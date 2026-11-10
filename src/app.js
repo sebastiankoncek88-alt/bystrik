@@ -382,7 +382,7 @@ VIEWS.read = () => {
   const recUI = RD.blobUrl ? `<audio controls src="${RD.blobUrl}" style="width:100%"></audio><div class="rowbtns"><button class="btn" data-a="rec-again">🔁 Nahrať znova</button><button class="btn good" data-a="rec-save" ${RD.saved ? 'disabled' : ''}>${RD.saved ? 'Uložené ✓' : '💾 Uložiť pre rodiča'}</button></div>`
     : RD.recording ? `<button class="btn primary block recbtn on" data-a="rec-stop">⏹️ Zastaviť nahrávanie <span id="rectime">0 s</span></button>`
       : RD.done ? `<div class="readdone">✅ Prečítané! Výborne.</div>`
-      : MIC_BLOCKED ? `<button class="btn primary block" data-a="dikt-open">🎙️ Nahrať cez diktafón</button><button class="btn block" data-a="rec-pick">📂 Pridať hotovú nahrávku</button><button class="linkbtn" data-a="rd-done">Prečítal(a) som bez nahrávky</button>`
+      : MIC_BLOCKED ? `${window.claude && window.claude.use ? '' : '<button class="btn primary block recbtn" data-a="mic-retry">🎤 Skúsiť mikrofón znova</button>'}<button class="btn ${window.claude && window.claude.use ? 'primary' : ''} block" data-a="dikt-open">🎙️ Nahrať cez diktafón</button><button class="btn block" data-a="rec-pick">📂 Pridať hotovú nahrávku</button><button class="linkbtn" data-a="rd-done">Prečítal(a) som bez nahrávky</button>`
       : `<button class="btn primary block recbtn" data-a="rec-start">🎤 Nahraj, ako čítaš</button>`;
   const qs = r.q.map((x, qi) => { const [qq, a, w] = x.split('|'); const opts = RD.opts[qi] || (RD.opts[qi] = shuffle([a, ...w.split(';')])); const ans = RD.ans[qi]; return `<div class="rq"><b>${qi + 1}. ${qq}</b><div class="opts one">${opts.map(o => `<button class="opt long ${ans !== undefined ? (o === a ? 'right' : (o === ans ? 'wrong' : 'dim')) : ''}" data-a="rd-ans" data-q="${qi}" data-o="${esc(o)}" ${ans !== undefined ? 'disabled' : ''}>${esc(o)}</button>`).join('')}</div></div>`; }).join('');
   return `<main class="view nonav"><div class="qtop"><button class="iconbtn press" data-a="rd-back" aria-label="Späť">←</button><div style="flex:1;font-family:var(--f-display);font-weight:800;font-size:1.2rem">${r.icon} ${r.title}</div><button class="iconbtn press" data-a="tut-open" aria-label="Návod">❓</button><button class="iconbtn press" data-a="rd-say" aria-label="Prečítať nahlas">🔊</button></div>
@@ -431,18 +431,36 @@ function endTut() { clearTut(); const p = P(); p.tutRead = true; save(); scrollT
 AFTER.read = () => {
   if (!P().tutRead && !RD.tutShown) { RD.tutShown = true; setTimeout(() => showTut(0), 500); } const f = $('#recfile'); if (f) f.addEventListener('change', () => { const file = f.files && f.files[0]; if (file) gotRecording(file); }); };
 async function recStart() {
-  if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia && window.MediaRecorder) {
-    try {
-      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-      const mr = new MediaRecorder(stream); REC = { mr, chunks: [], stream, t0: Date.now() };
-      mr.ondataavailable = e => { if (e.data && e.data.size) REC.chunks.push(e.data); };
-      mr.onstop = () => { stream.getTracks().forEach(t => t.stop()); gotRecording(new Blob(REC.chunks, { type: mr.mimeType || 'audio/webm' })); };
-      mr.start(); RD.recording = true; render(null); sfx('pop');
-      TIMERS.push(setInterval(() => { const e = $('#rectime'); if (e && REC) e.textContent = Math.round((Date.now() - REC.t0) / 1000) + ' s'; }, 500));
-      return;
-    } catch (e) { }
+  const inClaude = !!(window.claude && window.claude.use);
+  try { speechSynthesis.cancel(); } catch (e) { }
+  if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia || !window.MediaRecorder) { MIC_BLOCKED = true; render(null); return inClaude ? openDiktafon() : micHelp('nosupport'); }
+  try {
+    const stream = await navigator.mediaDevices.getUserMedia({ audio: { echoCancellation: true, noiseSuppression: true } });
+    let mr; try { mr = new MediaRecorder(stream); } catch (e) { stream.getTracks().forEach(t => t.stop()); throw Object.assign(new Error('rec'), { name: 'RecorderError' }); }
+    REC = { mr, chunks: [], stream, t0: Date.now() };
+    mr.ondataavailable = e => { if (e.data && e.data.size) REC.chunks.push(e.data); };
+    mr.onstop = () => { stream.getTracks().forEach(t => t.stop()); gotRecording(new Blob(REC.chunks, { type: mr.mimeType || 'audio/webm' })); };
+    mr.start(250); MIC_BLOCKED = false; RD.recording = true; render(null); sfx('pop');
+    TIMERS.push(setInterval(() => { const e = $('#rectime'); if (e && REC) e.textContent = Math.round((Date.now() - REC.t0) / 1000) + ' s'; }, 500));
+  } catch (e) {
+    MIC_BLOCKED = true; render(null);
+    if (inClaude) return openDiktafon();
+    micHelp(e && (e.name === 'NotAllowedError' || e.name === 'SecurityError' || e.name === 'PermissionDeniedError') ? 'denied' : e && (e.name === 'NotFoundError' || e.name === 'DevicesNotFoundError') ? 'nomic' : e && e.name === 'NotReadableError' ? 'busy' : 'other');
   }
-  MIC_BLOCKED = true; render(null); openDiktafon();
+}
+function micHelp(kind) {
+  closeSheet(); sfx('no');
+  const ios = /iPhone|iPad|iPod/.test(navigator.userAgent), android = /Android/.test(navigator.userAgent);
+  const txt = {
+    denied: ['🔒 Mikrofón je zablokovaný', 'Telefón si zapamätal, že táto stránka nesmie používať mikrofón. Povoľte ho takto:', ios ? ['V Safari ťuknite vľavo hore na <b>aA</b> (alebo ikonu vedľa adresy).', 'Vyberte <b>Nastavenia webovej stránky</b>.', 'Pri <b>Mikrofón</b> zvoľte <b>Povoliť</b>.', 'Ak to nepomôže: Nastavenia telefónu → Safari → Mikrofón → Povoliť.'] : android ? ['V Chrome ťuknite vedľa adresy na ikonu <b>🔒</b> (alebo ⓘ).', 'Ťuknite na <b>Povolenia</b> alebo <b>Nastavenia stránky</b>.', 'Pri <b>Mikrofón</b> zvoľte <b>Povoliť</b>.', 'Ak to nepomôže: Nastavenia telefónu → Aplikácie → Chrome → Povolenia → Mikrofón → Povoliť.'] : ['Ťuknite na ikonu <b>🔒</b> vedľa adresy stránky.', 'Pri <b>Mikrofón</b> zvoľte <b>Povoliť</b>.', 'Obnovte stránku.']],
+    nomic: ['🎤 Nenašiel sa mikrofón', 'Zariadenie nemá zapojený alebo zapnutý mikrofón.', ['Skontrolujte, či máte mikrofón alebo slúchadlá s mikrofónom.', 'Potom to skúste znova.']],
+    busy: ['🎤 Mikrofón práve používa iná aplikácia', 'Napríklad hovor, nahrávanie alebo iná stránka.', ['Zavrite ostatné aplikácie, ktoré nahrávajú.', 'Potom to skúste znova.']],
+    nosupport: ['🎤 Tento prehliadač nevie nahrávať', 'Skúste otvoriť apku v inom prehliadači.', [ios ? 'Na iPhone použite Safari (aktuálnu verziu).' : 'Použite Google Chrome (aktuálnu verziu).']],
+    other: ['🎤 Mikrofón sa nepodarilo zapnúť', 'Skúste to ešte raz. Ak to nepôjde, zatvorte a znova otvorte prehliadač.', ['Skontrolujte, či má prehliadač povolený mikrofón v nastaveniach telefónu.']]
+  }[kind];
+  const w = document.createElement('div'); w.id = 'sheetwrap';
+  w.innerHTML = `<div class="scrim" data-a="close-sheet"></div><div class="sheet" role="dialog" aria-label="Pomoc s mikrofónom"><div class="grab"></div><h2>${txt[0]}</h2><p class="muted b" style="font-size:.9rem;margin-bottom:10px">${txt[1]}</p><div class="dsteps">${txt[2].map((t, i) => `<div><span>${i + 1}</span><p>${t}</p></div>`).join('')}</div><button class="btn primary block" style="margin-top:12px" data-a="mic-retry">🔁 Skúsiť znova</button><button class="btn block" style="margin-top:10px" data-a="dikt-open">🎙️ Radšej cez diktafón</button><p class="muted b" style="font-size:.78rem;margin-top:8px;text-align:center">Tip: toto okno je pre rodiča. Dieťa môže zatiaľ text prečítať a ťuknúť „Prečítal(a) som bez nahrávky“.</p></div>`;
+  document.body.appendChild(w);
 }
 let MIC_BLOCKED = false;
 function openDiktafon() {
@@ -1129,7 +1147,7 @@ const ACT = {
   'rd-back': () => { if (REC && RD.recording) { try { REC.mr.stop(); } catch (e) { } } RD = null; go('reads', {}, 'b'); },
   'rd-say': () => say(READ[RD.id].text),
   'tut-say': () => { if (GUIDE) say(GUIDE.cur); }, 'tut-open': () => showTut(0), 'tut-skip': () => { const g = GUIDE; (g ? g.end : endTut)(); }, 'tut-next': d => { const i = +d.i; const g = GUIDE || { steps: TUT, end: endTut }; if (i >= g.steps.length) g.end(); else showGuide(g.steps, i, g.end); },
-  'rec-start': () => recStart(), 'dikt-open': () => openDiktafon(),
+  'rec-start': () => recStart(), 'dikt-open': () => openDiktafon(), 'mic-retry': () => { closeSheet(); MIC_BLOCKED = false; render(null); recStart(); },
   'rec-pick': () => { closeSheet(); const f = $('#recfile'); if (f) f.click(); },
   'rec-stop': () => { if (REC && REC.mr.state !== 'inactive') REC.mr.stop(); },
   'rec-again': () => { RD.blobUrl = null; RD.blob = null; RD.saved = false; render(null); if (!MIC_BLOCKED) recStart(); },
