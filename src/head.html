@@ -106,7 +106,7 @@ p{margin:0}
 .roomprev .dfig svg{height:100%;width:auto}
 
 /* shop + čítanka */
-.lvl.coinchip{background:var(--paper);cursor:pointer}
+.lvl.coinchip{background:var(--paper);color:var(--ink);cursor:pointer}
 .shophead{display:flex;align-items:center;gap:14px;padding:14px;background:var(--sun-soft)}
 .shophead .coinbig{font-size:3rem;animation:wig 2.4s infinite}
 .shophead b{font-family:var(--f-display);font-size:2.2rem;line-height:1;display:block}
@@ -198,6 +198,12 @@ body.calcopen .peek,body.calcopen .peekbub{display:none}
 .lsubj.mat{background:var(--c-mat-soft)} .lsubj.mat .big{color:var(--c-mat)}
 .lsubj.sjl{background:var(--c-sjl-soft)} .lsubj.sjl .big{color:var(--c-sjl)}
 .lsubj.prv{background:var(--c-prv-soft)}
+.diffs{display:grid;grid-template-columns:1fr 1fr;gap:10px;width:100%}
+.diff{display:flex;flex-direction:column;align-items:center;gap:2px;padding:12px 6px;border-radius:18px;border:2.5px solid var(--edge);box-shadow:0 4px 0 var(--drop);background:var(--paper2);color:var(--ink);font-family:inherit;cursor:pointer}
+.diff .de{font-size:2rem;line-height:1.1}.diff b{font-family:var(--f-display);font-size:1.05rem}.diff small{font-weight:700;opacity:.7;font-size:.75rem}
+.diff.d-me{background:#E3F8D9;color:#24451a}.diff.d-e{background:#DCEBFF;color:#1d3566}.diff.d-h{background:#FFE2CC;color:#6b2e0b}.diff.d-i{background:linear-gradient(135deg,#5A1030,#B3123F);color:#fff}
+.diff.on{outline:4px solid var(--sun);outline-offset:2px}
+.qbarw{height:8px;border-radius:9px;background:var(--line);overflow:hidden;margin-top:8px}.qbarw i{display:block;height:100%;width:100%;background:linear-gradient(90deg,var(--bad),var(--sun))}
 .pond{position:relative;height:min(58vh,420px);border-radius:var(--r);border:2.5px solid var(--edge);box-shadow:0 5px 0 var(--drop);background:radial-gradient(circle at 20% 40%,rgba(255,255,255,.35) 0 6%,transparent 7%),radial-gradient(circle at 80% 65%,rgba(255,255,255,.25) 0 5%,transparent 6%),linear-gradient(180deg,#7FD0FF,#3E9FE0);overflow:hidden;margin-top:8px}
 .pond .shore{position:absolute;left:0;right:0;height:16%;display:flex;align-items:center;justify-content:center;font-size:1.6rem;letter-spacing:.4em}
 .pond .far{top:0;background:linear-gradient(180deg,#8FD07A,#6DBA5C);border-bottom:3px solid #4E9A45}

@@ -121,7 +121,7 @@ p{margin:0}
 .roomprev .dfig svg{height:100%;width:auto}
 
 /* shop + čítanka */
-.lvl.coinchip{background:var(--paper);cursor:pointer}
+.lvl.coinchip{background:var(--paper);color:var(--ink);cursor:pointer}
 .shophead{display:flex;align-items:center;gap:14px;padding:14px;background:var(--sun-soft)}
 .shophead .coinbig{font-size:3rem;animation:wig 2.4s infinite}
 .shophead b{font-family:var(--f-display);font-size:2.2rem;line-height:1;display:block}
@@ -213,6 +213,12 @@ body.calcopen .peek,body.calcopen .peekbub{display:none}
 .lsubj.mat{background:var(--c-mat-soft)} .lsubj.mat .big{color:var(--c-mat)}
 .lsubj.sjl{background:var(--c-sjl-soft)} .lsubj.sjl .big{color:var(--c-sjl)}
 .lsubj.prv{background:var(--c-prv-soft)}
+.diffs{display:grid;grid-template-columns:1fr 1fr;gap:10px;width:100%}
+.diff{display:flex;flex-direction:column;align-items:center;gap:2px;padding:12px 6px;border-radius:18px;border:2.5px solid var(--edge);box-shadow:0 4px 0 var(--drop);background:var(--paper2);color:var(--ink);font-family:inherit;cursor:pointer}
+.diff .de{font-size:2rem;line-height:1.1}.diff b{font-family:var(--f-display);font-size:1.05rem}.diff small{font-weight:700;opacity:.7;font-size:.75rem}
+.diff.d-me{background:#E3F8D9;color:#24451a}.diff.d-e{background:#DCEBFF;color:#1d3566}.diff.d-h{background:#FFE2CC;color:#6b2e0b}.diff.d-i{background:linear-gradient(135deg,#5A1030,#B3123F);color:#fff}
+.diff.on{outline:4px solid var(--sun);outline-offset:2px}
+.qbarw{height:8px;border-radius:9px;background:var(--line);overflow:hidden;margin-top:8px}.qbarw i{display:block;height:100%;width:100%;background:linear-gradient(90deg,var(--bad),var(--sun))}
 .pond{position:relative;height:min(58vh,420px);border-radius:var(--r);border:2.5px solid var(--edge);box-shadow:0 5px 0 var(--drop);background:radial-gradient(circle at 20% 40%,rgba(255,255,255,.35) 0 6%,transparent 7%),radial-gradient(circle at 80% 65%,rgba(255,255,255,.25) 0 5%,transparent 6%),linear-gradient(180deg,#7FD0FF,#3E9FE0);overflow:hidden;margin-top:8px}
 .pond .shore{position:absolute;left:0;right:0;height:16%;display:flex;align-items:center;justify-content:center;font-size:1.6rem;letter-spacing:.4em}
 .pond .far{top:0;background:linear-gradient(180deg,#8FD07A,#6DBA5C);border-bottom:3px solid #4E9A45}
@@ -3020,6 +3026,22 @@ const GAMES = {
   mole: { i: '🐹', n: 'Chyť škrečka', d: 'Škrečky vykúkajú z norčiek. Ťukni len na tie so správnou odpoveďou.', bg: 'var(--mint-soft)' },
   frog: { i: '🐸', n: 'Žabka cez rybník', d: 'Skáč po leknách so správnou odpoveďou a dostaň žabku na druhý breh.', bg: 'var(--c-mat-soft)' }
 };
+const DIFF = { me: { n: 'Mega easy', e: '🐣', sp: 1.9, ql: 0, xp: .5 }, e: { n: 'Easy', e: '🙂', sp: 1.25, ql: 10, xp: 1 }, h: { n: 'Hard', e: '🔥', sp: .72, ql: 5, xp: 1.5 }, i: { n: 'Impossible', e: '💀', sp: .45, ql: 2.6, xp: 2 } };
+const DF = () => DIFF[(GM && GM.d) || 'e'];
+function pickDiff(k) {
+  const p = P(); const last = (p.gdiff || {})[k] || 'e'; const g = GAMES[k]; sfx('whoosh');
+  const w = document.createElement('div'); w.className = 'over';
+  w.innerHTML = `<div class="card box diffbox"><div style="font-size:3.2rem;line-height:1">${g.i}</div><h2>${g.n}</h2><p class="muted b">Vyber si obtiažnosť</p><div class="diffs">${Object.entries(DIFF).map(([d, x]) => `<button class="diff press d-${d} ${d === last ? 'on' : ''}" data-a="gdiff" data-g="${k}" data-d="${d}"><span class="de">${x.e}</span><b>${x.n}</b><small>${x.xp === 1 ? 'normálne body' : x.xp < 1 ? 'polovica bodov' : '×' + x.xp + ' bodov'}</small></button>`).join('')}</div><button class="btn block" data-a="ov-close">Zrušiť</button></div>`;
+  document.body.appendChild(w);
+}
+function qTimer(onOut) {
+  if (GM.qt) clearTimeout(GM.qt); const lim = DF().ql; const bar = $('#qbar'); if (!lim) { if (bar) bar.parentNode.style.display = 'none'; return; }
+  if (bar) { bar.style.transition = 'none'; bar.style.width = '100%'; void bar.offsetWidth; bar.style.transition = `width ${lim}s linear`; bar.style.width = '0%'; }
+  GM.qt = setTimeout(() => { if (!GM.ended) onOut(); }, lim * 1000); TIMERS.push(GM.qt);
+}
+function tfResolve(ok, el) { if (GM.qt) clearTimeout(GM.qt); GM.lock = true; gHit(ok, el); if (GM.ended) return; const c = $('#tfcard'); c.style.background = ok ? 'var(--good-soft)' : 'var(--bad-soft)'; $('#tfex').textContent = ok ? '✓ ' + pick(PRAISE) : '✗ ' + GM.st.ex; TIMERS.push(setTimeout(() => { if (GM.ended) return; GM.lock = false; GM.st = makeStatement(GM.g); c.style.background = ''; c.textContent = GM.st.text; c.classList.remove('enter'); void c.offsetWidth; c.classList.add('enter'); $('#tfex').innerHTML = '&nbsp;'; qTimer(tfOut); }, ok ? 500 : 1300)); }
+function tfOut() { if (GM.lock) return; tfResolve(false, $('#tfcard')); }
+function frogOut() { if (GM.busy) return; GM.busy = true; const fr = $('#frog'); if (fr) fr.classList.add('splash'); gHit(false, fr); const ex = $('.deckinfo'); if (ex) ex.textContent = '⏰ Čas vypršal! Správne bolo: ' + GM.fq.answer; setTimeout(() => { if (GM.ended) return; GM.fq = frogQ(GM.g); GM.busy = false; const w = $('#fwrap'); if (w) w.innerHTML = frogHTML(); qTimer(frogOut); }, 1300); }
 function frogQ(g) {
   const ts = ALL_TOPICS.filter(t => t.g === g && t.s === 'mat' && t.gen); const ts2 = ts.length ? ts : ALL_TOPICS.filter(t => t.g <= g && t.s === 'mat' && t.gen);
   for (let k = 0; k < 30; k++) { try { const q = makeQuestion(pick(ts2)); if (q.html || !q.options || q.options.length < 3 || q.text.length > 60 || q.options.some(o => String(o).length > 9)) continue; const w = shuffle(q.options.filter(o => o !== q.answer)).slice(0, 2); return { text: q.text, answer: q.answer, opts: shuffle([q.answer, ...w]) }; } catch (e) { } }
@@ -3042,14 +3064,15 @@ let GM = null;
 function gamesToday(p) { return p.gp && p.gp.d === today() ? p.gp.n : 0; }
 function gamesLeft(p) { const L = DATA.settings.gameLimit; return L ? Math.max(0, L - gamesToday(p)) : Infinity; }
 function gameLimitMsg() { const p = P(); sfx('no'); buzz([30, 40, 30]); const w = document.createElement('div'); w.className = 'over'; w.innerHTML = `<div class="card box"><div style="font-size:4rem;line-height:1">🌙</div><h2>Na dnes stačilo hier!</h2><p class="b muted">Dnes si už zahral(a) ${DATA.settings.gameLimit} ${plural(DATA.settings.gameLimit, 'minihru', 'minihry', 'miníhier')}. Zajtra môžeš znova. Zatiaľ sa môžeš učiť a zbierať mince 📚</p><button class="btn primary block" data-a="ov-learn">📚 Ísť sa učiť</button><button class="btn block" data-a="ov-close">OK</button></div>`; document.body.appendChild(w); }
-function startGame(k) { const pp = P(); if (gamesLeft(pp) <= 0) return gameLimitMsg(); pp.gp = { d: today(), n: gamesToday(pp) + 1 }; save(); const g = pp.grade; GM = { k, g, score: 0, lives: 3, left: 45, combo: 0 }; if (k === 'balloons') { GM.target = balloonTarget(g); GM.hits = 0; } if (k === 'rain') GM.setup = rainSetup(g); if (k === 'tf') GM.st = makeStatement(g); if (k === 'mole') GM.rule = moleRule(g); if (k === 'frog') { GM.step = 0; GM.shores = 0; GM.fq = frogQ(g); GM.left = 60; } go('game', {}, 'u'); }
+function startGame(k, d) { const pp = P(); if (!d) return pickDiff(k); pp.gdiff = pp.gdiff || {}; pp.gdiff[k] = d; if (gamesLeft(pp) <= 0) return gameLimitMsg(); pp.gp = { d: today(), n: gamesToday(pp) + 1 }; save(); const g = pp.grade; GM = { k, g, d, score: 0, lives: 3, left: 45, combo: 0 }; if (k === 'balloons') { GM.target = balloonTarget(g); GM.hits = 0; } if (k === 'rain') GM.setup = rainSetup(g); if (k === 'tf') GM.st = makeStatement(g); if (k === 'mole') GM.rule = moleRule(g); if (k === 'frog') { GM.step = 0; GM.shores = 0; GM.fq = frogQ(g); GM.left = 60; } go('game', {}, 'u'); }
 VIEWS.game = () => {
-  const head = `<div class="qtop"><button class="iconbtn press" data-a="quit-game" aria-label="Ukončiť">✕</button><span class="hearts" id="hearts">${'❤️'.repeat(GM.lives)}${'🤍'.repeat(3 - GM.lives)}</span><div style="flex:1"></div><span class="timer" id="gscore">⭐ ${GM.score}</span><span class="timer" id="gtime">${GM.left} s</span></div>`;
+  const head = `<div class="qtop"><button class="iconbtn press" data-a="quit-game" aria-label="Ukončiť">✕</button><span class="hearts" id="hearts">${'❤️'.repeat(GM.lives)}${'🤍'.repeat(3 - GM.lives)}</span><div style="flex:1"></div><span class="timer dtag">${DF().e}</span><span class="timer" id="gscore">⭐ ${GM.score}</span><span class="timer" id="gtime">${GM.left} s</span></div>`;
   if (GM.k === 'balloons') return `<main class="view nonav">${head}<div class="target" id="gtarget">Praskni balóny s výsledkom <b>${GM.target}</b></div><div class="gamearea" id="garea"></div></main>`;
   if (GM.k === 'rain') return `<main class="view nonav">${head}<div class="target">${GM.setup.title}<div class="hint">${GM.setup.hint}</div></div><div class="gamearea rain" id="garea"></div></main>`;
   if (GM.k === 'mole') return `<main class="view nonav">${head}<div class="target">${GM.rule.t}</div><div class="holes" id="holes">${Array.from({ length: 9 }, (_, i) => `<div class="hole"><button class="mole" data-a="mole" data-i="${i}" id="mole${i}" aria-label="Škrečok"><span class="mface">🐹</span><span class="mlab"></span></button><span class="dirt"></span></div>`).join('')}</div><p class="deckinfo">Ťukni rýchlo, kým sa škrečok schová!</p></main>`;
-  if (GM.k === 'frog') return `<main class="view nonav">${head}<div id="fwrap">${frogHTML()}</div></main>`;
-  return `<main class="view nonav">${head}<p class="deckinfo">Je to pravda?</p><section class="card tfcard enter" id="tfcard">${esc(GM.st.text)}</section><div class="tfbtns"><button class="yes press" data-a="tf" data-v="1" aria-label="Pravda">✓</button><button class="no press" data-a="tf" data-v="0" aria-label="Nepravda">✗</button></div><p class="deckinfo" id="tfex">&nbsp;</p></main>`;
+  const qb = '<div class="qbarw"><i id="qbar"></i></div>';
+  if (GM.k === 'frog') return `<main class="view nonav">${head}${qb}<div id="fwrap">${frogHTML()}</div></main>`;
+  return `<main class="view nonav">${head}${qb}<p class="deckinfo">Je to pravda?</p><section class="card tfcard enter" id="tfcard">${esc(GM.st.text)}</section><div class="tfbtns"><button class="yes press" data-a="tf" data-v="1" aria-label="Pravda">✓</button><button class="no press" data-a="tf" data-v="0" aria-label="Nepravda">✗</button></div><p class="deckinfo" id="tfex">&nbsp;</p></main>`;
 };
 AFTER.game = () => {
   TIMERS.push(setInterval(() => { GM.left--; const t = $('#gtime'); if (t) { t.textContent = GM.left + ' s'; t.classList.toggle('low', GM.left <= 10); } if (GM.left <= 0) endGame(); }, 1000));
@@ -3058,20 +3081,22 @@ AFTER.game = () => {
   if (GM.k === 'balloons') TIMERS.push(setInterval(() => {
     const good = Math.random() < .45; const e = balloonExpr(GM.g, GM.target, good);
     const b = document.createElement('button'); b.className = 'balloon'; b.dataset.a = 'balloon'; b.dataset.v = e.good ? GM.target : 'x'; b.textContent = e.text;
-    b.style.left = R(2, 72) + '%'; b.style.background = pick(BC); b.style.animationDuration = (GM.g >= 3 ? 7 : 6.2) + Math.random() * 1.5 + 's';
+    b.style.left = R(2, 72) + '%'; b.style.background = pick(BC); b.style.animationDuration = ((GM.g >= 3 ? 7 : 6.2) + Math.random() * 1.5) * DF().sp + 's';
     b.addEventListener('animationend', () => b.remove()); area.appendChild(b);
-  }, 850));
+  }, 850 * Math.min(1.5, DF().sp)));
   if (GM.k === 'mole') TIMERS.push(setInterval(() => {
     const free = [...Array(9).keys()].filter(i => !$('#mole' + i).classList.contains('up')); if (!free.length) return;
     const i = pick(free); const m = $('#mole' + i); const it = GM.rule.gen();
     m.querySelector('.mlab').textContent = it.x; m.dataset.good = it.good ? 1 : 0; m.classList.remove('hit', 'miss'); m.classList.add('up');
-    const stay = Math.max(1100, 1900 - GM.g * 150);
+    const stay = Math.max(1100, 1900 - GM.g * 150) * DF().sp;
     TIMERS.push(setTimeout(() => m.classList.remove('up'), stay));
-  }, Math.max(600, 950 - GM.g * 70)));
+  }, Math.max(600, 950 - GM.g * 70) * DF().sp));
   if (GM.k === 'rain') TIMERS.push(setInterval(() => {
     const it = GM.setup.item(); const d = document.createElement('button'); d.className = 'drop'; d.dataset.a = 'drop'; d.dataset.good = it.good ? 1 : 0; d.textContent = it.text;
-    d.style.left = R(2, 62) + '%'; d.style.animationDuration = 5 + Math.random() * 1.8 + 's'; d.addEventListener('animationend', () => d.remove()); area.appendChild(d);
-  }, 950));
+    d.style.left = R(2, 62) + '%'; d.style.animationDuration = (5 + Math.random() * 1.8) * DF().sp + 's'; d.addEventListener('animationend', () => d.remove()); area.appendChild(d);
+  }, 950 * Math.min(1.5, DF().sp)));
+  if (GM.k === 'tf') qTimer(tfOut);
+  if (GM.k === 'frog') qTimer(frogOut);
 };
 function gHit(ok, el) {
   const s = $('#gscore');
@@ -3081,7 +3106,7 @@ function gHit(ok, el) {
   if (GM.lives <= 0) endGame();
 }
 function endGame() {
-  if (!GM || GM.ended) return; GM.ended = true; clearTimers(); const p = P(); const before = p.xp; const g = Math.min(80, 10 + GM.score * 4);
+  if (!GM || GM.ended) return; GM.ended = true; clearTimers(); const p = P(); const before = p.xp; const g = Math.round(Math.min(80, 10 + GM.score * 4) * DF().xp);
   gain(p, g); p.stats.games++; p.best[GM.k] = Math.max(p.best[GM.k] || 0, GM.score); bump('games'); logAct('game-' + GM.k, null, GM.score, 0); touchStreak(p); checkBadges(p); save();
   TIMERS.push(setTimeout(() => go('result', { kind: 'game', game: GM.k, score: GM.score, xp: g, bonus: 0, before, after: p.xp, back: { v: 'games', p: {} } }, 'u'), 400));
 }
@@ -3398,22 +3423,23 @@ const ACT = {
   tile: d => tileTap(+d.i), 'm-pick': d => mPick(d.s, +d.i), bin: (d, el) => binTap(+d.i, el),
   game: d => { sfx('tap'); startGame(d.g); },
   frog: (d, el) => {
-    if (GM.ended || GM.busy) return; GM.busy = true; const ok = GM.fq.opts[+el.dataset.i] === GM.fq.answer; const fr = $('#frog'); const pond = $('#pond');
+    if (GM.ended || GM.busy) return; GM.busy = true; if (GM.qt) clearTimeout(GM.qt); const ok = GM.fq.opts[+el.dataset.i] === GM.fq.answer; const fr = $('#frog'); const pond = $('#pond');
     const pr = pond.getBoundingClientRect(), r = el.getBoundingClientRect(), f = fr.getBoundingClientRect();
     fr.style.transform = `translate(${r.left + r.width / 2 - (f.left + f.width / 2)}px, ${r.top + r.height / 2 - (f.top + f.height / 2)}px)`; fr.classList.add('jump'); sfx('whoosh');
     setTimeout(() => {
       if (ok) { el.classList.add('good'); gHit(true, el); GM.step++; if (GM.step % 5 === 0) { GM.shores++; GM.score += 3; const s2 = $('#gscore'); if (s2) s2.textContent = '⭐ ' + GM.score; try { confetti(70, .3); } catch (e) { } sfx('coin'); toast('🏡 Žabka je na brehu! +3 ⭐'); } }
       else { el.classList.add('sink'); fr.classList.add('splash'); gHit(false, el); const ex = $('.deckinfo'); if (ex) ex.textContent = 'Správne bolo: ' + GM.fq.answer; }
-      setTimeout(() => { if (GM.ended) return; GM.fq = frogQ(GM.g); GM.busy = false; const w = $('#fwrap'); if (w) w.innerHTML = frogHTML(); }, ok ? 450 : 1100);
+      setTimeout(() => { if (GM.ended) return; GM.fq = frogQ(GM.g); GM.busy = false; const w = $('#fwrap'); if (w) w.innerHTML = frogHTML(); qTimer(frogOut); }, ok ? 450 : 1100);
     }, 380);
   },
   mole: (d, el) => { if (GM.ended || !el.classList.contains('up') || el.classList.contains('hit')) return; const ok = el.dataset.good === '1'; el.classList.add(ok ? 'hit' : 'miss'); setTimeout(() => el.classList.remove('up'), 250); gHit(ok, el); },
   'quit-game': () => { GM.ended = true; go('games', {}, 'b'); },
   balloon: (d, el) => { if (GM.ended || el.classList.contains('popped')) return; const ok = d.v !== 'x' && d.v !== 'old' && +d.v === GM.target; el.classList.add('popped'); setTimeout(() => el.remove(), 300); gHit(ok, el); if (ok && ++GM.hits % 4 === 0) { GM.target = balloonTarget(GM.g); const t = $('#gtarget'); if (t) { t.innerHTML = `Nové číslo! Praskni balóny s výsledkom <b>${GM.target}</b>`; t.style.animation = 'none'; void t.offsetWidth; t.style.animation = 'yay .5s'; } $$('.balloon').forEach(b => { if (b.dataset.v !== 'x') b.dataset.v = 'old'; }); } },
   drop: (d, el) => { if (GM.ended || el.classList.contains('popped')) return; const ok = d.good === '1'; el.style.background = ok ? 'var(--good)' : 'var(--bad)'; el.style.color = '#fff'; el.classList.add('popped'); setTimeout(() => el.remove(), 300); gHit(ok, el); },
-  tf: (d, el) => { if (GM.ended || GM.lock) return; const ok = (d.v === '1') === GM.st.truth; GM.lock = true; gHit(ok, el); if (GM.ended) return; const c = $('#tfcard'); c.style.background = ok ? 'var(--good-soft)' : 'var(--bad-soft)'; $('#tfex').textContent = ok ? '✓ ' + pick(PRAISE) : '✗ ' + GM.st.ex; TIMERS.push(setTimeout(() => { if (GM.ended) return; GM.lock = false; GM.st = makeStatement(GM.g); c.style.background = ''; c.textContent = GM.st.text; c.classList.remove('enter'); void c.offsetWidth; c.classList.add('enter'); $('#tfex').innerHTML = '&nbsp;'; }, ok ? 500 : 1300)); },
+  tf: (d, el) => { if (GM.ended || GM.lock) return; tfResolve((d.v === '1') === GM.st.truth, el); },
+  'gdiff': d => { $$('.over').forEach(e => e.remove()); sfx('tap'); startGame(d.g, d.d); },
   'res-back': () => { const r = UI.params; go(r.back.v, r.back.p, 'b'); },
-  'res-again': () => { const r = UI.params; if (r.kind === 'read') return go('reads', {}, 'b'); if (r.kind === 'game') return startGame(r.game); if (r.kind === 'test' || r.kind === 'quiz' || r.kind === 'time' || r.kind === 'daily') return startQuiz(r.retry, r.kind, r.back); startMode(r.retry[0]); },
+  'res-again': () => { const r = UI.params; if (r.kind === 'read') return go('reads', {}, 'b'); if (r.kind === 'game') return startGame(r.game, (P().gdiff || {})[r.game]); if (r.kind === 'test' || r.kind === 'quiz' || r.kind === 'time' || r.kind === 'daily') return startQuiz(r.retry, r.kind, r.back); startMode(r.retry[0]); },
   gift: (d, el) => { el.classList.add('open'); sfx('gift'); confetti(80, .4); setTimeout(() => { el.remove(); $('.over .rewards').hidden = false; $('[data-a="ov-wear"]').hidden = false; }, 450); },
   'ov-close': () => { $('.over')?.remove(); setTimeout(flushPending, 200); },
   'ov-wear': () => { $('.over')?.remove(); PENDING = []; go('wardrobe', {}, 'f'); },
