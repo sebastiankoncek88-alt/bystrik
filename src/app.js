@@ -867,8 +867,15 @@ const GAMES = {
   balloons: { i: '🎈', n: 'Balónová prestrelka', d: 'Praskni balóny s príkladom, ktorého výsledok je hľadané číslo.', bg: 'var(--c-mat-soft)' },
   rain: { i: '🌧️', n: 'Slovný dážď', d: 'Padajú písmenká a slová. Ťukaj len na tie správne.', bg: 'var(--lilac-soft)' },
   tf: { i: '⚡', n: 'Pravda či nie?', d: 'Je to pravda? Rozhodni sa čo najrýchlejšie.', bg: 'var(--sun-soft)' },
-  mole: { i: '🐹', n: 'Chyť škrečka', d: 'Škrečky vykúkajú z norčiek. Ťukni len na tie so správnou odpoveďou.', bg: 'var(--mint-soft)' }
+  mole: { i: '🐹', n: 'Chyť škrečka', d: 'Škrečky vykúkajú z norčiek. Ťukni len na tie so správnou odpoveďou.', bg: 'var(--mint-soft)' },
+  frog: { i: '🐸', n: 'Žabka cez rybník', d: 'Skáč po leknách so správnou odpoveďou a dostaň žabku na druhý breh.', bg: 'var(--c-mat-soft)' }
 };
+function frogQ(g) {
+  const ts = ALL_TOPICS.filter(t => t.g === g && t.s === 'mat' && t.gen); const ts2 = ts.length ? ts : ALL_TOPICS.filter(t => t.g <= g && t.s === 'mat' && t.gen);
+  for (let k = 0; k < 30; k++) { try { const q = makeQuestion(pick(ts2)); if (q.html || !q.options || q.options.length < 3 || q.text.length > 60 || q.options.some(o => String(o).length > 9)) continue; const w = shuffle(q.options.filter(o => o !== q.answer)).slice(0, 2); return { text: q.text, answer: q.answer, opts: shuffle([q.answer, ...w]) }; } catch (e) { } }
+  const a = R(2, 9), b = R(2, 9); return { text: `${a} + ${b} = ?`, answer: String(a + b), opts: shuffle([a + b, a + b + 1, a + b - 2].map(String)) };
+}
+function frogHTML() { const st = GM.step % 5; return `<div class="target" id="fq">${esc(GM.fq.text)}</div><div class="pond" id="pond"><div class="shore far">🌳 🏡 🌳</div><div class="fprog">${Array.from({ length: 5 }, (_, i) => `<i class="${i < st ? 'on' : ''}"></i>`).join('')}</div><div class="pads">${GM.fq.opts.map((o, i) => `<button class="pad press" data-a="frog" data-i="${i}"><span>${esc(o)}</span></button>`).join('')}</div><div class="frog" id="frog">🐸</div><div class="shore near"></div></div><p class="deckinfo">Ťukni na leknín so správnou odpoveďou! Breh: ${GM.shores} 🏡</p>`; }
 function moleRule(g) {
   const nouns = (id, cat) => { const it = topicItems(TOPIC[id]); return () => { const good = Math.random() < .45; const pool = it.filter(x => (x[1] === cat) === good); const [w] = pick(pool); return { x: w, good }; }; };
   const mult = k => ({ t: `Ťukaj na násobky čísla ${k}`, gen: () => { const good = Math.random() < .45; let n; if (good) n = k * R(1, 10); else { do { n = R(2, k * 10); } while (n % k === 0); } return { x: n, good }; } });
@@ -885,12 +892,13 @@ let GM = null;
 function gamesToday(p) { return p.gp && p.gp.d === today() ? p.gp.n : 0; }
 function gamesLeft(p) { const L = DATA.settings.gameLimit; return L ? Math.max(0, L - gamesToday(p)) : Infinity; }
 function gameLimitMsg() { const p = P(); sfx('no'); buzz([30, 40, 30]); const w = document.createElement('div'); w.className = 'over'; w.innerHTML = `<div class="card box"><div style="font-size:4rem;line-height:1">🌙</div><h2>Na dnes stačilo hier!</h2><p class="b muted">Dnes si už zahral(a) ${DATA.settings.gameLimit} ${plural(DATA.settings.gameLimit, 'minihru', 'minihry', 'miníhier')}. Zajtra môžeš znova. Zatiaľ sa môžeš učiť a zbierať mince 📚</p><button class="btn primary block" data-a="ov-learn">📚 Ísť sa učiť</button><button class="btn block" data-a="ov-close">OK</button></div>`; document.body.appendChild(w); }
-function startGame(k) { const pp = P(); if (gamesLeft(pp) <= 0) return gameLimitMsg(); pp.gp = { d: today(), n: gamesToday(pp) + 1 }; save(); const g = pp.grade; GM = { k, g, score: 0, lives: 3, left: 45, combo: 0 }; if (k === 'balloons') { GM.target = balloonTarget(g); GM.hits = 0; } if (k === 'rain') GM.setup = rainSetup(g); if (k === 'tf') GM.st = makeStatement(g); if (k === 'mole') GM.rule = moleRule(g); go('game', {}, 'u'); }
+function startGame(k) { const pp = P(); if (gamesLeft(pp) <= 0) return gameLimitMsg(); pp.gp = { d: today(), n: gamesToday(pp) + 1 }; save(); const g = pp.grade; GM = { k, g, score: 0, lives: 3, left: 45, combo: 0 }; if (k === 'balloons') { GM.target = balloonTarget(g); GM.hits = 0; } if (k === 'rain') GM.setup = rainSetup(g); if (k === 'tf') GM.st = makeStatement(g); if (k === 'mole') GM.rule = moleRule(g); if (k === 'frog') { GM.step = 0; GM.shores = 0; GM.fq = frogQ(g); GM.left = 60; } go('game', {}, 'u'); }
 VIEWS.game = () => {
   const head = `<div class="qtop"><button class="iconbtn press" data-a="quit-game" aria-label="Ukončiť">✕</button><span class="hearts" id="hearts">${'❤️'.repeat(GM.lives)}${'🤍'.repeat(3 - GM.lives)}</span><div style="flex:1"></div><span class="timer" id="gscore">⭐ ${GM.score}</span><span class="timer" id="gtime">${GM.left} s</span></div>`;
   if (GM.k === 'balloons') return `<main class="view nonav">${head}<div class="target" id="gtarget">Praskni balóny s výsledkom <b>${GM.target}</b></div><div class="gamearea" id="garea"></div></main>`;
   if (GM.k === 'rain') return `<main class="view nonav">${head}<div class="target">${GM.setup.title}<div class="hint">${GM.setup.hint}</div></div><div class="gamearea rain" id="garea"></div></main>`;
   if (GM.k === 'mole') return `<main class="view nonav">${head}<div class="target">${GM.rule.t}</div><div class="holes" id="holes">${Array.from({ length: 9 }, (_, i) => `<div class="hole"><button class="mole" data-a="mole" data-i="${i}" id="mole${i}" aria-label="Škrečok"><span class="mface">🐹</span><span class="mlab"></span></button><span class="dirt"></span></div>`).join('')}</div><p class="deckinfo">Ťukni rýchlo, kým sa škrečok schová!</p></main>`;
+  if (GM.k === 'frog') return `<main class="view nonav">${head}<div id="fwrap">${frogHTML()}</div></main>`;
   return `<main class="view nonav">${head}<p class="deckinfo">Je to pravda?</p><section class="card tfcard enter" id="tfcard">${esc(GM.st.text)}</section><div class="tfbtns"><button class="yes press" data-a="tf" data-v="1" aria-label="Pravda">✓</button><button class="no press" data-a="tf" data-v="0" aria-label="Nepravda">✗</button></div><p class="deckinfo" id="tfex">&nbsp;</p></main>`;
 };
 AFTER.game = () => {
@@ -1239,6 +1247,16 @@ const ACT = {
   'card-yes': () => cardAnswer(true), 'card-no': () => cardAnswer(false),
   tile: d => tileTap(+d.i), 'm-pick': d => mPick(d.s, +d.i), bin: (d, el) => binTap(+d.i, el),
   game: d => { sfx('tap'); startGame(d.g); },
+  frog: (d, el) => {
+    if (GM.ended || GM.busy) return; GM.busy = true; const ok = GM.fq.opts[+el.dataset.i] === GM.fq.answer; const fr = $('#frog'); const pond = $('#pond');
+    const pr = pond.getBoundingClientRect(), r = el.getBoundingClientRect(), f = fr.getBoundingClientRect();
+    fr.style.transform = `translate(${r.left + r.width / 2 - (f.left + f.width / 2)}px, ${r.top + r.height / 2 - (f.top + f.height / 2)}px)`; fr.classList.add('jump'); sfx('whoosh');
+    setTimeout(() => {
+      if (ok) { el.classList.add('good'); gHit(true, el); GM.step++; if (GM.step % 5 === 0) { GM.shores++; GM.score += 3; const s2 = $('#gscore'); if (s2) s2.textContent = '⭐ ' + GM.score; try { confetti(70, .3); } catch (e) { } sfx('coin'); toast('🏡 Žabka je na brehu! +3 ⭐'); } }
+      else { el.classList.add('sink'); fr.classList.add('splash'); gHit(false, el); const ex = $('.deckinfo'); if (ex) ex.textContent = 'Správne bolo: ' + GM.fq.answer; }
+      setTimeout(() => { if (GM.ended) return; GM.fq = frogQ(GM.g); GM.busy = false; const w = $('#fwrap'); if (w) w.innerHTML = frogHTML(); }, ok ? 450 : 1100);
+    }, 380);
+  },
   mole: (d, el) => { if (GM.ended || !el.classList.contains('up') || el.classList.contains('hit')) return; const ok = el.dataset.good === '1'; el.classList.add(ok ? 'hit' : 'miss'); setTimeout(() => el.classList.remove('up'), 250); gHit(ok, el); },
   'quit-game': () => { GM.ended = true; go('games', {}, 'b'); },
   balloon: (d, el) => { if (GM.ended || el.classList.contains('popped')) return; const ok = d.v !== 'x' && d.v !== 'old' && +d.v === GM.target; el.classList.add('popped'); setTimeout(() => el.remove(), 300); gHit(ok, el); if (ok && ++GM.hits % 4 === 0) { GM.target = balloonTarget(GM.g); const t = $('#gtarget'); if (t) { t.innerHTML = `Nové číslo! Praskni balóny s výsledkom <b>${GM.target}</b>`; t.style.animation = 'none'; void t.offsetWidth; t.style.animation = 'yay .5s'; } $$('.balloon').forEach(b => { if (b.dataset.v !== 'x') b.dataset.v = 'old'; }); } },
