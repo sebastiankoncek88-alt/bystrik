@@ -280,6 +280,26 @@ body.calcopen .peek,body.calcopen .peekbub{display:none}
 .subj:active .big,.tile2:active .i{transform:scale(1.2) rotate(-8deg)}
 .stars span:not([style]){display:inline-block;animation:twinkle 2.4s ease-in-out infinite}
 @keyframes twinkle{50%{transform:scale(1.15)}}
+.ptasks{padding:14px;display:flex;flex-direction:column;gap:10px;background:var(--c-mat-soft);border-color:var(--edge)}
+.ptform{display:grid;grid-template-columns:1fr;gap:8px;padding:6px 0 10px}
+.ptform label{display:flex;flex-direction:column;gap:4px;font-weight:800;font-size:.85rem}
+.ptform select{font:inherit;font-weight:700;padding:10px 12px;border-radius:14px;border:2.5px solid var(--edge);background:var(--paper);color:var(--ink)}
+.diploma{position:relative;padding:22px 18px 18px;text-align:center;display:flex;flex-direction:column;align-items:center;gap:6px;background:linear-gradient(160deg,#FFFBEA,#FFF1C9);color:#2A2650;border:3px solid #C99511;border-radius:24px;box-shadow:0 6px 0 #8A6400,inset 0 0 0 6px #FFF8DF,inset 0 0 0 8px #E8C766}
+.diploma .muted{color:#7A6A3A}
+.dribbon{font-family:var(--f-display);font-weight:800;letter-spacing:.08em;background:#C0392B;color:#fff;padding:6px 18px;border-radius:12px;box-shadow:0 3px 0 #7B241C;font-size:.95rem}
+.diploma h2{font-family:var(--f-display);font-size:2.2rem;color:#8A3B12;text-shadow:0 2px 0 #FFE7A0}
+.dstats{display:grid;grid-template-columns:1fr 1fr;gap:8px;width:100%;margin-top:8px}
+.dstats div{background:rgba(255,255,255,.7);border:2px solid #E8C766;border-radius:14px;padding:8px;display:flex;flex-direction:column}
+.dstats b{font-family:var(--f-display);font-size:1.6rem;line-height:1}
+.dstats span{font-weight:700;font-size:.78rem;color:#7A6A3A}
+.dtop{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;margin-top:6px;font-size:.88rem}
+.dtop b{width:100%}
+.dtop span{background:#fff;border:2px solid #E8C766;border-radius:99px;padding:3px 10px;font-weight:800}
+.dpraise{font-weight:800;font-size:1.02rem;margin-top:6px;line-height:1.35}
+.dsign{display:flex;align-items:center;gap:10px;width:100%;margin-top:6px;text-align:left}
+.dsign .dbear{width:52px;height:52px} .dsign .dbear svg{width:100%;height:100%}
+.dsign b{font-family:var(--f-display);display:block} .dsign span{font-size:.8rem;font-weight:700;color:#7A6A3A}
+.dsign .dmedal{margin-left:auto;font-size:2.8rem;animation:wig 2s infinite}
 /* top bar */
 .top{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;display:flex;align-items:center;gap:10px;padding:10px max(16px,env(safe-area-inset-right,0px)) 10px max(16px,env(safe-area-inset-left,0px));background:color-mix(in srgb,var(--g1) 70%,transparent);backdrop-filter:blur(10px)}
 .headbub{width:48px;height:48px;border-radius:50%;border:2.5px solid var(--edge);overflow:hidden;flex:none;background:var(--paper)}
@@ -1448,6 +1468,25 @@ const READS = [
   { id: 'r4-recyklacia', g: 4, icon: '♻️', title: 'Triedime v škole', text: 'Naša trieda sa rozhodla viac triediť odpad. Do triedy sme priniesli tri farebné koše: modrý na papier, žltý na plasty a zelený na sklo. Každý piatok kontrolujeme, či je všetko správne roztriedené. Zistili sme, že najviac vyhadzujeme papiera, a tak píšeme aj na druhú stranu listov. Z vrchnákov fliaš sme vyrobili veľkú mozaiku. Pani riaditeľka nás pochválila, že sme príkladom pre celú školu.',
     q: ['Aký kôš je na plasty?|žltý|modrý;zelený', 'Čoho trieda vyhadzovala najviac?|papiera|skla;plastov', 'Čo vyrobili z vrchnákov fliaš?|mozaiku|robota;auto'] }
 ];
+
+READS.push(
+  { id: 'r1-jablko', g: 1, icon: '🍎', title: 'Červené jablko', text: 'Na strome visí jablko. Je veľké a červené. Ema ho odtrhla a umyla. Potom si ho rozdelila s bratom Jakubom.',
+    q: ['Kde viselo jablko?|na strome|na plote;v obchode', 'Akej farby bolo jablko?|červené|žlté;zelené', 'S kým sa Ema rozdelila?|s bratom Jakubom|s mamou;s mačkou'] },
+  { id: 'r1-vlacik', g: 1, icon: '🚂', title: 'Malý vláčik', text: 'Tomáš má malý vláčik. Vláčik má tri vagóny. Vozí v nich kocky a autíčka. Keď ide, robí: šu-šu-šu!',
+    q: ['Koľko vagónov má vláčik?|tri|dva;päť', 'Čo vozí vo vagónoch?|kocky a autíčka|vodu;piesok', 'Aký zvuk robí vláčik?|šu-šu-šu|mňau;bum'] },
+  { id: 'r2-babka', g: 2, icon: '🥞', title: 'Palacinky u babky', text: 'V nedeľu sme išli k babke. Babka piekla palacinky. Ja som ich natieral džemom a brat ich posýpal cukrom. Kuchyňa krásne voňala. Zjedli sme ich až desať. Babka sa smiala, že sme ako malé medvieďatá.',
+    q: ['Kedy išli k babke?|v nedeľu|v pondelok;v piatok', 'Čo piekla babka?|palacinky|koláč;chlieb', 'Koľko palaciniek zjedli?|desať|dve;sto'] },
+  { id: 'r2-dazd', g: 2, icon: '☔', title: 'Dážď', text: 'Ráno svietilo slnko, no poobede sa zatiahlo. Z tmavých oblakov začalo pršať. Nina si obula gumáky a vzala dáždnik. Skákala po mlákach a smiala sa. Keď dážď prestal, na oblohe sa objavila dúha.',
+    q: ['Kedy začalo pršať?|poobede|ráno;v noci', 'Čo si Nina obula?|gumáky|sandále;papuče', 'Čo sa objavilo na oblohe po daždi?|dúha|hviezdy;mesiac'] },
+  { id: 'r3-vcielka', g: 3, icon: '🌻', title: 'Slnečnica', text: 'Na jar zasadila Lea do záhrady malé semienko slnečnice. Každý deň ho polievala. Čoskoro vyrástla zelená stonka a veľké listy. V lete mala slnečnica žltý kvet vyšší ako Lea. Kvet sa otáčal za slnkom. Na jeseň v ňom dozreli semienka, ktoré si pochutnali vtáky aj Lea.',
+    q: ['Čo zasadila Lea?|semienko slnečnice|zemiak;jablko', 'Kam sa otáčal kvet?|za slnkom|k oblakom;k zemi', 'Kto si pochutnal na semienkach?|vtáky aj Lea|len mačka;nikto'] },
+  { id: 'r3-pekar', g: 3, icon: '🥖', title: 'U pekára', text: 'Pekár vstáva ešte za tmy, keď všetci spia. Zamiesi múku, vodu, kvasnice a soľ na cesto. Cesto nechá vykysnúť, aby bolo nadýchané. Potom z neho tvaruje rožky a chlebíky a pečie ich v horúcej peci. Ráno, keď ideme do školy, je v obchode čerstvé pečivo.',
+    q: ['Kedy vstáva pekár?|za tmy|na obed;večer', 'Čo dáva pekár do cesta?|múku, vodu, kvasnice a soľ|cukor a čokoládu;mlieko a vajcia', 'Kde pečie rožky?|v horúcej peci|v mrazničke;na slnku'] },
+  { id: 'r4-tatry', g: 4, icon: '🏔️', title: 'Výlet do Tatier', text: 'Cez letné prázdniny sme sa vybrali do Vysokých Tatier. Z Popradu sme išli električkou až na Štrbské pleso. Okolo plesa vedie pohodlný chodník, z ktorého je vidieť vysoké štíty. Na chate sme si dali čaj a borovičkový koláč. Ocko nám ukázal Kriváň, ktorý je symbolom Slovákov. Večer sme boli unavení, ale šťastní.',
+    q: ['Do ktorých hôr išla rodina?|do Vysokých Tatier|do Pienin;do Malej Fatry', 'Akým dopravným prostriedkom išli na Štrbské pleso?|električkou|loďou;lietadlom', 'Ktorý štít je symbolom Slovákov?|Kriváň|Gerlachovský štít;Chopok'] },
+  { id: 'r4-robot', g: 4, icon: '🤖', title: 'Školský robot', text: 'Na krúžku robotiky sme postavili malého robota. Mal kolesá, senzor na prekážky a blikajúce oči. Najprv sme ho naprogramovali, aby išiel rovno. Potom sme pridali príkaz, aby sa otočil, keď narazí na stenu. Robot zablúdil iba raz a skončil pod lavicou. Na súťaži sme so svojím robotom získali tretie miesto.',
+    q: ['Na akom krúžku postavili robota?|na krúžku robotiky|na futbale;na speve', 'Čo urobil robot, keď narazil na stenu?|otočil sa|zastal navždy;zaspieval', 'Ktoré miesto získali na súťaži?|tretie|prvé;posledné'] }
+);
 const READ = Object.fromEntries(READS.map(r => [r.id, r]));
 /* ===== Avatar – farby ===== */
 const SKIN = ['#FFE3C7', '#F7CBA4', '#E6AC80', '#C98A5C', '#94603F', '#62402B'];
@@ -1977,8 +2016,8 @@ function checkBadges(p) {
   for (const a of ACH) { const t = achTier(p, a); const was = p.ach[a.id] || 0; if (t > was) { for (let k = was; k < t; k++) { p.coins = (p.coins || 0) + ACH_COINS[k]; got.push([a, k]); } p.ach[a.id] = t; } }
   got.forEach(([a, k], i) => setTimeout(() => achPop(a, k), 900 + i * 3700));
 }
-function achPop(a, k) {
-  const d = document.createElement('div'); d.className = 'achpop'; d.innerHTML = `<span class="am">${MEDAL[k]}</span><div><span class="eyebrow">Nový úspech!</span><b>${a.i} ${a.n}</b><span>${a.d}: ${a.t[k]} · +${ACH_COINS[k]} ${COIN}</span></div>`;
+function achPop(a, k, custom) {
+  const d = document.createElement('div'); d.className = 'achpop'; d.innerHTML = custom ? `<span class="am">🎉</span><div><span class="eyebrow">Výborne!</span><b>${a.i} ${a.n}</b><span>${a.d} · +${custom} ${COIN}</span></div>` : `<span class="am">${MEDAL[k]}</span><div><span class="eyebrow">Nový úspech!</span><b>${a.i} ${a.n}</b><span>${a.d}: ${a.t[k]} · +${ACH_COINS[k]} ${COIN}</span></div>`;
   document.body.appendChild(d); sfx('level'); buzz([20, 40, 20]); confetti(70, .12); setTimeout(() => d.classList.add('out'), 3000); setTimeout(() => d.remove(), 3600);
 }
 
@@ -2007,7 +2046,7 @@ function seeded(str) { let h = 2166136261; for (const c of str) { h ^= c.charCod
 function ensureDay(p) {
   const t = today(); if (p.day && p.day.date === t) return p.day;
   const rnd = seeded(t + p.id); const pool = TASKS.slice().sort(() => rnd() - .5); const picked = [], keys = new Set();
-  for (const x of pool) { if (keys.has(x.k)) continue; keys.add(x.k); picked.push(x.id); if (picked.length === 3) break; }
+  for (const x of pool) { if (keys.has(x.k)) continue; if (x.k === 'games' && DATA.settings.gameLimit && x.t > DATA.settings.gameLimit) continue; keys.add(x.k); picked.push(x.id); if (picked.length === 3) break; }
   p.day = { date: t, cnt: {}, tasks: picked, claimed: [], bonus: false }; return p.day;
 }
 function bump(k, n = 1) {
@@ -2278,7 +2317,7 @@ VIEWS.home = () => {
   const taskCard = `<section class="card tasks"><div class="sec"><h2>Dnešné úlohy</h2><span class="eyebrow">${d.claimed.length}/3</span></div>${tasks}${allCl && !d.bonus ? `<button class="btn sun block press" data-a="claim-bonus">Všetko splnené! Otvor truhlicu +50 🎁</button>` : allCl ? '<p class="b muted">Super! Zajtra budú nové úlohy.</p>' : '<p class="muted b" style="font-size:.85rem">Keď splníš všetky tri, dostaneš truhlicu s bonusom.</p>'}</section>`;
   const subj = k => { const ts = SUBJECTS[k].topics.filter(t => t.g === p.grade); const st = ts.reduce((s, t) => s + (p.topics[t.id]?.stars || 0), 0); const max = ts.length * 3; return `<button class="card subj ${k} press" data-a="subject" data-s="${k}"><span class="big">${k === 'mat' ? '1+2' : k === 'sjl' ? 'Aa' : '🌍'}</span><h3>${SUBJECTS[k].name}</h3><span class="muted b" style="font-size:.85rem">⭐ ${st} / ${max} hviezd</span><span class="pbar"><i style="width:${max ? st / max * 100 : 0}%"></i></span><span class="deco">${k === 'mat' ? '➗' : k === 'sjl' ? '✏️' : '🔭'}</span></button>`; };
   const dd = p.dailyDone === today();
-  return `${topbar()}<main class="view pop-in">${stage}${streak}${taskCard}
+  return `${topbar()}<main class="view pop-in">${stage}${ptaskCard(p)}${streak}${taskCard}
   <div style="display:flex;flex-direction:column;gap:8px"><div class="sec"><h2>Učenie</h2><span class="eyebrow">${p.grade}. ročník</span></div><div class="subjects">${subj('mat')}${subj('sjl')}${subj('prv')}</div><p class="muted b" style="font-size:.85rem">Prehľad: príroda, Slovensko a svet okolo nás a angličtina.</p></div>
   <button class="card daily press ${dd ? 'done' : ''}" data-a="daily"><span class="ic">${dd ? '✅' : '🎯'}</span><span><b>${dd ? 'Denná výzva splnená!' : 'Denná výzva'}</b><span class="b" style="font-size:.9rem">${dd ? 'Môžeš si ju zahrať znova, len tak pre radosť.' : '10 otázok zo všetkých predmetov · +50 bodov'}</span></span></button>
   <button class="card readcard press" data-a="nav" data-v="reads"><span class="ic">📖</span><span><b>Čítanka</b><span class="b" style="font-size:.9rem">Krátke príbehy na čítanie nahlas · rodič si ťa vypočuje</span></span></button>
@@ -2289,6 +2328,22 @@ VIEWS.home = () => {
 AFTER.home = () => { if (UI.params.wave) { const f = $('.stage .avatar'); f && f.classList.add('waving'); } };
 
 /* --- predmet --- */
+function weekDiploma(p) {
+  const since = Date.now() - 7 * DAYMS; const days = Array.from({ length: 7 }, (_, i) => p.days[daysAgo(i)]).filter(Boolean);
+  const q = days.reduce((a, d) => a + d.q, 0), c = days.reduce((a, d) => a + d.c, 0); const log = p.log.filter(l => l.t >= since);
+  const cnt = {}; log.forEach(l => { if (l.id && TOPIC[l.id]) cnt[l.id] = (cnt[l.id] || 0) + 1; }); const top = Object.entries(cnt).sort((a, b) => b[1] - a[1]).slice(0, 3);
+  const reads = (p.readings || []).filter(r => r.t >= since).length, games = log.filter(l => l.k.startsWith('game')).length;
+  const praise = q >= 150 ? 'Bol to úžasný týždeň plný učenia! Si skutočný šampión. 🏆' : q >= 60 ? 'Skvelý týždeň! Učíš sa poctivo a ide ti to výborne. 🌟' : q > 0 ? 'Dobrý začiatok! Skús sa učiť trochu každý deň. 💪' : 'Tento týždeň sa ešte len začína. Poď sa učiť a diplom sa naplní! 🧸';
+  const d0 = new Date(since), d1 = new Date();
+  return `<section class="diploma"><div class="dribbon">📜 TÝŽDENNÝ DIPLOM 📜</div><span class="muted b">${d0.getDate()}. ${d0.getMonth() + 1}. – ${d1.getDate()}. ${d1.getMonth() + 1}. ${d1.getFullYear()}</span><h2>${esc(p.name)}</h2><span class="b">${p.grade}. ročník · Level ${levelInfo(p.xp).L}</span>
+  <div class="dstats"><div><b>${c}</b><span>správnych odpovedí</span></div><div><b>${q ? Math.round(c / q * 100) : 0} %</b><span>úspešnosť</span></div><div><b>${days.length}/7</b><span>dní učenia</span></div><div><b>${reads}</b><span>prečítaných textov</span></div></div>
+  ${top.length ? `<div class="dtop"><b>Najviac si trénoval(a):</b>${top.map(([id]) => `<span>${TOPIC[id].icon} ${TOPIC[id].name}</span>`).join('')}</div>` : ''}
+  <p class="dpraise">${praise}</p><div class="dsign"><span class="dbear">${owlSvg('')}</span><div><b>Medvedík Bystrík</b><span>tvoj učiteľ</span></div><span class="dmedal">${q >= 150 ? '🥇' : q >= 60 ? '🥈' : '🥉'}</span></div></section><p class="muted b" style="font-size:.82rem;text-align:center">Diplom sa každý deň aktualizuje podľa posledných 7 dní.${games ? ` Tento týždeň si odohral(a) ${games} ${plural(games, 'minihru', 'minihry', 'miníhier')}.` : ''}</p>`;
+}
+function ptaskCard(p) {
+  const act = (p.ptasks || []).filter(t => !t.done && TOPIC[t.topic]); if (!act.length) return '';
+  return `<section class="card ptasks"><div class="sec"><h2>📋 Úlohy od rodiča</h2></div>${act.map(t => `<div class="task"><span class="ck">${TOPIC[t.topic].icon}</span><div class="tt">Získaj ${'⭐'.repeat(t.stars)} v téme ${TOPIC[t.topic].name}<div class="muted" style="font-size:.78rem">${SUBJECTS[TOPIC[t.topic].s].name} · odmena +${t.coins} ${COIN}</div></div><button class="claim press" data-a="pt-go" data-id="${t.topic}">Ísť na to</button></div>`).join('')}</section>`;
+}
 let PAREA = 'all';
 VIEWS.subject = ({ s, g }) => {
   const p = P(); g = g || p.grade; const S = SUBJECTS[s]; const m = p.mode[s] || 'quiz';
@@ -2377,7 +2432,7 @@ function finishQuiz() {
   if (Q.mode === 'quiz' || Q.mode === 'daily') {
     stars = Q.correct >= 10 ? 3 : Q.correct >= 8 ? 2 : Q.correct >= 5 ? 1 : 0; p.stats.quizzes++; bump('quizzes'); if (stars === 3) bump('stars3');
     if (Q.correct === 10) { p.stats.perfect++; bonus += 30; }
-    if (Q.mode === 'quiz') { const ts = topicStat(p, Q.topicIds[0]); ts.played++; ts.best = Math.max(ts.best, Q.correct); ts.stars = Math.max(ts.stars, stars); logAct('quiz', Q.topicIds[0], Q.correct, Q.total); }
+    if (Q.mode === 'quiz') { const ts = topicStat(p, Q.topicIds[0]); ts.played++; ts.best = Math.max(ts.best, Q.correct); ts.stars = Math.max(ts.stars, stars); logAct('quiz', Q.topicIds[0], Q.correct, Q.total); checkPTasks(p, Q.topicIds[0], stars); }
     else { if (p.dailyDone !== today()) { p.dailyDone = today(); p.stats.daily++; bonus += 50; } bump('daily'); logAct('daily', null, Q.correct, Q.total); }
   } else { p.stats.bestTime = Math.max(p.stats.bestTime, Q.correct); const ts = topicStat(p, Q.topicIds[0]); ts.time = Math.max(ts.time || 0, Q.correct); bump('time'); logAct('time', Q.topicIds[0], Q.correct, Q.i + 1); }
   gain(p, Q.xp + bonus); touchStreak(p); checkBadges(p); save();
@@ -2615,8 +2670,9 @@ VIEWS.rewards = () => {
     body = `<section class="card streak" style="align-items:center;text-align:center"><span class="flame" style="font-size:4rem">🔥</span><b class="n" style="font-size:2rem">${p.streak.count} ${plural(p.streak.count, 'deň', 'dni', 'dní')} po sebe</b><span class="b muted">Najdlhšia séria: ${p.streak.best || 0}. Séria rastie, keď sa učíš každý deň.</span></section>
     <div class="sec"><h2>Odmeny za sériu</h2></div><div class="road" style="padding:0">${sr.map(([c, it]) => { const got = (p.streak.best || 0) >= it.streak; return `<div class="node ${got ? 'got' : ''}"><span class="ln">${got ? '✓' : `<span><small>DNÍ</small>${it.streak}</span>`}</span><div class="nc"><b>${got ? 'Získané' : `Séria ${it.streak} dní`}</b><div class="ri"><span class="rt"><span class="t">${itemThumb(c, it, p.av)}</span>${rewardName(c, it)}</span></div><div class="pbar" style="margin-top:6px"><i style="width:${Math.min(100, p.streak.count / it.streak * 100)}%;background:var(--accent)"></i></div></div></div>`; }).join('')}</div>
     <div class="sec"><h2>Denná odmena</h2><span class="eyebrow">${drReady(p) ? 'Pripravená!' : 'Zajtra ďalšia'}</span></div><div class="cal">${DR.map((x, i) => `<div class="d ${i + 1 < dn || (!drReady(p) && i + 1 === p.dailyReward.day) ? 'got' : ''} ${drReady(p) && i + 1 === dn ? 'now' : ''} ${i === 6 ? 'big' : ''}"><span class="di">${x.i}</span>${i + 1}. deň<br>+${x.xp}</div>`).join('')}</div>${drReady(p) ? '<button class="btn sun block" data-a="dreward">Vyzdvihnúť dnešnú odmenu</button>' : ''}`;
-  } else body = `<p class="muted b" style="font-size:.88rem">Každý úspech má 3 medaily: 🥉 bronz, 🥈 striebro a 🥇 zlato. Za každú medailu dostaneš mince!</p><div class="achlist pop-in">${ACH.map(a => { const t = achTier(p, a); const v = a.m(p) || 0; const next = a.t[t]; const prev = t ? a.t[t - 1] : 0; const pct = next ? Math.min(100, (v - prev) / (next - prev) * 100) : 100; return `<div class="card ach ${t ? 't' + t : 'off'}"><span class="ai">${a.i}</span><div class="ab"><b>${a.n}</b><span>${a.d}${next ? `: ${v} / ${next}` : ': všetko splnené!'}</span><div class="pbar"><i style="width:${pct}%"></i></div></div><span class="amed">${MEDAL.map((m, k) => `<i class="${k < t ? 'on' : ''}">${m}</i>`).join('')}</span></div>`; }).join('')}</div>`;
-  return `${topbar()}<main class="view"><h1 style="font-size:2rem">Odmeny</h1><div class="seg"><button class="${RTAB === 'road' ? 'on' : ''}" data-a="rtab" data-t="road">Cesta odmien</button><button class="${RTAB === 'streak' ? 'on' : ''}" data-a="rtab" data-t="streak">🔥 Séria</button><button class="${RTAB === 'badges' ? 'on' : ''}" data-a="rtab" data-t="badges">🏅 Úspechy ${ACH.reduce((a, x) => a + achTier(p, x), 0)}/${ACH.length * 3}</button></div>${body}</main>${nav('rewards')}`;
+  } else if (RTAB === 'week') body = weekDiploma(p);
+  else body = `<p class="muted b" style="font-size:.88rem">Každý úspech má 3 medaily: 🥉 bronz, 🥈 striebro a 🥇 zlato. Za každú medailu dostaneš mince!</p><div class="achlist pop-in">${ACH.map(a => { const t = achTier(p, a); const v = a.m(p) || 0; const next = a.t[t]; const prev = t ? a.t[t - 1] : 0; const pct = next ? Math.min(100, (v - prev) / (next - prev) * 100) : 100; return `<div class="card ach ${t ? 't' + t : 'off'}"><span class="ai">${a.i}</span><div class="ab"><b>${a.n}</b><span>${a.d}${next ? `: ${v} / ${next}` : ': všetko splnené!'}</span><div class="pbar"><i style="width:${pct}%"></i></div></div><span class="amed">${MEDAL.map((m, k) => `<i class="${k < t ? 'on' : ''}">${m}</i>`).join('')}</span></div>`; }).join('')}</div>`;
+  return `${topbar()}<main class="view"><h1 style="font-size:2rem">Odmeny</h1><div class="seg"><button class="${RTAB === 'road' ? 'on' : ''}" data-a="rtab" data-t="road">🗺️ Cesta</button><button class="${RTAB === 'streak' ? 'on' : ''}" data-a="rtab" data-t="streak">🔥 Séria</button><button class="${RTAB === 'week' ? 'on' : ''}" data-a="rtab" data-t="week">📜 Týždeň</button><button class="${RTAB === 'badges' ? 'on' : ''}" data-a="rtab" data-t="badges">🏅 Úspechy</button></div>${body}</main>${nav('rewards')}`;
 };
 function drawRoad() {
   const road = $('#road'), svg = $('#roadpath'); if (!road || !svg) return; const r0 = road.getBoundingClientRect();
@@ -2713,8 +2769,11 @@ function parentReads(p) {
   const ids = []; p.readings.forEach(x => { if (!ids.includes(x.r)) ids.push(x.r); });
   return `<section class="card pcard"><span class="eyebrow">📖 Čítanie – text a nahrávky</span><p class="muted b" style="font-size:.85rem;padding:4px 0">Pri každom texte vidíte presne to, čo dieťa čítalo, a pod tým jeho čítania a nahrávky. Vypočujte si ich a ohodnoťte, dieťa uvidí hodnotenie v Čítanke.</p>${ids.map(rid => { const r = READ[rid]; const recs = p.readings.filter(x => x.r === rid); return `<div class="ptext"><b style="font-family:var(--f-display);font-size:1.1rem">${r ? r.icon + ' ' + r.title : 'Text'} <span class="muted" style="font-size:.85rem">${r ? r.g + '. ročník' : ''}</span></b><div class="ptextbody">${r ? esc(r.text) : ''}</div>${recs.map((x, i) => `<div class="prec"><span class="b">${x.noAudio ? '✅ Prečítal(a) nahlas, bez nahrávky' : '🎙️ Nahrávka'} · ${fmtTime(x.t)}</span>${x.noAudio ? '' : `<div id="aud-${x.id}"><button class="btn small" data-a="play-rec" data-id="${x.id}">▶️ Vypočuť</button></div>`}<div class="chips" style="padding:0">${[3, 2, 1].map(k => `<button class="chip ${x.rating === k ? 'on' : ''}" data-a="rate-rec" data-id="${x.id}" data-r="${k}">${RATE[k]}</button>`).join('')}<button class="chip" data-a="del-rec" data-id="${x.id}" aria-label="Vymazať nahrávku">🗑️</button></div></div>`).join('')}</div>`; }).join('')}</section>`;
 }
+function checkPTasks(p, id, stars) {
+  (p.ptasks || []).forEach(t => { if (!t.done && t.topic === id && stars >= t.stars) { t.done = Date.now(); p.coins = (p.coins || 0) + t.coins; p.log.unshift({ t: Date.now(), k: 'ptask', id, c: t.coins, n: t.stars }); setTimeout(() => achPop({ i: '📋', n: 'Úloha od rodiča splnená!', d: TOPIC[id].name, t: [t.coins] }, 0, t.coins), 1200); } });
+}
 function giftsToday(p) { const t = today(); return (p.log || []).filter(l => l.k === 'gift' && dkey(new Date(l.t)) === t).length; }
-const KIND = { gift: 'Odmena od rodiča', 'game-mole': 'Minihra Chyť škrečka', read: 'Čítanka – nahrávka', readq: 'Čítanka – otázky', quiz: 'Kvíz', time: 'Na čas', daily: 'Denná výzva', cards: 'Kartičky', pex: 'Pexeso', match: 'Spájačka', sort: 'Triedička', 'game-balloons': 'Minihra Balóny', 'game-rain': 'Minihra Slovný dážď', 'game-tf': 'Minihra Pravda či nie' };
+const KIND = { ptask: 'Splnená úloha od rodiča', gift: 'Odmena od rodiča', 'game-mole': 'Minihra Chyť škrečka', read: 'Čítanka – nahrávka', readq: 'Čítanka – otázky', quiz: 'Kvíz', time: 'Na čas', daily: 'Denná výzva', cards: 'Kartičky', pex: 'Pexeso', match: 'Spájačka', sort: 'Triedička', 'game-balloons': 'Minihra Balóny', 'game-rain': 'Minihra Slovný dážď', 'game-tf': 'Minihra Pravda či nie' };
 function fmtTime(t) { const d = new Date(t); const k = dkey(d); const hm = `${d.getHours()}:${String(d.getMinutes()).padStart(2, '0')}`; return k === today() ? `dnes ${hm}` : k === daysAgo(1) ? `včera ${hm}` : `${d.getDate()}. ${d.getMonth() + 1}. ${hm}`; }
 VIEWS.parent = () => {
   if (!PARENT_OK) { PIN = { mode: DATA.parent.pin ? 'enter' : 'create', val: '', first: '' }; UI.view = 'pin'; return VIEWS.pin(); }
@@ -2738,7 +2797,10 @@ VIEWS.parent = () => {
   <section class="card pcard"><span class="eyebrow">Darí sa</span>${strong.length ? strong.map(topicLine).join('') : '<p class="muted b" style="padding:8px 0">Zobrazí sa, keď bude mať v téme aspoň 5 odpovedí s úspešnosťou nad 80 %.</p>'}</section>
   <section class="card pcard"><span class="eyebrow">Treba precvičiť</span>${weak.length ? weak.map(topicLine).join('') : '<p class="muted b" style="padding:8px 0">Zatiaľ nič. Témy s úspešnosťou pod 70 % sa zobrazia tu.</p>'}</section>
   <section class="card pcard"><span class="eyebrow">Matematika – hviezdy podľa ročníkov</span>${subjProg('mat')}<span class="eyebrow">Slovenčina – hviezdy podľa ročníkov</span>${subjProg('sjl')}<span class="eyebrow">Prehľad (príroda, svet, angličtina) – hviezdy podľa ročníkov</span>${subjProg('prv')}</section>
-  <section class="card pcard"><span class="eyebrow">História aktivít</span>${p.log.slice(0, 15).map(l => `<div class="statrow"><span>${KIND[l.k] || l.k}${l.id && TOPIC[l.id] ? ' · ' + TOPIC[l.id].name : ''}</span><b>${l.k === 'gift' ? '+' + l.c + ' mincí' : l.k.startsWith('game') ? l.c + ' b.' : l.k === 'pex' ? l.n + ' ťahov' : `${l.c}/${l.n}`}</b><small>${fmtTime(l.t)}</small></div>`).join('') || '<p class="muted b" style="padding:8px 0">Zatiaľ prázdne.</p>'}</section>
+  <section class="card pcard"><span class="eyebrow">História aktivít</span>${p.log.slice(0, 15).map(l => `<div class="statrow"><span>${KIND[l.k] || l.k}${l.id && TOPIC[l.id] ? ' · ' + TOPIC[l.id].name : ''}</span><b>${l.k === 'gift' || l.k === 'ptask' ? '+' + l.c + ' mincí' : l.k.startsWith('game') ? l.c + ' b.' : l.k === 'pex' ? l.n + ' ťahov' : `${l.c}/${l.n}`}</b><small>${fmtTime(l.t)}</small></div>`).join('') || '<p class="muted b" style="padding:8px 0">Zatiaľ prázdne.</p>'}</section>
+  <section class="card pcard"><span class="eyebrow">📋 Úlohy pre dieťa</span><p class="muted b" style="font-size:.85rem;padding:4px 0">Vyberte tému a koľko hviezd má dieťa v kvíze získať. Keď to splní, apka mu automaticky pridá mince.</p>
+  <div class="ptform"><label>Téma<select id="pt-topic">${['mat', 'sjl', 'prv'].map(k => `<optgroup label="${SUBJECTS[k].name}">${SUBJECTS[k].topics.filter(t => t.g === p.grade).map(t => `<option value="${t.id}">${t.name}</option>`).join('')}</optgroup>`).join('')}</select></label><label>Hviezdy<select id="pt-stars"><option value="1">⭐ aspoň 5 z 10</option><option value="2" selected>⭐⭐ aspoň 8 z 10</option><option value="3">⭐⭐⭐ 10 z 10</option></select></label><label>Odmena<select id="pt-coins">${[5, 10, 15, 20].map(n => `<option value="${n}" ${n === 10 ? 'selected' : ''}>${n} mincí</option>`).join('')}</select></label><button class="btn primary small" data-a="pt-add">➕ Zadať úlohu</button></div>
+  ${(p.ptasks || []).slice(0, 8).map(t => TOPIC[t.topic] ? `<div class="statrow"><span>${t.done ? '✅' : '⏳'} ${TOPIC[t.topic].name} · ${'⭐'.repeat(t.stars)}</span><b>${t.done ? 'splnené' : `<button class="chip" data-a="pt-del" data-id="${t.id}">Zrušiť</button>`}</b><small>+${t.coins} mincí${t.done ? ' · ' + fmtTime(t.done) : ''}</small></div>` : '').join('')}</section>
   <section class="card pcard"><span class="eyebrow">🎁 Odmeniť mincami</span><p class="muted b" style="font-size:.85rem;padding:4px 0">Pochváľte dieťa za snahu, domáce úlohy alebo pomoc doma. Mince si minie v obchode. Teraz má ${COIN} ${p.coins || 0}.</p>${(() => { const used = giftsToday(p); const left = 2 - used; return `<div class="chips" style="padding:4px 0 4px">${[5, 10, 15, 20].map(n => `<button class="chip" data-a="p-gift" data-n="${n}" ${left > 0 ? '' : 'disabled style="opacity:.45"'}>+${n} ${COIN}</button>`).join('')}</div><p class="b" style="font-size:.85rem;padding-bottom:8px;color:${left > 0 ? 'var(--muted)' : 'var(--bad)'}">${left > 0 ? `Dnes môžete odmeniť ešte ${left}×.` : 'Dnes ste už odmenili 2×. Ďalšia odmena bude možná zajtra.'}</p>`; })()}</section>
   ${parentReads(p)}
   <section class="card pcard"><span class="eyebrow">Ročník dieťaťa</span><div class="chips" style="padding:6px 0">${[1, 2, 3, 4].map(g => `<button class="chip ${p.grade === g ? 'on' : ''}" data-a="p-grade" data-g="${g}">${g}. ročník</button>`).join('')}</div></section>
@@ -2810,6 +2872,9 @@ const ACT = {
   'pin-change': () => { PARENT_OK = false; PIN = { mode: 'create', val: '', first: '' }; UI.view = 'pin'; render('f'); },
   psel: d => { PSEL = d.id; PDEL = false; render(null); },
   'p-grade': d => { const p = DATA.profiles.find(x => x.id === PSEL); p.grade = +d.g; save(); toast(`Ročník: ${d.g}.`); render(null); },
+  'pt-add': () => { const p = DATA.profiles.find(x => x.id === PSEL); p.ptasks = p.ptasks || []; if (p.ptasks.filter(t => !t.done).length >= 3) { toast('Naraz môžu byť najviac 3 aktívne úlohy.'); return; } p.ptasks.unshift({ id: 'pt' + Date.now().toString(36), topic: $('#pt-topic').value, stars: +$('#pt-stars').value, coins: +$('#pt-coins').value, t: Date.now(), done: 0 }); if (p.ptasks.length > 20) p.ptasks.length = 20; save(); sfx('pop'); toast('Úloha zadaná ✓ Dieťa ju uvidí na domovskej obrazovke.'); render(null); },
+  'pt-del': d => { const p = DATA.profiles.find(x => x.id === PSEL); p.ptasks = (p.ptasks || []).filter(t => t.id !== d.id); save(); render(null); },
+  'pt-go': d => { sfx('tap'); const t = TOPIC[d.id]; startQuiz([d.id], 'quiz', { v: 'home', p: {} }); },
   'p-glimit': d => { DATA.settings.gameLimit = +d.n; save(); sfx('tap'); toast(+d.n ? `Minihry: ${d.n}× za deň ✓` : 'Minihry bez limitu ✓'); render(null); },
   'ov-learn': () => { const o = $('.over'); if (o) o.parentNode.removeChild(o); go('learn', {}, 'f'); },
   'p-gift': (d, el) => { const p = DATA.profiles.find(x => x.id === PSEL); if (giftsToday(p) >= 2 || ![5, 10, 15, 20].includes(+d.n)) { sfx('no'); toast('Dnes ste už odmenili 2×. Skúste zajtra.'); return; } p.coins = (p.coins || 0) + (+d.n); p.log.unshift({ t: Date.now(), k: 'gift', id: null, c: +d.n, n: 0 }); save(); burst(el, 30); sfx('coin'); toast(`Dieťa dostalo ${d.n} mincí 🎁`); render(null); },

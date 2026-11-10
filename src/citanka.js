@@ -36,4 +36,23 @@ const READS = [
   { id: 'r4-recyklacia', g: 4, icon: '♻️', title: 'Triedime v škole', text: 'Naša trieda sa rozhodla viac triediť odpad. Do triedy sme priniesli tri farebné koše: modrý na papier, žltý na plasty a zelený na sklo. Každý piatok kontrolujeme, či je všetko správne roztriedené. Zistili sme, že najviac vyhadzujeme papiera, a tak píšeme aj na druhú stranu listov. Z vrchnákov fliaš sme vyrobili veľkú mozaiku. Pani riaditeľka nás pochválila, že sme príkladom pre celú školu.',
     q: ['Aký kôš je na plasty?|žltý|modrý;zelený', 'Čoho trieda vyhadzovala najviac?|papiera|skla;plastov', 'Čo vyrobili z vrchnákov fliaš?|mozaiku|robota;auto'] }
 ];
+
+READS.push(
+  { id: 'r1-jablko', g: 1, icon: '🍎', title: 'Červené jablko', text: 'Na strome visí jablko. Je veľké a červené. Ema ho odtrhla a umyla. Potom si ho rozdelila s bratom Jakubom.',
+    q: ['Kde viselo jablko?|na strome|na plote;v obchode', 'Akej farby bolo jablko?|červené|žlté;zelené', 'S kým sa Ema rozdelila?|s bratom Jakubom|s mamou;s mačkou'] },
+  { id: 'r1-vlacik', g: 1, icon: '🚂', title: 'Malý vláčik', text: 'Tomáš má malý vláčik. Vláčik má tri vagóny. Vozí v nich kocky a autíčka. Keď ide, robí: šu-šu-šu!',
+    q: ['Koľko vagónov má vláčik?|tri|dva;päť', 'Čo vozí vo vagónoch?|kocky a autíčka|vodu;piesok', 'Aký zvuk robí vláčik?|šu-šu-šu|mňau;bum'] },
+  { id: 'r2-babka', g: 2, icon: '🥞', title: 'Palacinky u babky', text: 'V nedeľu sme išli k babke. Babka piekla palacinky. Ja som ich natieral džemom a brat ich posýpal cukrom. Kuchyňa krásne voňala. Zjedli sme ich až desať. Babka sa smiala, že sme ako malé medvieďatá.',
+    q: ['Kedy išli k babke?|v nedeľu|v pondelok;v piatok', 'Čo piekla babka?|palacinky|koláč;chlieb', 'Koľko palaciniek zjedli?|desať|dve;sto'] },
+  { id: 'r2-dazd', g: 2, icon: '☔', title: 'Dážď', text: 'Ráno svietilo slnko, no poobede sa zatiahlo. Z tmavých oblakov začalo pršať. Nina si obula gumáky a vzala dáždnik. Skákala po mlákach a smiala sa. Keď dážď prestal, na oblohe sa objavila dúha.',
+    q: ['Kedy začalo pršať?|poobede|ráno;v noci', 'Čo si Nina obula?|gumáky|sandále;papuče', 'Čo sa objavilo na oblohe po daždi?|dúha|hviezdy;mesiac'] },
+  { id: 'r3-vcielka', g: 3, icon: '🌻', title: 'Slnečnica', text: 'Na jar zasadila Lea do záhrady malé semienko slnečnice. Každý deň ho polievala. Čoskoro vyrástla zelená stonka a veľké listy. V lete mala slnečnica žltý kvet vyšší ako Lea. Kvet sa otáčal za slnkom. Na jeseň v ňom dozreli semienka, ktoré si pochutnali vtáky aj Lea.',
+    q: ['Čo zasadila Lea?|semienko slnečnice|zemiak;jablko', 'Kam sa otáčal kvet?|za slnkom|k oblakom;k zemi', 'Kto si pochutnal na semienkach?|vtáky aj Lea|len mačka;nikto'] },
+  { id: 'r3-pekar', g: 3, icon: '🥖', title: 'U pekára', text: 'Pekár vstáva ešte za tmy, keď všetci spia. Zamiesi múku, vodu, kvasnice a soľ na cesto. Cesto nechá vykysnúť, aby bolo nadýchané. Potom z neho tvaruje rožky a chlebíky a pečie ich v horúcej peci. Ráno, keď ideme do školy, je v obchode čerstvé pečivo.',
+    q: ['Kedy vstáva pekár?|za tmy|na obed;večer', 'Čo dáva pekár do cesta?|múku, vodu, kvasnice a soľ|cukor a čokoládu;mlieko a vajcia', 'Kde pečie rožky?|v horúcej peci|v mrazničke;na slnku'] },
+  { id: 'r4-tatry', g: 4, icon: '🏔️', title: 'Výlet do Tatier', text: 'Cez letné prázdniny sme sa vybrali do Vysokých Tatier. Z Popradu sme išli električkou až na Štrbské pleso. Okolo plesa vedie pohodlný chodník, z ktorého je vidieť vysoké štíty. Na chate sme si dali čaj a borovičkový koláč. Ocko nám ukázal Kriváň, ktorý je symbolom Slovákov. Večer sme boli unavení, ale šťastní.',
+    q: ['Do ktorých hôr išla rodina?|do Vysokých Tatier|do Pienin;do Malej Fatry', 'Akým dopravným prostriedkom išli na Štrbské pleso?|električkou|loďou;lietadlom', 'Ktorý štít je symbolom Slovákov?|Kriváň|Gerlachovský štít;Chopok'] },
+  { id: 'r4-robot', g: 4, icon: '🤖', title: 'Školský robot', text: 'Na krúžku robotiky sme postavili malého robota. Mal kolesá, senzor na prekážky a blikajúce oči. Najprv sme ho naprogramovali, aby išiel rovno. Potom sme pridali príkaz, aby sa otočil, keď narazí na stenu. Robot zablúdil iba raz a skončil pod lavicou. Na súťaži sme so svojím robotom získali tretie miesto.',
+    q: ['Na akom krúžku postavili robota?|na krúžku robotiky|na futbale;na speve', 'Čo urobil robot, keď narazil na stenu?|otočil sa|zastal navždy;zaspieval', 'Ktoré miesto získali na súťaži?|tretie|prvé;posledné'] }
+);
 const READ = Object.fromEntries(READS.map(r => [r.id, r]));
