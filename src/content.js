@@ -92,6 +92,7 @@ const MATH = [
 ];
 
 /* ===== Slovenčina ===== */
+const ABC_FULL = 'A Á Ä B C Č D Ď DZ DŽ E É F G H CH I Í J K L Ĺ Ľ M N Ň O Ó Ô P Q R Ŕ S Š T Ť U Ú V W X Y Ý Z Ž'.split(' ');
 const ABC1 = ['A', 'B', 'C', 'Č', 'D', 'Ď', 'DZ', 'DŽ', 'E', 'F', 'G', 'H', 'CH', 'I', 'J', 'K', 'L', 'Ľ', 'M', 'N', 'Ň', 'O', 'P', 'R', 'S', 'Š', 'T', 'Ť', 'U', 'V', 'Y', 'Z', 'Ž'];
 const PICS = '🐱|mačka,🐶|pes,🍎|jablko,🐟|ryba,🌞|slnko,🏠|dom,🚗|auto,🐘|slon,🦉|sova,🐭|myš,🌳|strom,🐻|medveď,🍌|banán,🦆|kačka,🐸|žaba,🐝|včela,🥕|mrkva,⚽|lopta,🐰|zajac,🦊|líška,🐴|kôň,🍐|hruška,🔑|kľúč,🌙|mesiac,🐌|slimák,🚂|vlak,🎈|balón,🐢|korytnačka,🦒|žirafa,🍋|citrón,🐓|kohút,🧀|syr,🥚|vajce,🐑|ovca,🦔|jež,🐍|had,🍇|hrozno,🐞|lienka,🌷|tulipán,🍉|melón,🐧|tučniak,🦁|lev,🐄|krava,☂️|dáždnik,📚|kniha,✏️|ceruzka,🦋|motýľ,🏰|hrad,🍦|zmrzlina,🦀|rak,🍄|hríb,🎁|darček,🐐|koza,⭐|hviezda,🍞|chlieb,🧦|ponožka,👑|koruna,🚲|bicykel,🐿️|veverička,🌹|ruža'.split(',').map(s => s.split('|'));
 const firstLetter = w => w.toLowerCase().startsWith('ch') ? 'CH' : w.toLowerCase().startsWith('dz') ? (w[2] === 'ž' ? 'DŽ' : 'DZ') : w[0].toUpperCase();
@@ -118,7 +119,7 @@ function spellVariants(word) {
 const SJL = [
   /* 1. ročník */
   { id: 's1-pismeno', g: 1, name: 'Prvé písmeno', icon: '🔤', gen() { const [e, w] = pick(PICS); const L = firstLetter(w); const L0 = L.length; return { q: 'Na aké písmeno začína toto slovo?', html: `<div class="bigemoji">${e}</div><div class="caption">${'?'.repeat(1)}${w.slice(L0)}</div>`, speak: `${w}. Na aké písmeno začína slovo ${w}?`, a: L, w: shuffle(ABC1.filter(x => x !== L)).slice(0, 3), ex: `${cap(w)} začína na písmeno ${L}.` }; }, pex: () => shuffle(PICS).slice(0, 6).map(([e, w]) => [e, w]) },
-  { id: 's1-abeceda', g: 1, name: 'Abeceda', icon: '🅰️', gen() { const i = R(0, ABC1.length - 2); const L = ABC1[i], a = ABC1[i + 1]; return Math.random() < .5 ? { q: `Ktoré písmeno je v abecede hneď za písmenom ${L}?`, a, w: shuffle(ABC1.filter(x => x !== a && x !== L)).slice(0, 3), ex: `… ${L}, ${a} …` } : { q: `Ktoré písmeno je v abecede tesne pred písmenom ${a}?`, a: L, w: shuffle(ABC1.filter(x => x !== a && x !== L)).slice(0, 3), ex: `… ${L}, ${a} …` }; } },
+  { id: 's1-abeceda', g: 1, name: 'Abeceda', icon: '🅰️', gen() { const A = ABC_FULL; const i = R(0, A.length - 4); const row = A.slice(i, i + 4); const miss = R(1, 3); const a = row[miss]; const w = shuffle(A.filter(x => x !== a && !row.includes(x)).slice(Math.max(0, i - 3), i + 8)).slice(0, 3); return { q: 'Ktoré písmeno chýba v rade?', html: `<div class="abcrow">${row.map((x, k) => k === miss ? '<span class="slot">?</span>' : `<span>${x}</span>`).join('')}</div><div class="hint">Písmená idú za sebou ako v abecede.</div>`, speak: 'Ktoré písmeno chýba v rade? Písmená idú za sebou ako v abecede.', a, w, ex: `V abecede idú za sebou: ${row.join(', ')}.` }; } },
   { id: 's1-slabiky', g: 1, name: 'Slabiky', icon: '👏', gen() { const s = pick(SYL); const n = s.split('-').length; return { q: `Koľko slabík má slovo „${s.replace(/-/g, '')}“?`, a: n, w: [1, 2, 3, 4, 5].filter(x => x !== n).slice(0, 3), ex: `${s.toUpperCase().replace(/-/g, ' – ')} (${n})`, speak: `Koľko slabík má slovo ${s.replace(/-/g, '')}? Vytlieskaj si ho.` }; } },
   { id: 's1-hlasky', g: 1, type: 'cat', name: 'Samohlásky a spoluhlásky', icon: '🗣️', prompt: 'Písmeno {x} je…', choices: ['samohláska', 'spoluhláska'], items: 'A|samohláska,E|samohláska,I|samohláska,O|samohláska,U|samohláska,Y|samohláska,M|spoluhláska,B|spoluhláska,S|spoluhláska,T|spoluhláska,L|spoluhláska,P|spoluhláska,K|spoluhláska,V|spoluhláska,D|spoluhláska,R|spoluhláska,Ž|spoluhláska,N|spoluhláska', ex: 'Samohlásky sú a, e, i, o, u, y (aj dlhé á, é, í, ó, ú, ý).' },
   { id: 's1-velke', g: 1, type: 'qa', name: 'Veľké písmeno', icon: '🔠', items: 'Ktoré slovo píšeme s veľkým písmenom?|Peter|pes;stôl;lopta,Ktoré slovo píšeme s veľkým písmenom?|Bratislava|mesto;ulica;rieka,Ktoré slovo píšeme s veľkým písmenom?|Zuzka|mačka;kniha;lavica,Ktoré slovo píšeme s veľkým písmenom?|Dunaj|voda;more;potok,Ktoré slovo píšeme s veľkým písmenom?|Slovensko|krajina;dedina;hora,Ktoré slovo píšeme s veľkým písmenom?|Tatry|kopec;skala;les,Ktoré slovo píšeme s veľkým písmenom?|Miško|chlapec;kamarát;brat,Ktoré slovo píšeme s veľkým písmenom?|Košice|dom;škola;obchod,Ako píšeme prvé písmeno na začiatku vety?|veľké|malé;tlačené;žiadne,Čo dáme na koniec oznamovacej vety?|bodku|čiarku;otáznik;pomlčku', ex: 'Mená ľudí, zvierat, miest, riek a hôr píšeme s veľkým začiatočným písmenom.' },
@@ -166,6 +167,15 @@ function topicItems(t) {
   const raw = typeof t.items === 'function' ? t.items() : t.items.split(',').map(s => s.split('|'));
   return raw;
 }
+function autoEx(q) {
+  const m = q.text.replace(/ /g, '').match(/^(\d+) ([+−·:]) (\d+) = \?$/);
+  if (m) { const x = +m[1], y = +m[3], r = q.raw; const op = m[2];
+    if (op === '+') return y <= 10 && x <= 20 ? `${x} + ${y} = ${r}. Tip: začni pri čísle ${x} a pripočítaj ${y}.` : `${x} + ${y} = ${r}. Tip: sčítaj najprv desiatky, potom jednotky.`;
+    if (op === '−') return x <= 20 ? `${x} − ${y} = ${r}. Tip: od ${x} odpočítaj ${y} (môžeš si pomôcť prstami).` : `${x} − ${y} = ${r}. Skúška: ${r} + ${y} = ${x}.`;
+    if (op === '·') return `${x} · ${y} = ${r}. Znamená to ${x}-krát ${y}${x <= 5 ? ': ' + Array(x).fill(y).join(' + ') : ''}.`;
+    if (op === ':') return `${x} : ${y} = ${r}, lebo ${r} · ${y} = ${x}.`; }
+  return '';
+}
 function makeQuestion(t, mode) {
   let q;
   if (t.gen) {
@@ -191,6 +201,7 @@ function makeQuestion(t, mode) {
     const [w, c, full] = pick(topicItems(t));
     q = { text: 'Doplň správne písmeno:', html: `<div class="bigword">${w.replace('_', '<span class="slot">_</span>')}</div>`, speak: 'Doplň správne písmeno.', answer: c, options: t.choices.slice(), keep: t.choices, ex: `Správne: ${full}. ${t.ex || ''}`, full };
   }
+  if (!q.ex) q.ex = autoEx(q);
   q.key = q.text + q.html + q.answer;
   q.options = q.keep ? q.keep.slice() : shuffle([...new Set(q.options)]);
   if (q.numeric && mode === 'quiz' && Math.random() < .4) q.input = true;

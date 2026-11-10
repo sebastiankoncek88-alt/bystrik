@@ -443,6 +443,30 @@ body.calcopen .view{padding-bottom:60vh}
 .bkcode{width:100%;min-height:90px;font:12px/1.3 ui-monospace,monospace;border:2px solid var(--edge);border-radius:12px;padding:8px;background:var(--paper2);color:var(--ink);word-break:break-all;margin-bottom:10px}
 .bkrestore{display:flex;flex-direction:column;gap:8px;padding:10px 0}
 .blinkdot{display:inline-block;width:12px;height:12px;border-radius:50%;background:var(--bad);margin-left:6px;vertical-align:middle;animation:pulse 1s infinite}
+.opt.picked,.padshow.picked{background:var(--lilac);color:#fff;animation:yay .35s}
+.tlog{padding:14px;display:flex;flex-direction:column;gap:8px}
+.tlog h2{font-size:1.3rem}
+.tl{display:flex;flex-direction:column;gap:2px;padding:8px 10px;border-radius:14px;border:2px solid var(--line);font-weight:700;font-size:.9rem}
+.tl.ok{background:var(--good-soft)} .tl.no{background:var(--bad-soft)}
+.abcrow{display:flex;gap:8px;justify-content:center}
+.abcrow span{width:58px;height:66px;border-radius:14px;border:2.5px solid var(--edge);background:var(--paper2);display:grid;place-items:center;font-family:var(--f-display);font-weight:800;font-size:2rem;box-shadow:0 3px 0 var(--drop)}
+.abcrow .slot{background:var(--sun-soft);border-bottom:2.5px solid var(--edge);color:var(--accent)}
+.notescard{display:flex;align-items:center;gap:14px;padding:16px;background:linear-gradient(135deg,#7FC8FF,#9C7CF4 60%,#F25C8B);color:#fff;text-align:left;width:100%;position:relative;overflow:hidden}
+.notescard .ic{font-size:2.8rem;line-height:1;animation:wig 2.6s infinite}
+.notescard b{font-family:var(--f-display);font-size:1.4rem;display:block;text-shadow:0 2px 0 rgba(0,0,0,.15)}
+.notescard .b{color:#fff;opacity:.95}
+.nhead{display:flex;align-items:center;gap:12px}
+.nhead .nb{width:80px;height:80px;flex:none} .nhead .nb svg{width:100%;height:100%}
+.nbtns{display:flex;flex-wrap:wrap;gap:8px} .nbtns .btn{flex:1 1 120px}
+.nbusy{display:flex;gap:12px;align-items:center;padding:12px}
+.nbusy img{width:90px;height:90px;object-fit:cover;border-radius:14px;border:2px solid var(--edge);animation:pulse 1.6s infinite}
+.nbusy div{display:flex;flex-direction:column;gap:4px}
+.notecard{padding:14px;display:flex;flex-direction:column;gap:8px}
+.notecard ul{margin:0;padding-left:20px;font-weight:700;line-height:1.5}
+.notecard h2{font-size:1.2rem}
+.remotebar{position:sticky;top:0;z-index:30;display:flex;align-items:center;gap:10px;justify-content:space-between;padding:10px 16px;background:var(--sun);color:#2A2650;font-weight:800;font-size:.85rem;border-bottom:2.5px solid var(--edge)}
+.readonly .ptform,.readonly .bkbtns,.readonly .bkcode,.readonly [data-a="parent-lock"],.readonly [data-a="pt-del"],.readonly [data-a="del-rec"],.readonly [data-a="pdel-ask"]{display:none!important}
+.readonly button:not([data-a="psel"]):not([data-a="play-rec"]){pointer-events:none;opacity:.6}
 /* top bar */
 .top{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;display:flex;align-items:center;gap:10px;padding:10px max(16px,env(safe-area-inset-right,0px)) 10px max(16px,env(safe-area-inset-left,0px));background:color-mix(in srgb,var(--g1) 70%,transparent);backdrop-filter:blur(10px)}
 .headbub{width:48px;height:48px;border-radius:50%;border:2.5px solid var(--edge);overflow:hidden;flex:none;background:var(--paper)}
@@ -547,7 +571,7 @@ body.calcopen .view{padding-bottom:60vh}
 .chip.on{background:var(--ink);color:var(--bg)}
 
 /* subject */
-.modepick{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:8px}
+.modepick{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
 .mp{display:flex;flex-direction:column;align-items:center;gap:2px;padding:10px 2px 8px;border-radius:18px;border:2.5px solid var(--edge);background:var(--paper);box-shadow:0 4px 0 var(--drop);font-family:var(--f-display);font-weight:800;font-size:.78rem;line-height:1.05;text-align:center}
 .mp .mi{font-size:1.7rem;line-height:1;transition:transform .3s cubic-bezier(.3,1.8,.5,1)}
 .mp.on{background:var(--sun);color:#2A2650;transform:translateY(-3px)} .mp.on .mi{transform:scale(1.2) rotate(-8deg)}
@@ -945,6 +969,7 @@ const MATH = [
 ];
 
 /* ===== Slovenčina ===== */
+const ABC_FULL = 'A Á Ä B C Č D Ď DZ DŽ E É F G H CH I Í J K L Ĺ Ľ M N Ň O Ó Ô P Q R Ŕ S Š T Ť U Ú V W X Y Ý Z Ž'.split(' ');
 const ABC1 = ['A', 'B', 'C', 'Č', 'D', 'Ď', 'DZ', 'DŽ', 'E', 'F', 'G', 'H', 'CH', 'I', 'J', 'K', 'L', 'Ľ', 'M', 'N', 'Ň', 'O', 'P', 'R', 'S', 'Š', 'T', 'Ť', 'U', 'V', 'Y', 'Z', 'Ž'];
 const PICS = '🐱|mačka,🐶|pes,🍎|jablko,🐟|ryba,🌞|slnko,🏠|dom,🚗|auto,🐘|slon,🦉|sova,🐭|myš,🌳|strom,🐻|medveď,🍌|banán,🦆|kačka,🐸|žaba,🐝|včela,🥕|mrkva,⚽|lopta,🐰|zajac,🦊|líška,🐴|kôň,🍐|hruška,🔑|kľúč,🌙|mesiac,🐌|slimák,🚂|vlak,🎈|balón,🐢|korytnačka,🦒|žirafa,🍋|citrón,🐓|kohút,🧀|syr,🥚|vajce,🐑|ovca,🦔|jež,🐍|had,🍇|hrozno,🐞|lienka,🌷|tulipán,🍉|melón,🐧|tučniak,🦁|lev,🐄|krava,☂️|dáždnik,📚|kniha,✏️|ceruzka,🦋|motýľ,🏰|hrad,🍦|zmrzlina,🦀|rak,🍄|hríb,🎁|darček,🐐|koza,⭐|hviezda,🍞|chlieb,🧦|ponožka,👑|koruna,🚲|bicykel,🐿️|veverička,🌹|ruža'.split(',').map(s => s.split('|'));
 const firstLetter = w => w.toLowerCase().startsWith('ch') ? 'CH' : w.toLowerCase().startsWith('dz') ? (w[2] === 'ž' ? 'DŽ' : 'DZ') : w[0].toUpperCase();
@@ -971,7 +996,7 @@ function spellVariants(word) {
 const SJL = [
   /* 1. ročník */
   { id: 's1-pismeno', g: 1, name: 'Prvé písmeno', icon: '🔤', gen() { const [e, w] = pick(PICS); const L = firstLetter(w); const L0 = L.length; return { q: 'Na aké písmeno začína toto slovo?', html: `<div class="bigemoji">${e}</div><div class="caption">${'?'.repeat(1)}${w.slice(L0)}</div>`, speak: `${w}. Na aké písmeno začína slovo ${w}?`, a: L, w: shuffle(ABC1.filter(x => x !== L)).slice(0, 3), ex: `${cap(w)} začína na písmeno ${L}.` }; }, pex: () => shuffle(PICS).slice(0, 6).map(([e, w]) => [e, w]) },
-  { id: 's1-abeceda', g: 1, name: 'Abeceda', icon: '🅰️', gen() { const i = R(0, ABC1.length - 2); const L = ABC1[i], a = ABC1[i + 1]; return Math.random() < .5 ? { q: `Ktoré písmeno je v abecede hneď za písmenom ${L}?`, a, w: shuffle(ABC1.filter(x => x !== a && x !== L)).slice(0, 3), ex: `… ${L}, ${a} …` } : { q: `Ktoré písmeno je v abecede tesne pred písmenom ${a}?`, a: L, w: shuffle(ABC1.filter(x => x !== a && x !== L)).slice(0, 3), ex: `… ${L}, ${a} …` }; } },
+  { id: 's1-abeceda', g: 1, name: 'Abeceda', icon: '🅰️', gen() { const A = ABC_FULL; const i = R(0, A.length - 4); const row = A.slice(i, i + 4); const miss = R(1, 3); const a = row[miss]; const w = shuffle(A.filter(x => x !== a && !row.includes(x)).slice(Math.max(0, i - 3), i + 8)).slice(0, 3); return { q: 'Ktoré písmeno chýba v rade?', html: `<div class="abcrow">${row.map((x, k) => k === miss ? '<span class="slot">?</span>' : `<span>${x}</span>`).join('')}</div><div class="hint">Písmená idú za sebou ako v abecede.</div>`, speak: 'Ktoré písmeno chýba v rade? Písmená idú za sebou ako v abecede.', a, w, ex: `V abecede idú za sebou: ${row.join(', ')}.` }; } },
   { id: 's1-slabiky', g: 1, name: 'Slabiky', icon: '👏', gen() { const s = pick(SYL); const n = s.split('-').length; return { q: `Koľko slabík má slovo „${s.replace(/-/g, '')}“?`, a: n, w: [1, 2, 3, 4, 5].filter(x => x !== n).slice(0, 3), ex: `${s.toUpperCase().replace(/-/g, ' – ')} (${n})`, speak: `Koľko slabík má slovo ${s.replace(/-/g, '')}? Vytlieskaj si ho.` }; } },
   { id: 's1-hlasky', g: 1, type: 'cat', name: 'Samohlásky a spoluhlásky', icon: '🗣️', prompt: 'Písmeno {x} je…', choices: ['samohláska', 'spoluhláska'], items: 'A|samohláska,E|samohláska,I|samohláska,O|samohláska,U|samohláska,Y|samohláska,M|spoluhláska,B|spoluhláska,S|spoluhláska,T|spoluhláska,L|spoluhláska,P|spoluhláska,K|spoluhláska,V|spoluhláska,D|spoluhláska,R|spoluhláska,Ž|spoluhláska,N|spoluhláska', ex: 'Samohlásky sú a, e, i, o, u, y (aj dlhé á, é, í, ó, ú, ý).' },
   { id: 's1-velke', g: 1, type: 'qa', name: 'Veľké písmeno', icon: '🔠', items: 'Ktoré slovo píšeme s veľkým písmenom?|Peter|pes;stôl;lopta,Ktoré slovo píšeme s veľkým písmenom?|Bratislava|mesto;ulica;rieka,Ktoré slovo píšeme s veľkým písmenom?|Zuzka|mačka;kniha;lavica,Ktoré slovo píšeme s veľkým písmenom?|Dunaj|voda;more;potok,Ktoré slovo píšeme s veľkým písmenom?|Slovensko|krajina;dedina;hora,Ktoré slovo píšeme s veľkým písmenom?|Tatry|kopec;skala;les,Ktoré slovo píšeme s veľkým písmenom?|Miško|chlapec;kamarát;brat,Ktoré slovo píšeme s veľkým písmenom?|Košice|dom;škola;obchod,Ako píšeme prvé písmeno na začiatku vety?|veľké|malé;tlačené;žiadne,Čo dáme na koniec oznamovacej vety?|bodku|čiarku;otáznik;pomlčku', ex: 'Mená ľudí, zvierat, miest, riek a hôr píšeme s veľkým začiatočným písmenom.' },
@@ -1019,6 +1044,15 @@ function topicItems(t) {
   const raw = typeof t.items === 'function' ? t.items() : t.items.split(',').map(s => s.split('|'));
   return raw;
 }
+function autoEx(q) {
+  const m = q.text.replace(/ /g, '').match(/^(\d+) ([+−·:]) (\d+) = \?$/);
+  if (m) { const x = +m[1], y = +m[3], r = q.raw; const op = m[2];
+    if (op === '+') return y <= 10 && x <= 20 ? `${x} + ${y} = ${r}. Tip: začni pri čísle ${x} a pripočítaj ${y}.` : `${x} + ${y} = ${r}. Tip: sčítaj najprv desiatky, potom jednotky.`;
+    if (op === '−') return x <= 20 ? `${x} − ${y} = ${r}. Tip: od ${x} odpočítaj ${y} (môžeš si pomôcť prstami).` : `${x} − ${y} = ${r}. Skúška: ${r} + ${y} = ${x}.`;
+    if (op === '·') return `${x} · ${y} = ${r}. Znamená to ${x}-krát ${y}${x <= 5 ? ': ' + Array(x).fill(y).join(' + ') : ''}.`;
+    if (op === ':') return `${x} : ${y} = ${r}, lebo ${r} · ${y} = ${x}.`; }
+  return '';
+}
 function makeQuestion(t, mode) {
   let q;
   if (t.gen) {
@@ -1044,6 +1078,7 @@ function makeQuestion(t, mode) {
     const [w, c, full] = pick(topicItems(t));
     q = { text: 'Doplň správne písmeno:', html: `<div class="bigword">${w.replace('_', '<span class="slot">_</span>')}</div>`, speak: 'Doplň správne písmeno.', answer: c, options: t.choices.slice(), keep: t.choices, ex: `Správne: ${full}. ${t.ex || ''}`, full };
   }
+  if (!q.ex) q.ex = autoEx(q);
   q.key = q.text + q.html + q.answer;
   q.options = q.keep ? q.keep.slice() : shuffle([...new Set(q.options)]);
   if (q.numeric && mode === 'quiz' && Math.random() < .4) q.input = true;
@@ -1573,6 +1608,114 @@ for (const t of MORE_SJL) { SJL.push(t); const x = { ...t, s: 'sjl' }; ALL_TOPIC
 const AREAS = { bio: { i: '🌿', n: 'Príroda' }, geo: { i: '🗺️', n: 'Slovensko a svet' }, anj: { i: '🇬🇧', n: 'Angličtina' } };
 const AREA_OF = { 'p1-obdobia': 'bio', 'p1-telo': 'bio', 'p1-mlad': 'bio', 'p1-ovocie': 'bio', 'p1-cesta': 'geo', 'p2-kalendar': 'geo', 'p2-zvierata': 'bio', 'p2-rastliny': 'bio', 'p2-povolania': 'geo', 'p2-voda': 'bio', 'p3-zivocichy': 'bio', 'p3-les': 'bio', 'p3-voda': 'bio', 'p3-materialy': 'bio', 'p3-mapa': 'geo', 'p3-obec': 'geo', 'p4-vesmir': 'bio', 'p4-telo': 'bio', 'p4-priroda': 'bio', 'p4-slovensko': 'geo', 'p4-kraje': 'geo', 'p4-susedia': 'geo', 'p4-historia': 'geo' };
 for (const t of PRV) { const a = t.type === 'vocab' ? 'anj' : (AREA_OF[t.id] || 'bio'); t.area = a; TOPIC[t.id].area = a; }
+/* ===== Ďalšie učivo 2 ===== */
+const ORD = ['prvé', 'druhé', 'tretie', 'štvrté', 'piate'];
+const MATH3 = [
+  { id: 'm1-dj', g: 1, name: 'Desiatky a jednotky', icon: '🧱', gen() { const n = R(10, 20); const j = n - 10; const f = (d, k) => `${d} D a ${k} J`; return { q: `Koľko desiatok a jednotiek má číslo ${n}?`, a: f(n === 20 ? 2 : 1, n === 20 ? 0 : j), w: [...new Set([f(j, 1), f(1, j + 1), f(0, n)])].filter(x => x !== f(n === 20 ? 2 : 1, n === 20 ? 0 : j)).slice(0, 3), ex: 'D = desiatky, J = jednotky. Napríklad 14 = 1 desiatka a 4 jednotky.' }; } },
+  { id: 'm1-parne', g: 1, name: 'Párne a nepárne', icon: '👫', gen() { const n = R(1, 20); return { q: `Je číslo ${n} párne alebo nepárne?`, a: n % 2 ? 'nepárne' : 'párne', w: [n % 2 ? 'párne' : 'nepárne'], ex: 'Párne čísla sa dajú rozdeliť na dve rovnaké skupiny: 2, 4, 6, 8, 10…' }; } },
+  { id: 'm1-poradie', g: 1, name: 'Na ktorom mieste?', icon: '🏁', gen() { const e = shuffle(['🐸', '🐶', '🐱', '🐰', '🐻', '🦊', '🐼']).slice(0, 5); const i = R(0, 4); return { q: `Na ktorom mieste je ${e[i]}? (počítaj zľava)`, html: `<div class="countgrid" style="max-width:none">${e.map(x => `<span>${x}</span>`).join('')}</div>`, a: ORD[i], w: shuffle(ORD.filter((_, k) => k !== i)).slice(0, 3), speak: `Na ktorom mieste je zvieratko? Počítaj zľava.`, ex: `Počítame zľava: prvé, druhé, tretie… ${e[i]} je ${ORD[i]}.` }; } },
+  { id: 'm2-dj', g: 2, name: 'Desiatky a jednotky do 100', icon: '🧱', gen() { const d = R(1, 9), j = R(0, 9), n = d * 10 + j; return Math.random() < .5 ? { q: `Koľko desiatok má číslo ${n}?`, a: d, ex: `${n} = ${d} desiatok a ${j} jednotiek` } : { q: `${d} D + ${j} J = ?`, a: n, ex: `${d} desiatok = ${d * 10}, plus ${j} = ${n}` }; } },
+  { id: 'm2-porov', g: 2, name: 'Porovnávanie do 100', icon: '⚖️', gen() { let a = R(10, 99), b = Math.random() < .2 ? a : R(10, 99); let L = String(a), Rr = String(b); if (Math.random() < .4) { const x = R(1, Math.min(9, a - 1)); L = `${a - x} + ${x}`; } const s = a > b ? '>' : a < b ? '<' : '='; return { q: 'Ktorý znak patrí do krúžku?', html: `<div class="bigeq small">${L} <span class="slot">?</span> ${Rr}</div>`, a: s, w: ['<', '>', '='].filter(x => x !== s), speak: `${L} a ${Rr}. Ktorý znak patrí medzi ne?`, ex: `${a} ${s} ${b}` }; } },
+  { id: 'm2-utvary', g: 2, type: 'qa', name: 'Útvary a ich strany', icon: '🔷', ex: 'Spočítaj strany alebo rohy útvaru prstom.', items: lines(`
+    Koľko strán má štvorec?|4|3;5;6
+    Koľko strán má trojuholník?|3|4;2;5
+    Koľko vrcholov má obdĺžnik?|4|3;5;8
+    Ktorý útvar nemá žiadne rohy?|kruh|štvorec;trojuholník;obdĺžnik
+    Ktorý útvar má všetky strany rovnako dlhé?|štvorec|obdĺžnik;kruh;ovál
+    Čím meriame dĺžku úsečky?|pravítkom|váhou;hodinami;teplomerom
+    Koľko strán má päťuholník?|5|4;6;3
+    Aký tvar má minca?|kruh|štvorec;trojuholník;obdĺžnik`) },
+  { id: 'm3-nasob10', g: 3, name: 'Násobenie a delenie 10 a 100', icon: '🔟', gen() { const t = R(0, 3); if (t === 0) { const a = R(2, 99); return { q: `${a} · 10 = ?`, a: a * 10, ex: 'Pri násobení 10 pripíšeme jednu nulu.' }; } if (t === 1) { const a = R(2, 9); return { q: `${a} · 100 = ?`, a: a * 100, ex: 'Pri násobení 100 pripíšeme dve nuly.' }; } if (t === 2) { const a = R(2, 99) * 10; return { q: `${a} : 10 = ?`, a: a / 10, ex: 'Pri delení 10 škrtneme jednu nulu.' }; } const a = R(2, 9) * 100; return { q: `${a} : 100 = ?`, a: a / 100, ex: 'Pri delení 100 škrtneme dve nuly.' }; } },
+  { id: 'm3-porov', g: 3, name: 'Porovnávanie do 1 000', icon: '⚖️', gen() { const a = R(100, 999); const b = Math.random() < .15 ? a : (Math.random() < .5 ? a + pick([-100, -10, -1, 1, 10, 100]) : R(100, 999)); const bb = Math.max(100, Math.min(999, b)); const s = a > bb ? '>' : a < bb ? '<' : '='; return { q: 'Ktorý znak patrí do krúžku?', html: `<div class="bigeq small">${a} <span class="slot">?</span> ${bb}</div>`, a: s, w: ['<', '>', '='].filter(x => x !== s), speak: `${a} a ${bb}. Ktorý znak patrí medzi ne?`, ex: 'Porovnávame najprv stovky, potom desiatky a nakoniec jednotky.' }; } },
+  { id: 'm3-trvanie', g: 3, name: 'Ako dlho to trvá?', icon: '⏱️', gen() { const h = R(7, 17); const m1 = pick([0, 15, 30]); const d = pick([15, 30, 45, 60, 90]); const tm = h * 60 + m1 + d; const f = t => `${Math.floor(t / 60)}:${String(t % 60).padStart(2, '0')}`; if (Math.random() < .5) return { q: `Začiatok o ${f(h * 60 + m1)}, koniec o ${f(tm)}. Koľko minút to trvalo?`, a: d, ex: `Od ${f(h * 60 + m1)} do ${f(tm)} je ${d} minút.` }; const a = f(tm); const w = [...new Set([f(tm + 15), f(tm - 15), f(tm + 60), f(h * 60 + m1 + 30)])].filter(x => x !== a).slice(0, 3); return { q: `Film začal o ${f(h * 60 + m1)} a trval ${d} minút. Kedy skončil?`, a, w, ex: `${f(h * 60 + m1)} + ${d} min = ${a}` }; } },
+  { id: 'm4-delenie', g: 4, name: 'Písomné delenie', icon: '➗', gen() { const d = R(2, 9), q = R(12, 99); return { q: `${d * q} : ${d} = ?`, a: q, ex: `Skúška: ${q} · ${d} = ${d * q}` }; } },
+  { id: 'm4-zaokr', g: 4, name: 'Zaokrúhľovanie veľkých čísel', icon: '🎯', gen() { const n = R(1001, 99999); const k = pick([10, 100, 1000]); const a = Math.round(n / k) * k; const w = [...new Set([a + k, a - k, Math.floor(n / k) * k === a ? Math.ceil(n / k) * k : Math.floor(n / k) * k])].filter(x => x !== a && x > 0).slice(0, 3); while (w.length < 3) w.push(a + k * (w.length + 2)); return { q: `Zaokrúhli číslo ${fmt(n)} na ${{ 10: 'desiatky', 100: 'stovky', 1000: 'tisícky' }[k]}.`, a: fmt(a), w: w.map(fmt), ex: 'Pozri sa na číslicu napravo od miesta, na ktoré zaokrúhľuješ: 0–4 nadol, 5–9 nahor.' }; } },
+  { id: 'm4-dvakroky', g: 4, name: 'Slovné úlohy na dva kroky', icon: '🧾', gen() { const [n, f] = pick(KIDS); const t = R(0, 2); if (t === 0) { const c = R(3, 15), k = R(2, 5), a = c * k + R(5, 40); return { q: `${n} ${f ? 'mala' : 'mal'} ${a} €. ${f ? 'Kúpila' : 'Kúpil'} si ${k} knihy po ${c} €. Koľko eur ${f ? 'jej' : 'mu'} zostalo?`, a: a - c * k, ex: `${k} · ${c} = ${c * k}, potom ${a} − ${c * k} = ${a - c * k}` }; } if (t === 1) { const r = R(3, 9), p = R(4, 12), m = R(2, r * p - 1); return { q: `V sále je ${r} radov po ${p} stoličiek. Obsadených je ${m}. Koľko stoličiek je voľných?`, a: r * p - m, ex: `${r} · ${p} = ${r * p}, potom ${r * p} − ${m} = ${r * p - m}` }; } const a = R(20, 60), b = R(10, 40), d = R(2, 4); const s = (a + b) - ((a + b) % d); return { q: `V košíku je ${a} jabĺk a ${s - a} hrušiek. Ovocie rozdelíme rovnako do ${d} misiek. Koľko kusov bude v jednej miske?`, a: s / d, ex: `${a} + ${s - a} = ${s}, potom ${s} : ${d} = ${s / d}` }; } }
+];
+const SJL3 = [
+  { id: 's1-rymy', g: 1, type: 'qa', name: 'Rýmy', icon: '🎵', ex: 'Rýmujú sa slová, ktoré na konci znejú rovnako: pes – les.', items: lines(`
+    Čo sa rýmuje so slovom „pes“?|les|mačka;dom;ruka
+    Čo sa rýmuje so slovom „dom“?|hrom|pes;lopta;stôl
+    Čo sa rýmuje so slovom „mačka“?|kačka|myš;stromček;pes
+    Čo sa rýmuje so slovom „ryba“?|chyba|voda;more;sova
+    Čo sa rýmuje so slovom „hora“?|nora|kopec;les;skala
+    Čo sa rýmuje so slovom „kvet“?|svet|lúka;tráva;ruža
+    Čo sa rýmuje so slovom „vlak“?|mrak|auto;koľaj;stanica
+    Čo sa rýmuje so slovom „mak“?|rak|chlieb;kvet;pole
+    Čo sa rýmuje so slovom „žaba“?|baba|jazero;mucha;potok
+    Čo sa rýmuje so slovom „myška“?|šiška|mačka;syr;diera`) },
+  { id: 's1-veta', g: 1, type: 'qa', name: 'Správne napísaná veta', icon: '✏️', ex: 'Veta začína veľkým písmenom a končí bodkou, otáznikom alebo výkričníkom.', items: lines(`
+    Ktorá veta je napísaná správne?|Mama varí obed.|mama varí obed.;Mama varí obed
+    Ktorá veta je napísaná správne?|Pes beží.|pes beží.;Pes beží
+    Ktorá veta je napísaná správne?|Ema má loptu.|ema má loptu.;Ema má loptu
+    Ktorá veta je napísaná správne?|Kde je mačka?|kde je mačka?;Kde je mačka.
+    Ktorá veta je napísaná správne?|Ideme do školy.|ideme do školy.;Ideme do školy
+    Ktorá veta je napísaná správne?|Tomáš píše.|tomáš píše.;Tomáš píše`) },
+  { id: 's2-dvojhlasky', g: 2, type: 'fill', name: 'Doplň dvojhlásku', icon: '🔠', choices: ['ia', 'ie', 'iu', 'ô'], items: () => lines(`
+    k_ň|ô|kôň
+    st_l|ô|stôl
+    n_ž|ô|nôž
+    v_ňa|ô|vôňa
+    m_sto|ie|miesto
+    l_tadlo|ie|lietadlo
+    b_ly|ie|biely
+    ml_ko|ie|mlieko
+    pr_teľ|ia|priateľ
+    č_pka|ia|čiapka
+    ľud_|ia|ľudia
+    pát_|ia|pátia`)().filter(x => x[0] !== 'pát_'), ex: 'Dvojhlásky sú ia, ie, iu, ô.' },
+  { id: 's2-slabiky', g: 2, type: 'qa', name: 'Delenie slov na slabiky', icon: '✂️', ex: 'Slovo si vytlieskaj. Každá slabika má samohlásku alebo dvojhlásku.', items: () => lines(`
+    Ktoré delenie na slabiky je správne?|la-vi-ca|lav-i-ca;la-vic-a
+    Ktoré delenie na slabiky je správne?|ja-ho-da|jah-o-da;ja-hod-a
+    Ktoré delenie na slabiky je správne?|čo-ko-lá-da|čok-o-lá-da;čo-kol-á-da
+    Ktoré delenie na slabiky je správne?|pa-pa-gáj|pap-a-gáj;pa-pag-áj
+    Ktoré delenie na slabiky je správne?|te-le-ví-zor|tel-e-ví-zor;te-lev-í-zor
+    Ktoré delenie na slabiky je správne?|po-mo-ranč|pom-o-ranč;po-mor-anč
+    Ktoré delenie na slabiky je správne?|ko-le-so|kol-e-so;ko-les-o
+    Ktoré delenie na slabiky je správne?|ba-bič-ka|bab-ič-ka;ba-bi-čka`)().filter(x => !x[1].includes('po-mo')) },
+  { id: 's3-pribuzne', g: 3, type: 'qa', name: 'Príbuzné slová', icon: '🌳', items: lines(`
+    Ktoré slovo je príbuzné so slovom „ryba“?|rybár|rýchly;rytier;ryža
+    Ktoré slovo je príbuzné so slovom „syn“?|synovec|sýkorka;syr;sypať
+    Ktoré slovo je príbuzné so slovom „býk“?|býčok|byt;bylina;bystrý
+    Ktoré slovo je príbuzné so slovom „syr“?|syrový|syn;sýty;syčať
+    Ktoré slovo je príbuzné so slovom „mydlo“?|mydlový|myš;mýliť;myslieť
+    Ktoré slovo je príbuzné so slovom „jazyk“?|jazykový|jazero;jahoda;jaskyňa
+    Ktoré slovo je príbuzné so slovom „vysoký“?|výška|vydra;výr;vyť
+    Ktoré slovo je príbuzné so slovom „kobyla“?|kobylka|kopyto;kolobežka;koberec`), ex: 'Príbuzné slová majú spoločný základ, preto sa píšu s rovnakým y.' },
+  { id: 's3-spravne', g: 3, name: 'Ktoré slovo je správne?', icon: '🔍', gen() { const [, , w] = pick(vyb(['b', 'm', 'p', 'r', 's', 'v', 'z'])); const v = spellVariants(w); return { q: 'Ktoré slovo je napísané správne?', a: w, w: v.filter(x => x !== w), ex: `Správne je ${w}. Po obojakej spoluhláske píšeme y len vo vybraných a príbuzných slovách.` }; } },
+  { id: 's4-osoba', g: 4, type: 'cat', name: 'Osoba slovies', icon: '🙋', prompt: 'Sloveso „{x}“ je v…', choices: ['1. osobe', '2. osobe', '3. osobe'], items: 'píšem|1. osobe,čítame|1. osobe,spievam|1. osobe,skáčeme|1. osobe,beháš|2. osobe,píšeš|2. osobe,čítate|2. osobe,kreslíte|2. osobe,píše|3. osobe,behá|3. osobe,čítajú|3. osobe,skáču|3. osobe,spí|3. osobe', ex: '1. osoba: ja, my. 2. osoba: ty, vy. 3. osoba: on, ona, ono, oni.' },
+  { id: 's4-vlastne', g: 4, type: 'cat', name: 'Vlastné a všeobecné mená', icon: '🏙️', prompt: '„{x}“ je…', choices: ['vlastné podstatné meno', 'všeobecné podstatné meno'], items: 'Bratislava|vlastné podstatné meno,Dunaj|vlastné podstatné meno,Peter|vlastné podstatné meno,Tatry|vlastné podstatné meno,Slovensko|vlastné podstatné meno,Bodka (meno psa)|vlastné podstatné meno,Košice|vlastné podstatné meno,mesto|všeobecné podstatné meno,rieka|všeobecné podstatné meno,chlapec|všeobecné podstatné meno,hory|všeobecné podstatné meno,krajina|všeobecné podstatné meno,pes|všeobecné podstatné meno,škola|všeobecné podstatné meno', ex: 'Vlastné mená (mená ľudí, zvierat, miest, riek, hôr) píšeme s veľkým začiatočným písmenom.' }
+];
+for (const t of MATH3) { MATH.push(t); const x = { ...t, s: 'mat' }; ALL_TOPICS.push(x); TOPIC[t.id] = x; }
+for (const t of SJL3) { SJL.push(t); const x = { ...t, s: 'sjl' }; ALL_TOPICS.push(x); TOPIC[t.id] = x; }
+
+/* ===== Všeobecný prehľad do dennej výzvy (ľahké otázky) ===== */
+const GK = { id: 'gk', g: 0, s: 'prv', type: 'qa', name: 'Svet okolo nás', icon: '🌈', items: lines(`
+    Koľko nôh má slon?|4|2;6;8
+    Koľko nôh má pavúk?|8|6;4;10
+    Koľko nôh má mravec?|6|4;8;2
+    Koľko nôh má sliepka?|2|4;6;3
+    Ktoré zviera má dlhý chobot?|slon|žirafa;kôň;medveď
+    Ktoré zviera má najdlhší krk?|žirafa|slon;zebra;tiger
+    Ktoré zviera mňaučí?|mačka|pes;krava;koza
+    Čo nám dáva krava?|mlieko|vajcia;med;vlnu
+    Čo nám dávajú včely?|med|mlieko;vajcia;vlnu
+    Koľko kolies má bicykel?|2|3;4;1
+    Koľko kolies má auto?|4|2;3;6
+    Akej farby je zrelý banán?|žltý|modrý;fialový;čierny
+    Akej farby je tráva?|zelená|červená;modrá;žltá
+    Kde žijú ryby?|vo vode|na strome;v piesku;v oblakoch
+    Čo potrebujeme, keď prší?|dáždnik|slnečné okuliare;plavky;sánky
+    Koľko hodín má jeden deň?|24|12;10;60
+    Ktorý mesiac je v roku prvý?|január|marec;december;september
+    Ktorý vták nevie lietať a žije v Antarktíde?|tučniak|orol;vrabec;lastovička
+    Z čoho rastie strom?|zo semienka|z kameňa;z piesku;z ľadu
+    Čo svieti na oblohe cez deň?|Slnko|Mesiac;hviezdy;lampa
+    Koľko dní má týždeň?|7|5;10;12
+    Kto lieči choré zvieratá?|veterinár|pekár;pilot;krajčír
+    Čo robí medveď v zime?|spí|pláva;opeľuje kvety;odletí
+    Ktoré ovocie je červené a rastie na kríčku pri zemi?|jahoda|banán;citrón;slivka`) };
+TOPIC.gk = GK;
 /* ===== Čítanka: krátke texty s otázkami ===== */
 const READS = [
   { id: 'r1-mica', g: 1, icon: '🐱', title: 'Mačka Mica', text: 'Mama má mačku Micu. Mica je malá a biela. Rada pije mlieko. Ema sa s Micou hrá s loptou.',
@@ -1669,7 +1812,7 @@ const CATALOG = {
   pet: [
     { id: 'nic', n: 'Žiadne' }, { id: 'medved', n: 'Macko', e: '🐻' }, { id: 'pes', n: 'Psík', e: '🐶' }, { id: 'macka', n: 'Mačička', e: '🐱' }, { id: 'zajac', n: 'Zajko', e: '🐰' }, { id: 'skrecok', n: 'Škrečok', e: '🐹' }, { id: 'zaba', n: 'Žabka', e: '🐸' },
     { id: 'panda', n: 'Panda', e: '🐼', lvl: 4 }, { id: 'koala', n: 'Koala', e: '🐨', lvl: 6 }, { id: 'liska', n: 'Líštička', e: '🦊', streak: 7 }, { id: 'opica', n: 'Opička', e: '🐵', lvl: 8 }, { id: 'tiger', n: 'Tigrík', e: '🐯', lvl: 10 },
-    { id: 'sova', n: 'Sovička', e: '🦉', lvl: 12 }, { id: 'lev', n: 'Levík', e: '🦁', lvl: 14 }, { id: 'dino', n: 'Dino', e: '🦖', lvl: 16 }, { id: 'tucniak', n: 'Tučniak', e: '🐧', lvl: 18 }, { id: 'drak', n: 'Dráčik', e: '🐲', lvl: 20 }, { id: 'jednorozec', n: 'Jednorožec', e: '🦄', streak: 21, g: 'd' }, { id: 'motyl', n: 'Motýlik', e: '🦋', price: 50 }, { id: 'korytnacka', n: 'Korytnačka', e: '🐢', price: 60 }, { id: 'jezko', n: 'Ježko', e: '🦔', price: 70 }, { id: 'papagaj', n: 'Papagáj', e: '🦜', price: 90 }, { id: 'chobotnica', n: 'Chobotnička', e: '🐙', price: 100 }, { id: 'delfin', n: 'Delfín', e: '🐬', price: 120 }, { id: 'zirafa', n: 'Žirafa', e: '🦒', price: 120 }, { id: 'plameniak', n: 'Plameniak', e: '🦩', price: 200 }, { id: 'dinosaurus', n: 'Brontosaurus', e: '🦕', price: 250 }, { id: 'pav', n: 'Páv', e: '🦚', price: 280 }, { id: 'velryba', n: 'Veľryba', e: '🐳', price: 300 }, { id: 'zralok', n: 'Žralok', e: '🦈', streak: 21, g: 'c' }
+    { id: 'sova', n: 'Sovička', e: '🦉', lvl: 12 }, { id: 'lev', n: 'Levík', e: '🦁', lvl: 14 }, { id: 'dino', n: 'Dino', e: '🦖', lvl: 16 }, { id: 'tucniak', n: 'Tučniak', e: '🐧', lvl: 18 }, { id: 'drak', n: 'Dráčik', e: '🐲', lvl: 20 }, { id: 'jednorozec', n: 'Jednorožec', e: '🦄', streak: 21, g: 'd' }, { id: 'motyl', n: 'Motýlik', e: '🦋', lvl: 3 }, { id: 'korytnacka', n: 'Korytnačka', e: '🐢', lvl: 5 }, { id: 'jezko', n: 'Ježko', e: '🦔', lvl: 7 }, { id: 'papagaj', n: 'Papagáj', e: '🦜', lvl: 9 }, { id: 'chobotnica', n: 'Chobotnička', e: '🐙', lvl: 11 }, { id: 'delfin', n: 'Delfín', e: '🐬', lvl: 13 }, { id: 'zirafa', n: 'Žirafa', e: '🦒', lvl: 15 }, { id: 'plameniak', n: 'Plameniak', e: '🦩', lvl: 17 }, { id: 'dinosaurus', n: 'Brontosaurus', e: '🦕', lvl: 19 }, { id: 'pav', n: 'Páv', e: '🦚', lvl: 20 }, { id: 'velryba', n: 'Veľryba', e: '🐳', lvl: 20 }, { id: 'zralok', n: 'Žralok', e: '🦈', streak: 21, g: 'c' }
   ],
   bgp: [{ id: 'nic', n: 'Jednofarebné' }, { id: 'bodky', n: 'Bodky' }, { id: 'pruhy', n: 'Pruhy' }, { id: 'hviezdy', n: 'Hviezdičky' }, { id: 'srdce', n: 'Srdiečka' }, { id: 'kvety', n: 'Kvietky' }, { id: 'oblaky', n: 'Obláčiky' }, { id: 'duha', n: 'Dúha' }, { id: 'vesmir', n: 'Vesmír' }],
   skin: SKIN.map((c, i) => ({ id: 'k' + i, c })),
@@ -2256,7 +2399,8 @@ const MODES = {
   cards: { i: '🃏', n: 'Kartičky', d: 'Pozri sa na kartičku, skús si odpoveď a otoč ju. Takto sa učivo zapamätá.' },
   match: { i: '🔗', n: 'Spájačka', d: 'Spoj, čo k sebe patrí. Pri skupinách slov ich roztrieďuješ do košíkov.' },
   pex: { i: '🧩', n: 'Pexeso', d: 'Otáčaj kartičky a hľadaj dvojice, ktoré k sebe patria.' },
-  time: { i: '⏱️', n: 'Na čas', d: 'Koľko správnych odpovedí stihneš za 60 sekúnd?' }
+  time: { i: '⏱️', n: 'Na čas', d: 'Koľko správnych odpovedí stihneš za 60 sekúnd?' },
+  test: { i: '📝', n: 'Test', d: 'Skutočný test: 10 otázok bez pomôcok a bez nápovedy. Správne odpovede a vysvetlenia uvidíš až na konci.' }
 };
 const AVAIL = {};
 function avail(t) {
@@ -2312,12 +2456,13 @@ VIEWS.learn = () => {
   const card = k => { const ts = SUBJECTS[k].topics.filter(t => t.g === p.grade); const st = ts.reduce((a, t) => a + (p.topics[t.id]?.stars || 0), 0); const max = ts.length * 3; const d = { mat: ['1+2', 'Počty, násobilka, geometria, slovné úlohy', '➗'], sjl: ['Aa', 'Písmená, y/i, vybrané slová, slovné druhy', '✏️'], prv: ['🌍', '🌿 Príroda · 🗺️ Slovensko a svet · 🇬🇧 Angličtina', '🔭'] }[k]; return `<button class="card lsubj ${k} press" data-a="subject" data-s="${k}"><span class="big">${d[0]}</span><span class="lt"><b>${SUBJECTS[k].name}</b><span>${d[1]}</span><span class="pbar"><i style="width:${max ? st / max * 100 : 0}%"></i></span><small>⭐ ${st} / ${max} hviezd · ${ts.length} tém</small></span><span class="deco">${d[2]}</span></button>`; };
   return `${topbar()}<main class="view pop-in"><div><h1 style="font-size:2rem">Učenie</h1><p class="muted b">Vyber si predmet. Učivo je pre ${p.grade}. ročník, iný ročník si vyberieš v predmete.</p></div>${card('mat')}${card('sjl')}${card('prv')}
   <button class="card readcard press" data-a="nav" data-v="reads"><span class="ic">📖</span><span><b>Čítanka</b><span class="b" style="font-size:.9rem">Prečítaj príbeh nahlas a odpovedz na otázky</span></span></button>
-  <button class="card daily press ${dd ? 'done' : ''}" data-a="daily"><span class="ic">${dd ? '✅' : '🎯'}</span><span><b>${dd ? 'Denná výzva splnená!' : 'Denná výzva'}</b><span class="b" style="font-size:.9rem">${dd ? 'Môžeš si ju zahrať znova.' : '10 otázok zo všetkých predmetov · +50 bodov'}</span></span></button></main>${nav('learn')}`;
+  <button class="card notescard press" data-a="nav" data-v="notes"><span class="ic">📸</span><span><b>Moje poznámky</b><span class="b" style="font-size:.9rem">Odfoť zošit, Bystrík ti spraví zhrnutie a kvíz</span></span></button>
+  <button class="card daily press ${dd ? 'done' : ''}" data-a="daily"><span class="ic">${dd ? '✅' : '🎯'}</span><span><b>${dd ? 'Denná výzva splnená!' : 'Denná výzva'}</b><span class="b" style="font-size:.9rem">${dd ? 'Môžeš si ju zahrať znova.' : 'Opakovanie toho, čo si nedávno precvičoval(a), a ľahké otázky o svete · +50 bodov'}</span></span></button></main>${nav('learn')}`;
 };
 /* --- obchod --- */
 let SHOPCAT = 'all', SHOPSEL = null;
-const SHOPCATS = [['all', 'Všetko'], ['top', '👕 Oblečenie'], ['shoes', '👟 Topánky'], ['acc', '🎩 Doplnky'], ['pet', '🐾 Zvieratká']];
-function shopItems(p) { const out = []; for (const c of ['top', 'shoes', 'acc', 'pet']) for (const it of CATALOG[c]) if (it.price && (!it.g || it.g === p.av.gender)) out.push([c, it]); return out.sort((a, b) => a[1].price - b[1].price); }
+const SHOPCATS = [['all', 'Všetko'], ['top', '👕 Oblečenie'], ['shoes', '👟 Topánky'], ['acc', '🎩 Doplnky']];
+function shopItems(p) { const out = []; for (const c of ['top', 'shoes', 'acc']) for (const it of CATALOG[c]) if (it.price && (!it.g || it.g === p.av.gender)) out.push([c, it]); return out.sort((a, b) => a[1].price - b[1].price); }
 const SHOP_DAYS = 2, DAYMS = 86400000;
 function shopPeriod() { const d = new Date(); return Math.floor(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()) / DAYMS / SHOP_DAYS); }
 function shopMs() { const d = new Date(); const now = Date.UTC(d.getFullYear(), d.getMonth(), d.getDate(), d.getHours(), d.getMinutes(), d.getSeconds()); return Math.max(0, (shopPeriod() + 1) * SHOP_DAYS * DAYMS - now); }
@@ -2327,7 +2472,7 @@ function shopLeft() { const d = new Date(); const now = Date.UTC(d.getFullYear()
 function shopPremium(p) { const rnd = seeded('prem' + shopPeriod() + p.id); return shopItems(p).filter(([, it]) => it.price >= 200 && !p.owned.includes(it.sid)).sort(() => rnd() - .5).slice(0, 2); }
 function shopOffer(p) {
   const rnd = seeded('shop' + shopPeriod() + p.id); const all = shopItems(p).filter(([, it]) => it.price < 200 && !p.owned.includes(it.sid)).sort(() => rnd() - .5);
-  const out = []; for (const c of ['top', 'shoes', 'acc', 'pet']) { const x = all.find(([cc]) => cc === c); if (x) out.push(x); }
+  const out = []; for (const c of ['top', 'shoes', 'acc']) { const x = all.find(([cc]) => cc === c); if (x) out.push(x); }
   for (const x of all) { if (out.length >= 6) break; if (!out.includes(x)) out.push(x); }
   return out.sort((a, b) => a[1].price - b[1].price);
 }
@@ -2491,7 +2636,7 @@ VIEWS.home = () => {
   const dd = p.dailyDone === today();
   return `${topbar()}<main class="view pop-in">${stage}${ptaskCard(p)}${streak}${taskCard}
   <div style="display:flex;flex-direction:column;gap:8px"><div class="sec"><h2>Učenie</h2><span class="eyebrow">${p.grade}. ročník</span></div><div class="subjects">${subj('mat')}${subj('sjl')}${subj('prv')}</div><p class="muted b" style="font-size:.85rem">Prehľad: príroda, Slovensko a svet okolo nás a angličtina.</p></div>
-  <button class="card daily press ${dd ? 'done' : ''}" data-a="daily"><span class="ic">${dd ? '✅' : '🎯'}</span><span><b>${dd ? 'Denná výzva splnená!' : 'Denná výzva'}</b><span class="b" style="font-size:.9rem">${dd ? 'Môžeš si ju zahrať znova, len tak pre radosť.' : '10 otázok zo všetkých predmetov · +50 bodov'}</span></span></button>
+  <button class="card daily press ${dd ? 'done' : ''}" data-a="daily"><span class="ic">${dd ? '✅' : '🎯'}</span><span><b>${dd ? 'Denná výzva splnená!' : 'Denná výzva'}</b><span class="b" style="font-size:.9rem">${dd ? 'Môžeš si ju zahrať znova, len tak pre radosť.' : 'Opakovanie toho, čo si nedávno precvičoval(a), a ľahké otázky o svete · +50 bodov'}</span></span></button>
   <button class="card readcard press" data-a="nav" data-v="reads"><span class="ic">📖</span><span><b>Čítanka</b><span class="b" style="font-size:.9rem">Krátke príbehy na čítanie nahlas · rodič si ťa vypočuje</span></span></button>
   <div class="tiles2"><button class="card tile2 games press" data-a="nav" data-v="games"><span class="i">🎈</span><b>Minihry</b><span>Balóny, slovný dážď a Pravda či nie</span></button>${CHAT_ON() ? `<button class="card tile2 chat press" data-a="nav" data-v="chat"><span class="i">🧸</span><b>Opýtaj sa Bystríka</b><span>Vysvetlí ti, čomu nerozumieš</span></button>` : `<button class="card tile2 chat press" data-a="nav" data-v="wardrobe"><span class="i">👕</span><b>Šatník</b><span>Obleč si svoju postavičku</span></button>`}</div>
   ${nextL ? `<button class="card next press" data-a="nav" data-v="rewards"><span class="thumb">${itemThumb(nr[0][0], nr[0][1], p.av)}</span><span style="min-width:0"><span class="eyebrow">Ďalšia odmena · level ${nextL}</span><b style="display:block;font-family:var(--f-display);font-size:1.1rem;line-height:1.15">${nr.map(x => rewardName(...x)).join(', ')}</b><span class="muted b" style="font-size:.88rem">Chýba ti ešte ${toNext} bodov</span></span></button>` : ''}
@@ -2516,6 +2661,42 @@ function ptaskCard(p) {
   const act = (p.ptasks || []).filter(t => !t.done && TOPIC[t.topic]); if (!act.length) return '';
   return `<section class="card ptasks"><div class="sec"><h2>📋 Úlohy od rodiča</h2></div>${act.map(t => `<div class="task"><span class="ck">${TOPIC[t.topic].icon}</span><div class="tt">Získaj ${'⭐'.repeat(t.stars)} v téme ${TOPIC[t.topic].name}<div class="muted" style="font-size:.78rem">${SUBJECTS[TOPIC[t.topic].s].name} · odmena +${t.coins} ${COIN}</div></div><button class="claim press" data-a="pt-go" data-id="${t.topic}">Ísť na to</button></div>`).join('')}</section>`;
 }
+let NOTE = { busy: false, err: '', preview: '' };
+function noteTopic(n) { const t = { id: 'note-' + n.id, g: 0, s: 'prv', type: 'qa', name: n.title, icon: '📸', items: () => n.qs.map(x => [x.q, x.a, x.w.join(';'), x.ex || '']) }; TOPIC[t.id] = t; return t; }
+function registerNotes() { DATA.profiles.forEach(p => (p.notes || []).forEach(noteTopic)); }
+VIEWS.notes = () => {
+  const p = P(); const on = CHAT_ON();
+  return `${topbar('learn-back')}<main class="view"><div class="nhead"><span class="nb">${bearSvg(NOTE.busy ? '' : 'cheer')}</span><div><h1 style="font-size:1.8rem">Moje poznámky</h1><p class="muted b" style="font-size:.9rem">Odfoť si poznámky zo zošita. Bystrík ich zhrnie do bodov a spraví z nich kvíz alebo test.</p></div></div>
+  ${on ? `<div class="nbtns"><button class="btn primary" data-a="note-cam" ${NOTE.busy ? 'disabled' : ''}>📸 Odfotiť poznámky</button><button class="btn" data-a="note-pick" ${NOTE.busy ? 'disabled' : ''}>🖼️ Vybrať fotku</button></div><input type="file" id="notecam" accept="image/*" capture="environment" hidden><input type="file" id="notepick" accept="image/*" hidden>` : `<section class="card" style="padding:14px"><b>🧸 Táto funkcia potrebuje Bystríka (umelú inteligenciu).</b><p class="muted b" style="font-size:.88rem;margin-top:6px">Funguje v apke otvorenej v Claude a keď majú rodičia zapnutý „Chat s Bystríkom“.</p></section>`}
+  ${NOTE.busy ? `<section class="card nbusy">${NOTE.preview ? `<img src="${NOTE.preview}" alt="Fotka poznámok">` : ''}<div><b>Bystrík číta tvoje poznámky…</b><span class="typing"><i></i><i></i><i></i></span><span class="muted b" style="font-size:.82rem">Môže to trvať chvíľku.</span></div></section>` : ''}
+  ${NOTE.err ? `<section class="card" style="padding:12px;background:var(--bad-soft)"><b>😕 ${esc(NOTE.err)}</b></section>` : ''}
+  ${(p.notes || []).map(n => `<section class="card notecard"><div class="sec"><h2>📸 ${esc(n.title)}</h2><span class="eyebrow">${fmtTime(n.t)}</span></div><ul>${n.summary.map(x => `<li>${esc(x)}</li>`).join('')}</ul><div class="nbtns"><button class="btn small primary" data-a="note-quiz" data-id="${n.id}">❓ Kvíz</button><button class="btn small" data-a="note-test" data-id="${n.id}">📝 Test</button><button class="btn small" data-a="note-del" data-id="${n.id}" aria-label="Vymazať">🗑️</button></div></section>`).join('') || (NOTE.busy ? '' : '<p class="muted b" style="text-align:center">Zatiaľ nemáš žiadne poznámky. Odfoť si prvé! 📒</p>')}
+  </main>${nav('learn')}`;
+};
+AFTER.notes = () => { ['notecam', 'notepick'].forEach(id => { const f = $('#' + id); if (f) f.addEventListener('change', () => { const file = f.files && f.files[0]; if (file) processNote(file); }); }); };
+async function shrinkImage(file) {
+  try { const url = URL.createObjectURL(file); const img = await new Promise((res, rej) => { const i = new Image(); i.onload = () => res(i); i.onerror = rej; i.src = url; }); const k = Math.min(1, 1600 / Math.max(img.width, img.height)); const c = document.createElement('canvas'); c.width = Math.round(img.width * k); c.height = Math.round(img.height * k); c.getContext('2d').drawImage(img, 0, 0, c.width, c.height); URL.revokeObjectURL(url); return await new Promise(r => c.toBlob(r, 'image/jpeg', .85)); } catch (e) { return file; }
+}
+async function processNote(file) {
+  const p = P(); NOTE = { busy: true, err: '', preview: '' }; try { NOTE.preview = URL.createObjectURL(file); } catch (e) { } render(null); scrollTo({ top: 0, behavior: 'smooth' });
+  const fail = msg => { NOTE = { busy: false, err: msg, preview: '' }; if (UI.view === 'notes') render(null); sfx('no'); };
+  const sample = await getSample(); if (!sample) return fail('Bystrík teraz nemôže čítať fotky. Funguje to v apke otvorenej v Claude.');
+  try { const lim = await sample.limits(); if (!lim || !lim.images) return fail('Na tomto mieste sa fotky nedajú poslať Bystríkovi.'); } catch (e) { return fail('Na tomto mieste sa fotky nedajú poslať Bystríkovi.'); }
+  const blob = await shrinkImage(file);
+  const prompt = `Na fotke sú školské poznámky dieťaťa na 1. stupni ZŠ na Slovensku (${p.grade}. ročník). Prečítaj ich a odpovedz IBA jedným JSON objektom v tomto tvare:
+{"title":"krátky názov témy (max 4 slová)","summary":["bod 1","bod 2"],"questions":[{"q":"otázka","a":"správna odpoveď","w":["zlá 1","zlá 2","zlá 3"],"ex":"krátke vysvetlenie pre dieťa"}]}
+Pravidlá: všetko po slovensky, jednoducho a primerane veku. summary má 3 až 7 krátkych bodov. questions má 6 až 8 otázok, ktoré vychádzajú LEN z poznámok, odpovede sú krátke (najviac 5 slov), w obsahuje 3 rôzne nesprávne odpovede. Ak na fotke nie sú čitateľné školské poznámky, odpovedz {"error":"krátke vysvetlenie po slovensky"}.`;
+  try {
+    const r = await sample.json(prompt, { images: [blob], cache: false });
+    if (!r || r.error) return fail(r && r.error ? String(r.error) : 'Poznámky sa nepodarilo prečítať. Skús fotku spraviť ostrejšie a pri dobrom svetle.');
+    const qs = (Array.isArray(r.questions) ? r.questions : []).map(x => ({ q: String(x.q || '').trim(), a: String(x.a || '').trim(), w: [...new Set((Array.isArray(x.w) ? x.w : []).map(y => String(y).trim()).filter(y => y && y !== String(x.a || '').trim()))].slice(0, 3), ex: String(x.ex || '').trim() })).filter(x => x.q && x.a && x.w.length >= 2).slice(0, 8);
+    const summary = (Array.isArray(r.summary) ? r.summary : []).map(x => String(x).trim()).filter(Boolean).slice(0, 8);
+    if (qs.length < 3 || !summary.length) return fail('Z tejto fotky sa nedal spraviť kvíz. Skús odfotiť viac textu.');
+    const n = { id: Date.now().toString(36), t: Date.now(), title: String(r.title || 'Moje poznámky').slice(0, 40), summary, qs };
+    p.notes = [n, ...(p.notes || [])].slice(0, 10); noteTopic(n); p.stats.chat++; save();
+    NOTE = { busy: false, err: '', preview: '' }; if (UI.view === 'notes') render(null); sfx('level'); confetti(120); say('Hotovo! Tvoje poznámky som zhrnul do bodov a pripravil som ti kvíz.');
+  } catch (e) { fail(e && e.code === 'rate_limited' ? 'Bystrík si musí chvíľu oddýchnuť. Skús to o pár minút.' : e && e.code === 'not_granted' ? 'Bystrík nemá povolenie. Popros rodičov.' : 'Poznámky sa nepodarilo spracovať. Skús to znova.'); }
+}
 let PAREA = 'all';
 VIEWS.subject = ({ s, g }) => {
   const p = P(); g = g || p.grade; const S = SUBJECTS[s]; const m = p.mode[s] || 'quiz';
@@ -2533,7 +2714,7 @@ VIEWS.subject = ({ s, g }) => {
 function startMode(id) {
   const t = TOPIC[id]; const p = P(); const m = p.mode[t.s] || 'quiz'; const back = { v: 'subject', p: { s: t.s, g: t.g } };
   if (!modeOk(t, m)) { toast(`${MODES[m].n} v tejto téme nie je. Vyber iný spôsob hore.`); sfx('no'); return; }
-  if (m === 'quiz' || m === 'time') return startQuiz([id], m, back);
+  if (m === 'quiz' || m === 'time' || m === 'test') return startQuiz([id], m, back);
   if (m === 'cards') { const deck = topicCards(t); CD = { t: id, deck, total: deck.length, known: 0, xp: 0, back }; return go('cards', {}, 'u'); }
   if (m === 'pex') { let pairs = t.pex ? t.pex() : null; for (let k = 0; k < 5 && !pairs; k++) pairs = pexesoPairs(t); const tiles = shuffle(pairs.flatMap(([a, b], i) => [{ v: a, pair: i }, { v: b, pair: i }])); PX = { t: id, tiles, moves: 0, lock: false, back }; return go('pexeso', {}, 'u'); }
   if (m === 'match') {
@@ -2545,13 +2726,13 @@ function startMode(id) {
 
 /* --- kvíz --- */
 let Q = null;
-function startQuiz(topicIds, mode, back) {
-  Q = { topicIds, mode, back, i: 0, total: 10, correct: 0, combo: 0, seen: new Set(), xp: 0, cur: null, input: '', answered: false, left: 60 };
+function startQuiz(topicIds, mode, back, opts = {}) {
+  Q = { topicIds, mode, back, i: 0, total: opts.total || 10, seq: opts.seq || null, correct: 0, combo: 0, seen: new Set(), xp: 0, cur: null, input: '', answered: false, left: 60, tlog: [] };
   nextQ(); go('quiz', {}, 'u');
   if (mode === 'time') TIMERS.push(setInterval(() => { Q.left--; const el = $('.timer'); if (el) { el.textContent = Q.left + ' s'; el.classList.toggle('low', Q.left <= 10); } if (Q.left <= 10 && Q.left > 0) sfx('tick'); if (Q.left <= 0) { clearTimers(); finishQuiz(); } }, 1000));
 }
 function nextQ() {
-  const t = TOPIC[pick(Q.topicIds)]; let q;
+  const t = TOPIC[Q.seq ? Q.seq[Q.i % Q.seq.length] : pick(Q.topicIds)]; let q;
   for (let k = 0; k < 25; k++) { q = makeQuestion(t, Q.mode === 'time' ? 'time' : 'quiz'); if (!Q.seen.has(q.key)) break; }
   Q.seen.add(q.key); q.topic = t.id; q.s = t.s; Q.cur = q; Q.answered = false; Q.input = '';
 }
@@ -2570,7 +2751,7 @@ function qBody() {
   return `<div style="display:flex;flex-direction:column;gap:16px">${card}${ans}</div>`;
 }
 function syncPeek() {
-  const need = Q && Q.cur && (Q.cur.s === 'mat' || Q.cur.s === 'sjl'); let pk = $('.peek');
+  const need = Q && Q.cur && Q.mode !== 'test' && (Q.cur.s === 'mat' || Q.cur.s === 'sjl') && !String(Q.cur.topic).startsWith('note-'); let pk = $('.peek');
   if (pk && need && pk.dataset.s !== Q.cur.s) { pk.dataset.s = Q.cur.s; }
   if (need && !pk) {
     pk = document.createElement('button'); pk.className = 'peek peekbear'; pk.dataset.a = 'calc'; pk.dataset.s = Q.cur.s; pk.setAttribute('aria-label', 'Medvedík Bystrík s pomôckami'); pk.innerHTML = bearSvg(''); document.body.appendChild(pk);
@@ -2586,8 +2767,15 @@ function setMood(m) { const mini = $('#mini'); if (!mini) return; mini.innerHTML
 function answer(val, el) {
   if (Q.answered) return; Q.answered = true;
   const q = Q.cur, p = P(); const ok = q.input ? Number(val) === q.raw : val === q.answer;
+  if (Q.mode === 'test') {
+    const ts = topicStat(p, q.topic); ts.total++; p.stats.answered++; countDay(ok); bump(q.s);
+    if (ok) { ts.correct++; p.stats.correct++; Q.correct++; bump('correct'); Q.xp += 12; }
+    Q.tlog.push({ t: q.text, a: q.full || q.answer, g: q.input ? fmt(String(val)) : String(val), ok, ex: q.ex || '' });
+    sfx('tap'); if (q.input) $('#padshow').classList.add('picked'); else { const o = $('#opts'); if (o) o.classList.add('locked'); if (el) el.classList.add('picked'); }
+    TIMERS.push(setTimeout(() => { Q.i++; if (Q.i >= Q.total) return finishQuiz(); nextQ(); renderQ(); }, 450)); return;
+  }
   const ts = topicStat(p, q.topic); ts.total++; p.stats.answered++; countDay(ok); bump(q.s);
-  if (ok) { ts.correct++; p.stats.correct++; Q.correct++; Q.combo++; bump('correct'); const g = (Q.mode === 'time' ? 8 : 10) + (Q.combo >= 3 ? 2 : 0); Q.xp += g; sfx('ok'); buzz(15); floatXp(el, '+' + g); burst(el); setMood('happy'); const pk = $('.peek'); if (pk) { pk.classList.remove('happy'); void pk.offsetWidth; pk.classList.add('happy'); if (Math.random() < .5) peekSay(pick(PRAISE)); } if (Q.combo >= 3 && Q.combo % 3 === 0) confetti(40, .55); }
+  if (ok) { ts.correct++; p.stats.correct++; Q.correct++; Q.combo++; bump('correct'); let g = (Q.mode === 'time' ? 8 : 10) + (Q.combo >= 3 ? 2 : 0); if (q.calcUsed) g = Math.max(1, Math.round(g / 2)); Q.xp += g; sfx('ok'); buzz(15); floatXp(el, '+' + g + (q.calcUsed ? ' 🧮' : '')); burst(el); setMood('happy'); const pk = $('.peek'); if (pk) { pk.classList.remove('happy'); void pk.offsetWidth; pk.classList.add('happy'); if (Math.random() < .5) peekSay(pick(PRAISE)); } if (Q.combo >= 3 && Q.combo % 3 === 0) confetti(40, .55); }
   else { Q.combo = 0; sfx('no'); buzz([30, 40, 30]); setMood('sad'); }
   const cb = $('#combo'); if (cb) { cb.textContent = Q.combo >= 2 ? '🔥' + Q.combo : ''; if (ok && Q.combo >= 2) { cb.classList.remove('pop'); void cb.offsetWidth; cb.classList.add('pop'); } }
   if (q.sayAfter || q.speakLang) setTimeout(() => say(q.sayAfter || q.speak, 'en-GB'), 350);
@@ -2595,21 +2783,21 @@ function answer(val, el) {
   else { const opts = $('#opts'); opts.classList.add('locked'); opts.querySelectorAll('.opt').forEach(b => { const v = q.options[+b.dataset.i]; if (v === q.answer) b.classList.add('right'); else if (b === el) b.classList.add('wrong'); else b.classList.add('dim'); }); }
   if (Q.mode === 'time') { TIMERS.push(setTimeout(() => { if (!Q || Q.left <= 0 || UI.view !== 'quiz') return; Q.i++; nextQ(); renderQ(); }, ok ? 450 : 1100)); return; }
   const fb = document.createElement('div'); fb.className = 'fb ' + (ok ? 'ok' : 'no'); fb.id = 'fb';
-  fb.innerHTML = `<div class="in"><h3>${ok ? '✓ ' + pick(PRAISE) : '✗ ' + pick(COMFORT)}</h3>${!ok ? `<p>Správna odpoveď: <b>${esc(q.full || q.answer)}</b></p>` : ''}${q.ex && (!ok || q.full) ? `<p class="muted">${esc(q.ex)}</p>` : ''}<div id="explain"></div><div class="rowbtns" style="grid-template-columns:${!ok && CHAT_ON() ? '1fr 1fr' : '1fr'}">${!ok && CHAT_ON() ? '<button class="btn lilac" data-a="explain">🧸 Vysvetli mi to</button>' : ''}<button class="btn ${ok ? 'good' : 'primary'}" data-a="next">${Q.i + 1 >= Q.total ? 'Výsledok' : 'Ďalej'}</button></div></div>`;
+  fb.innerHTML = `<div class="in"><h3>${ok ? '✓ ' + pick(PRAISE) : '✗ ' + pick(COMFORT)}</h3>${ok && q.calcUsed ? '<p class="muted">🧮 Použil(a) si kalkulačku, preto len polovica bodov.</p>' : ''}${!ok && !q.ex ? `<p class="muted">💡 Zapamätaj si správnu odpoveď. Nabudúce to už budeš vedieť!</p>` : ''}${!ok ? `<p>Správna odpoveď: <b>${esc(q.full || q.answer)}</b></p>` : ''}${q.ex && (!ok || q.full) ? `<p class="muted">${esc(q.ex)}</p>` : ''}<div id="explain"></div><div class="rowbtns" style="grid-template-columns:${!ok && CHAT_ON() ? '1fr 1fr' : '1fr'}">${!ok && CHAT_ON() ? '<button class="btn lilac" data-a="explain">🧸 Vysvetli mi to</button>' : ''}<button class="btn ${ok ? 'good' : 'primary'}" data-a="next">${Q.i + 1 >= Q.total ? 'Výsledok' : 'Ďalej'}</button></div></div>`;
   document.body.appendChild(fb);
 }
 function nextStep() { const fb = $('#fb'); if (fb) fb.remove(); Q.i++; if (Q.i >= Q.total) return finishQuiz(); nextQ(); renderQ(); sfx('tap'); }
 function finishQuiz() {
   const fb = $('#fb'); if (fb) fb.remove(); clearTimers();
   const p = P(); const before = p.xp; let bonus = 0, stars = 0;
-  if (Q.mode === 'quiz' || Q.mode === 'daily') {
+  if (Q.mode === 'quiz' || Q.mode === 'daily' || Q.mode === 'test') {
     stars = Q.correct >= 10 ? 3 : Q.correct >= 8 ? 2 : Q.correct >= 5 ? 1 : 0; p.stats.quizzes++; bump('quizzes'); if (stars === 3) bump('stars3');
     if (Q.correct === 10) { p.stats.perfect++; bonus += 30; }
-    if (Q.mode === 'quiz') { const ts = topicStat(p, Q.topicIds[0]); ts.played++; ts.best = Math.max(ts.best, Q.correct); ts.stars = Math.max(ts.stars, stars); logAct('quiz', Q.topicIds[0], Q.correct, Q.total); checkPTasks(p, Q.topicIds[0], stars); }
+    if (Q.mode === 'quiz' || Q.mode === 'test') { const ts = topicStat(p, Q.topicIds[0]); ts.played++; ts.best = Math.max(ts.best, Q.correct); ts.stars = Math.max(ts.stars, stars); logAct('quiz', Q.topicIds[0], Q.correct, Q.total); checkPTasks(p, Q.topicIds[0], stars); }
     else { if (p.dailyDone !== today()) { p.dailyDone = today(); p.stats.daily++; bonus += 50; } bump('daily'); logAct('daily', null, Q.correct, Q.total); }
   } else { p.stats.bestTime = Math.max(p.stats.bestTime, Q.correct); const ts = topicStat(p, Q.topicIds[0]); ts.time = Math.max(ts.time || 0, Q.correct); bump('time'); logAct('time', Q.topicIds[0], Q.correct, Q.i + 1); }
   gain(p, Q.xp + bonus); touchStreak(p); checkBadges(p); save();
-  go('result', { kind: Q.mode, correct: Q.correct, total: Q.mode === 'time' ? Q.i + (Q.answered ? 1 : 0) : Q.total, stars, xp: Q.xp + bonus, bonus, before, after: p.xp, retry: Q.topicIds, back: Q.back }, 'u');
+  go('result', { tlog: Q.tlog, kind: Q.mode, correct: Q.correct, total: Q.mode === 'time' ? Q.i + (Q.answered ? 1 : 0) : Q.total, stars, xp: Q.xp + bonus, bonus, before, after: p.xp, retry: Q.topicIds, back: Q.back }, 'u');
 }
 async function explainQ() {
   const q = Q.cur; const box = $('#explain'); const btn = $('[data-a="explain"]'); if (btn) btn.remove();
@@ -2632,12 +2820,12 @@ VIEWS.result = r => {
           : r.kind === 'read' ? big('📖', 'Výborne si čítal(a)!', `<div class="score">Otázky: ${r.correct} z ${r.total} správne</div>`)
           : r.kind === 'game' ? big(GAMES[r.game].i, `${r.score} ${plural(r.score, 'bod', 'body', 'bodov')}!`, `<div class="score muted">Najlepšie: ${p.best[r.game] || 0}</div>`)
             : `<div class="bigstars">${[0, 1, 2].map(i => `<span class="${i < r.stars ? '' : 'off'}" style="animation-delay:${300 + i * 300}ms">⭐</span>`).join('')}</div><h1>${r.correct === 10 ? 'Dokonalé!' : r.correct >= 8 ? 'Výborne!' : r.correct >= 5 ? 'Dobrá práca!' : 'Ide to, trénuj ďalej!'}</h1><div class="score">${r.correct} z ${r.total} správne</div>`;
-  const good = r.kind === 'quiz' || r.kind === 'daily' ? r.stars >= 2 : true; const bsay = good ? pick(['Si úžasný!', 'Paráda, len tak ďalej!', 'Som na teba hrdý!', 'Výborne si to zvládol!']) : pick(['Nevadí, nabudúce to bude lepšie!', 'Skús to ešte raz, dáš to!', 'Každý sa učí, aj ja!']);
-  return `<main class="view nonav" style="justify-content:center"><div class="resbear ${good ? 'cheer' : 'comfort'}">${bearSvg(good ? 'cheer' : 'comfort')}<span class="rbub">${bsay}</span></div><section class="card result">${head}<div class="xpgain">+<span id="xpc">0</span> bodov · +${Math.max(1, Math.round(r.xp / 5))} ${COIN}${r.bonus ? ` <span class="muted" style="font-size:1rem">(bonus ${r.bonus})</span>` : ''}</div><div style="width:100%"><div style="display:flex;justify-content:space-between;font-weight:800"><span>Level <span id="lvn">${b.L}</span></span><span class="muted" id="lvt">${b.cur} / ${b.need}</span></div><div class="xpbar" style="height:18px"><i id="xpb" style="width:${b.pct}%"></i></div></div><div class="rowbtns"><button class="btn primary" data-a="res-back">✓ Hotovo</button><button class="btn" data-a="res-again">🔁 Skúsiť znova</button></div></section></main>`;
+  const good = r.kind === 'quiz' || r.kind === 'daily' || r.kind === 'test' ? r.stars >= 2 : true; const bsay = good ? pick(['Si úžasný!', 'Paráda, len tak ďalej!', 'Som na teba hrdý!', 'Výborne si to zvládol!']) : pick(['Nevadí, nabudúce to bude lepšie!', 'Skús to ešte raz, dáš to!', 'Každý sa učí, aj ja!']);
+  return `<main class="view nonav" style="justify-content:center"><div class="resbear ${good ? 'cheer' : 'comfort'}">${bearSvg(good ? 'cheer' : 'comfort')}<span class="rbub">${bsay}</span></div><section class="card result">${head}<div class="xpgain">+<span id="xpc">0</span> bodov · +${Math.max(1, Math.round(r.xp / 5))} ${COIN}${r.bonus ? ` <span class="muted" style="font-size:1rem">(bonus ${r.bonus})</span>` : ''}</div><div style="width:100%"><div style="display:flex;justify-content:space-between;font-weight:800"><span>Level <span id="lvn">${b.L}</span></span><span class="muted" id="lvt">${b.cur} / ${b.need}</span></div><div class="xpbar" style="height:18px"><i id="xpb" style="width:${b.pct}%"></i></div></div><div class="rowbtns"><button class="btn primary" data-a="res-back">✓ Hotovo</button><button class="btn" data-a="res-again">🔁 Skúsiť znova</button></div></section>${r.tlog && r.tlog.length && r.kind === 'test' ? `<section class="card tlog"><h2>📝 Výsledky testu</h2>${r.tlog.map((x, i) => `<div class="tl ${x.ok ? 'ok' : 'no'}"><b>${i + 1}. ${x.ok ? '✅' : '❌'} ${x.t}</b>${x.ok ? `<span>Tvoja odpoveď: ${esc(x.g)}</span>` : `<span>Tvoja odpoveď: <s>${esc(x.g)}</s></span><span>Správne: <b>${esc(x.a)}</b></span>${x.ex ? `<span class="muted">💡 ${esc(x.ex)}</span>` : ''}`}</div>`).join('')}</section>` : ''}</main>`;
 };
 AFTER.result = () => {
   const r = UI.params; const a = levelInfo(r.after), b = levelInfo(r.before);
-  if (r.kind === 'quiz' || r.kind === 'daily') { for (let i = 0; i < r.stars; i++) setTimeout(() => sfx('star', i), 300 + i * 300); if (r.stars === 3) setTimeout(() => confetti(140), 1100); } else setTimeout(() => confetti(90), 300);
+  if (r.kind === 'quiz' || r.kind === 'daily' || r.kind === 'test') { for (let i = 0; i < r.stars; i++) setTimeout(() => sfx('star', i), 300 + i * 300); if (r.stars === 3) setTimeout(() => confetti(140), 1100); } else setTimeout(() => confetti(90), 300);
   let n = 0; const step = Math.max(1, Math.ceil(r.xp / 30)); const iv = setInterval(() => { n = Math.min(r.xp, n + step); const el = $('#xpc'); if (!el) return clearInterval(iv); el.textContent = n; if (n >= r.xp) clearInterval(iv); }, 30);
   setTimeout(() => {
     const bar = $('#xpb'); if (!bar) return;
@@ -2926,6 +3114,7 @@ function openCalc() {
 }
 const fmtCalc = s => s === 'Chyba' ? s : (s.includes('.') ? s.replace('-', '−').replace('.', ',') : (s.startsWith('-') ? '−' + fmt(s.slice(1)) : fmt(s)));
 function calcKey(k) {
+  if (Q && UI.view === 'quiz' && Q.cur && !Q.answered && !Q.cur.calcUsed) { Q.cur.calcUsed = true; peekSay('S kalkulačkou dostaneš za tento príklad polovicu bodov.', 2600); }
   const c = CALC; sfx('tap');
   const num = () => parseFloat(c.cur) || 0;
   const comp = (a, op, b) => op === '+' ? a + b : op === '−' ? a - b : op === '×' ? a * b : b === 0 ? NaN : a / b;
@@ -2989,8 +3178,21 @@ async function readBackup(code) {
   if (code.startsWith('BYS1:')) { const bin = atob(code.slice(5)); const buf = new Uint8Array(bin.length); for (let i = 0; i < bin.length; i++) buf[i] = bin.charCodeAt(i); const ds = new Blob([buf]).stream().pipeThrough(new DecompressionStream('gzip')); return JSON.parse(await new Response(ds).text()); }
   throw new Error('bad');
 }
+function dailySeq(p) {
+  const since = Date.now() - 4 * DAYMS; const recent = [];
+  for (const l of p.log) { if (l.t < since) break; if (l.id && TOPIC[l.id] && TOPIC[l.id].g > 0 && !recent.includes(l.id)) recent.push(l.id); if (recent.length >= 3) break; }
+  const grade = ALL_TOPICS.filter(t => t.g === p.grade).map(t => t.id);
+  const base = recent.length ? recent : shuffle(grade).slice(0, 3);
+  const seq = [];
+  for (let i = 0; i < 5; i++) seq.push(base[i % base.length]);
+  for (let i = 0; i < 3; i++) seq.push('gk');
+  for (let i = 0; i < 2; i++) seq.push(pick(grade));
+  return shuffle(seq);
+}
 function giftsToday(p) { const t = today(); return (p.log || []).filter(l => l.k === 'gift' && dkey(new Date(l.t)) === t).length; }
-const KIND = { ptask: 'Splnená úloha od rodiča', gift: 'Odmena od rodiča', 'game-mole': 'Minihra Chyť škrečka', read: 'Čítanka – nahrávka', readq: 'Čítanka – otázky', quiz: 'Kvíz', time: 'Na čas', daily: 'Denná výzva', cards: 'Kartičky', pex: 'Pexeso', match: 'Spájačka', sort: 'Triedička', 'game-balloons': 'Minihra Balóny', 'game-rain': 'Minihra Slovný dážď', 'game-tf': 'Minihra Pravda či nie' };
+let VIEWDATA = null, PSEL_SAVED = null;
+VIEWS.remote = () => { const saved = DATA, ok = PARENT_OK; DATA = VIEWDATA; PARENT_OK = true; if (!DATA.profiles.find(x => x.id === PSEL)) PSEL = DATA.current || (DATA.profiles[0] && DATA.profiles[0].id); let html; try { html = VIEWS.parent(); } finally { DATA = saved; PARENT_OK = ok; } return `<div class="remotebar">👀 Len na pozretie: postup z iného zariadenia (záloha z ${fmtTime(VIEWDATA._at || Date.now())})<button class="btn small" data-a="remote-close">Zavrieť</button></div><div class="readonly">${html}</div>`; };
+const KIND = { test: 'Test', ptask: 'Splnená úloha od rodiča', gift: 'Odmena od rodiča', 'game-mole': 'Minihra Chyť škrečka', read: 'Čítanka – nahrávka', readq: 'Čítanka – otázky', quiz: 'Kvíz', time: 'Na čas', daily: 'Denná výzva', cards: 'Kartičky', pex: 'Pexeso', match: 'Spájačka', sort: 'Triedička', 'game-balloons': 'Minihra Balóny', 'game-rain': 'Minihra Slovný dážď', 'game-tf': 'Minihra Pravda či nie' };
 function fmtTime(t) { const d = new Date(t); const k = dkey(d); const hm = `${d.getHours()}:${String(d.getMinutes()).padStart(2, '0')}`; return k === today() ? `dnes ${hm}` : k === daysAgo(1) ? `včera ${hm}` : `${d.getDate()}. ${d.getMonth() + 1}. ${hm}`; }
 VIEWS.parent = () => {
   if (!PARENT_OK) { PIN = { mode: DATA.parent.pin ? 'enter' : 'create', val: '', first: '' }; UI.view = 'pin'; return VIEWS.pin(); }
@@ -3015,7 +3217,7 @@ VIEWS.parent = () => {
   <section class="card pcard"><span class="eyebrow">Treba precvičiť</span>${weak.length ? weak.map(topicLine).join('') : '<p class="muted b" style="padding:8px 0">Zatiaľ nič. Témy s úspešnosťou pod 70 % sa zobrazia tu.</p>'}</section>
   <section class="card pcard"><span class="eyebrow">Matematika – hviezdy podľa ročníkov</span>${subjProg('mat')}<span class="eyebrow">Slovenčina – hviezdy podľa ročníkov</span>${subjProg('sjl')}<span class="eyebrow">Prehľad (príroda, svet, angličtina) – hviezdy podľa ročníkov</span>${subjProg('prv')}</section>
   <section class="card pcard"><span class="eyebrow">História aktivít</span>${p.log.slice(0, 15).map(l => `<div class="statrow"><span>${KIND[l.k] || l.k}${l.id && TOPIC[l.id] ? ' · ' + TOPIC[l.id].name : ''}</span><b>${l.k === 'gift' || l.k === 'ptask' ? '+' + l.c + ' mincí' : l.k.startsWith('game') ? l.c + ' b.' : l.k === 'pex' ? l.n + ' ťahov' : `${l.c}/${l.n}`}</b><small>${fmtTime(l.t)}</small></div>`).join('') || '<p class="muted b" style="padding:8px 0">Zatiaľ prázdne.</p>'}</section>
-  ${backupCard()}<section class="card pcard"><span class="eyebrow">📋 Úlohy pre dieťa</span><p class="muted b" style="font-size:.85rem;padding:4px 0">Vyberte tému a koľko hviezd má dieťa v kvíze získať. Keď to splní, apka mu automaticky pridá mince.</p>
+  ${backupCard()}${UI.view === 'remote' ? '' : `<section class="card pcard"><span class="eyebrow">👀 Pozrieť postup z iného zariadenia</span><p class="muted b" style="font-size:.85rem;padding:4px 0">Na telefóne dieťaťa otvorte Rodičovský účet → „Skopírovať kód zálohy“ a pošlite si ho. Tu ho vložte a uvidíte, čo dieťa robilo. Nič sa tým tu neprepíše.</p><textarea id="rmcode" class="bkcode" placeholder="Sem vložte kód…"></textarea><button class="btn small primary" data-a="remote-open">👀 Zobraziť postup</button></section>`}<section class="card pcard"><span class="eyebrow">📋 Úlohy pre dieťa</span><p class="muted b" style="font-size:.85rem;padding:4px 0">Vyberte tému a koľko hviezd má dieťa v kvíze získať. Keď to splní, apka mu automaticky pridá mince.</p>
   <div class="ptform"><label>Téma<select id="pt-topic">${['mat', 'sjl', 'prv'].map(k => `<optgroup label="${SUBJECTS[k].name}">${SUBJECTS[k].topics.filter(t => t.g === p.grade).map(t => `<option value="${t.id}">${t.name}</option>`).join('')}</optgroup>`).join('')}</select></label><label>Hviezdy<select id="pt-stars"><option value="1">⭐ aspoň 5 z 10</option><option value="2" selected>⭐⭐ aspoň 8 z 10</option><option value="3">⭐⭐⭐ 10 z 10</option></select></label><label>Odmena<select id="pt-coins">${[5, 10, 15, 20].map(n => `<option value="${n}" ${n === 10 ? 'selected' : ''}>${n} mincí</option>`).join('')}</select></label><button class="btn primary small" data-a="pt-add">➕ Zadať úlohu</button></div>
   ${(p.ptasks || []).slice(0, 8).map(t => TOPIC[t.topic] ? `<div class="statrow"><span>${t.done ? '✅' : '⏳'} ${TOPIC[t.topic].name} · ${'⭐'.repeat(t.stars)}</span><b>${t.done ? 'splnené' : `<button class="chip" data-a="pt-del" data-id="${t.id}">Zrušiť</button>`}</b><small>+${t.coins} mincí${t.done ? ' · ' + fmtTime(t.done) : ''}</small></div>` : '').join('')}</section>
   <section class="card pcard"><span class="eyebrow">🎁 Odmeniť mincami</span><p class="muted b" style="font-size:.85rem;padding:4px 0">Pochváľte dieťa za snahu, domáce úlohy alebo pomoc doma. Mince si minie v obchode. Teraz má ${COIN} ${p.coins || 0}.</p>${(() => { const used = giftsToday(p); const left = 2 - used; return `<div class="chips" style="padding:4px 0 4px">${[5, 10, 15, 20].map(n => `<button class="chip" data-a="p-gift" data-n="${n}" ${left > 0 ? '' : 'disabled style="opacity:.45"'}>+${n} ${COIN}</button>`).join('')}</div><p class="b" style="font-size:.85rem;padding-bottom:8px;color:${left > 0 ? 'var(--muted)' : 'var(--bad)'}">${left > 0 ? `Dnes môžete odmeniť ešte ${left}×.` : 'Dnes ste už odmenili 2×. Ďalšia odmena bude možná zajtra.'}</p>`; })()}</section>
@@ -3051,7 +3253,7 @@ const ACT = {
   'grade-chip': d => { sfx('tap'); UI.params.g = +d.g; render(null); },
   topic: d => { sfx('tap'); startMode(d.id); },
   'close-sheet': () => closeSheet(),
-  daily: () => { const g = P().grade; sfx('tap'); startQuiz(ALL_TOPICS.filter(t => t.g === g).map(t => t.id), 'daily', { v: 'home', p: {} }); },
+  daily: () => { const p = P(); sfx('tap'); const seq = dailySeq(p); startQuiz([...new Set(seq)], 'daily', { v: 'home', p: {} }, { seq }); },
   ans: (d, el) => answer(Q.cur.options[+d.i], el),
   key: (d, el) => { if (Q.answered) return; const k = d.k; sfx('tap'); if (k === 'del') Q.input = Q.input.slice(0, -1); else if (k === 'ok') { if (Q.input) answer(Q.input, el); return; } else if (Q.input.length < 7) Q.input += k; $('#padshow').innerHTML = Q.input ? fmt(Q.input) : '&nbsp;'; },
   next: () => nextStep(), explain: () => explainQ(), speak: () => say(Q.cur.speak, Q.cur.speakLang),
@@ -3070,7 +3272,7 @@ const ACT = {
   drop: (d, el) => { if (GM.ended || el.classList.contains('popped')) return; const ok = d.good === '1'; el.style.background = ok ? 'var(--good)' : 'var(--bad)'; el.style.color = '#fff'; el.classList.add('popped'); setTimeout(() => el.remove(), 300); gHit(ok, el); },
   tf: (d, el) => { if (GM.ended || GM.lock) return; const ok = (d.v === '1') === GM.st.truth; GM.lock = true; gHit(ok, el); if (GM.ended) return; const c = $('#tfcard'); c.style.background = ok ? 'var(--good-soft)' : 'var(--bad-soft)'; $('#tfex').textContent = ok ? '✓ ' + pick(PRAISE) : '✗ ' + GM.st.ex; TIMERS.push(setTimeout(() => { if (GM.ended) return; GM.lock = false; GM.st = makeStatement(GM.g); c.style.background = ''; c.textContent = GM.st.text; c.classList.remove('enter'); void c.offsetWidth; c.classList.add('enter'); $('#tfex').innerHTML = '&nbsp;'; }, ok ? 500 : 1300)); },
   'res-back': () => { const r = UI.params; go(r.back.v, r.back.p, 'b'); },
-  'res-again': () => { const r = UI.params; if (r.kind === 'read') return go('reads', {}, 'b'); if (r.kind === 'game') return startGame(r.game); if (r.kind === 'quiz' || r.kind === 'time' || r.kind === 'daily') return startQuiz(r.retry, r.kind, r.back); startMode(r.retry[0]); },
+  'res-again': () => { const r = UI.params; if (r.kind === 'read') return go('reads', {}, 'b'); if (r.kind === 'game') return startGame(r.game); if (r.kind === 'test' || r.kind === 'quiz' || r.kind === 'time' || r.kind === 'daily') return startQuiz(r.retry, r.kind, r.back); startMode(r.retry[0]); },
   gift: (d, el) => { el.classList.add('open'); sfx('gift'); confetti(80, .4); setTimeout(() => { el.remove(); $('.over .rewards').hidden = false; $('[data-a="ov-wear"]').hidden = false; }, 450); },
   'ov-close': () => { $('.over')?.remove(); setTimeout(flushPending, 200); },
   'ov-wear': () => { $('.over')?.remove(); PENDING = []; go('wardrobe', {}, 'f'); },
@@ -3099,6 +3301,8 @@ const ACT = {
   'pt-add': () => { const p = DATA.profiles.find(x => x.id === PSEL); p.ptasks = p.ptasks || []; if (p.ptasks.filter(t => !t.done).length >= 3) { toast('Naraz môžu byť najviac 3 aktívne úlohy.'); return; } p.ptasks.unshift({ id: 'pt' + Date.now().toString(36), topic: $('#pt-topic').value, stars: +$('#pt-stars').value, coins: +$('#pt-coins').value, t: Date.now(), done: 0 }); if (p.ptasks.length > 20) p.ptasks.length = 20; save(); sfx('pop'); toast('Úloha zadaná ✓ Dieťa ju uvidí na domovskej obrazovke.'); render(null); },
   'pt-del': d => { const p = DATA.profiles.find(x => x.id === PSEL); p.ptasks = (p.ptasks || []).filter(t => t.id !== d.id); save(); render(null); },
   'pt-go': d => { sfx('tap'); const t = TOPIC[d.id]; startQuiz([d.id], 'quiz', { v: 'home', p: {} }); },
+  'remote-open': async () => { try { const o = await readBackup($('#rmcode').value); const data = o.data || o; if (!data || !Array.isArray(data.profiles) || !data.profiles.length) throw new Error('bad'); VIEWDATA = JSON.parse(JSON.stringify(data)); VIEWDATA._at = o.t || Date.now(); const saved = DATA; DATA = VIEWDATA; try { DATA.profiles.forEach(migrate); } finally { DATA = saved; } PSEL_SAVED = PSEL; PSEL = VIEWDATA.current; go('remote', {}, 'f'); } catch (e) { sfx('no'); toast('Tento kód sa nedá prečítať. Skontrolujte, či je celý.'); } },
+  'remote-close': () => { VIEWDATA = null; PSEL = PSEL_SAVED || DATA.current; go('parent', {}, 'b'); },
   'p-glimit': d => { DATA.settings.gameLimit = +d.n; save(); sfx('tap'); toast(+d.n ? `Minihry: ${d.n}× za deň ✓` : 'Minihry bez limitu ✓'); render(null); },
   'ov-learn': () => { const o = $('.over'); if (o) o.parentNode.removeChild(o); go('learn', {}, 'f'); },
   'p-gift': (d, el) => { const p = DATA.profiles.find(x => x.id === PSEL); if (giftsToday(p) >= 2 || ![5, 10, 15, 20].includes(+d.n)) { sfx('no'); toast('Dnes ste už odmenili 2×. Skúste zajtra.'); return; } p.coins = (p.coins || 0) + (+d.n); p.log.unshift({ t: Date.now(), k: 'gift', id: null, c: +d.n, n: 0 }); save(); burst(el, 30); sfx('coin'); toast(`Dieťa dostalo ${d.n} mincí 🎁`); render(null); },
@@ -3106,6 +3310,10 @@ const ACT = {
   'pdel-ask': () => { PDEL = true; render(null); }, 'pdel-no': () => { PDEL = false; render(null); },
   'pdel-yes': () => { DATA.profiles = DATA.profiles.filter(p => p.id !== PSEL); if (DATA.current === PSEL) DATA.current = DATA.profiles[0]?.id || null; PSEL = DATA.current; PDEL = false; save(); if (!DATA.profiles.length) { PARENT_OK = false; return boot(); } render(null); },
   ask: d => askBot(d.q),
+  'note-cam': () => { const f = $('#notecam'); if (f) f.click(); }, 'note-pick': () => { const f = $('#notepick'); if (f) f.click(); },
+  'note-quiz': d => { const n = (P().notes || []).find(x => x.id === d.id); if (!n) return; noteTopic(n); startQuiz(['note-' + n.id], 'quiz', { v: 'notes', p: {} }, { total: Math.min(10, n.qs.length) }); },
+  'note-test': d => { const n = (P().notes || []).find(x => x.id === d.id); if (!n) return; noteTopic(n); startQuiz(['note-' + n.id], 'test', { v: 'notes', p: {} }, { total: Math.min(10, n.qs.length) }); },
+  'note-del': d => { const p = P(); p.notes = (p.notes || []).filter(x => x.id !== d.id); save(); render(null); },
   parea: d => { PAREA = d.k; sfx('tap'); render(null); },
   theme: d => { DATA.settings.theme = d.t; save(); applyTheme(); sfx('pop'); render(null); },
   'tour-again': () => { go('home', {}, 'b'); setTimeout(() => showGuide(TOUR, 0, endTour), 700); },
@@ -3157,7 +3365,7 @@ function boot() {
   if (!P()) return go('profiles', {}, 'u');
   go('home', { wave: true }, 'u');
 }
-load(); applyTheme(); boot();
+load(); applyTheme(); registerNotes(); boot();
 setTimeout(initDb, 0);
 </script>
 <script>if('serviceWorker' in navigator){addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(()=>{}));}</script>
