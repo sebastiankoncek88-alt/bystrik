@@ -302,7 +302,7 @@ body.calcopen .peek,body.calcopen .peekbub{display:none}
 .dsign .dmedal{margin-left:auto;font-size:2.8rem;animation:wig 2s infinite}
 .pat-pnotky{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='60' height='60'%3E%3Cg fill='white' fill-opacity='.75'%3E%3Cellipse cx='10' cy='24' rx='5' ry='4'/%3E%3Crect x='14' y='6' width='2.4' height='18'/%3E%3Cpath d='M14 6 q8 2 8 9 q-3-4-8-4z'/%3E%3C/g%3E%3Cg fill='white' fill-opacity='.5' transform='translate%2830 28%29'%3E%3Cellipse cx='6' cy='20' rx='4' ry='3.2'/%3E%3Cellipse cx='20' cy='17' rx='4' ry='3.2'/%3E%3Crect x='9' y='4' width='2' height='16'/%3E%3Crect x='23' y='1' width='2' height='16'/%3E%3Cpolygon points='9%2C4 25%2C1 25%2C5 9%2C8'/%3E%3C/g%3E%3C/svg%3E");background-size:60px 60px}
 .pat-pvlocky{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='60' height='60'%3E%3Cg stroke='white' stroke-opacity='.75' stroke-width='2' stroke-linecap='round'%3E%3Cpath d='M15 4v22M4 15h22M7 7l16 16M23 7L7 23'/%3E%3C/g%3E%3Cg stroke='white' stroke-opacity='.5' stroke-width='1.6' stroke-linecap='round' transform='translate%2832 32%29'%3E%3Cpath d='M10 2v16M2 10h16M4 4l12 12M16 4L4 16'/%3E%3C/g%3E%3C/svg%3E");background-size:60px 60px}
-.talking svg{animation:talk .22s ease-in-out infinite alternate!important;transform-origin:50% 80%}
+
 @keyframes talk{to{transform:scale(1.06,.94) rotate(-2deg)}}
 .tutsay{width:40px;height:40px;font-size:1.1rem;flex:none}
 .typed{animation:fadeType .6s ease-out}
@@ -354,6 +354,61 @@ body.calcopen .peek,body.calcopen .peekbub{display:none}
 .grades button.on{outline:4px solid var(--accent);outline-offset:2px;animation:yay .5s}
 .ob .pickg button.on,.ob .petpick button.on{animation:yay .5s}
 .ob .field{animation:popUp .4s .15s backwards}
+/* medvedík Bystrík – animácie */
+.bear .b-all,.bear .b-head,.bear .b-eyes,.bear .b-happyeyes,.bear .b-ear-l,.bear .b-ear-r,.bear .b-arm-l,.bear .b-arm-r,.bear .b-mouth,.bear .b-smile,.bear .b-cheek,.bear .b-bow,.bear .b-body,.bear .b-sparks path,.bear .b-shadow,.bear .b-nose{transform-box:fill-box}
+.bear .b-all{transform-origin:50% 100%;animation:bbreath 3.4s ease-in-out infinite}
+@keyframes bbreath{50%{transform:scale(1.025,.975)}}
+.bear .b-shadow{transform-origin:center;animation:bshadow 3.4s ease-in-out infinite}
+@keyframes bshadow{50%{transform:scaleX(1.06)}}
+.bear .b-head{transform-origin:50% 92%;animation:btilt 7s ease-in-out infinite}
+@keyframes btilt{0%,62%,100%{transform:rotate(0)}68%{transform:rotate(-7deg)}76%{transform:rotate(-7deg)}84%{transform:rotate(5deg)}92%{transform:rotate(0)}}
+.bear .b-eyes{transform-origin:center;animation:bblink 4.2s infinite}
+@keyframes bblink{0%,43%,47%,90%,94%,100%{transform:scaleY(1)}45%,92%{transform:scaleY(.08)}}
+.bear .b-happyeyes{opacity:0}
+.bear .b-ear-l{transform-origin:75% 90%;animation:bearl 5.5s ease-in-out infinite}
+.bear .b-ear-r{transform-origin:25% 90%;animation:bearr 5.5s ease-in-out infinite .5s}
+@keyframes bearl{0%,80%,100%{transform:rotate(0)}85%{transform:rotate(-18deg)}90%{transform:rotate(10deg)}95%{transform:rotate(-4deg)}}
+@keyframes bearr{0%,80%,100%{transform:rotate(0)}85%{transform:rotate(18deg)}90%{transform:rotate(-10deg)}95%{transform:rotate(4deg)}}
+.bear .b-arm-r{transform-origin:35% 12%;animation:bwave 6s ease-in-out infinite}
+@keyframes bwave{0%,55%,100%{transform:rotate(0)}60%{transform:rotate(-150deg)}64%{transform:rotate(-120deg)}68%{transform:rotate(-155deg)}72%{transform:rotate(-120deg)}76%{transform:rotate(-150deg)}82%{transform:rotate(0)}}
+.bear .b-arm-l{transform-origin:65% 12%}
+.bear .b-cheek{transform-origin:center;animation:bcheek 3.4s ease-in-out infinite}
+@keyframes bcheek{50%{opacity:.9;transform:scale(1.15)}}
+.bear .b-bow{transform-origin:center;animation:bbow 4s ease-in-out infinite}
+@keyframes bbow{0%,80%,100%{transform:rotate(0)}86%{transform:rotate(12deg) scale(1.1)}92%{transform:rotate(-8deg)}}
+.bear .b-mouth{opacity:0;transform-origin:50% 30%}
+.bear .b-sparks path{opacity:0;transform-origin:center}
+.talking .bear .b-smile,.bear.talking .b-smile{opacity:0}
+.talking .bear .b-mouth,.bear.talking .b-mouth{opacity:1;animation:btalk .17s ease-in-out infinite alternate}
+@keyframes btalk{from{transform:scaleY(.25)}to{transform:scaleY(1.15)}}
+.talking .bear .b-all{animation:btalkbody .34s ease-in-out infinite alternate}
+@keyframes btalkbody{to{transform:translateY(-2px) rotate(1.5deg)}}
+.talking .bear .b-arm-r{animation:bgesture .7s ease-in-out infinite alternate}
+@keyframes bgesture{to{transform:rotate(-45deg)}}
+.bear.bhappy .b-all{animation:bjump .75s cubic-bezier(.3,1.7,.5,1)}
+@keyframes bjump{30%{transform:translateY(-16px) scale(1.06,.96)}55%{transform:translateY(0) scale(1.08,.9)}75%{transform:translateY(-5px)}}
+.bear.bhappy .b-eyes{opacity:0} .bear.bhappy .b-happyeyes{opacity:1}
+.bear.bhappy .b-arm-l{animation:barmup-l .75s ease-in-out} .bear.bhappy .b-arm-r{animation:barmup-r .75s ease-in-out}
+@keyframes barmup-l{30%,70%{transform:rotate(140deg)}} @keyframes barmup-r{30%,70%{transform:rotate(-140deg)}}
+.bear.bhappy .b-sparks path{animation:bspark .9s ease-out}
+@keyframes bspark{0%{opacity:0;transform:scale(0)}40%{opacity:1;transform:scale(1.4) rotate(45deg)}100%{opacity:0;transform:scale(.6) rotate(90deg)}}
+.bear.cheer .b-all{animation:bcheer 1s cubic-bezier(.3,1.5,.5,1) infinite}
+@keyframes bcheer{0%,100%{transform:translateY(0)}40%{transform:translateY(-12px) scale(1.04,.97)}}
+.bear.cheer .b-arm-l{animation:bcl 1s ease-in-out infinite} .bear.cheer .b-arm-r{animation:bcr 1s ease-in-out infinite}
+@keyframes bcl{0%,100%{transform:rotate(120deg)}50%{transform:rotate(160deg)}} @keyframes bcr{0%,100%{transform:rotate(-120deg)}50%{transform:rotate(-160deg)}}
+.bear.cheer .b-eyes{opacity:0} .bear.cheer .b-happyeyes{opacity:1}
+.bear.cheer .b-sparks path{animation:bspark 1.4s ease-out infinite} .bear.cheer .b-sparks path:nth-child(2){animation-delay:.45s} .bear.cheer .b-sparks path:nth-child(3){animation-delay:.9s}
+.bear.comfort .b-head{animation:bcomfort 2.4s ease-in-out infinite}
+@keyframes bcomfort{50%{transform:rotate(8deg)}}
+.bear.comfort .b-arm-r{animation:bpat 1.6s ease-in-out infinite}
+@keyframes bpat{50%{transform:rotate(-70deg)}}
+svg.bear{cursor:pointer;overflow:visible}
+.bheart{position:fixed;z-index:96;pointer-events:none;font-size:1.3rem;animation:bheart 1.3s ease-out forwards}
+@keyframes bheart{0%{transform:translate(0,0) scale(.4);opacity:0}20%{opacity:1;transform:translate(calc(var(--dx) * .3),-20px) scale(1.2)}100%{transform:translate(var(--dx),-90px) scale(.8);opacity:0}}
+.resbear{display:flex;align-items:center;justify-content:center;gap:6px;margin-bottom:-6px;animation:popUp .5s cubic-bezier(.3,1.6,.5,1)}
+.resbear svg{width:96px;height:96px;flex:none}
+.rbub{background:var(--paper);border:2.5px solid var(--edge);border-radius:18px 18px 18px 4px;padding:8px 12px;font-family:var(--f-display);font-weight:800;font-size:1.05rem;box-shadow:0 3px 0 var(--drop);max-width:200px;animation:popUp .5s .3s backwards cubic-bezier(.3,1.6,.5,1)}
+@media (prefers-reduced-motion: reduce){.bear *{animation:none!important}}
 /* top bar */
 .top{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;display:flex;align-items:center;gap:10px;padding:10px max(16px,env(safe-area-inset-right,0px)) 10px max(16px,env(safe-area-inset-left,0px));background:color-mix(in srgb,var(--g1) 70%,transparent);backdrop-filter:blur(10px)}
 .headbub{width:48px;height:48px;border-radius:50%;border:2.5px solid var(--edge);overflow:hidden;flex:none;background:var(--paper)}
@@ -2157,7 +2212,7 @@ function nav(on) {
   const b = (v, i, n, dot) => `<button class="${on === v ? 'on' : ''}" data-a="nav" data-v="${v}"><span class="ni">${i}</span>${n}${dot ? '<span class="dot"></span>' : ''}</button>`;
   return `<nav class="nav"><div class="in">${b('home', '🏠', 'Domov', claimable && on !== 'home')}${b('learn', '📚', 'Učenie')}${b('games', '🎮', 'Hry')}${b('shop', '🛍️', 'Obchod')}${b('wardrobe', '👕', 'Šatník', fresh)}</div></nav>`;
 }
-const bearSvg = (cls = 'owl') => `<svg class="${cls}" viewBox="0 0 120 120" aria-hidden="true"><ellipse cx="60" cy="114" rx="30" ry="4" fill="#000" opacity=".1"/><ellipse cx="60" cy="94" rx="27" ry="21" fill="#C98A5C"/><ellipse cx="60" cy="98" rx="16" ry="13" fill="#F3D3AE"/><ellipse cx="38" cy="108" rx="9" ry="6" fill="#B07448"/><ellipse cx="82" cy="108" rx="9" ry="6" fill="#B07448"/><circle cx="31" cy="88" r="8" fill="#B07448"/><circle cx="89" cy="88" r="8" fill="#B07448"/><circle cx="30" cy="24" r="13" fill="#C98A5C"/><circle cx="90" cy="24" r="13" fill="#C98A5C"/><circle cx="30" cy="24" r="7" fill="#F3B8C4"/><circle cx="90" cy="24" r="7" fill="#F3B8C4"/><circle cx="60" cy="50" r="36" fill="#C98A5C"/><ellipse cx="60" cy="62" rx="17" ry="13" fill="#F3D3AE"/><ellipse cx="60" cy="56" rx="7" ry="5" fill="#3A2A2A"/><path d="M60 61 V66 M53 68 Q60 74 67 68" stroke="#3A2A2A" stroke-width="2.6" fill="none" stroke-linecap="round"/><circle cx="46" cy="44" r="5" fill="#3A2A2A"/><circle cx="74" cy="44" r="5" fill="#3A2A2A"/><circle cx="47.6" cy="42.4" r="1.7" fill="#fff"/><circle cx="75.6" cy="42.4" r="1.7" fill="#fff"/><ellipse cx="38" cy="58" rx="6" ry="3.5" fill="#FF8FA3" opacity=".55"/><ellipse cx="82" cy="58" rx="6" ry="3.5" fill="#FF8FA3" opacity=".55"/><path d="M50 86 L60 92 L70 86 L70 80 L60 86 L50 80 Z" fill="#FF7A59"/><circle cx="60" cy="86" r="3.5" fill="#FFC94D"/></svg>`;
+const bearSvg = (cls = 'owl') => `<svg class="bear ${cls}" viewBox="0 0 120 120" aria-hidden="true"><ellipse class="b-shadow" cx="60" cy="115" rx="30" ry="4" fill="#000" opacity=".1"/><g class="b-all"><g class="b-feet"><ellipse cx="44" cy="110" rx="9" ry="6" fill="#B07448"/><ellipse cx="76" cy="110" rx="9" ry="6" fill="#B07448"/><ellipse cx="44" cy="111" rx="4" ry="2.6" fill="#F3D3AE"/><ellipse cx="76" cy="111" rx="4" ry="2.6" fill="#F3D3AE"/></g><g class="b-body"><ellipse cx="60" cy="93" rx="27" ry="21" fill="#C98A5C"/><ellipse cx="60" cy="97" rx="16" ry="13" fill="#F3D3AE"/></g><g class="b-head"><g class="b-ear-l"><circle cx="30" cy="24" r="13" fill="#C98A5C"/><circle cx="30" cy="24" r="7" fill="#F3B8C4"/></g><g class="b-ear-r"><circle cx="90" cy="24" r="13" fill="#C98A5C"/><circle cx="90" cy="24" r="7" fill="#F3B8C4"/></g><circle cx="60" cy="50" r="36" fill="#C98A5C"/><path d="M36 30 Q46 22 56 26" stroke="#B07448" stroke-width="3" fill="none" stroke-linecap="round" opacity=".5"/><ellipse cx="60" cy="62" rx="17" ry="13" fill="#F3D3AE"/><g class="b-eyes"><circle cx="46" cy="44" r="5.2" fill="#3A2A2A"/><circle cx="74" cy="44" r="5.2" fill="#3A2A2A"/><circle cx="47.8" cy="42.2" r="1.8" fill="#fff"/><circle cx="75.8" cy="42.2" r="1.8" fill="#fff"/></g><g class="b-happyeyes"><path d="M41 45 Q46 39 51 45 M69 45 Q74 39 79 45" stroke="#3A2A2A" stroke-width="3" fill="none" stroke-linecap="round"/></g><ellipse class="b-cheek" cx="37" cy="58" rx="6" ry="3.5" fill="#FF8FA3" opacity=".6"/><ellipse class="b-cheek" cx="83" cy="58" rx="6" ry="3.5" fill="#FF8FA3" opacity=".6"/><ellipse class="b-nose" cx="60" cy="56" rx="7" ry="5" fill="#3A2A2A"/><ellipse cx="58" cy="54.5" rx="2.2" ry="1.3" fill="#fff" opacity=".6"/><path class="b-smile" d="M60 61 V65 M53 67 Q60 73 67 67" stroke="#3A2A2A" stroke-width="2.6" fill="none" stroke-linecap="round"/><g class="b-mouth"><ellipse cx="60" cy="68" rx="5.5" ry="4.5" fill="#7A2335"/><ellipse cx="60" cy="70.5" rx="3.2" ry="1.8" fill="#FF8FA6"/></g></g><g class="b-arm-l"><ellipse cx="35" cy="90" rx="7.5" ry="12" fill="#B07448" transform="rotate(25 35 90)"/></g><g class="b-arm-r"><ellipse cx="85" cy="90" rx="7.5" ry="12" fill="#B07448" transform="rotate(-25 85 90)"/></g><g class="b-bow"><path d="M49 85 L60 91 L71 85 L71 78 L60 85 L49 78 Z" fill="#FF7A59" stroke="#E05A3A" stroke-width="1"/><circle cx="60" cy="84.5" r="3.6" fill="#FFC94D"/></g></g><g class="b-sparks"><path d="M12 40 l2 5 5 2-5 2-2 5-2-5-5-2 5-2z" fill="#FFC94D"/><path d="M104 30 l1.6 4 4 1.6-4 1.6-1.6 4-1.6-4-4-1.6 4-1.6z" fill="#FF8FA3"/><path d="M108 76 l1.4 3.4 3.4 1.4-3.4 1.4-1.4 3.4-1.4-3.4-3.4-1.4 3.4-1.4z" fill="#86E3C9"/></g></svg>`;
 const owlSvg = bearSvg;
 const TIPS = ['Učenie nájdeš dole v lište pod 📚.', 'Za mince si v obchode kúpiš nové veci!', 'Každá správna odpoveď ťa posunie k novej odmene!', 'Splň dnešné úlohy a vyzdvihni si body!', 'Kartičky pomáhajú zapamätať si učivo.', 'V spájačke spájaš, čo k sebe patrí.', 'Chyba nevadí. Aj z nej sa učíš!', 'Keď niečomu nerozumieš, opýtaj sa ma v chate.', 'Uč sa každý deň a séria porastie! 🔥'];
 const starStr = n => `<span class="stars" aria-label="${n} z 3 hviezd">${[0, 1, 2].map(i => i < n ? '⭐' : '<span style="opacity:.25">⭐</span>').join('')}</span>`;
@@ -2524,7 +2579,8 @@ VIEWS.result = r => {
           : r.kind === 'read' ? big('📖', 'Výborne si čítal(a)!', `<div class="score">Otázky: ${r.correct} z ${r.total} správne</div>`)
           : r.kind === 'game' ? big(GAMES[r.game].i, `${r.score} ${plural(r.score, 'bod', 'body', 'bodov')}!`, `<div class="score muted">Najlepšie: ${p.best[r.game] || 0}</div>`)
             : `<div class="bigstars">${[0, 1, 2].map(i => `<span class="${i < r.stars ? '' : 'off'}" style="animation-delay:${300 + i * 300}ms">⭐</span>`).join('')}</div><h1>${r.correct === 10 ? 'Dokonalé!' : r.correct >= 8 ? 'Výborne!' : r.correct >= 5 ? 'Dobrá práca!' : 'Ide to, trénuj ďalej!'}</h1><div class="score">${r.correct} z ${r.total} správne</div>`;
-  return `<main class="view nonav" style="justify-content:center"><section class="card result">${head}<div class="xpgain">+<span id="xpc">0</span> bodov · +${Math.max(1, Math.round(r.xp / 5))} ${COIN}${r.bonus ? ` <span class="muted" style="font-size:1rem">(bonus ${r.bonus})</span>` : ''}</div><div style="width:100%"><div style="display:flex;justify-content:space-between;font-weight:800"><span>Level <span id="lvn">${b.L}</span></span><span class="muted" id="lvt">${b.cur} / ${b.need}</span></div><div class="xpbar" style="height:18px"><i id="xpb" style="width:${b.pct}%"></i></div></div><div class="rowbtns"><button class="btn primary" data-a="res-back">✓ Hotovo</button><button class="btn" data-a="res-again">🔁 Skúsiť znova</button></div></section></main>`;
+  const good = r.kind === 'quiz' || r.kind === 'daily' ? r.stars >= 2 : true; const bsay = good ? pick(['Si úžasný!', 'Paráda, len tak ďalej!', 'Som na teba hrdý!', 'Výborne si to zvládol!']) : pick(['Nevadí, nabudúce to bude lepšie!', 'Skús to ešte raz, dáš to!', 'Každý sa učí, aj ja!']);
+  return `<main class="view nonav" style="justify-content:center"><div class="resbear ${good ? 'cheer' : 'comfort'}">${bearSvg(good ? 'cheer' : 'comfort')}<span class="rbub">${bsay}</span></div><section class="card result">${head}<div class="xpgain">+<span id="xpc">0</span> bodov · +${Math.max(1, Math.round(r.xp / 5))} ${COIN}${r.bonus ? ` <span class="muted" style="font-size:1rem">(bonus ${r.bonus})</span>` : ''}</div><div style="width:100%"><div style="display:flex;justify-content:space-between;font-weight:800"><span>Level <span id="lvn">${b.L}</span></span><span class="muted" id="lvt">${b.cur} / ${b.need}</span></div><div class="xpbar" style="height:18px"><i id="xpb" style="width:${b.pct}%"></i></div></div><div class="rowbtns"><button class="btn primary" data-a="res-back">✓ Hotovo</button><button class="btn" data-a="res-again">🔁 Skúsiť znova</button></div></section></main>`;
 };
 AFTER.result = () => {
   const r = UI.params; const a = levelInfo(r.after), b = levelInfo(r.before);
@@ -2983,6 +3039,8 @@ const ACT = {
 };
 function newProfile(name, gender, grade, av) { const p = { id: 'p' + Date.now().toString(36), name, grade, av: { ...av, gender }, xp: 0, stats: {}, topics: {}, badges: [], streak: {}, dailyDone: '', created: Date.now() }; migrate(p); return p; }
 function closeSheet() { const w = $('#sheetwrap'); if (w) w.remove(); document.body.classList.remove('calcopen'); }
+function bearJoy(svg) { if (!svg) return; svg.classList.remove('bhappy'); void svg.getBoundingClientRect(); svg.classList.add('bhappy'); setTimeout(() => svg.classList.remove('bhappy'), 1300); const r = svg.getBoundingClientRect(); for (let i = 0; i < 5; i++) { const h = document.createElement('span'); h.className = 'bheart'; h.textContent = pick(['💛', '💖', '⭐', '✨', '💜']); h.style.left = (r.left + r.width * (.2 + Math.random() * .6)) + 'px'; h.style.top = (r.top + r.height * .3) + 'px'; h.style.setProperty('--dx', ((Math.random() - .5) * 90) + 'px'); h.style.animationDelay = (i * 70) + 'ms'; document.body.appendChild(h); setTimeout(() => h.remove(), 1500); } sfx('pop'); }
+document.addEventListener('pointerdown', e => { const bear = e.target.closest('svg.bear'); if (bear) bearJoy(bear); });
 document.addEventListener('pointerdown', e => { const b = e.target.closest('.btn,.opt,.key,.chip,.mp,.bin,.mi2'); if (!b || matchMedia('(prefers-reduced-motion: reduce)').matches) return; const r = b.getBoundingClientRect(); const sz = Math.max(r.width, r.height); const sp = document.createElement('span'); sp.className = 'ripple'; sp.style.cssText = `width:${sz}px;height:${sz}px;left:${e.clientX - r.left - sz / 2}px;top:${e.clientY - r.top - sz / 2}px`; b.appendChild(sp); setTimeout(() => sp.remove(), 550); });
 document.addEventListener('click', e => { const el = e.target.closest('[data-a]'); if (!el) return; ac(); const f = ACT[el.dataset.a]; if (f) { e.preventDefault(); f(el.dataset, el, e); } });
 document.addEventListener('keydown', e => {
