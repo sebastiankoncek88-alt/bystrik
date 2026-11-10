@@ -2139,7 +2139,8 @@ const $ = (s, r = document) => r.querySelector(s);
 const $$ = (s, r = document) => [...r.querySelectorAll(s)];
 const esc = s => String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 function normalize() {
-  DATA.settings = Object.assign({ sound: true, voice: true, calc: true, chat: true, gameLimit: 2, theme: 'auto' }, DATA.settings || {});
+  DATA.settings = Object.assign({ sound: true, voice: true, calc: true, chat: true, gameLimit: 0, theme: 'auto' }, DATA.settings || {});
+  if (!DATA.settings.glimFree) { if (DATA.settings.gameLimit === 2) DATA.settings.gameLimit = 0; DATA.settings.glimFree = 1; }
   DATA.parent = DATA.parent || { pin: null };
   DATA.profiles.forEach(migrate);
 }
