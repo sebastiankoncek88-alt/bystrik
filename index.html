@@ -2115,7 +2115,7 @@ for (const [cat, list] of Object.entries(CATALOG)) for (const it of list) if (it
 /* ===== Stav a ukladanie ===== */
 const KEY = 'bystrik.v1';
 let DATA = { profiles: [], current: null, settings: {}, parent: { pin: null }, t: 0 };
-const CHAT_ON = () => !!(DATA.settings.chat && window.claude && window.claude.use);
+const CHAT_ON = () => !!(DATA.settings.chat && ((window.claude && window.claude.use) || getApiKey()));
 const COIN = '<svg class="ci" viewBox="0 0 40 40" aria-hidden="true"><use href="#coin"/></svg>';
 const $ = (s, r = document) => r.querySelector(s);
 const $$ = (s, r = document) => [...r.querySelectorAll(s)];
@@ -2163,7 +2163,31 @@ async function initDb() {
   } catch (e) { }
 }
 let SAMPLE = null;
-function getSample() { if (!SAMPLE) SAMPLE = (window.claude && window.claude.use) ? window.claude.use('sample').catch(() => null) : Promise.resolve(null); return SAMPLE; }
+/* AI na webe: vlastný kľúč rodiča (uložený len v tomto zariadení, nie v zálohe) */
+const API_KEY_LS = 'bystrik.apikey';
+function getApiKey() { try { return localStorage.getItem(API_KEY_LS) || ''; } catch (e) { return ''; } }
+function setApiKey(k) { try { if (k) localStorage.setItem(API_KEY_LS, k); else localStorage.removeItem(API_KEY_LS); } catch (e) { } SAMPLE = null; }
+function blobB64(b) { return new Promise((res, rej) => { const r = new FileReader(); r.onload = () => res(String(r.result).split(',')[1]); r.onerror = rej; r.readAsDataURL(b); }); }
+function apiSample(key) {
+  const call = async (input, opts = {}) => {
+    const messages = typeof input === 'string' ? [{ role: 'user', content: input }] : input.map(m => ({ role: m.role, content: m.content }));
+    if (opts.images && opts.images.length) { const last = messages[messages.length - 1]; const imgs = await Promise.all(opts.images.map(async b => ({ type: 'image', source: { type: 'base64', media_type: b.type && b.type.startsWith('image/') ? b.type : 'image/jpeg', data: await blobB64(b) } }))); last.content = [...imgs, { type: 'text', text: String(last.content) }]; }
+    let res;
+    try {
+      res = await fetch('https://api.anthropic.com/v1/messages', { method: 'POST', headers: { 'content-type': 'application/json', 'x-api-key': key, 'anthropic-version': '2026-10-21', 'anthropic-beta': 'server-side-fallback-2026-07-01', 'anthropic-dangerous-direct-browser-access': 'true' }, body: JSON.stringify({ model: 'claude-opus-5-5', max_tokens: opts.max || 4000, output_config: { effort: opts.effort || 'low' }, fallbacks: 'default', messages }) });
+    } catch (e) { throw { code: 'network', message: 'Bez pripojenia na internet.' }; }
+    if (!res.ok) { let msg = ''; try { msg = (await res.json()).error.message; } catch (e) { } throw { code: res.status === 401 || res.status === 403 ? 'not_granted' : res.status === 429 ? 'rate_limited' : res.status === 400 && /credit|balance/i.test(msg) ? 'no_credit' : 'api_error', message: msg || 'HTTP ' + res.status }; }
+    const j = await res.json();
+    if (j.stop_reason === 'refusal') throw { code: 'refused', message: 'refusal' };
+    const text = (j.content || []).filter(b => b.type === 'text').map(b => b.text).join('').trim();
+    if (opts.onText) { try { opts.onText({ text, delta: text }); } catch (e) { } }
+    return { text };
+  };
+  call.json = async (input, opts = {}) => { const { text } = await call(input, { ...opts, effort: 'medium', max: 10000 }); const t = text.replace(/^```(?:json)?\s*/i, '').replace(/\s*```\s*$/, ''); const a = t.indexOf('{'), b = t.lastIndexOf('}'); try { return JSON.parse(a >= 0 && b > a ? t.slice(a, b + 1) : t); } catch (e) { throw { code: 'invalid_json', text }; } };
+  call.limits = async () => ({ images: { max: 5 } });
+  return call;
+}
+function getSample() { if (!SAMPLE) SAMPLE = (window.claude && window.claude.use) ? window.claude.use('sample').catch(() => null) : Promise.resolve(getApiKey() ? apiSample(getApiKey()) : null); return SAMPLE; }
 
 /* ===== Zvuky, hlas ===== */
 let AC = null;
@@ -2667,7 +2691,7 @@ function registerNotes() { DATA.profiles.forEach(p => (p.notes || []).forEach(no
 VIEWS.notes = () => {
   const p = P(); const on = CHAT_ON();
   return `${topbar('learn-back')}<main class="view"><div class="nhead"><span class="nb">${bearSvg(NOTE.busy ? '' : 'cheer')}</span><div><h1 style="font-size:1.8rem">Moje poznámky</h1><p class="muted b" style="font-size:.9rem">Odfoť si poznámky zo zošita. Bystrík ich zhrnie do bodov a spraví z nich kvíz alebo test.</p></div></div>
-  ${on ? `<div class="nbtns"><button class="btn primary" data-a="note-cam" ${NOTE.busy ? 'disabled' : ''}>📸 Odfotiť poznámky</button><button class="btn" data-a="note-pick" ${NOTE.busy ? 'disabled' : ''}>🖼️ Vybrať fotku</button></div><input type="file" id="notecam" accept="image/*" capture="environment" hidden><input type="file" id="notepick" accept="image/*" hidden>` : `<section class="card" style="padding:14px"><b>🧸 Táto funkcia potrebuje Bystríka (umelú inteligenciu).</b><p class="muted b" style="font-size:.88rem;margin-top:6px">Funguje v apke otvorenej v Claude a keď majú rodičia zapnutý „Chat s Bystríkom“.</p></section>`}
+  ${on ? `<div class="nbtns"><button class="btn primary" data-a="note-cam" ${NOTE.busy ? 'disabled' : ''}>📸 Odfotiť poznámky</button><button class="btn" data-a="note-pick" ${NOTE.busy ? 'disabled' : ''}>🖼️ Vybrať fotku</button></div><input type="file" id="notecam" accept="image/*" capture="environment" hidden><input type="file" id="notepick" accept="image/*" hidden>` : `<section class="card" style="padding:14px"><b>🧸 Táto funkcia potrebuje Bystríka (umelú inteligenciu).</b><p class="muted b" style="font-size:.88rem;margin-top:6px">Na webe ju zapnú rodičia: Rodičovský účet → „Bystrík (AI) na webe“ → vložiť AI kľúč. V Claude funguje sama.</p></section>`}
   ${NOTE.busy ? `<section class="card nbusy">${NOTE.preview ? `<img src="${NOTE.preview}" alt="Fotka poznámok">` : ''}<div><b>Bystrík číta tvoje poznámky…</b><span class="typing"><i></i><i></i><i></i></span><span class="muted b" style="font-size:.82rem">Môže to trvať chvíľku.</span></div></section>` : ''}
   ${NOTE.err ? `<section class="card" style="padding:12px;background:var(--bad-soft)"><b>😕 ${esc(NOTE.err)}</b></section>` : ''}
   ${(p.notes || []).map(n => `<section class="card notecard"><div class="sec"><h2>📸 ${esc(n.title)}</h2><span class="eyebrow">${fmtTime(n.t)}</span></div><ul>${n.summary.map(x => `<li>${esc(x)}</li>`).join('')}</ul><div class="nbtns"><button class="btn small primary" data-a="note-quiz" data-id="${n.id}">❓ Kvíz</button><button class="btn small" data-a="note-test" data-id="${n.id}">📝 Test</button><button class="btn small" data-a="note-del" data-id="${n.id}" aria-label="Vymazať">🗑️</button></div></section>`).join('') || (NOTE.busy ? '' : '<p class="muted b" style="text-align:center">Zatiaľ nemáš žiadne poznámky. Odfoť si prvé! 📒</p>')}
@@ -2680,7 +2704,7 @@ async function shrinkImage(file) {
 async function processNote(file) {
   const p = P(); NOTE = { busy: true, err: '', preview: '' }; try { NOTE.preview = URL.createObjectURL(file); } catch (e) { } render(null); scrollTo({ top: 0, behavior: 'smooth' });
   const fail = msg => { NOTE = { busy: false, err: msg, preview: '' }; if (UI.view === 'notes') render(null); sfx('no'); };
-  const sample = await getSample(); if (!sample) return fail('Bystrík teraz nemôže čítať fotky. Funguje to v apke otvorenej v Claude.');
+  const sample = await getSample(); if (!sample) return fail('Bystrík teraz nemôže čítať fotky. Funguje to v Claude alebo keď rodič zadá AI kľúč v rodičovskom účte.');
   try { const lim = await sample.limits(); if (!lim || !lim.images) return fail('Na tomto mieste sa fotky nedajú poslať Bystríkovi.'); } catch (e) { return fail('Na tomto mieste sa fotky nedajú poslať Bystríkovi.'); }
   const blob = await shrinkImage(file);
   const prompt = `Na fotke sú školské poznámky dieťaťa na 1. stupni ZŠ na Slovensku (${p.grade}. ročník). Prečítaj ich a odpovedz IBA jedným JSON objektom v tomto tvare:
@@ -2803,7 +2827,7 @@ async function explainQ() {
   const q = Q.cur; const box = $('#explain'); const btn = $('[data-a="explain"]'); if (btn) btn.remove();
   box.innerHTML = `<div class="explain">${owlSvg('')}<span id="extext"><span class="typing"><i></i><i></i><i></i></span></span></div>`;
   const sample = await getSample();
-  if (!sample) { $('#extext').textContent = 'Bystrík teraz nemôže odpovedať. Chat funguje, keď je apka otvorená v prihlásenom účte Claude.'; return; }
+  if (!sample) { $('#extext').textContent = 'Bystrík teraz nemôže odpovedať. Chat funguje, keď je apka otvorená v Claude alebo keď rodič zadá AI kľúč v rodičovskom účte.'; return; }
   const p = P(); const prompt = `${tutorIntro(p)}\n\nDieťa práve odpovedalo nesprávne na úlohu z predmetu ${SUBJECTS[q.s].name}.\nÚloha: ${q.text}${q.speak && q.speak !== q.text ? ' (' + q.speak + ')' : ''}\nSprávna odpoveď: ${q.full || q.answer}\nDoplňujúce vysvetlenie: ${q.ex || '-'}\n\nVysvetli dieťaťu krátko (3–4 vety) a jednoducho, prečo je správna odpoveď práve táto a ako na to nabudúce príde. Povzbuď ho.`;
   try { p.stats.chat++; await sample(prompt, { cache: false, onText: ({ text }) => { const e = $('#extext'); if (e) e.textContent = text; } }); save(); }
   catch (e) { const el = $('#extext'); if (el) el.textContent = e && e.code === 'rate_limited' ? 'Bystrík si musí chvíľu oddýchnuť. Skús to o chvíľu.' : 'Teraz sa to nepodarilo. Skús to neskôr.'; }
@@ -3074,7 +3098,7 @@ async function askBot(q) {
   if (CHAT.busy) return; const p = P(); CHAT.busy = true; CHAT.msgs.push({ r: 'me', t: q }, { r: 'bot', t: '' }); render(null); sfx('pop');
   const sample = await getSample();
   const finish = t => { CHAT.msgs[CHAT.msgs.length - 1].t = t; CHAT.busy = false; if (UI.view === 'chat') render(null); };
-  if (!sample) return finish('Teraz ti nemôžem odpovedať. Chat funguje, keď je apka otvorená v prihlásenom účte Claude.');
+  if (!sample) return finish('Teraz ti nemôžem odpovedať. Chat funguje, keď je apka otvorená v Claude alebo keď rodič zadá AI kľúč v rodičovskom účte.');
   const hist = CHAT.msgs.slice(0, -1).slice(-9);
   const msgs = [{ role: 'user', content: tutorIntro(p) + '\n\nZačni rozhovor.' }, { role: 'assistant', content: `Ahoj ${p.name}! Som Bystrík. Na čo sa chceš opýtať?` }];
   hist.forEach(m => { if (m.t) msgs.push({ role: m.r === 'me' ? 'user' : 'assistant', content: m.t }); });
@@ -3158,9 +3182,18 @@ function checkPTasks(p, id, stars) {
 }
 const needBackup = () => DATA.profiles.some(p => p.xp > 0) && (!DATA.backupAt || Date.now() - DATA.backupAt > 7 * DAYMS);
 let RESTORE = false;
+function aiCard() {
+  if (window.claude && window.claude.use) return '';
+  const has = !!getApiKey();
+  return `<section class="card pcard aicard"><span class="eyebrow">🧸 Bystrík (AI) na webe</span>${has ? '<p class="b" style="color:var(--good);font-size:.9rem;padding:4px 0">✅ AI kľúč je uložený. Chat, „Vysvetli mi to“ a Moje poznámky fungujú.</p>' : '<p class="b" style="font-size:.9rem;padding:4px 0">Zapnite chat s Bystríkom, vysvetľovanie chýb a čítanie poznámok z fotiek.</p>'}
+  <div class="dsteps" style="margin:6px 0 10px"><div><span>1</span><p>Otvorte <b>console.anthropic.com</b>, prihláste sa a v časti <b>Billing</b> si dobite kredit (stačí pár eur).</p></div><div><span>2</span><p>V časti <b>API Keys</b> ťuknite na <b>Create Key</b> a kľúč skopírujte (začína sa <b>sk-ant-</b>).</p></div><div><span>3</span><p>Vložte ho sem a ťuknite na <b>Uložiť</b>.</p></div></div>
+  <input class="field" id="aikey" type="password" autocomplete="off" placeholder="${has ? '•••••••• (uložený)' : 'sk-ant-…'}" style="font-size:1rem;padding:10px 12px;text-align:left">
+  <div class="bkbtns" style="margin-top:8px"><button class="btn small primary" data-a="ai-save">💾 Uložiť</button>${has ? '<button class="btn small" data-a="ai-test">🔎 Otestovať</button><button class="btn small" data-a="ai-del">🗑️ Odstrániť</button>' : ''}</div>
+  <p class="muted b" style="font-size:.78rem">Kľúč zostane len v tomto zariadení a nie je v zálohe. Každá otázka Bystríkovi stojí zlomok centu, spracovanie fotky pár centov. Kto má prístup k tomuto telefónu, môže kľúč používať.</p></section>`;
+}
 function backupCard() {
   const nb = needBackup(); const inClaude = !!(window.claude && window.claude.use);
-  return `<section class="card pcard backup ${nb ? 'blink' : ''}"><span class="eyebrow">☁️ Ulož si postup</span>${nb ? '<p class="b" style="color:var(--bad);font-size:.9rem;padding:4px 0">⚠️ Zatiaľ nemáte zálohu. Ak sa vymažú údaje prehliadača alebo prejdete na iný telefón, deti by prišli o levely, mince a oblečenie.</p>' : `<p class="b" style="color:var(--good);font-size:.9rem;padding:4px 0">✅ Posledná záloha: ${fmtTime(DATA.backupAt)}</p>`}
+  return `<section class="card pcard backup ${nb ? 'blink' : ''}"><span class="eyebrow">☁️ Ulož si postup</span>${nb ? '<p class="b" style="color:var(--bad);font-size:.9rem;padding:4px 0">⚠️ Zatiaľ nemáte zálohu. Ak sa vymažú údaje prehliadača alebo prejdete na iný telefón, deti by prišli o levely, mince a oblečenie.</p>' : (DATA.backupAt ? `<p class="b" style="color:var(--good);font-size:.9rem;padding:4px 0">✅ Posledná záloha: ${fmtTime(DATA.backupAt)}</p>` : '<p class="muted b" style="font-size:.9rem;padding:4px 0">Zatiaľ nemáte zálohu.</p>')}
   <p class="muted b" style="font-size:.82rem;padding-bottom:8px">Kód zálohy si skopírujte a pošlite si ho napríklad e-mailom. Na inom zariadení ho vložíte cez „Obnoviť zo zálohy“. Záloha obsahuje všetkých hráčov (bez nahrávok čítania).</p>
   <div class="bkbtns"><button class="btn small primary" data-a="bk-copy">📋 Skopírovať kód zálohy</button>${inClaude ? '' : '<button class="btn small" data-a="bk-file">💾 Stiahnuť súbor</button>'}<button class="btn small" data-a="bk-restore">📥 Obnoviť zo zálohy</button></div>
   <textarea id="bkcode" class="bkcode" readonly hidden></textarea>
@@ -3217,7 +3250,7 @@ VIEWS.parent = () => {
   <section class="card pcard"><span class="eyebrow">Treba precvičiť</span>${weak.length ? weak.map(topicLine).join('') : '<p class="muted b" style="padding:8px 0">Zatiaľ nič. Témy s úspešnosťou pod 70 % sa zobrazia tu.</p>'}</section>
   <section class="card pcard"><span class="eyebrow">Matematika – hviezdy podľa ročníkov</span>${subjProg('mat')}<span class="eyebrow">Slovenčina – hviezdy podľa ročníkov</span>${subjProg('sjl')}<span class="eyebrow">Prehľad (príroda, svet, angličtina) – hviezdy podľa ročníkov</span>${subjProg('prv')}</section>
   <section class="card pcard"><span class="eyebrow">História aktivít</span>${p.log.slice(0, 15).map(l => `<div class="statrow"><span>${KIND[l.k] || l.k}${l.id && TOPIC[l.id] ? ' · ' + TOPIC[l.id].name : ''}</span><b>${l.k === 'gift' || l.k === 'ptask' ? '+' + l.c + ' mincí' : l.k.startsWith('game') ? l.c + ' b.' : l.k === 'pex' ? l.n + ' ťahov' : `${l.c}/${l.n}`}</b><small>${fmtTime(l.t)}</small></div>`).join('') || '<p class="muted b" style="padding:8px 0">Zatiaľ prázdne.</p>'}</section>
-  ${backupCard()}${UI.view === 'remote' ? '' : `<section class="card pcard"><span class="eyebrow">👀 Pozrieť postup z iného zariadenia</span><p class="muted b" style="font-size:.85rem;padding:4px 0">Na telefóne dieťaťa otvorte Rodičovský účet → „Skopírovať kód zálohy“ a pošlite si ho. Tu ho vložte a uvidíte, čo dieťa robilo. Nič sa tým tu neprepíše.</p><textarea id="rmcode" class="bkcode" placeholder="Sem vložte kód…"></textarea><button class="btn small primary" data-a="remote-open">👀 Zobraziť postup</button></section>`}<section class="card pcard"><span class="eyebrow">📋 Úlohy pre dieťa</span><p class="muted b" style="font-size:.85rem;padding:4px 0">Vyberte tému a koľko hviezd má dieťa v kvíze získať. Keď to splní, apka mu automaticky pridá mince.</p>
+  ${aiCard()}${backupCard()}${UI.view === 'remote' ? '' : `<section class="card pcard"><span class="eyebrow">👀 Pozrieť postup z iného zariadenia</span><p class="muted b" style="font-size:.85rem;padding:4px 0">Na telefóne dieťaťa otvorte Rodičovský účet → „Skopírovať kód zálohy“ a pošlite si ho. Tu ho vložte a uvidíte, čo dieťa robilo. Nič sa tým tu neprepíše.</p><textarea id="rmcode" class="bkcode" placeholder="Sem vložte kód…"></textarea><button class="btn small primary" data-a="remote-open">👀 Zobraziť postup</button></section>`}<section class="card pcard"><span class="eyebrow">📋 Úlohy pre dieťa</span><p class="muted b" style="font-size:.85rem;padding:4px 0">Vyberte tému a koľko hviezd má dieťa v kvíze získať. Keď to splní, apka mu automaticky pridá mince.</p>
   <div class="ptform"><label>Téma<select id="pt-topic">${['mat', 'sjl', 'prv'].map(k => `<optgroup label="${SUBJECTS[k].name}">${SUBJECTS[k].topics.filter(t => t.g === p.grade).map(t => `<option value="${t.id}">${t.name}</option>`).join('')}</optgroup>`).join('')}</select></label><label>Hviezdy<select id="pt-stars"><option value="1">⭐ aspoň 5 z 10</option><option value="2" selected>⭐⭐ aspoň 8 z 10</option><option value="3">⭐⭐⭐ 10 z 10</option></select></label><label>Odmena<select id="pt-coins">${[5, 10, 15, 20].map(n => `<option value="${n}" ${n === 10 ? 'selected' : ''}>${n} mincí</option>`).join('')}</select></label><button class="btn primary small" data-a="pt-add">➕ Zadať úlohu</button></div>
   ${(p.ptasks || []).slice(0, 8).map(t => TOPIC[t.topic] ? `<div class="statrow"><span>${t.done ? '✅' : '⏳'} ${TOPIC[t.topic].name} · ${'⭐'.repeat(t.stars)}</span><b>${t.done ? 'splnené' : `<button class="chip" data-a="pt-del" data-id="${t.id}">Zrušiť</button>`}</b><small>+${t.coins} mincí${t.done ? ' · ' + fmtTime(t.done) : ''}</small></div>` : '').join('')}</section>
   <section class="card pcard"><span class="eyebrow">🎁 Odmeniť mincami</span><p class="muted b" style="font-size:.85rem;padding:4px 0">Pochváľte dieťa za snahu, domáce úlohy alebo pomoc doma. Mince si minie v obchode. Teraz má ${COIN} ${p.coins || 0}.</p>${(() => { const used = giftsToday(p); const left = 2 - used; return `<div class="chips" style="padding:4px 0 4px">${[5, 10, 15, 20].map(n => `<button class="chip" data-a="p-gift" data-n="${n}" ${left > 0 ? '' : 'disabled style="opacity:.45"'}>+${n} ${COIN}</button>`).join('')}</div><p class="b" style="font-size:.85rem;padding-bottom:8px;color:${left > 0 ? 'var(--muted)' : 'var(--bad)'}">${left > 0 ? `Dnes môžete odmeniť ešte ${left}×.` : 'Dnes ste už odmenili 2×. Ďalšia odmena bude možná zajtra.'}</p>`; })()}</section>
@@ -3298,6 +3331,9 @@ const ACT = {
   'bk-restore': () => { RESTORE = true; render(null); setTimeout(() => { const f = $('#bkfile'); if (f) f.addEventListener('change', async () => { const file = f.files && f.files[0]; if (file) $('#bkin').value = await file.text(); }); const b = $('.bkrestore'); if (b) b.scrollIntoView({ block: 'center' }); }, 50); },
   'bk-cancel': () => { RESTORE = false; render(null); },
   'bk-apply': async () => { try { const o = await readBackup($('#bkin').value); const data = o.data || o; if (!data || !Array.isArray(data.profiles)) throw new Error('bad'); DATA = Object.assign({ profiles: [], current: null }, data); normalize(); DATA.backupAt = Date.now(); if (!P()) DATA.current = DATA.profiles[0] ? DATA.profiles[0].id : null; save(); RESTORE = false; PSEL = DATA.current; toast(`Obnovené ✓ Hráči: ${DATA.profiles.map(p => p.name).join(', ')}`); sfx('level'); confetti(120); render(null); } catch (e) { sfx('no'); toast('Tento kód zálohy sa nedá prečítať. Skontrolujte, či je celý.'); } },
+  'ai-save': () => { const v = ($('#aikey').value || '').trim(); if (!v) { toast('Najprv vložte AI kľúč.'); return; } if (!v.startsWith('sk-ant-')) { toast('Kľúč by sa mal začínať „sk-ant-“. Skontrolujte ho.'); return; } setApiKey(v); sfx('coin'); toast('AI kľúč uložený ✓ Bystrík teraz funguje aj na webe.'); render(null); },
+  'ai-del': () => { setApiKey(''); toast('AI kľúč odstránený.'); render(null); },
+  'ai-test': async (d, el) => { el.disabled = true; el.textContent = '⏳ Testujem…'; try { const s2 = await getSample(); const r = await s2('Odpovedz po slovensky jednou krátkou vetou: pozdrav dieťa.', { cache: false }); toast('✅ Funguje! Bystrík hovorí: ' + r.text.slice(0, 80)); } catch (e) { toast(e && e.code === 'not_granted' ? '❌ Kľúč nie je platný. Skontrolujte ho.' : e && e.code === 'no_credit' ? '❌ Na účte chýba kredit (Billing).' : e && e.code === 'rate_limited' ? '⏳ Príliš veľa požiadaviek, skúste o chvíľu.' : '❌ Nepodarilo sa: ' + ((e && e.message) || 'chyba')); } render(null); },
   'pt-add': () => { const p = DATA.profiles.find(x => x.id === PSEL); p.ptasks = p.ptasks || []; if (p.ptasks.filter(t => !t.done).length >= 3) { toast('Naraz môžu byť najviac 3 aktívne úlohy.'); return; } p.ptasks.unshift({ id: 'pt' + Date.now().toString(36), topic: $('#pt-topic').value, stars: +$('#pt-stars').value, coins: +$('#pt-coins').value, t: Date.now(), done: 0 }); if (p.ptasks.length > 20) p.ptasks.length = 20; save(); sfx('pop'); toast('Úloha zadaná ✓ Dieťa ju uvidí na domovskej obrazovke.'); render(null); },
   'pt-del': d => { const p = DATA.profiles.find(x => x.id === PSEL); p.ptasks = (p.ptasks || []).filter(t => t.id !== d.id); save(); render(null); },
   'pt-go': d => { sfx('tap'); const t = TOPIC[d.id]; startQuiz([d.id], 'quiz', { v: 'home', p: {} }); },
