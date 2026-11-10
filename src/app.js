@@ -7,7 +7,7 @@ const $ = (s, r = document) => r.querySelector(s);
 const $$ = (s, r = document) => [...r.querySelectorAll(s)];
 const esc = s => String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 function normalize() {
-  DATA.settings = Object.assign({ sound: true, voice: true, calc: true, chat: true, gameLimit: 2 }, DATA.settings || {});
+  DATA.settings = Object.assign({ sound: true, voice: true, calc: true, chat: true, gameLimit: 2, theme: 'auto' }, DATA.settings || {});
   DATA.parent = DATA.parent || { pin: null };
   DATA.profiles.forEach(migrate);
 }
@@ -25,6 +25,8 @@ function migrate(p) {
   p.coins = p.coins || 0; p.owned = p.owned || []; p.readings = p.readings || [];
   if (!p.room) p.room = defaultRoom(p.av.gender); p.room.stickers = p.room.stickers || [];
 }
+function applyTheme() { const t = DATA.settings.theme; if (t === 'light' || t === 'dark') document.documentElement.dataset.theme = t; else if (document.documentElement.dataset.theme && THEME_SET) delete document.documentElement.dataset.theme; THEME_SET = t !== 'auto'; }
+let THEME_SET = false;
 function load() { try { const s = localStorage.getItem(KEY); if (s) DATA = Object.assign(DATA, JSON.parse(s)); } catch (e) { } normalize(); }
 function save() { DATA.t = Date.now(); try { localStorage.setItem(KEY, JSON.stringify(DATA)); } catch (e) { } queueSync(); }
 const P = () => DATA.profiles.find(p => p.id === DATA.current);
@@ -158,19 +160,38 @@ function itemThumb(cat, it, av) {
 }
 
 /* ===== Odznaky ===== */
-const BADGES = [
-  { id: 'prvy', i: '🎉', n: 'Prvý kvíz', c: p => p.stats.quizzes >= 1 }, { id: 'perfekt', i: '💎', n: 'Bez chyby', c: p => p.stats.perfect >= 1 },
-  { id: 'sto', i: '💯', n: '100 správnych', c: p => p.stats.correct >= 100 }, { id: 'patsto', i: '🚀', n: '500 správnych', c: p => p.stats.correct >= 500 },
-  { id: 'karty', i: '🃏', n: '50 kartičiek', c: p => p.stats.cards >= 50 }, { id: 'spajac', i: '🔗', n: '5 spájačiek', c: p => p.stats.match >= 5 },
-  { id: 'pex', i: '🧠', n: '5× pexeso', c: p => p.stats.pexeso >= 5 }, { id: 'hrac', i: '🎮', n: '10 minihier', c: p => p.stats.games >= 10 },
-  { id: 'rychlik', i: '⚡', n: '15 za minútu', c: p => p.stats.bestTime >= 15 }, { id: 'seria3', i: '🔥', n: '3 dni po sebe', c: p => p.streak.best >= 3 },
-  { id: 'seria7', i: '🌟', n: '7 dní po sebe', c: p => p.streak.best >= 7 }, { id: 'ulohy', i: '✅', n: '10 denných úloh', c: p => p.stats.tasks >= 10 },
-  { id: 'zvedavec', i: '🧸', n: '5 otázok Bystríkovi', c: p => p.stats.chat >= 5 }, { id: 'stylista', i: '👗', n: 'Módny návrhár', c: p => p.stats.style >= 15 },
-  { id: 'matikar', i: '🔢', n: '3★ v 5 témach matiky', c: p => Object.entries(p.topics).filter(([k, v]) => k[0] === 'm' && v.stars === 3).length >= 5 },
-  { id: 'slovinar', i: '📝', n: '3★ v 5 témach sloviny', c: p => Object.entries(p.topics).filter(([k, v]) => k[0] === 's' && v.stars === 3).length >= 5 },
-  { id: 'level10', i: '👑', n: 'Level 10', c: p => levelInfo(p.xp).L >= 10 }, { id: 'denna', i: '📅', n: '5 denných výziev', c: p => p.stats.daily >= 5 }
+const starsIn = (p, k) => Object.entries(p.topics).filter(([id]) => TOPIC[id] && TOPIC[id].s === k).reduce((a, [, v]) => a + (v.stars || 0), 0);
+const ACH = [
+  { id: 'spravne', i: '✔️', n: 'Šikovná hlávka', d: 'Správne odpovede', m: p => p.stats.correct, t: [50, 250, 1000] },
+  { id: 'kvizy', i: '❓', n: 'Kvízový majster', d: 'Dokončené kvízy', m: p => p.stats.quizzes, t: [5, 25, 100] },
+  { id: 'perfekt', i: '💎', n: 'Bez chyby', d: 'Kvízy na 10 z 10', m: p => p.stats.perfect, t: [1, 5, 20] },
+  { id: 'seria', i: '🔥', n: 'Vytrvalec', d: 'Dni po sebe', m: p => p.streak.best || 0, t: [3, 7, 30] },
+  { id: 'hviezdy', i: '⭐', n: 'Zberateľ hviezd', d: 'Hviezdy spolu', m: p => Object.values(p.topics).reduce((a, v) => a + (v.stars || 0), 0), t: [10, 50, 150] },
+  { id: 'matika', i: '🔢', n: 'Matikár', d: 'Hviezdy z matematiky', m: p => starsIn(p, 'mat'), t: [10, 40, 90] },
+  { id: 'slovina', i: '📝', n: 'Slovinár', d: 'Hviezdy zo slovenčiny', m: p => starsIn(p, 'sjl'), t: [10, 40, 90] },
+  { id: 'prehlad', i: '🌍', n: 'Objaviteľ sveta', d: 'Hviezdy z prehľadu', m: p => starsIn(p, 'prv'), t: [10, 40, 90] },
+  { id: 'citanie', i: '📖', n: 'Čitateľ', d: 'Prečítané texty', m: p => (p.readings || []).length, t: [1, 10, 30] },
+  { id: 'karty', i: '🃏', n: 'Kartičkár', d: 'Zvládnuté kartičky', m: p => p.stats.cards, t: [30, 150, 500] },
+  { id: 'spajacky', i: '🔗', n: 'Spájač', d: 'Spájačky a pexesá', m: p => p.stats.match + p.stats.pexeso, t: [5, 25, 75] },
+  { id: 'hry', i: '🎮', n: 'Hráč', d: 'Odohrané minihry', m: p => p.stats.games, t: [5, 25, 75] },
+  { id: 'rychlik', i: '⚡', n: 'Bleskový', d: 'Najviac správnych za minútu', m: p => p.stats.bestTime, t: [10, 15, 20] },
+  { id: 'ulohy', i: '✅', n: 'Plnič úloh', d: 'Splnené denné úlohy', m: p => p.stats.tasks, t: [5, 30, 100] },
+  { id: 'denne', i: '🎯', n: 'Denný hrdina', d: 'Splnené denné výzvy', m: p => p.stats.daily, t: [3, 15, 50] },
+  { id: 'level', i: '👑', n: 'Na vrchole', d: 'Dosiahnutý level', m: p => levelInfo(p.xp).L, t: [5, 10, 20] },
+  { id: 'moda', i: '👗', n: 'Módny návrhár', d: 'Zmeny v šatníku', m: p => p.stats.style, t: [15, 60, 200] },
+  { id: 'nakupy', i: '🛍️', n: 'Zberateľ', d: 'Veci kúpené v obchode', m: p => (p.owned || []).length, t: [1, 5, 15] }
 ];
-function checkBadges(p) { const got = []; for (const b of BADGES) if (!p.badges.includes(b.id) && b.c(p)) { p.badges.push(b.id); got.push(b); } got.forEach((b, i) => setTimeout(() => { toast(`Nový odznak: ${b.i} ${b.n}`); sfx('match'); }, 700 + i * 900)); }
+const MEDAL = ['🥉', '🥈', '🥇'], ACH_COINS = [10, 25, 50];
+function achTier(p, a) { const v = a.m(p) || 0; let t = 0; a.t.forEach((x, i) => { if (v >= x) t = i + 1; }); return t; }
+function checkBadges(p) {
+  p.ach = p.ach || {}; const got = [];
+  for (const a of ACH) { const t = achTier(p, a); const was = p.ach[a.id] || 0; if (t > was) { for (let k = was; k < t; k++) { p.coins = (p.coins || 0) + ACH_COINS[k]; got.push([a, k]); } p.ach[a.id] = t; } }
+  got.forEach(([a, k], i) => setTimeout(() => achPop(a, k), 900 + i * 3700));
+}
+function achPop(a, k) {
+  const d = document.createElement('div'); d.className = 'achpop'; d.innerHTML = `<span class="am">${MEDAL[k]}</span><div><span class="eyebrow">Nový úspech!</span><b>${a.i} ${a.n}</b><span>${a.d}: ${a.t[k]} · +${ACH_COINS[k]} ${COIN}</span></div>`;
+  document.body.appendChild(d); sfx('level'); buzz([20, 40, 20]); confetti(70, .12); setTimeout(() => d.classList.add('out'), 3000); setTimeout(() => d.remove(), 3600);
+}
 
 /* ===== Dni, séria, úlohy, denné odmeny ===== */
 const dkey = d => `${d.getFullYear()}-${d.getMonth() + 1}-${d.getDate()}`;
@@ -215,7 +236,11 @@ let PENDING = [];
 function gain(p, n) { p.xp += n; p.coins = (p.coins || 0) + Math.max(1, Math.round(n / 5)); }
 function addXp(n) { const p = P(); const a = levelInfo(p.xp).L; gain(p, n); const b = levelInfo(p.xp).L; return { from: a, to: b }; }
 function flushPending() { if ($('.over')) return; const x = PENDING.shift(); if (x) showRewardOverlay(x); }
-function grant(n, el) { const r = addXp(n); floatXp(el, '+' + n); sfx('coin'); save(); if (r.to > r.from) queueLevelUp(r.from, r.to); flushPending(); }
+function coinFly(el, k = 6) {
+  const to = $('.coinchip'); if (!el || !to || matchMedia('(prefers-reduced-motion: reduce)').matches) return; const a = el.getBoundingClientRect(), b = to.getBoundingClientRect();
+  for (let i = 0; i < k; i++) { const c = document.createElement('span'); c.className = 'flycoin'; c.innerHTML = COIN; c.style.left = (a.left + a.width / 2 - 12) + 'px'; c.style.top = (a.top + a.height / 2 - 12) + 'px'; document.body.appendChild(c); const dx = b.left + b.width / 2 - a.left - a.width / 2, dy = b.top + b.height / 2 - a.top - a.height / 2; const mx = (Math.random() - .5) * 120; c.animate([{ transform: 'translate(0,0) scale(.6)', opacity: 0 }, { transform: `translate(${mx}px,${-60 - Math.random() * 40}px) scale(1.2)`, opacity: 1, offset: .35 }, { transform: `translate(${dx}px,${dy}px) scale(.7)`, opacity: 1 }], { duration: 900 + i * 90, easing: 'cubic-bezier(.5,0,.4,1)' }).onfinish = () => { c.remove(); to.classList.remove('bump'); void to.offsetWidth; to.classList.add('bump'); }; }
+}
+function grant(n, el) { const r = addXp(n); floatXp(el, '+' + n); coinFly(el); sfx('coin'); save(); if (r.to > r.from) queueLevelUp(r.from, r.to); flushPending(); }
 function queueLevelUp(from, to) { const g = P().av.gender; const rw = []; for (let L = from + 1; L <= to; L++) rw.push(...rewardsAt(L, g)); PENDING.push({ title: title(to), sub: rw.length ? 'Máš darček! Ťukni naň.' : 'Len tak ďalej!', rw, num: to, level: true }); }
 
 /* ===== Router ===== */
@@ -309,9 +334,9 @@ function roomView() {
 const VIEWS = {}, AFTER = {};
 VIEWS.learn = () => {
   const p = P(); const dd = p.dailyDone === today();
-  const card = k => { const ts = SUBJECTS[k].topics.filter(t => t.g === p.grade); const st = ts.reduce((a, t) => a + (p.topics[t.id]?.stars || 0), 0); const max = ts.length * 3; const d = { mat: ['1+2', 'Počty, násobilka, geometria, slovné úlohy', '➗'], sjl: ['Aa', 'Písmená, y/i, vybrané slová, slovné druhy', '✏️'], prv: ['🌍', 'Príroda, Slovensko a svet, angličtina', '🔭'] }[k]; return `<button class="card lsubj ${k} press" data-a="subject" data-s="${k}"><span class="big">${d[0]}</span><span class="lt"><b>${SUBJECTS[k].name}</b><span>${d[1]}</span><span class="pbar"><i style="width:${max ? st / max * 100 : 0}%"></i></span><small>⭐ ${st} / ${max} hviezd · ${ts.length} tém</small></span><span class="deco">${d[2]}</span></button>`; };
+  const card = k => { const ts = SUBJECTS[k].topics.filter(t => t.g === p.grade); const st = ts.reduce((a, t) => a + (p.topics[t.id]?.stars || 0), 0); const max = ts.length * 3; const d = { mat: ['1+2', 'Počty, násobilka, geometria, slovné úlohy', '➗'], sjl: ['Aa', 'Písmená, y/i, vybrané slová, slovné druhy', '✏️'], prv: ['🌍', '🌿 Príroda · 🗺️ Slovensko a svet · 🇬🇧 Angličtina', '🔭'] }[k]; return `<button class="card lsubj ${k} press" data-a="subject" data-s="${k}"><span class="big">${d[0]}</span><span class="lt"><b>${SUBJECTS[k].name}</b><span>${d[1]}</span><span class="pbar"><i style="width:${max ? st / max * 100 : 0}%"></i></span><small>⭐ ${st} / ${max} hviezd · ${ts.length} tém</small></span><span class="deco">${d[2]}</span></button>`; };
   return `${topbar()}<main class="view pop-in"><div><h1 style="font-size:2rem">Učenie</h1><p class="muted b">Vyber si predmet. Učivo je pre ${p.grade}. ročník, iný ročník si vyberieš v predmete.</p></div>${card('mat')}${card('sjl')}${card('prv')}
-  <button class="card daily press" style="background:var(--sun-soft)" data-a="nav" data-v="reads"><span class="ic">📖</span><span><b>Čítanka</b><span class="b" style="font-size:.9rem">Prečítaj príbeh nahlas a odpovedz na otázky</span></span></button>
+  <button class="card readcard press" data-a="nav" data-v="reads"><span class="ic">📖</span><span><b>Čítanka</b><span class="b" style="font-size:.9rem">Prečítaj príbeh nahlas a odpovedz na otázky</span></span></button>
   <button class="card daily press ${dd ? 'done' : ''}" data-a="daily"><span class="ic">${dd ? '✅' : '🎯'}</span><span><b>${dd ? 'Denná výzva splnená!' : 'Denná výzva'}</b><span class="b" style="font-size:.9rem">${dd ? 'Môžeš si ju zahrať znova.' : '10 otázok zo všetkých predmetov · +50 bodov'}</span></span></button></main>${nav('learn')}`;
 };
 /* --- obchod --- */
@@ -365,8 +390,30 @@ const TUT = [
   { e: '✅', t: 'Keď dočítaš, ťukni na „Zastaviť“ a potom „Uložiť“. Ak sa mikrofón nezapne, ukážem ti, ako sa nahrať diktafónom.', f: '.recbox' },
   { e: '❓', t: 'Nakoniec odpovedz na otázky k textu a vyzdvihni si odmenu!', f: '.qbox' }
 ];
+const TOUR = [
+  { e: '🧸', t: 'Ahoj! Som medvedík Bystrík. Ukážem ti, čo všetko tu nájdeš. Ťukni na Ďalej.', f: null },
+  { e: '👋', t: 'Toto si ty! Keď na seba ťukneš, zamávaš. Oblečenie si zmeníš v šatníku.', f: '.stage' },
+  { e: '🎁', t: 'Tu si každý deň vyzdvihni dennú odmenu.', f: '.float.chest' },
+  { e: '✅', t: 'Tu sú dnešné úlohy. Za splnené úlohy dostaneš body a mince.', f: '.tasks' },
+  { e: '📚', t: 'Tu sa učíš: matematika, slovenčina, prehľad a čítanka.', f: '.nav [data-v="learn"]' },
+  { e: '🎮', t: 'Tu sú minihry. Za deň si môžeš zahrať pár hier.', f: '.nav [data-v="games"]' },
+  { e: '🪙', t: 'Toto sú tvoje mince. Za ne si kúpiš nové veci v obchode.', f: '.coinchip' },
+  { e: '👕', t: 'V šatníku sa oblečieš a navrhneš si vlastné pozadie.', f: '.nav [data-v="wardrobe"]' },
+  { e: '🚀', t: 'Hotovo! Poďme sa spolu učiť. Návod nájdeš kedykoľvek v nastaveniach.', f: null }
+];
+let GUIDE = null;
+function showGuide(steps, i, end) {
+  GUIDE = { steps, end }; clearTut(); GUIDE = { steps, end };
+  const st = steps[i]; const el = st.f ? $(st.f) : null; let atTop = false;
+  if (el) { el.classList.add('tutfocus'); const r = el.getBoundingClientRect(); if (r.top > innerHeight * .55) atTop = true; if (!el.closest('.nav') && !el.closest('.top')) { el.scrollIntoView({ behavior: 'smooth', block: 'center' }); atTop = false; const r2 = el.getBoundingClientRect(); if (r2.top > innerHeight * .5) atTop = true; } }
+  const w = document.createElement('div'); w.className = 'tutsheet' + (atTop ? ' attop' : '');
+  w.innerHTML = `<div class="in"><div class="dots">${steps.map((_, k) => `<i class="${k === i ? 'on' : ''}"></i>`).join('')}</div><div class="tutrow">${steps === TUT ? `<span class="tutemoji">${st.e}</span>` : `<span class="tutbear">${owlSvg('')}</span>`}<p>${st.t}</p></div><div class="rowbtns"><button class="btn" data-a="tut-skip">Preskočiť</button><button class="btn primary" data-a="tut-next" data-i="${i + 1}">${i + 1 < steps.length ? 'Ďalej →' : 'Rozumiem! 👍'}</button></div></div>`;
+  document.body.appendChild(w); say(st.t); sfx('pop');
+}
+function endTour() { clearTut(); const p = P(); if (p) { p.tourDone = true; save(); } confetti(120, .3); }
 function clearTut() { document.querySelectorAll('.tutsheet').forEach(e => e.parentNode.removeChild(e)); document.querySelectorAll('.tutfocus').forEach(e => e.classList.remove('tutfocus')); }
-function showTut(i = 0) {
+function showTut(i = 0) { return showGuide(TUT, i, endTut); }
+function showTutOld(i = 0) {
   clearTut();
   const st = TUT[i]; const el = $(st.f); if (el) { el.classList.add('tutfocus'); el.scrollIntoView({ behavior: 'smooth', block: 'center' }); }
   const w = document.createElement('div'); w.className = 'tutsheet';
@@ -445,7 +492,7 @@ VIEWS.home = () => {
   return `${topbar()}<main class="view pop-in">${stage}${streak}${taskCard}
   <div style="display:flex;flex-direction:column;gap:8px"><div class="sec"><h2>Učenie</h2><span class="eyebrow">${p.grade}. ročník</span></div><div class="subjects">${subj('mat')}${subj('sjl')}${subj('prv')}</div><p class="muted b" style="font-size:.85rem">Prehľad: príroda, Slovensko a svet okolo nás a angličtina.</p></div>
   <button class="card daily press ${dd ? 'done' : ''}" data-a="daily"><span class="ic">${dd ? '✅' : '🎯'}</span><span><b>${dd ? 'Denná výzva splnená!' : 'Denná výzva'}</b><span class="b" style="font-size:.9rem">${dd ? 'Môžeš si ju zahrať znova, len tak pre radosť.' : '10 otázok zo všetkých predmetov · +50 bodov'}</span></span></button>
-  <button class="card daily press" style="background:var(--sun-soft)" data-a="nav" data-v="reads"><span class="ic">📖</span><span><b>Čítanka</b><span class="b" style="font-size:.9rem">Krátke príbehy na čítanie nahlas · rodič si ťa vypočuje</span></span></button>
+  <button class="card readcard press" data-a="nav" data-v="reads"><span class="ic">📖</span><span><b>Čítanka</b><span class="b" style="font-size:.9rem">Krátke príbehy na čítanie nahlas · rodič si ťa vypočuje</span></span></button>
   <div class="tiles2"><button class="card tile2 games press" data-a="nav" data-v="games"><span class="i">🎈</span><b>Minihry</b><span>Balóny, slovný dážď a Pravda či nie</span></button>${CHAT_ON() ? `<button class="card tile2 chat press" data-a="nav" data-v="chat"><span class="i">🧸</span><b>Opýtaj sa Bystríka</b><span>Vysvetlí ti, čomu nerozumieš</span></button>` : `<button class="card tile2 chat press" data-a="nav" data-v="wardrobe"><span class="i">👕</span><b>Šatník</b><span>Obleč si svoju postavičku</span></button>`}</div>
   ${nextL ? `<button class="card next press" data-a="nav" data-v="rewards"><span class="thumb">${itemThumb(nr[0][0], nr[0][1], p.av)}</span><span style="min-width:0"><span class="eyebrow">Ďalšia odmena · level ${nextL}</span><b style="display:block;font-family:var(--f-display);font-size:1.1rem;line-height:1.15">${nr.map(x => rewardName(...x)).join(', ')}</b><span class="muted b" style="font-size:.88rem">Chýba ti ešte ${toNext} bodov</span></span></button>` : ''}
   </main>${nav('home')}`;
@@ -453,17 +500,19 @@ VIEWS.home = () => {
 AFTER.home = () => { if (UI.params.wave) { const f = $('.stage .avatar'); f && f.classList.add('waving'); } };
 
 /* --- predmet --- */
+let PAREA = 'all';
 VIEWS.subject = ({ s, g }) => {
   const p = P(); g = g || p.grade; const S = SUBJECTS[s]; const m = p.mode[s] || 'quiz';
   const ts = S.topics.filter(t => t.g === g).map(t => ({ ...t, s }));
   return `${topbar('learn-back')}<main class="view"><h1 style="font-size:2rem">${S.name}</h1>
-  ${s !== 'mat' ? `<button class="card daily press" style="background:var(--sun-soft)" data-a="nav" data-v="reads"><span class="ic">📖</span><span><b>Čítanka</b><span class="b" style="font-size:.9rem">Prečítaj príbeh nahlas, nahraj sa a odpovedz na otázky</span></span></button>` : ''}
+  ${s !== 'mat' ? `<button class="card readcard press" data-a="nav" data-v="reads"><span class="ic">📖</span><span><b>Čítanka</b><span class="b" style="font-size:.9rem">Prečítaj príbeh nahlas, nahraj sa a odpovedz na otázky</span></span></button>` : ''}
   <span class="eyebrow">1. Ako sa chceš učiť?</span>
   <div class="modepick" role="radiogroup">${Object.entries(MODES).map(([k, x]) => `<button class="mp press ${k === m ? 'on' : ''}" data-a="mode" data-m="${k}" data-s="${s}" role="radio" aria-checked="${k === m}"><span class="mi">${x.i}</span>${x.n}</button>`).join('')}</div>
   <div class="modehelp"><span style="font-size:1.6rem">${MODES[m].i}</span><span>${MODES[m].d}</span></div>
   <span class="eyebrow">2. Vyber ročník a tému</span>
   <div class="chips">${[1, 2, 3, 4].map(x => `<button class="chip ${x === g ? 'on' : ''}" data-a="grade-chip" data-g="${x}" data-s="${s}">${x}. ročník</button>`).join('')}</div>
-  <div class="topics">${ts.map((t, i) => { const st = p.topics[t.id]; const ok = modeOk(t, m); return `<button class="card topic press ${ok ? '' : 'na'}" data-a="topic" data-id="${t.id}" style="animation:popUp .4s ${i * 45}ms backwards"><span class="ti" style="background:var(--c-${s}-soft)">${t.icon}</span><span class="tn">${t.name}<small>${ok ? (st && st.total ? `${Math.round(st.correct / st.total * 100)} % správne` : 'Ešte nevyskúšané') : `${MODES[m].n} tu nie je, vyber iný spôsob`}</small></span>${starStr(st?.stars || 0)}${ok ? '<span class="go">Hrať</span>' : ''}</button>`; }).join('')}</div></main>${nav('learn')}`;
+  ${s === 'prv' ? `<div class="chips">${[['all', '✨ Všetko'], ...Object.entries(AREAS).map(([k, a]) => [k, a.i + ' ' + a.n])].map(([k, n]) => `<button class="chip ${PAREA === k ? 'on' : ''}" data-a="parea" data-k="${k}">${n}</button>`).join('')}</div>` : ''}
+  ${(s === 'prv' ? Object.keys(AREAS).filter(k => PAREA === 'all' || PAREA === k).map(k => [k, ts.filter(t => (TOPIC[t.id].area || 'bio') === k)]) : [[null, ts]]).filter(([, list]) => list.length).map(([k, list]) => `${k ? `<div class="areahead a-${k}"><span>${AREAS[k].i}</span>${AREAS[k].n}</div>` : ''}<div class="topics">${list.map((t, i) => { const st = p.topics[t.id]; const ok = modeOk(t, m); return `<button class="card topic press ${ok ? '' : 'na'}" data-a="topic" data-id="${t.id}" style="animation:popUp .4s ${i * 45}ms backwards"><span class="ti" style="background:var(--c-${s}-soft)">${t.icon}</span><span class="tn">${t.name}<small>${ok ? (st && st.total ? `${Math.round(st.correct / st.total * 100)} % správne` : 'Ešte nevyskúšané') : `${MODES[m].n} tu nie je, vyber iný spôsob`}</small></span>${starStr(st?.stars || 0)}${ok ? '<span class="go">Hrať</span>' : ''}</button>`; }).join('')}</div>`).join('')}</main>${nav('learn')}`;
 };
 function startMode(id) {
   const t = TOPIC[id]; const p = P(); const m = p.mode[t.s] || 'quiz'; const back = { v: 'subject', p: { s: t.s, g: t.g } };
@@ -777,8 +826,8 @@ VIEWS.rewards = () => {
     body = `<section class="card streak" style="align-items:center;text-align:center"><span class="flame" style="font-size:4rem">🔥</span><b class="n" style="font-size:2rem">${p.streak.count} ${plural(p.streak.count, 'deň', 'dni', 'dní')} po sebe</b><span class="b muted">Najdlhšia séria: ${p.streak.best || 0}. Séria rastie, keď sa učíš každý deň.</span></section>
     <div class="sec"><h2>Odmeny za sériu</h2></div><div class="road" style="padding:0">${sr.map(([c, it]) => { const got = (p.streak.best || 0) >= it.streak; return `<div class="node ${got ? 'got' : ''}"><span class="ln">${got ? '✓' : `<span><small>DNÍ</small>${it.streak}</span>`}</span><div class="nc"><b>${got ? 'Získané' : `Séria ${it.streak} dní`}</b><div class="ri"><span class="rt"><span class="t">${itemThumb(c, it, p.av)}</span>${rewardName(c, it)}</span></div><div class="pbar" style="margin-top:6px"><i style="width:${Math.min(100, p.streak.count / it.streak * 100)}%;background:var(--accent)"></i></div></div></div>`; }).join('')}</div>
     <div class="sec"><h2>Denná odmena</h2><span class="eyebrow">${drReady(p) ? 'Pripravená!' : 'Zajtra ďalšia'}</span></div><div class="cal">${DR.map((x, i) => `<div class="d ${i + 1 < dn || (!drReady(p) && i + 1 === p.dailyReward.day) ? 'got' : ''} ${drReady(p) && i + 1 === dn ? 'now' : ''} ${i === 6 ? 'big' : ''}"><span class="di">${x.i}</span>${i + 1}. deň<br>+${x.xp}</div>`).join('')}</div>${drReady(p) ? '<button class="btn sun block" data-a="dreward">Vyzdvihnúť dnešnú odmenu</button>' : ''}`;
-  } else body = `<div class="badges pop-in">${BADGES.map(b => `<div class="card badge ${p.badges.includes(b.id) ? '' : 'off'}"><span class="bi">${b.i}</span>${b.n}</div>`).join('')}</div>`;
-  return `${topbar()}<main class="view"><h1 style="font-size:2rem">Odmeny</h1><div class="seg"><button class="${RTAB === 'road' ? 'on' : ''}" data-a="rtab" data-t="road">Cesta odmien</button><button class="${RTAB === 'streak' ? 'on' : ''}" data-a="rtab" data-t="streak">🔥 Séria</button><button class="${RTAB === 'badges' ? 'on' : ''}" data-a="rtab" data-t="badges">Odznaky ${p.badges.length}/${BADGES.length}</button></div>${body}</main>${nav('rewards')}`;
+  } else body = `<p class="muted b" style="font-size:.88rem">Každý úspech má 3 medaily: 🥉 bronz, 🥈 striebro a 🥇 zlato. Za každú medailu dostaneš mince!</p><div class="achlist pop-in">${ACH.map(a => { const t = achTier(p, a); const v = a.m(p) || 0; const next = a.t[t]; const prev = t ? a.t[t - 1] : 0; const pct = next ? Math.min(100, (v - prev) / (next - prev) * 100) : 100; return `<div class="card ach ${t ? 't' + t : 'off'}"><span class="ai">${a.i}</span><div class="ab"><b>${a.n}</b><span>${a.d}${next ? `: ${v} / ${next}` : ': všetko splnené!'}</span><div class="pbar"><i style="width:${pct}%"></i></div></div><span class="amed">${MEDAL.map((m, k) => `<i class="${k < t ? 'on' : ''}">${m}</i>`).join('')}</span></div>`; }).join('')}</div>`;
+  return `${topbar()}<main class="view"><h1 style="font-size:2rem">Odmeny</h1><div class="seg"><button class="${RTAB === 'road' ? 'on' : ''}" data-a="rtab" data-t="road">Cesta odmien</button><button class="${RTAB === 'streak' ? 'on' : ''}" data-a="rtab" data-t="streak">🔥 Séria</button><button class="${RTAB === 'badges' ? 'on' : ''}" data-a="rtab" data-t="badges">🏅 Úspechy ${ACH.reduce((a, x) => a + achTier(p, x), 0)}/${ACH.length * 3}</button></div>${body}</main>${nav('rewards')}`;
 };
 function drawRoad() {
   const road = $('#road'), svg = $('#roadpath'); if (!road || !svg) return; const r0 = road.getBoundingClientRect();
@@ -852,7 +901,7 @@ function calcKey(k) {
 VIEWS.settings = () => {
   const tg = (k, n) => `<button class="row" data-a="toggle" data-k="${k}"><span class="grow">${n}</span><span class="toggle ${DATA.settings[k] ? 'on' : ''}"></span></button>`;
   const sv = 'speechSynthesis' in window ? slovakVoice() : null;
-  return `${topbar('home')}<main class="view"><h1 style="font-size:2rem">Nastavenia</h1><section class="card" style="padding:6px 14px"><div class="list">${tg('sound', '🔊 Zvuky')}${tg('voice', '🗣️ Čítanie otázok nahlas')}<div class="row" style="flex-direction:column;align-items:flex-start;gap:6px"><span>${sv === 'sk' ? '✅ Slovenský hlas je v telefóne' : sv === 'cs' ? '⚠️ Slovenský hlas chýba, číta sa českým hlasom' : '⚠️ Slovenský hlas v telefóne chýba'}</span>${sv !== 'sk' ? '<small class="muted" style="font-weight:700">Aby hlas správne čítal mäkčene a dĺžne, nainštalujte slovenský hlas. Android: Nastavenia → Prevod textu na reč → Google → Inštalovať hlasové údaje → Slovenčina. iPhone: Nastavenia → Prístupnosť → Hovorený obsah → Hlasy → Slovenčina.</small>' : ''}<button class="btn small" data-a="voice-test">🔊 Vyskúšať hlas</button></div><button class="row" data-a="nav" data-v="room"><span class="grow">🎨 Moje pozadie</span><span>›</span></button><button class="row" data-a="edit-prof"><span class="grow">✏️ Úvodné nastavenie<small class="muted" style="display:block;font-weight:700;font-size:.82rem">Meno, dievča/chlapec, ročník, zvieratko a účes. Body a odmeny zostanú.</small></span><span>›</span></button><button class="row" data-a="nav" data-v="profiles"><span class="grow">👥 Zmeniť hráča alebo pridať nového</span><span>›</span></button><button class="row" data-a="parent-open"><span class="grow">🔒 Rodičovský účet</span><span>›</span></button></div></section><p class="muted b" style="font-size:.88rem">V rodičovskom účte, chránenom PIN kódom, nájdete prehľad pokroku, históriu a ďalšie nastavenia.</p></main>${nav('')}`;
+  return `${topbar('home')}<main class="view"><h1 style="font-size:2rem">Nastavenia</h1><section class="card" style="padding:6px 14px"><div class="list">${tg('sound', '🔊 Zvuky')}${tg('voice', '🗣️ Čítanie otázok nahlas')}<div class="row" style="flex-direction:column;align-items:flex-start;gap:6px"><span>${sv === 'sk' ? '✅ Slovenský hlas je v telefóne' : sv === 'cs' ? '⚠️ Slovenský hlas chýba, číta sa českým hlasom' : '⚠️ Slovenský hlas v telefóne chýba'}</span>${sv !== 'sk' ? '<small class="muted" style="font-weight:700">Aby hlas správne čítal mäkčene a dĺžne, nainštalujte slovenský hlas. Android: Nastavenia → Prevod textu na reč → Google → Inštalovať hlasové údaje → Slovenčina. iPhone: Nastavenia → Prístupnosť → Hovorený obsah → Hlasy → Slovenčina.</small>' : ''}<button class="btn small" data-a="voice-test">🔊 Vyskúšať hlas</button></div><div class="row" style="flex-direction:column;align-items:flex-start;gap:6px"><span>🌗 Vzhľad apky</span><div class="seg" style="width:100%">${[['auto', '🔄 Automaticky'], ['light', '☀️ Svetlý'], ['dark', '🌙 Tmavý']].map(([k, n]) => `<button class="${DATA.settings.theme === k ? 'on' : ''}" data-a="theme" data-t="${k}">${n}</button>`).join('')}</div></div><button class="row" data-a="tour-again"><span class="grow">🧸 Ukáž mi znova návod</span><span>›</span></button><button class="row" data-a="nav" data-v="room"><span class="grow">🎨 Moje pozadie</span><span>›</span></button><button class="row" data-a="edit-prof"><span class="grow">✏️ Úvodné nastavenie<small class="muted" style="display:block;font-weight:700;font-size:.82rem">Meno, dievča/chlapec, ročník, zvieratko a účes. Body a odmeny zostanú.</small></span><span>›</span></button><button class="row" data-a="nav" data-v="profiles"><span class="grow">👥 Zmeniť hráča alebo pridať nového</span><span>›</span></button><button class="row" data-a="parent-open"><span class="grow">🔒 Rodičovský účet</span><span>›</span></button></div></section><p class="muted b" style="font-size:.88rem">V rodičovskom účte, chránenom PIN kódom, nájdete prehľad pokroku, históriu a ďalšie nastavenia.</p></main>${nav('')}`;
 };
 
 /* --- rodičovský účet --- */
@@ -924,7 +973,7 @@ const ACT = {
   'ob-pet-next': () => { const v = ($('#ob-petname').value || '').trim(); OB.av.petName = v && v !== itemOf('pet', OB.av.pet).n ? v : ''; sfx('tap'); OB.step = 5; go('onboard', {}, 'f'); },
   'ob-to-room': () => { sfx('tap'); OB.step = 6; go('onboard', {}, 'f'); },
   'ob-hair': d => { OB.av.hair = d.i; sfx('pop'); render(null); const f = $('#ob-fig .avatar'); f && f.classList.add('jump'); },
-  'ob-done': () => { if (OB.edit) { const p = P(); p.name = OB.name; p.grade = OB.grade; p.av = { ...OB.av, gender: OB.gender }; p.room = OB.room; save(); sfx('level'); confetti(100); toast('Uložené ✓'); return go('home', { wave: true }, 'u'); } const p = newProfile(OB.name, OB.gender, OB.grade, OB.av); p.room = OB.room || defaultRoom(OB.gender); DATA.profiles.push(p); DATA.current = p.id; PARENT_OK = false; save(); sfx('level'); confetti(150); go('home', { wave: true }, 'u'); },
+  'ob-done': () => { if (OB.edit) { const p = P(); p.name = OB.name; p.grade = OB.grade; p.av = { ...OB.av, gender: OB.gender }; p.room = OB.room; save(); sfx('level'); confetti(100); toast('Uložené ✓'); return go('home', { wave: true }, 'u'); } const p = newProfile(OB.name, OB.gender, OB.grade, OB.av); p.room = OB.room || defaultRoom(OB.gender); DATA.profiles.push(p); DATA.current = p.id; PARENT_OK = false; save(); sfx('level'); confetti(150); go('home', { wave: true }, 'u'); setTimeout(() => { if (UI.view === 'home' && !P().tourDone) showGuide(TOUR, 0, endTour); }, 1400); },
   'pick-prof': d => { DATA.current = d.id; save(); sfx('pop'); go('home', { wave: true }, 'f'); },
   'edit-prof': () => { const p = P(); OB = { step: 1, edit: true, name: p.name, gender: p.av.gender, grade: p.grade, av: JSON.parse(JSON.stringify(p.av)), room: JSON.parse(JSON.stringify(p.room)) }; sfx('tap'); go('onboard', {}, 'f'); },
   'new-prof': () => { OB = { step: 1, name: '', gender: 'd', grade: 1, av: defaultAvatar('d'), room: defaultRoom('d') }; go('onboard', {}, 'f'); },
@@ -979,6 +1028,9 @@ const ACT = {
   'pdel-ask': () => { PDEL = true; render(null); }, 'pdel-no': () => { PDEL = false; render(null); },
   'pdel-yes': () => { DATA.profiles = DATA.profiles.filter(p => p.id !== PSEL); if (DATA.current === PSEL) DATA.current = DATA.profiles[0]?.id || null; PSEL = DATA.current; PDEL = false; save(); if (!DATA.profiles.length) { PARENT_OK = false; return boot(); } render(null); },
   ask: d => askBot(d.q),
+  parea: d => { PAREA = d.k; sfx('tap'); render(null); },
+  theme: d => { DATA.settings.theme = d.t; save(); applyTheme(); sfx('pop'); render(null); },
+  'tour-again': () => { go('home', {}, 'b'); setTimeout(() => showGuide(TOUR, 0, endTour), 700); },
   shopcat: d => { SHOPCAT = d.c; SHOPSEL = null; sfx('tap'); render(null); },
   'buy-ask': d => { const p = P(); const it = itemOf(d.c, d.i); if ((p.coins || 0) < it.price) { sfx('no'); toast(`Chýba ti ešte ${it.price - (p.coins || 0)} mincí. Uč sa a zbieraj! 🪙`); return; } SHOPSEL = it.sid; sfx('tap'); render(null); },
   buy: (d, el) => { const p = P(); const it = itemOf(d.c, d.i); if ((p.coins || 0) < it.price || p.owned.includes(it.sid)) return; p.coins -= it.price; p.owned.push(it.sid); SHOPSEL = null; save(); sfx('gift'); buzz([30, 40, 30]); burst(el, 40); confetti(90, .4); toast(`Kúpené: ${it.n}! 🎉`); render(null); },
@@ -987,7 +1039,7 @@ const ACT = {
   'rd-open': d => { RD = { id: d.id, opts: {}, ans: {}, correct: 0 }; sfx('tap'); go('read', {}, 'f'); },
   'rd-back': () => { if (REC && RD.recording) { try { REC.mr.stop(); } catch (e) { } } RD = null; go('reads', {}, 'b'); },
   'rd-say': () => say(READ[RD.id].text),
-  'tut-open': () => showTut(0), 'tut-skip': () => endTut(), 'tut-next': d => { const i = +d.i; if (i >= TUT.length) endTut(); else showTut(i); },
+  'tut-open': () => showTut(0), 'tut-skip': () => { const g = GUIDE; (g ? g.end : endTut)(); }, 'tut-next': d => { const i = +d.i; const g = GUIDE || { steps: TUT, end: endTut }; if (i >= g.steps.length) g.end(); else showGuide(g.steps, i, g.end); },
   'rec-start': () => recStart(), 'dikt-open': () => openDiktafon(),
   'rec-pick': () => { closeSheet(); const f = $('#recfile'); if (f) f.click(); },
   'rec-stop': () => { if (REC && REC.mr.state !== 'inactive') REC.mr.stop(); },
@@ -1025,5 +1077,5 @@ function boot() {
   if (!P()) return go('profiles', {}, 'u');
   go('home', { wave: true }, 'u');
 }
-load(); boot();
+load(); applyTheme(); boot();
 setTimeout(initDb, 0);

@@ -324,9 +324,9 @@ const THEMES = [
   { id: 'duha', n: 'Dúha', c: ['#FFD1DC', '#FFE7B8', '#FFF6B8', '#C9F2D9', '#CFE3FF', '#E4D4FF'], lvl: 8 },
   { id: 'vesmir', n: 'Vesmír', c: ['#2A2266', '#1B1F4B', '#0F1A3A'], dark: true, streak: 14 }
 ];
-const PATS = [{ id: 'nic', n: 'Bez vzoru' }, { id: 'bodky', n: 'Bodky' }, { id: 'pruhy', n: 'Pásiky' }, { id: 'kocky', n: 'Kocky' }, { id: 'vlnky', n: 'Vlnky' }, { id: 'mriezka', n: 'Mriežka' }, { id: 'diamanty', n: 'Diamanty' }, { id: 'bubliny', n: 'Bublinky' }, { id: 'luce', n: 'Lúče' }, { id: 'konfety', n: 'Konfety' }];
+const PATS = [{ id: 'nic', n: 'Bez vzoru' }, { id: 'bodky', n: 'Bodky' }, { id: 'pruhy', n: 'Pásiky' }, { id: 'kocky', n: 'Kocky' }, { id: 'vlnky', n: 'Vlnky' }, { id: 'mriezka', n: 'Mriežka' }, { id: 'diamanty', n: 'Diamanty' }, { id: 'bubliny', n: 'Bublinky' }, { id: 'luce', n: 'Lúče' }, { id: 'konfety', n: 'Konfety' }, { id: 'phviezdy', n: 'Hviezdičky' }, { id: 'psrdce', n: 'Srdiečka' }, { id: 'pkvety', n: 'Kvietky' }, { id: 'plabky', n: 'Labky' }, { id: 'pcikcak', n: 'Cik-cak' }, { id: 'ptrojuh', n: 'Trojuholníky' }, { id: 'pmesiac', n: 'Mesiačiky' }, { id: 'pduhy', n: 'Dúhy' }];
 const STICKERS = [
-  ...'😀,😍,😎,🦄,🐱,🐶,🐰,🐻,🐼,🦊,🐸,🐠,🦋,🐞,🐝,🦖,🌳,🌲,🌸,🌻,🌼,🌷,🍄,⭐,🌙,☀️,☁️,❄️,❤️,💜,🎈,🎀,🍭,🍦,🧁,🍓,🍉,⚽,🏀,🎵,🎨,✏️,📚,🚗,🚲,🏠,🏰,🪐'.split(',').map(e => ({ e, n: e })),
+  ...'😀,😍,😎,🦄,🐱,🐶,🐰,🐻,🐼,🦊,🐸,🐠,🦋,🐞,🐝,🦖,🌳,🌲,🌸,🌻,🌼,🌷,🍄,⭐,🌙,☀️,☁️,❄️,❤️,💜,🎈,🎀,🍭,🍦,🧁,🍓,🍉,⚽,🏀,🎵,🎨,✏️,📚,🚗,🚲,🏠,🏰,🪐,🐬,🐢,🦒,🍀,🌵,🍎,🎁,🧸,🦩,🍩,🎃,⛄,🐧,🦁,🍕,🎂,🎸,🏝️,🌊'.split(',').map(e => ({ e, n: e })),
   { e: '🌈', n: 'Dúha', lvl: 3 }, { e: '👑', n: 'Korunka', lvl: 5 }, { e: '🚀', n: 'Raketa', lvl: 7 }, { e: '💎', n: 'Diamant', lvl: 9 }, { e: '🐉', n: 'Drak', lvl: 12 }, { e: '🏆', n: 'Pohár', lvl: 15 }, { e: '🎆', n: 'Ohňostroj', streak: 7 }
 ];
 function defaultRoom(g) { return { theme: g === 'd' ? 'ruzova' : 'nebo', pat: 'bodky', page: true, stickers: [{ e: '⭐', x: 16, y: 14, s: 1, r: -10 }, { e: g === 'd' ? '🌸' : '⚽', x: 84, y: 20, s: 1, r: 12 }, { e: '☁️', x: 20, y: 44, s: 1.2, r: 0 }, { e: g === 'd' ? '🦄' : '🦖', x: 82, y: 62, s: 1.1, r: 6 }] }; }
