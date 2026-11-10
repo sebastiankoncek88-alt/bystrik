@@ -152,6 +152,24 @@ p{margin:0}
 .ptextbody{background:var(--paper2);border:2px solid var(--line);border-radius:14px;padding:10px 12px;font-weight:700;line-height:1.55}
 .prec{display:flex;flex-direction:column;gap:6px;padding:8px 10px;border-radius:14px;background:var(--sun-soft)}
 .view.nonav:has(.recbox){padding-bottom:calc(220px + env(safe-area-inset-bottom,0px))}
+.aiguidebtn{width:100%;margin-top:6px;animation:bkblink 2.4s ease-in-out infinite}
+.aigover{align-items:flex-end}
+.aigbox{text-align:left!important;align-items:stretch!important;gap:10px!important}
+.aigbox h2{font-size:1.35rem;line-height:1.2}
+.aigbox>.bear{width:110px;height:110px;align-self:center}
+.aighead{display:flex;align-items:center;gap:10px}.aighead .bear{width:62px;height:62px;flex:none}
+.aigdots{flex:1;display:flex;gap:6px}.aigdots i{flex:1;height:7px;border-radius:9px;background:var(--line)}.aigdots i.on{background:var(--accent)}.aigdots i.done{background:var(--good)}
+.aigbody{display:flex;flex-direction:column;gap:10px;font-weight:700;line-height:1.4}.aigbody .btn{text-decoration:none;text-align:center}
+.aigpic{display:flex;gap:10px}.aigfree{flex:1;background:var(--paper2);border:2px solid var(--line);border-radius:16px;padding:12px;text-align:center}.aigfree b{display:block;font-family:var(--f-display);font-size:1.6rem;color:var(--accent)}.aigfree span{font-size:.8rem;opacity:.75}
+.aigmock{background:#1f1f1f;color:#e8e8e8;border-radius:14px;overflow:hidden;font-size:.82rem;border:2px solid var(--edge)}
+.aigmock .mbar{background:#2d2d2d;padding:6px 10px;font-size:.75rem;opacity:.85}
+.aigmock .mrow{display:flex;align-items:center;gap:8px;padding:10px}.aigmock .mlist{border-top:1px solid #333}.aigmock .mlist>span:first-child{flex:1;color:#8ab4f8}.aigmock small{color:#aaa}
+.aigmock .mlogo{font-weight:800}.aigmock .mtxt{padding:0 10px 10px;margin:0}
+.aigmock .mbtn{background:#333;border-radius:99px;padding:6px 12px;font-weight:800}
+.aigmock .mfree{color:#aaa;font-size:.75rem}.aigmock .mico{width:28px;height:28px;display:grid;place-items:center;border-radius:8px;font-size:1rem}
+.aigmock .pulse{outline:3px solid #FFC94D;animation:aigp 1.1s ease-in-out infinite}
+@keyframes aigp{50%{outline-color:transparent;transform:scale(1.08)}}
+.aigwarn{background:#fff3cd;color:#7a5200;border-radius:12px;padding:8px 10px;margin:0}
 .dsteps{display:flex;flex-direction:column;gap:10px}
 .dsteps>div{display:flex;gap:10px;align-items:flex-start;font-weight:700;line-height:1.35;background:var(--paper2);border:2px solid var(--line);border-radius:14px;padding:10px}
 .dsteps span{flex:none;width:30px;height:30px;border-radius:50%;background:var(--accent);color:#fff;display:grid;place-items:center;font-family:var(--f-display);font-weight:800}
@@ -2727,7 +2745,7 @@ function registerNotes() { DATA.profiles.forEach(p => (p.notes || []).forEach(no
 VIEWS.notes = () => {
   const p = P(); const on = CHAT_ON();
   return `${topbar('learn-back')}<main class="view"><div class="nhead"><span class="nb">${bearSvg(NOTE.busy ? '' : 'cheer')}</span><div><h1 style="font-size:1.8rem">Moje poznámky</h1><p class="muted b" style="font-size:.9rem">Odfoť si poznámky zo zošita. Bystrík ich zhrnie do bodov a spraví z nich kvíz alebo test.</p></div></div>
-  ${on ? `<div class="nbtns"><button class="btn primary" data-a="note-cam" ${NOTE.busy ? 'disabled' : ''}>📸 Odfotiť poznámky</button><button class="btn" data-a="note-pick" ${NOTE.busy ? 'disabled' : ''}>🖼️ Vybrať fotku</button></div><input type="file" id="notecam" accept="image/*" capture="environment" hidden><input type="file" id="notepick" accept="image/*" hidden>` : `<section class="card" style="padding:14px"><b>🧸 Táto funkcia potrebuje Bystríka (umelú inteligenciu).</b><p class="muted b" style="font-size:.88rem;margin-top:6px">Na webe ju zapnú rodičia: Rodičovský účet → „Bystrík (AI) na webe“ → vložiť AI kľúč. V Claude funguje sama.</p></section>`}
+  ${on ? `<div class="nbtns"><button class="btn primary" data-a="note-cam" ${NOTE.busy ? 'disabled' : ''}>📸 Odfotiť poznámky</button><button class="btn" data-a="note-pick" ${NOTE.busy ? 'disabled' : ''}>🖼️ Vybrať fotku</button></div><input type="file" id="notecam" accept="image/*" capture="environment" hidden><input type="file" id="notepick" accept="image/*" hidden>` : `<section class="card" style="padding:14px"><b>🧸 Táto funkcia potrebuje Bystríka (umelú inteligenciu).</b><p class="muted b" style="font-size:.88rem;margin-top:6px">Popros rodičov: ⚙️ → Rodičovský účet → „Zapnúť AI“. Je to zadarmo a návod ich prevedie.</p></section>`}
   ${NOTE.busy ? `<section class="card nbusy">${NOTE.preview ? `<img src="${NOTE.preview}" alt="Fotka poznámok">` : ''}<div><b>Bystrík číta tvoje poznámky…</b><span class="typing"><i></i><i></i><i></i></span><span class="muted b" style="font-size:.82rem">Môže to trvať chvíľku.</span></div></section>` : ''}
   ${NOTE.err ? `<section class="card" style="padding:12px;background:var(--bad-soft)"><b>😕 ${esc(NOTE.err)}</b></section>` : ''}
   ${(p.notes || []).map(n => `<section class="card notecard"><div class="sec"><h2>📸 ${esc(n.title)}</h2><span class="eyebrow">${fmtTime(n.t)}</span></div><ul>${n.summary.map(x => `<li>${esc(x)}</li>`).join('')}</ul><div class="nbtns"><button class="btn small primary" data-a="note-quiz" data-id="${n.id}">❓ Kvíz</button><button class="btn small" data-a="note-test" data-id="${n.id}">📝 Test</button><button class="btn small" data-a="note-del" data-id="${n.id}" aria-label="Vymazať">🗑️</button></div></section>`).join('') || (NOTE.busy ? '' : '<p class="muted b" style="text-align:center">Zatiaľ nemáš žiadne poznámky. Odfoť si prvé! 📒</p>')}
@@ -3218,13 +3236,30 @@ function checkPTasks(p, id, stars) {
 }
 const needBackup = () => DATA.profiles.some(p => p.xp > 0) && (!DATA.backupAt || Date.now() - DATA.backupAt > 7 * DAYMS);
 let RESTORE = false;
+/* Návod na AI kľúč */
+let AIG = 0;
+const AIG_STEPS = [
+  { t: 'Zapneme Bystríkovi mozog! 🧠', say: 'Ahoj! Pomôžem vám zapnúť moju umelú inteligenciu. Je to zadarmo a zaberie to asi dve minúty.', body: () => `<div class="aigpic"><div class="aigfree"><b>0 €</b><span>bez karty</span></div><div class="aigfree"><b>2 min</b><span>raz na zariadenie</span></div></div><p>Potrebujete len <b>Google účet</b> (ten istý ako na Gmail alebo YouTube).</p>` },
+  { t: '1. Otvorte Google AI Studio', say: 'Ťuknite na tlačidlo Otvoriť Google AI Studio a prihláste sa svojím Google účtom. Ak sa niečo spýta, potvrďte podmienky.', body: () => `<a class="btn primary" href="https://aistudio.google.com/apikey" target="_blank" rel="noopener">🌐 Otvoriť Google AI Studio</a><div class="aigmock"><div class="mbar">aistudio.google.com</div><div class="mrow"><span class="mlogo">Google AI Studio</span></div><p class="mtxt">Prihláste sa Google účtom a ak treba, odsúhlaste podmienky (<b>I agree / Continue</b>).</p></div><p class="muted">Otvorí sa v novej karte. Potom sa sem vráťte.</p>` },
+  { t: '2. Vytvorte kľúč', say: 'Vpravo hore ťuknite na Create API key. Ak už tam kľúč v zozname máte, tento krok preskočte.', body: () => `<div class="aigmock"><div class="mbar">API Keys</div><div class="mrow" style="justify-content:flex-end"><span class="mbtn pulse">🔑 Create API key</span></div><div class="mrow mlist"><span>…abcd<br><small>Default Gemini API Key</small></span><span class="mfree">Free tier</span></div></div><p>Ťuknite na <b>Create API key</b>. Ak už kľúč v zozname vidíte, pokračujte ďalej.</p><p class="aigwarn">⚠️ Na <b>Set up billing</b> neklikajte, zadarmo to stačí.</p>` },
+  { t: '3. Skopírujte kľúč', say: 'Pri kľúči ťuknite na ikonku dvoch štvorčekov. Tým sa kľúč skopíruje.', body: () => `<div class="aigmock"><div class="mbar">API Keys</div><div class="mrow mlist"><span>…abcd<br><small>Default Gemini API Key</small></span><span class="mico pulse">⧉</span><span class="mico">$</span><span class="mico">⋮</span></div></div><p>Pri kľúči ťuknite na ikonku <b>dvoch štvorčekov ⧉</b> (Copy). Na telefóne môže byť skrytá pod <b>⋮</b>.</p>` },
+  { t: '4. Vložte kľúč sem', say: 'Vráťte sa sem a ťuknite na Vložiť. Potom na Uložiť a vyskúšať. Hotovo!', body: () => `<input class="field" id="aigkey" type="password" autocomplete="off" placeholder="Sem vložte kľúč" style="font-size:1rem;padding:12px;text-align:left"><div class="rowbtns" style="grid-template-columns:1fr 1fr"><button class="btn" data-a="aig-paste">📋 Vložiť</button><button class="btn primary" data-a="aig-save">✅ Uložiť a vyskúšať</button></div><p class="muted" id="aigmsg">Kľúč zostane len v tomto zariadení. Nikomu ho neposielajte.</p>` }
+];
+function aiGuide(i) {
+  AIG = Math.max(0, Math.min(AIG_STEPS.length - 1, i)); const st = AIG_STEPS[AIG];
+  let o = $('#aigover'); if (!o) { o = document.createElement('div'); o.className = 'over aigover'; o.id = 'aigover'; document.body.appendChild(o); }
+  o.innerHTML = `<div class="box card aigbox"><div class="aighead">${bearSvg('talking')}<div class="aigdots">${AIG_STEPS.map((_, k) => `<i class="${k === AIG ? 'on' : k < AIG ? 'done' : ''}"></i>`).join('')}</div><button class="iconbtn press" data-a="aig-close" aria-label="Zavrieť">✕</button></div><h2>${st.t}</h2><div class="aigbody">${st.body()}</div><div class="rowbtns" style="grid-template-columns:${AIG ? '1fr 2fr' : '1fr'}">${AIG ? '<button class="btn" data-a="aig-go" data-i="-1">← Späť</button>' : ''}${AIG < AIG_STEPS.length - 1 ? `<button class="btn primary" data-a="aig-go" data-i="1">${AIG ? 'Hotovo, ďalej →' : 'Poďme na to →'}</button>` : ''}</div></div>`;
+  try { say(st.say); } catch (e) { }
+  setTimeout(() => { const b = $('#aigover .bear'); if (b) b.classList.remove('talking'); }, Math.min(6000, st.say.length * 70));
+}
+async function readClip() { try { return ((await navigator.clipboard.readText()) || '').trim(); } catch (e) { return ''; } }
 function aiCard() {
   if (window.claude && window.claude.use) return '';
   const has = !!getApiKey();
   return `<section class="card pcard aicard"><span class="eyebrow">🧸 Bystrík (AI) na webe</span>${has ? '<p class="b" style="color:var(--good);font-size:.9rem;padding:4px 0">✅ AI kľúč je uložený. Chat, „Vysvetli mi to“ a Moje poznámky fungujú.</p>' : '<p class="b" style="font-size:.9rem;padding:4px 0">Zapnite chat s Bystríkom, vysvetľovanie chýb a čítanie poznámok z fotiek.</p>'}
-  <div class="dsteps" style="margin:6px 0 10px"><div><span>1</span><p>Otvorte <a href="https://aistudio.google.com/apikey" target="_blank" rel="noopener"><b>aistudio.google.com/apikey</b></a> a prihláste sa Google účtom. Je to <b>zadarmo</b>, netreba kartu.</p></div><div><span>2</span><p>Ťuknite na <b>Create API key</b> a kľúč skopírujte (ikonka dvoch štvorčekov).</p></div><div><span>3</span><p>Vložte ho sem a ťuknite na <b>Uložiť</b>.</p></div></div>
+  ${has ? '' : '<button class="btn primary aiguidebtn" data-a="ai-guide">▶️ Zapnúť AI s návodom</button><p class="muted b" style="font-size:.8rem;text-align:center;margin:6px 0 10px">Zadarmo · bez platobnej karty · asi 2 minúty</p>'}
   <input class="field" id="aikey" type="password" autocomplete="off" placeholder="${has ? '•••••••• (uložený)' : 'Sem vložte kľúč'}" style="font-size:1rem;padding:10px 12px;text-align:left">
-  <div class="bkbtns" style="margin-top:8px"><button class="btn small primary" data-a="ai-save">💾 Uložiť</button>${has ? '<button class="btn small" data-a="ai-test">🔎 Otestovať</button><button class="btn small" data-a="ai-link">📲 Odkaz pre ďalší telefón</button><button class="btn small" data-a="ai-del">🗑️ Odstrániť</button>' : ''}</div>
+  <div class="bkbtns" style="margin-top:8px"><button class="btn small" data-a="ai-paste">📋 Vložiť</button><button class="btn small primary" data-a="ai-save">💾 Uložiť</button>${has ? '<button class="btn small" data-a="ai-test">🔎 Otestovať</button><button class="btn small" data-a="ai-link">📲 Odkaz pre ďalší telefón</button><button class="btn small" data-a="ai-del">🗑️ Odstrániť</button>' : ''}</div>
   <p class="muted b" style="font-size:.78rem">Kľúč zostane len v tomto zariadení a nie je v zálohe. S bezplatným kľúčom Google má Bystrík denný limit otázok. Google môže otázky z bezplatnej verzie použiť na zlepšovanie svojej AI, preto deti nech nepíšu osobné údaje. Kto má prístup k tomuto telefónu, môže kľúč používať.</p></section>`;
 }
 function backupCard() {
@@ -3369,6 +3404,23 @@ const ACT = {
   'bk-apply': async () => { try { const o = await readBackup($('#bkin').value); const data = o.data || o; if (!data || !Array.isArray(data.profiles)) throw new Error('bad'); DATA = Object.assign({ profiles: [], current: null }, data); normalize(); DATA.backupAt = Date.now(); if (!P()) DATA.current = DATA.profiles[0] ? DATA.profiles[0].id : null; save(); RESTORE = false; PSEL = DATA.current; toast(`Obnovené ✓ Hráči: ${DATA.profiles.map(p => p.name).join(', ')}`); sfx('level'); confetti(120); render(null); } catch (e) { sfx('no'); toast('Tento kód zálohy sa nedá prečítať. Skontrolujte, či je celý.'); } },
   'ai-save': () => { const v = ($('#aikey').value || '').trim(); if (!v) { toast('Najprv vložte AI kľúč.'); return; } if (v.length < 20 || /\s/.test(v)) { toast('Kľúč vyzerá neúplne. Skopírujte ho znova.'); return; } setApiKey(v); sfx('coin'); toast('AI kľúč uložený ✓ Bystrík teraz funguje aj na webe.'); render(null); },
   'ai-link': async () => { const u = location.origin + location.pathname + '#k=' + encodeURIComponent(getApiKey()); try { if (navigator.share) { await navigator.share({ title: 'Bystrík', url: u }); return; } } catch (e) { return; } try { await navigator.clipboard.writeText(u); toast('Odkaz skopírovaný. Pošlite si ho do druhého telefónu a otvorte. Nikomu inému ho nedávajte.'); } catch (e) { prompt('Skopírujte odkaz:', u); } },
+  'ai-guide': () => { sfx('whoosh'); aiGuide(0); },
+  'aig-go': (d, el) => { sfx('tap'); aiGuide(AIG + (+el.dataset.i)); },
+  'aig-close': () => { try { speechSynthesis.cancel(); } catch (e) { } const o = $('#aigover'); if (o) o.remove(); },
+  'aig-paste': async () => { const t = await readClip(); if (t) { $('#aigkey').value = t; sfx('pop'); } else toast('Ťuknite do políčka, podržte prst a zvoľte „Prilepiť“.'); },
+  'ai-paste': async () => { const t = await readClip(); if (t) { $('#aikey').value = t; sfx('pop'); } else toast('Ťuknite do políčka, podržte prst a zvoľte „Prilepiť“.'); },
+  'aig-save': async (d, el) => {
+    const v = ($('#aigkey').value || '').trim(); const msg = $('#aigmsg');
+    if (v.length < 20 || /\s/.test(v)) { msg.textContent = '❗ Kľúč vyzerá neúplne. Vráťte sa o krok a skopírujte ho znova.'; sfx('no'); return; }
+    el.disabled = true; el.textContent = '⏳ Skúšam…'; setApiKey(v);
+    try { const s2 = await getSample(); const r = await s2('Odpovedz po slovensky jednou krátkou veselou vetou: pozdrav dieťa.', { cache: false });
+      const o = $('#aigover'); o.innerHTML = `<div class="box card aigbox">${bearSvg('cheer')}<h2>Hurá, funguje to! 🎉</h2><p class="b">Bystrík hovorí: „${esc(r.text.slice(0, 120))}“</p><p class="muted">Teraz funguje chat, „Vysvetli mi to“ aj Moje poznámky. Na ďalšie zariadenie: Rodičovský účet → 📲 Odkaz pre ďalší telefón.</p><button class="btn primary" data-a="aig-close">Super!</button></div>`; sfx('coin'); try { confetti && confetti(); } catch (e) { } render(null);
+    } catch (e) {
+      if (e && e.code === 'not_granted') { setApiKey(''); msg.textContent = '❌ Tento kľúč nefunguje. Skopírujte ho znova (celý).'; }
+      else msg.textContent = e && (e.code === 'rate_limited' || /high demand|503/i.test(e.message || '')) ? '✅ Kľúč je uložený. Google je teraz preťažený, skúste Bystríka o chvíľu.' : '⚠️ Kľúč je uložený, ale test sa nepodaril: ' + ((e && e.message) || 'chyba');
+      el.disabled = false; el.textContent = '✅ Uložiť a vyskúšať'; sfx('no');
+    }
+  },
   'ai-del': () => { setApiKey(''); toast('AI kľúč odstránený.'); render(null); },
   'ai-test': async (d, el) => { el.disabled = true; el.textContent = '⏳ Testujem…'; try { const s2 = await getSample(); const r = await s2('Odpovedz po slovensky jednou krátkou vetou: pozdrav dieťa.', { cache: false }); toast('✅ Funguje! Bystrík hovorí: ' + r.text.slice(0, 80)); } catch (e) { toast(e && e.code === 'not_granted' ? '❌ Kľúč nie je platný. Skontrolujte ho.' : e && e.code === 'no_credit' ? '❌ Na účte chýba kredit (Billing).' : e && e.code === 'rate_limited' ? '⏳ Dnešný limit je minutý alebo príliš veľa požiadaviek. Skúste neskôr.' : '❌ Nepodarilo sa: ' + ((e && e.message) || 'chyba')); } render(null); },
   'pt-add': () => { const p = DATA.profiles.find(x => x.id === PSEL); p.ptasks = p.ptasks || []; if (p.ptasks.filter(t => !t.done).length >= 3) { toast('Naraz môžu byť najviac 3 aktívne úlohy.'); return; } p.ptasks.unshift({ id: 'pt' + Date.now().toString(36), topic: $('#pt-topic').value, stars: +$('#pt-stars').value, coins: +$('#pt-coins').value, t: Date.now(), done: 0 }); if (p.ptasks.length > 20) p.ptasks.length = 20; save(); sfx('pop'); toast('Úloha zadaná ✓ Dieťa ju uvidí na domovskej obrazovke.'); render(null); },
