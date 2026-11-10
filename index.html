@@ -300,6 +300,60 @@ body.calcopen .peek,body.calcopen .peekbub{display:none}
 .dsign .dbear{width:52px;height:52px} .dsign .dbear svg{width:100%;height:100%}
 .dsign b{font-family:var(--f-display);display:block} .dsign span{font-size:.8rem;font-weight:700;color:#7A6A3A}
 .dsign .dmedal{margin-left:auto;font-size:2.8rem;animation:wig 2s infinite}
+.pat-pnotky{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='60' height='60'%3E%3Cg fill='white' fill-opacity='.75'%3E%3Cellipse cx='10' cy='24' rx='5' ry='4'/%3E%3Crect x='14' y='6' width='2.4' height='18'/%3E%3Cpath d='M14 6 q8 2 8 9 q-3-4-8-4z'/%3E%3C/g%3E%3Cg fill='white' fill-opacity='.5' transform='translate%2830 28%29'%3E%3Cellipse cx='6' cy='20' rx='4' ry='3.2'/%3E%3Cellipse cx='20' cy='17' rx='4' ry='3.2'/%3E%3Crect x='9' y='4' width='2' height='16'/%3E%3Crect x='23' y='1' width='2' height='16'/%3E%3Cpolygon points='9%2C4 25%2C1 25%2C5 9%2C8'/%3E%3C/g%3E%3C/svg%3E");background-size:60px 60px}
+.pat-pvlocky{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='60' height='60'%3E%3Cg stroke='white' stroke-opacity='.75' stroke-width='2' stroke-linecap='round'%3E%3Cpath d='M15 4v22M4 15h22M7 7l16 16M23 7L7 23'/%3E%3C/g%3E%3Cg stroke='white' stroke-opacity='.5' stroke-width='1.6' stroke-linecap='round' transform='translate%2832 32%29'%3E%3Cpath d='M10 2v16M2 10h16M4 4l12 12M16 4L4 16'/%3E%3C/g%3E%3C/svg%3E");background-size:60px 60px}
+.talking svg{animation:talk .22s ease-in-out infinite alternate!important;transform-origin:50% 80%}
+@keyframes talk{to{transform:scale(1.06,.94) rotate(-2deg)}}
+.tutsay{width:40px;height:40px;font-size:1.1rem;flex:none}
+.typed{animation:fadeType .6s ease-out}
+@keyframes fadeType{from{opacity:0;transform:translateY(6px)}}
+.cd{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:10px}
+.cdb{display:flex;flex-direction:column;align-items:center;background:var(--paper);border:2.5px solid var(--edge);border-radius:14px;padding:6px 2px;box-shadow:0 3px 0 var(--drop)}
+.cdb b{font-family:var(--f-display);font-size:1.7rem;line-height:1;font-variant-numeric:tabular-nums}
+.cdb small{font-weight:800;font-size:.72rem;color:var(--muted)}
+.cdb b.tick{animation:tick .35s cubic-bezier(.3,1.6,.5,1)}
+@keyframes tick{30%{transform:translateY(-4px) scale(1.15);color:var(--accent)}}
+.shoptimer{display:block!important}
+.sthead{display:flex;align-items:center;gap:12px}
+.hourglass{font-size:1.9rem;display:inline-block;animation:hg 3s ease-in-out infinite}
+@keyframes hg{0%,40%{transform:rotate(0)}50%,90%{transform:rotate(180deg)}100%{transform:rotate(360deg)}}
+.ob0{justify-content:center;text-align:center}
+.obhero{position:relative;display:flex;flex-direction:column;align-items:center;gap:8px;padding:10px 0 4px}
+.floaties{position:fixed;inset:0;pointer-events:none;z-index:-1;overflow:hidden}
+.floaties span{position:absolute;bottom:-60px;font-size:2rem;opacity:.55;animation:floatup2 linear infinite}
+@keyframes floatup2{to{transform:translateY(-115vh) rotate(360deg)}}
+.herobear{position:relative;width:170px;height:170px;animation:heroin .8s cubic-bezier(.3,1.6,.5,1),bob 3s ease-in-out .8s infinite;cursor:pointer;padding:0}
+.herobear svg{width:100%;height:100%;filter:drop-shadow(0 8px 0 rgba(0,0,0,.08))}
+@keyframes heroin{from{transform:scale(0) rotate(-20deg)}}
+.wavehand{position:absolute;right:4px;top:50px;font-size:2.4rem;transform-origin:70% 80%;animation:wavehand 1.4s ease-in-out infinite}
+@keyframes wavehand{0%,60%,100%{transform:rotate(0)}10%,30%{transform:rotate(22deg)}20%,40%{transform:rotate(-12deg)}}
+.herobub{position:absolute;left:-30px;top:6px;background:var(--paper);border:2.5px solid var(--edge);border-radius:16px 16px 4px 16px;padding:4px 10px;font-weight:800;font-size:.8rem;box-shadow:0 3px 0 var(--drop);animation:popUp .5s 1.2s backwards cubic-bezier(.3,1.6,.5,1),wig 2.4s 2s infinite;white-space:nowrap}
+.logo{font-family:var(--f-display);font-size:3.6rem;line-height:1;display:flex;gap:1px;justify-content:center}
+.logo span{display:inline-block;animation:letter .6s backwards cubic-bezier(.3,1.8,.5,1),lbob 2.8s ease-in-out infinite;text-shadow:0 4px 0 var(--paper),0 6px 0 var(--drop)}
+.logo span:nth-child(7n+1){color:#FF7A59} .logo span:nth-child(7n+2){color:#FFB020} .logo span:nth-child(7n+3){color:#22B573} .logo span:nth-child(7n+4){color:#4C86F7} .logo span:nth-child(7n+5){color:#9C7CF4} .logo span:nth-child(7n+6){color:#F25C8B} .logo span:nth-child(7n){color:#2EC4D6}
+.logo span:nth-child(2){animation-delay:.33s,.2s} .logo span:nth-child(3){animation-delay:.41s,.4s} .logo span:nth-child(4){animation-delay:.49s,.6s} .logo span:nth-child(5){animation-delay:.57s,.8s} .logo span:nth-child(6){animation-delay:.65s,1s} .logo span:nth-child(7){animation-delay:.73s,1.2s}
+@keyframes letter{from{transform:translateY(-60px) scale(.3);opacity:0}}
+@keyframes lbob{50%{transform:translateY(-5px)}}
+.tagline{font-family:var(--f-display);font-weight:700;font-size:1.15rem;color:var(--muted);animation:popUp .5s .8s backwards}
+.feat{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;max-width:360px}
+.feat span{background:var(--paper);border:2.5px solid var(--edge);border-radius:99px;padding:5px 12px;font-weight:800;font-size:.9rem;box-shadow:0 3px 0 var(--drop);animation:popUp .5s backwards cubic-bezier(.3,1.6,.5,1)}
+.glowbtn{animation:glow2 2s ease-in-out infinite,popUp .5s 1.4s backwards}
+@keyframes glow2{50%{box-shadow:0 5px 0 var(--drop),0 0 0 8px rgba(255,122,89,.25)}}
+.obtop{display:flex;flex-direction:column;gap:6px}
+.obprog{height:14px;border-radius:99px;background:var(--paper);border:2.5px solid var(--edge);overflow:hidden}
+.obprog i{display:block;height:100%;background:linear-gradient(90deg,var(--sun),var(--accent));border-radius:99px;transition:width .6s cubic-bezier(.3,1.4,.5,1);animation:obgrow .7s cubic-bezier(.3,1.4,.5,1)}
+@keyframes obgrow{from{width:0}}
+.obsay{display:flex;align-items:center;gap:10px}
+.obbear{width:78px;height:78px;flex:none;padding:0;animation:bob 2.6s ease-in-out infinite}
+.obbear svg{width:100%;height:100%}
+.obsay .bub{position:relative;background:var(--paper);border:2.5px solid var(--edge);border-radius:20px;padding:12px 14px;font-family:var(--f-display);font-weight:800;font-size:1.4rem;line-height:1.15;box-shadow:0 4px 0 var(--drop);animation:popUp .45s cubic-bezier(.3,1.6,.5,1)}
+.obsay .bub::before{content:"";position:absolute;left:-12px;top:50%;width:18px;height:18px;background:var(--paper);border-left:2.5px solid var(--edge);border-bottom:2.5px solid var(--edge);transform:translateY(-50%) rotate(45deg);border-radius:0 0 0 4px}
+.grades button{position:relative;overflow:hidden}
+.grades .gre{font-size:1.8rem;margin-bottom:2px}
+.grades .gr1{background:#FFF3C4} .grades .gr2{background:#D9F5E3} .grades .gr3{background:#FFE0CC} .grades .gr4{background:#E6DCFF}
+.grades button.on{outline:4px solid var(--accent);outline-offset:2px;animation:yay .5s}
+.ob .pickg button.on,.ob .petpick button.on{animation:yay .5s}
+.ob .field{animation:popUp .4s .15s backwards}
 /* top bar */
 .top{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;display:flex;align-items:center;gap:10px;padding:10px max(16px,env(safe-area-inset-right,0px)) 10px max(16px,env(safe-area-inset-left,0px));background:color-mix(in srgb,var(--g1) 70%,transparent);backdrop-filter:blur(10px)}
 .headbub{width:48px;height:48px;border-radius:50%;border:2.5px solid var(--edge);overflow:hidden;flex:none;background:var(--paper)}
@@ -1814,7 +1868,7 @@ const THEMES = [
   { id: 'duha', n: 'Dúha', c: ['#FFD1DC', '#FFE7B8', '#FFF6B8', '#C9F2D9', '#CFE3FF', '#E4D4FF'], lvl: 8 },
   { id: 'vesmir', n: 'Vesmír', c: ['#2A2266', '#1B1F4B', '#0F1A3A'], dark: true, streak: 14 }
 ];
-const PATS = [{ id: 'nic', n: 'Bez vzoru' }, { id: 'bodky', n: 'Bodky' }, { id: 'pruhy', n: 'Pásiky' }, { id: 'kocky', n: 'Kocky' }, { id: 'vlnky', n: 'Vlnky' }, { id: 'mriezka', n: 'Mriežka' }, { id: 'diamanty', n: 'Diamanty' }, { id: 'bubliny', n: 'Bublinky' }, { id: 'luce', n: 'Lúče' }, { id: 'konfety', n: 'Konfety' }, { id: 'phviezdy', n: 'Hviezdičky' }, { id: 'psrdce', n: 'Srdiečka' }, { id: 'pkvety', n: 'Kvietky' }, { id: 'plabky', n: 'Labky' }, { id: 'pcikcak', n: 'Cik-cak' }, { id: 'ptrojuh', n: 'Trojuholníky' }, { id: 'pmesiac', n: 'Mesiačiky' }, { id: 'pduhy', n: 'Dúhy' }];
+const PATS = [{ id: 'nic', n: 'Bez vzoru' }, { id: 'bodky', n: 'Bodky' }, { id: 'pruhy', n: 'Pásiky' }, { id: 'kocky', n: 'Kocky' }, { id: 'vlnky', n: 'Vlnky' }, { id: 'mriezka', n: 'Mriežka' }, { id: 'diamanty', n: 'Diamanty' }, { id: 'bubliny', n: 'Bublinky' }, { id: 'luce', n: 'Lúče' }, { id: 'konfety', n: 'Konfety' }, { id: 'phviezdy', n: 'Hviezdičky' }, { id: 'psrdce', n: 'Srdiečka' }, { id: 'pkvety', n: 'Kvietky' }, { id: 'plabky', n: 'Labky' }, { id: 'pcikcak', n: 'Cik-cak' }, { id: 'ptrojuh', n: 'Trojuholníky' }, { id: 'pmesiac', n: 'Mesiačiky' }, { id: 'pduhy', n: 'Dúhy' }, { id: 'pnotky', n: 'Nôtky' }, { id: 'pvlocky', n: 'Snehové vločky' }];
 const STICKERS = [
   ...'😀,😍,😎,🦄,🐱,🐶,🐰,🐻,🐼,🦊,🐸,🐠,🦋,🐞,🐝,🦖,🌳,🌲,🌸,🌻,🌼,🌷,🍄,⭐,🌙,☀️,☁️,❄️,❤️,💜,🎈,🎀,🍭,🍦,🧁,🍓,🍉,⚽,🏀,🎵,🎨,✏️,📚,🚗,🚲,🏠,🏰,🪐,🐬,🐢,🦒,🍀,🌵,🍎,🎁,🧸,🦩,🍩,🎃,⛄,🐧,🦁,🍕,🎂,🎸,🏝️,🌊'.split(',').map(e => ({ e, n: e })),
   { e: '🌈', n: 'Dúha', lvl: 3 }, { e: '👑', n: 'Korunka', lvl: 5 }, { e: '🚀', n: 'Raketa', lvl: 7 }, { e: '💎', n: 'Diamant', lvl: 9 }, { e: '🐉', n: 'Drak', lvl: 12 }, { e: '🏆', n: 'Pohár', lvl: 15 }, { e: '🎆', n: 'Ohňostroj', streak: 7 }
@@ -1914,7 +1968,11 @@ function say(text, lang = 'sk-SK') {
     if (lang === 'sk-SK') t = t.replace(/ · /g, ' krát ').replace(/ : /g, ' delené ').replace(/ − /g, ' mínus ').replace(/ \+ /g, ' plus ').replace(/ = \?/g, ' sa rovná koľko?').replace(/_/g, ' ').replace(/[„“"]/g, '');
     const v = pickVoice(lang);
     const parts = t.match(/[^.!?…]+[.!?…]*/g) || [t];
-    parts.forEach(seg => { const x = seg.trim(); if (!x) return; const u = new SpeechSynthesisUtterance(x); if (v) { u.voice = v; u.lang = v.lang; } else u.lang = lang; u.rate = lang === 'sk-SK' ? .85 : .8; u.pitch = 1.05; speechSynthesis.speak(u); });
+    const us = [];
+    parts.forEach(seg => { const x = seg.trim(); if (!x) return; const u = new SpeechSynthesisUtterance(x); if (v) { u.voice = v; u.lang = v.lang; } else u.lang = lang; u.rate = lang === 'sk-SK' ? .85 : .8; u.pitch = 1.05; us.push(u); });
+    const talk = on => document.querySelectorAll('.obbear,.tutbear,.herobear').forEach(e => e.classList.toggle('talking', on));
+    if (us.length) { us[0].onstart = () => talk(true); const last = us[us.length - 1]; last.onend = last.onerror = () => talk(false); }
+    us.forEach(u => speechSynthesis.speak(u));
   } catch (e) { }
 }
 function sayOld(text, lang = 'sk-SK') {
@@ -2173,6 +2231,9 @@ const SHOPCATS = [['all', 'Všetko'], ['top', '👕 Oblečenie'], ['shoes', '�
 function shopItems(p) { const out = []; for (const c of ['top', 'shoes', 'acc', 'pet']) for (const it of CATALOG[c]) if (it.price && (!it.g || it.g === p.av.gender)) out.push([c, it]); return out.sort((a, b) => a[1].price - b[1].price); }
 const SHOP_DAYS = 2, DAYMS = 86400000;
 function shopPeriod() { const d = new Date(); return Math.floor(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()) / DAYMS / SHOP_DAYS); }
+function shopMs() { const d = new Date(); const now = Date.UTC(d.getFullYear(), d.getMonth(), d.getDate(), d.getHours(), d.getMinutes(), d.getSeconds()); return Math.max(0, (shopPeriod() + 1) * SHOP_DAYS * DAYMS - now); }
+function cdHTML() { let t = Math.floor(shopMs() / 1000); const dd = Math.floor(t / 86400); t %= 86400; const hh = Math.floor(t / 3600); t %= 3600; const mm = Math.floor(t / 60), ss = t % 60; const b = (v, l) => `<span class="cdb"><b>${String(v).padStart(2, '0')}</b><small>${l}</small></span>`; return b(dd, plural(dd, 'deň', 'dni', 'dní')) + b(hh, 'hod') + b(mm, 'min') + b(ss, 'sek'); }
+AFTER.shop = () => { TIMERS.push(setInterval(() => { const e = $('#shopcd'); if (!e) return; if (shopMs() <= 0) return render(null); e.innerHTML = cdHTML(); const s = e.querySelector('.cdb:last-child b'); if (s) { s.classList.remove('tick'); void s.offsetWidth; s.classList.add('tick'); } }, 1000)); };
 function shopLeft() { const d = new Date(); const now = Date.UTC(d.getFullYear(), d.getMonth(), d.getDate(), d.getHours(), d.getMinutes()); const ms = (shopPeriod() + 1) * SHOP_DAYS * DAYMS - now; const h = Math.max(1, Math.ceil(ms / 3600000)); return h >= 24 ? `${Math.floor(h / 24)} ${plural(Math.floor(h / 24), 'deň', 'dni', 'dní')} a ${h % 24} h` : `${h} h`; }
 function shopPremium(p) { const rnd = seeded('prem' + shopPeriod() + p.id); return shopItems(p).filter(([, it]) => it.price >= 200 && !p.owned.includes(it.sid)).sort(() => rnd() - .5).slice(0, 2); }
 function shopOffer(p) {
@@ -2185,7 +2246,7 @@ VIEWS.shop = () => {
   const p = P(); const list = shopOffer(p); const prem = shopPremium(p);
   const itemCard = ([c, it], i) => { const own = p.owned.includes(it.sid); const worn = p.av[c] === it.id; const can = (p.coins || 0) >= it.price; const sel = SHOPSEL === it.sid; const pr = it.price >= 200; return `<div class="card shopitem ${own ? 'own' : ''} ${pr ? 'premium' : ''}" style="animation:popUp .4s ${i * 35}ms backwards">${pr ? '<span class="prem">👑 PRÉMIUM</span>' : ''}<span class="th">${itemThumb(c, it, p.av)}</span><b>${it.n}</b>${own ? (worn ? '<span class="tag">Máš to oblečené ✓</span>' : `<button class="btn small good" data-a="shop-wear" data-c="${c}" data-i="${it.id}">Obliecť</button>`) : sel ? `<button class="btn small primary" data-a="buy" data-c="${c}" data-i="${it.id}">Áno, kúpiť!</button>` : `<button class="btn small ${can ? 'sun' : ''}" data-a="buy-ask" data-c="${c}" data-i="${it.id}" ${can ? '' : 'aria-disabled="true"'}>${COIN} ${it.price}</button>`}${!own && !can ? `<span class="muted b" style="font-size:.75rem">Chýba ${it.price - (p.coins || 0)}</span>` : ''}</div>`; };
   return `${topbar()}<main class="view"><section class="card shophead"><span class="coinbig">${COIN}</span><div><span class="eyebrow">Tvoje mince</span><b>${p.coins || 0}</b><span class="muted b" style="font-size:.85rem;display:block">Mince získaš za každú správnu odpoveď, hry, úlohy a čítanie.</span></div></section>
-  <section class="card shoptimer"><span style="font-size:1.8rem">⏳</span><div><b>Ponuka na ${SHOP_DAYS} dni</b><span class="muted b" style="display:block;font-size:.85rem">Nový tovar o ${shopLeft()}. Čo si kúpiš, nájdeš v šatníku.</span></div></section><p class="muted b" style="font-size:.82rem">Mince sa nekupujú za peniaze, získaš ich učením. Rodič ťa môže odmeniť mincami v rodičovskom účte.</p>
+  <section class="card shoptimer"><div class="sthead"><span class="hourglass">⏳</span><div><b>Nový tovar o:</b><span class="muted b" style="display:block;font-size:.8rem">Ponuka sa mení každé ${SHOP_DAYS} dni. Čo si kúpiš, nájdeš v šatníku.</span></div></div><div class="cd" id="shopcd">${cdHTML()}</div></section><p class="muted b" style="font-size:.82rem">Mince sa nekupujú za peniaze, získaš ich učením. Rodič ťa môže odmeniť mincami v rodičovskom účte.</p>
   ${prem.length ? `<div class="sec"><h2>👑 Prémiová ponuka</h2><span class="eyebrow">od 200</span></div><div class="shopgrid">${prem.map(itemCard).join('')}</div><div class="sec"><h2>Bežná ponuka</h2></div>` : ''}
   <div class="shopgrid">${list.length ? '' : '<p class="b muted">Všetko z ponuky už máš! Nový tovar príde čoskoro.</p>'}${list.map(([c, it], i) => { const own = p.owned.includes(it.sid); const worn = p.av[c] === it.id; const can = (p.coins || 0) >= it.price; const sel = SHOPSEL === it.sid; return `<div class="card shopitem ${own ? 'own' : ''}" style="animation:popUp .4s ${i * 35}ms backwards"><span class="th">${itemThumb(c, it, p.av)}</span><b>${it.n}</b>${own ? (worn ? '<span class="tag">Máš to oblečené ✓</span>' : `<button class="btn small good" data-a="shop-wear" data-c="${c}" data-i="${it.id}">Obliecť</button>`) : sel ? `<button class="btn small primary" data-a="buy" data-c="${c}" data-i="${it.id}">Áno, kúpiť!</button>` : `<button class="btn small ${can ? 'sun' : ''}" data-a="buy-ask" data-c="${c}" data-i="${it.id}" ${can ? '' : 'aria-disabled="true"'}>${COIN} ${it.price}</button>`}${!own && !can ? `<span class="muted b" style="font-size:.75rem">Chýba ${it.price - (p.coins || 0)} ${COIN}</span>` : ''}</div>`; }).join('')}</div></main>${nav('shop')}`;
 };
@@ -2231,11 +2292,11 @@ const TOUR = [
 ];
 let GUIDE = null;
 function showGuide(steps, i, end) {
-  GUIDE = { steps, end }; clearTut(); GUIDE = { steps, end };
+  GUIDE = { steps, end }; clearTut(); GUIDE = { steps, end, cur: steps[i].t };
   const st = steps[i]; const el = st.f ? $(st.f) : null; let atTop = false;
   if (el) { el.classList.add('tutfocus'); const r = el.getBoundingClientRect(); if (r.top > innerHeight * .55) atTop = true; if (!el.closest('.nav') && !el.closest('.top')) { el.scrollIntoView({ behavior: 'smooth', block: 'center' }); atTop = false; const r2 = el.getBoundingClientRect(); if (r2.top > innerHeight * .5) atTop = true; } }
   const w = document.createElement('div'); w.className = 'tutsheet' + (atTop ? ' attop' : '');
-  w.innerHTML = `<div class="in"><div class="dots">${steps.map((_, k) => `<i class="${k === i ? 'on' : ''}"></i>`).join('')}</div><div class="tutrow">${steps === TUT ? `<span class="tutemoji">${st.e}</span>` : `<span class="tutbear">${owlSvg('')}</span>`}<p>${st.t}</p></div><div class="rowbtns"><button class="btn" data-a="tut-skip">Preskočiť</button><button class="btn primary" data-a="tut-next" data-i="${i + 1}">${i + 1 < steps.length ? 'Ďalej →' : 'Rozumiem! 👍'}</button></div></div>`;
+  w.innerHTML = `<div class="in"><div class="dots">${steps.map((_, k) => `<i class="${k === i ? 'on' : ''}"></i>`).join('')}</div><div class="tutrow">${steps === TUT ? `<span class="tutemoji">${st.e}</span>` : `<span class="tutbear">${owlSvg('')}</span>`}<p class="typed">${st.t}</p><button class="iconbtn press tutsay" data-a="tut-say" aria-label="Prečítaj znova">🔊</button></div><div class="rowbtns"><button class="btn" data-a="tut-skip">Preskočiť</button><button class="btn primary" data-a="tut-next" data-i="${i + 1}">${i + 1 < steps.length ? 'Ďalej →' : 'Rozumiem! 👍'}</button></div></div>`;
   document.body.appendChild(w); say(st.t); sfx('pop');
 }
 function endTour() { clearTut(); const p = P(); if (p) { p.tourDone = true; save(); } confetti(120, .3); }
@@ -2282,19 +2343,23 @@ VIEWS.room = roomView;
 
 /* --- úvod --- */
 let OB = null;
+const OB_T = ['', 'Ahoj! Ako sa voláš?', 'Si dievča alebo chlapec?', 'Do ktorej triedy chodíš?', 'Vyber si zvieratko! Bude tvojím kamarátom.', 'Aký účes sa ti páči?', 'Teraz si navrhni pozadie!'];
+const OB_HELLO = 'Ahoj! Ja som medvedík Bystrík. Spolu sa budeme učiť matiku, slovinu aj veci zo sveta. Za učenie dostaneš body, mince a nové oblečenie. Poďme na to!';
 VIEWS.onboard = () => {
   const s = OB.step; const dots = `<div class="dots">${[0, 1, 2, 3, 4, 5, 6].map(i => `<i class="${i === s ? 'on' : ''}"></i>`).join('')}</div>`;
   let body = '';
   if (s === 0) body = `<div style="display:grid;place-items:center">${owlSvg()}</div><h1 style="font-size:2.4rem;text-align:center">Ahoj! Ja som medvedík Bystrík.</h1><p class="muted b" style="text-align:center">Spolu sa naučíme matiku a slovinu. Za každý level dostaneš nové oblečenie, topánky, účesy a ďalšie odmeny pre svoju postavičku.</p><button class="btn primary block" data-a="ob-next">Poďme na to!</button>${DATA.profiles.length ? '<button class="btn block" data-a="nav" data-v="profiles">Už mám hráča</button>' : ''}`;
   if (s === 1) body = `<span class="eyebrow">${OB.edit ? 'Úvodné nastavenie · ' : ''}Krok 1 z 6</span><h1 style="font-size:2rem">Ako sa voláš?</h1><input class="field" id="ob-name" maxlength="16" autocomplete="off" placeholder="Tvoje meno" value="${esc(OB.name)}"><button class="btn primary block" data-a="ob-name">Ďalej</button>`;
   if (s === 2) body = `<span class="eyebrow">Krok 2 z 6</span><h1 style="font-size:2rem">Si dievča alebo chlapec?</h1><div class="pickg">${['d', 'c'].map(g => `<button class="card press ${OB.gender === g ? 'on' : ''}" data-a="ob-g" data-g="${g}">${avatarSvg(defaultAvatar(g), { cls: 'idle', noBg: true, noPet: true })}${g === 'd' ? 'Dievča' : 'Chlapec'}</button>`).join('')}</div>`;
-  if (s === 3) body = `<span class="eyebrow">Krok 3 z 6</span><h1 style="font-size:2rem">Do ktorej triedy chodíš?</h1><div class="grades">${[1, 2, 3, 4].map(g => `<button class="card press ${OB.grade === g ? 'on' : ''}" data-a="ob-grade" data-g="${g}"><b>${g}.</b>ročník</button>`).join('')}</div>`;
+  if (s === 3) body = `<span class="eyebrow">Krok 3 z 6</span><h1 style="font-size:2rem">Do ktorej triedy chodíš?</h1><div class="grades">${[1, 2, 3, 4].map(g => `<button class="card press gr${g} ${OB.grade === g ? 'on' : ''}" data-a="ob-grade" data-g="${g}"><span class="gre">${['🐣', '🐥', '🦊', '🦁'][g - 1]}</span><b>${g}.</b>ročník</button>`).join('')}</div>`;
   if (s === 4) body = `<span class="eyebrow">Krok 4 z 6</span><h1 style="font-size:2rem">Vyber si zvieratko</h1><p class="muted b">Bude ťa sprevádzať a pri matike ti požičia kalkulačku.</p><div class="petpick pop-in">${CATALOG.pet.filter(x => (!x.g || x.g === OB.gender) && (OB.edit ? unlocked(x, P()) : (!x.lvl && !x.streak && !x.price))).map(x => `<button class="card press ${OB.av.pet === x.id ? 'on' : ''}" data-a="ob-pet" data-i="${x.id}">${x.e}<span>${x.n}</span></button>`).join('')}</div><label class="b" for="ob-petname">Ako sa bude volať?</label><input class="field" id="ob-petname" maxlength="14" autocomplete="off" placeholder="Meno zvieratka" value="${esc(OB.av.petName || petName(OB.av))}"><button class="btn primary block" data-a="ob-pet-next">Ďalej</button><p class="muted b" style="font-size:.9rem">Ďalšie zvieratká, napríklad pandu, líštičku alebo dráčika, si odomkneš neskôr.</p>`;
   if (s === 5) body = `<span class="eyebrow">Krok 5 z 6</span><h1 style="font-size:2rem">Aký účes sa ti páči?</h1><div class="card" style="display:grid;grid-template-columns:120px 1fr;gap:10px;align-items:center;padding:8px"><div id="ob-fig">${avatarSvg(OB.av, { cls: 'idle' })}</div><div class="items" style="grid-template-columns:repeat(2,1fr)">${CATALOG.hair.filter(h => h.g === OB.gender && (OB.edit ? unlocked(h, P()) : !h.lvl)).map(h => `<button class="item press ${OB.av.hair === h.id ? 'on' : ''}" data-a="ob-hair" data-i="${h.id}">${itemThumb('hair', h, OB.av)}<span class="lab">${h.n}</span></button>`).join('')}</div></div><p class="muted b">Farby vlasov aj oblečenia si neskôr zmeníš v šatníku. Každý kúsok môže mať inú farbu.</p><button class="btn primary block" data-a="ob-to-room">Ďalej</button>`;
   if (s === 6) { DS = { room: OB.room, av: OB.av, sel: null, tab: 'stk', lockP: OB.edit ? P() : { xp: 0, streak: { best: 0 } }, save: null }; body = `<span class="eyebrow">${OB.edit ? 'Úvodné nastavenie · ' : ''}Krok 6 z 6</span><h1 style="font-size:2rem">Navrhni si pozadie</h1><p class="muted b">Vyber farby a nalep nálepky. Bude za tvojou postavičkou aj za celou apkou.</p><div id="dsgn" style="display:flex;flex-direction:column;gap:12px">${designerHTML()}</div><button class="btn primary block" data-a="ob-done">${OB.edit ? 'Uložiť zmeny' : 'Hotovo, začíname!'}</button>`; }
-  return `<main class="view nonav ob" style="gap:18px">${dots}${body}${s > 0 ? '<button class="btn small" style="align-self:center" data-a="ob-back">← Späť</button>' : ''}</main>`;
+  if (s === 0) body = `<div class="obhero"><div class="floaties" aria-hidden="true">${['📚', '✏️', '⭐', '🎨', '🔢', '🅰️', '🌍', '🎈', '🧩', '🏆'].map((e, i) => `<span style="left:${(i * 11 + 4) % 92}%;animation-delay:-${i * 1.1}s;animation-duration:${7 + (i % 4)}s">${e}</span>`).join('')}</div><button class="herobear" data-a="ob-say" aria-label="Medvedík Bystrík">${owlSvg('')}<span class="wavehand">👋</span><span class="herobub">Ťukni na mňa!</span></button><h1 class="logo" aria-label="Bystrík">${'Bystrík'.split('').map((c, i) => `<span style="animation-delay:${.25 + i * .08}s">${c}</span>`).join('')}</h1><p class="tagline">Hravé učenie pre 1. až 4. ročník</p><div class="feat">${[['🔢', 'Matika'], ['📝', 'Slovina'], ['🌍', 'Prehľad'], ['🎮', 'Hry'], ['👕', 'Šatník'], ['🏆', 'Odmeny']].map(([e, n], i) => `<span style="animation-delay:${.85 + i * .08}s">${e} ${n}</span>`).join('')}</div></div><button class="btn primary block glowbtn" data-a="ob-next">Poďme na to! 🚀</button>${DATA.profiles.length ? '<button class="btn block" data-a="nav" data-v="profiles">👥 Už mám hráča</button>' : ''}`;
+  else { body = body.replace(/<span class="eyebrow">[^<]*(?:<[^>]*>[^<]*)*?<\/span><h1[^>]*>.*?<\/h1>/, ''); body = `<div class="obtop"><div class="obprog"><i style="width:${s / 6 * 100}%"></i></div><span class="eyebrow">${OB.edit ? 'Úvodné nastavenie · ' : ''}Krok ${s} z 6</span></div><div class="obsay"><button class="obbear" data-a="ob-say" aria-label="Prečítaj znova">${owlSvg('')}</button><div class="bub">${OB_T[s]}</div></div>` + body; }
+  return `<main class="view nonav ob ${s === 0 ? 'ob0' : ''}" style="gap:18px">${body}${s > 0 ? '<button class="btn small" style="align-self:center" data-a="ob-back">← Späť</button>' : ''}</main>`;
 };
-AFTER.onboard = () => { const i = $('#ob-name'); if (i) { i.focus(); i.addEventListener('keydown', e => { if (e.key === 'Enter') ACT['ob-name'](); }); } };
+AFTER.onboard = () => { if (OB.step > 0) setTimeout(() => say(OB_T[OB.step]), 250); const i = $('#ob-name'); if (i) { i.focus(); i.addEventListener('keydown', e => { if (e.key === 'Enter') ACT['ob-name'](); }); } };
 VIEWS.profiles = () => `<main class="view nonav" style="justify-content:center"><div style="display:grid;place-items:center">${owlSvg()}</div><h1 style="font-size:2rem;text-align:center">Kto sa bude hrať?</h1><div class="profiles pop-in">${DATA.profiles.map(p => `<button class="card prof press" data-a="pick-prof" data-id="${p.id}"><span class="headbub">${avatarSvg(p.av, { crop: 'head' })}</span><b>${esc(p.name)}</b><span class="muted b">${p.grade}. ročník · Lv ${levelInfo(p.xp).L}</span></button>`).join('')}<button class="card prof press" data-a="new-prof" style="justify-content:center"><span style="font-size:3rem">➕</span><b>Nový hráč</b></button></div></main>`;
 
 /* --- lobby --- */
@@ -2815,6 +2880,7 @@ const ACT = {
   home: () => { sfx('tap'); go('home', {}, 'b'); },
   'learn-back': () => { sfx('tap'); go('learn', {}, 'b'); },
   wave: () => { const a = $('.stage .avatar, #wfig .avatar'); if (a) { a.classList.remove('waving', 'dance'); void a.offsetWidth; a.classList.add(Math.random() < .5 ? 'waving' : 'dance'); sfx('pop'); } },
+  'ob-say': () => { say(OB.step > 0 ? OB_T[OB.step] : OB_HELLO); const b = $('.herobub'); if (b) b.remove(); },
   'ob-next': () => { sfx('tap'); OB.step = 1; go('onboard', {}, 'f'); },
   'ob-back': () => { sfx('tap'); if (OB.edit && OB.step <= 1) return go('settings', {}, 'b'); OB.step--; go('onboard', {}, 'b'); },
   'ob-name': () => { const v = ($('#ob-name').value || '').trim(); if (!v) { toast('Napíš svoje meno 🙂'); return; } OB.name = v; sfx('tap'); OB.step = 2; go('onboard', {}, 'f'); },
@@ -2893,7 +2959,7 @@ const ACT = {
   'rd-open': d => { RD = { id: d.id, opts: {}, ans: {}, correct: 0 }; sfx('tap'); go('read', {}, 'f'); },
   'rd-back': () => { if (REC && RD.recording) { try { REC.mr.stop(); } catch (e) { } } RD = null; go('reads', {}, 'b'); },
   'rd-say': () => say(READ[RD.id].text),
-  'tut-open': () => showTut(0), 'tut-skip': () => { const g = GUIDE; (g ? g.end : endTut)(); }, 'tut-next': d => { const i = +d.i; const g = GUIDE || { steps: TUT, end: endTut }; if (i >= g.steps.length) g.end(); else showGuide(g.steps, i, g.end); },
+  'tut-say': () => { if (GUIDE) say(GUIDE.cur); }, 'tut-open': () => showTut(0), 'tut-skip': () => { const g = GUIDE; (g ? g.end : endTut)(); }, 'tut-next': d => { const i = +d.i; const g = GUIDE || { steps: TUT, end: endTut }; if (i >= g.steps.length) g.end(); else showGuide(g.steps, i, g.end); },
   'rec-start': () => recStart(), 'dikt-open': () => openDiktafon(),
   'rec-pick': () => { closeSheet(); const f = $('#recfile'); if (f) f.click(); },
   'rec-stop': () => { if (REC && REC.mr.state !== 'inactive') REC.mr.stop(); },
