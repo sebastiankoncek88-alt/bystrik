@@ -122,16 +122,22 @@ function tone(f, d, type = 'sine', vol = .14, when = 0, slide) {
   g.gain.setValueAtTime(.0001, t); g.gain.exponentialRampToValueAtTime(vol, t + .012); g.gain.exponentialRampToValueAtTime(.0001, t + d);
   o.connect(g).connect(a.destination); o.start(t); o.stop(t + d + .03);
 }
+/* Vlastný zvuk Bystríka: mäkké „drevené“ tóny (marimba) a zvučka */
+function mar(f, when = 0, vol = .15, d = .45) { tone(f, d, 'sine', vol, when); tone(f * 4, d * .16, 'sine', vol * .3, when); tone(f * 2.01, d * .38, 'triangle', vol * .1, when); }
+const JINGLE = [[392, 0], [659, .13], [587, .26], [784, .46]];
 const SFX = {
-  tap: () => tone(620, .06, 'triangle', .07), pop: () => tone(320, .09, 'sine', .14, 0, 980),
-  ok: () => { tone(660, .12, 'triangle', .15); tone(990, .2, 'triangle', .15, .1); },
-  no: () => tone(240, .28, 'sawtooth', .05, 0, 150), flip: () => tone(380, .14, 'sine', .08, 0, 900),
-  match: () => [523, 659, 784].forEach((f, i) => tone(f, .16, 'triangle', .12, i * .07)),
-  level: () => [523, 659, 784, 1046, 784, 1046, 1318].forEach((f, i) => tone(f, .2, 'square', .05, i * .11)),
-  star: i => tone(700 + i * 220, .22, 'triangle', .13), tick: () => tone(1200, .03, 'square', .03),
-  whoosh: () => tone(200, .25, 'sine', .06, 0, 1200), gift: () => [392, 523, 659, 784, 1046].forEach((f, i) => tone(f, .14, 'triangle', .12, i * .06)),
-  balloon: () => tone(900, .08, 'square', .06, 0, 200), coin: () => { tone(988, .08, 'square', .05); tone(1318, .2, 'square', .05, .08); }
+  tap: () => mar(880, 0, .05, .08), pop: () => mar(587, 0, .1, .16),
+  ok: () => { mar(659, 0, .14, .3); mar(784, .09, .14, .42); },
+  no: () => { mar(220, 0, .12, .32); mar(196, .12, .12, .45); }, flip: () => mar(523, 0, .08, .14),
+  match: () => [587, 659, 784].forEach((f, i) => mar(f, i * .08, .12, .3)),
+  jingle: () => { JINGLE.forEach(([f, t]) => mar(f, t, .15, .5)); [523, 659, 784].forEach(f => mar(f, .72, .09, .9)); tone(131, .7, 'sine', .1, .72); },
+  level: () => { JINGLE.forEach(([f, t]) => mar(f, t, .15, .5)); [1046, 1318, 1568].forEach((f, i) => mar(f, .66 + i * .1, .11, .6)); tone(131, .9, 'sine', .1, .66); },
+  star: i => mar([659, 784, 988][i] || 659 + i * 150, 0, .13, .35), tick: () => tone(1200, .03, 'sine', .03),
+  whoosh: () => tone(200, .25, 'sine', .06, 0, 1200), gift: () => [392, 523, 659, 784, 1046].forEach((f, i) => mar(f, i * .07, .12, .35)),
+  balloon: () => { mar(988, 0, .08, .1); tone(700, .07, 'sine', .05, 0, 240); }, coin: () => { mar(1175, 0, .07, .15); mar(1568, .07, .07, .32); }
 };
+let JINGLED = false;
+document.addEventListener('pointerdown', () => { if (JINGLED) return; JINGLED = true; setTimeout(() => sfx('jingle'), 60); }, true);
 function sfx(n, a) { if (!DATA.settings.sound) return; try { SFX[n](a); } catch (e) { } }
 function buzz(ms) { try { navigator.vibrate && navigator.vibrate(ms); } catch (e) { } }
 let VOICES = [];
@@ -357,8 +363,8 @@ function avail(t) {
 const modeOk = (t, m) => m === 'pex' ? avail(t).pairs : m === 'match' ? avail(t).match : true;
 
 /* ===== Vlastné pozadie ===== */
-const PAGE_BG = [['auto', 'Základná', '', ''], ['ruzova', 'Ružová', '#FFE4EE', '#2B1B30'], ['modra', 'Modrá', '#DFEBFF', '#152242'], ['matova', 'Mätová', '#D8F5E9', '#12302A'], ['fialova', 'Fialová', '#EAE2FF', '#221B47'], ['zlta', 'Žltá', '#FFF2C7', '#30280F'], ['broskyna', 'Broskyňová', '#FFE5D4', '#33211A'], ['siva', 'Sivá', '#EEF0F5', '#1A1C25'], ['biela', 'Biela', '#FFFFFF', '#FFFFFF', 'light'], ['kremova', 'Krémová', '#FBF3E1', '#FBF3E1', 'light'], ['cierna', 'Čierna', '#000000', '#000000', 'dark']];
-function applyPageBg() { const c = PAGE_BG.find(x => x[0] === (DATA.settings.bgc || 'auto')) || PAGE_BG[0]; const st = document.documentElement.style; if (c[0] === 'auto') { st.removeProperty('--pg'); return; } st.setProperty('--pg', isDark() ? c[3] : c[2]); }
+const PAGE_BG = [['auto', 'Základná', '', ''], ['ruzova', 'Ružová', '#FFE4EE', '#3A1B33'], ['modra', 'Modrá', '#DFEBFF', '#152242'], ['matova', 'Mätová', '#D8F5E9', '#12302A'], ['fialova', 'Fialová', '#EAE2FF', '#2A1D4A'], ['zlta', 'Žltá', '#FFF2C7', '#30280F'], ['broskyna', 'Broskyňová', '#FFE5D4', '#33211A'], ['siva', 'Sivá', '#EEF0F5', '#1A1C25'], ['biela', 'Biela', '#FFFFFF', '#FFFFFF', 'light'], ['kremova', 'Krémová', '#FBF3E1', '#FBF3E1', 'light'], ['cierna', 'Čierna', '#000000', '#000000', 'dark']];
+function applyPageBg() { const c = PAGE_BG.find(x => x[0] === (DATA.settings.bgc || 'auto')) || PAGE_BG[0]; const st = document.documentElement.style; if (c[0] === 'cierna') { st.setProperty('--topoc', '#fff'); st.setProperty('--topoo', '.14'); } else { st.removeProperty('--topoc'); st.removeProperty('--topoo'); } if (c[0] === 'auto') { st.removeProperty('--pg'); return; } st.setProperty('--pg', isDark() ? c[3] : c[2]); }
 const isDark = () => { const t = document.documentElement.dataset.theme; return t === 'dark' || (t !== 'light' && matchMedia('(prefers-color-scheme: dark)').matches); };
 function applyRoom() {
   const p = P(); const on = false; applyPageBg();
@@ -471,6 +477,7 @@ const TOUR = [
   { e: '🎮', t: 'Tu sú minihry. Za deň si môžeš zahrať pár hier.', f: '.nav [data-v="games"]' },
   { e: '🪙', t: 'Toto sú tvoje mince. Za ne si kúpiš nové veci v obchode.', f: '.coinchip' },
   { e: '👕', t: 'V šatníku sa oblečieš a navrhneš si vlastné pozadie.', f: '.nav [data-v="wardrobe"]' },
+  { e: '👨‍👩‍👧', t: 'A toto je pre rodičov: v nastaveniach úplne hore je Rodičovský účet. Uvidia tam, ako sa ti darí, a môžu ti dávať úlohy a odmeny.', f: '.top [data-v="settings"]' },
   { e: '🚀', t: 'Hotovo! Poďme sa spolu učiť. Návod nájdeš kedykoľvek v nastaveniach.', f: null }
 ];
 let GUIDE = null;
@@ -1106,7 +1113,7 @@ function calcKey(k) {
 VIEWS.settings = () => {
   const tg = (k, n) => `<button class="row" data-a="toggle" data-k="${k}"><span class="grow">${n}</span><span class="toggle ${DATA.settings[k] ? 'on' : ''}"></span></button>`;
   const sv = 'speechSynthesis' in window ? slovakVoice() : null;
-  return `${topbar('home')}<main class="view"><h1 style="font-size:2rem">Nastavenia</h1><section class="card" style="padding:6px 14px"><div class="list">${tg('sound', '🔊 Zvuky')}${tg('voice', '🗣️ Čítanie otázok nahlas')}<div class="row" style="flex-direction:column;align-items:flex-start;gap:6px"><span>${sv === 'sk' ? '✅ Slovenský hlas je v telefóne' : sv === 'cs' ? '⚠️ Slovenský hlas chýba, číta sa českým hlasom' : '⚠️ Slovenský hlas v telefóne chýba'}</span>${sv !== 'sk' ? '<small class="muted" style="font-weight:700">Aby hlas správne čítal mäkčene a dĺžne, nainštalujte slovenský hlas. Android: Nastavenia → Prevod textu na reč → Google → Inštalovať hlasové údaje → Slovenčina. iPhone: Nastavenia → Prístupnosť → Hovorený obsah → Hlasy → Slovenčina.</small>' : ''}<button class="btn small" data-a="voice-test">🔊 Vyskúšať hlas</button></div><div class="row" style="flex-direction:column;align-items:flex-start;gap:6px"><span>🌗 Vzhľad apky</span><div class="seg" style="width:100%">${[['auto', '🔄 Automaticky'], ['light', '☀️ Svetlý'], ['dark', '🌙 Tmavý']].map(([k, n]) => `<button class="${DATA.settings.theme === k ? 'on' : ''}" data-a="theme" data-t="${k}">${n}</button>`).join('')}</div></div><div class="row" style="flex-direction:column;align-items:flex-start;gap:8px"><span>🎨 Farba pozadia apky</span><div class="swatches">${PAGE_BG.map(c => `<button class="sw press ${(DATA.settings.bgc || 'auto') === c[0] ? 'on' : ''} ${c[0] === 'auto' ? 'swauto' : ''}" style="background:${c[0] === 'auto' ? 'var(--bg)' : c[2]};${c[0] === 'cierna' ? 'border-color:#888' : ''}" data-a="set-bg" data-c="${c[0]}" aria-label="${c[1]}" title="${c[1]}"></button>`).join('')}</div></div><button class="row" data-a="tour-again"><span class="grow">🧸 Ukáž mi znova návod</span><span>›</span></button><button class="row" data-a="nav" data-v="room"><span class="grow">🖼️ Pozadie za postavičkou</span><span>›</span></button><button class="row" data-a="edit-prof"><span class="grow">✏️ Úvodné nastavenie<small class="muted" style="display:block;font-weight:700;font-size:.82rem">Meno, dievča/chlapec, ročník, zvieratko a účes. Body a odmeny zostanú.</small></span><span>›</span></button><button class="row" data-a="nav" data-v="profiles"><span class="grow">👥 Zmeniť hráča alebo pridať nového</span><span>›</span></button><button class="row" data-a="parent-open"><span class="grow">🔒 Rodičovský účet${needBackup() ? ' <span class="blinkdot" title="Uložte si zálohu"></span>' : ''}</span><span>›</span></button></div></section><p class="muted b" style="font-size:.88rem">V rodičovskom účte, chránenom PIN kódom, nájdete prehľad pokroku, históriu a ďalšie nastavenia.</p></main>${nav('')}`;
+  return `${topbar('home')}<main class="view"><h1 style="font-size:2rem">Nastavenia</h1><button class="card parentcard press ${DATA.parentSeen ? '' : 'blink'}" data-a="parent-open"><span class="pci">👨‍👩‍👧</span><span class="grow"><span class="eyebrow">Pre rodičov</span><b>Rodičovský účet${needBackup() ? ' <span class="blinkdot" title="Uložte si zálohu"></span>' : ''}</b><small>Pokrok dieťaťa, úlohy a odmeny, čítanie, záloha a AI. Chráni ho PIN kód.</small></span><span class="pcgo">›</span></button><section class="card" style="padding:6px 14px"><div class="list">${tg('sound', '🔊 Zvuky')}${tg('voice', '🗣️ Čítanie otázok nahlas')}<div class="row" style="flex-direction:column;align-items:flex-start;gap:6px"><span>${sv === 'sk' ? '✅ Slovenský hlas je v telefóne' : sv === 'cs' ? '⚠️ Slovenský hlas chýba, číta sa českým hlasom' : '⚠️ Slovenský hlas v telefóne chýba'}</span>${sv !== 'sk' ? '<small class="muted" style="font-weight:700">Aby hlas správne čítal mäkčene a dĺžne, nainštalujte slovenský hlas. Android: Nastavenia → Prevod textu na reč → Google → Inštalovať hlasové údaje → Slovenčina. iPhone: Nastavenia → Prístupnosť → Hovorený obsah → Hlasy → Slovenčina.</small>' : ''}<button class="btn small" data-a="voice-test">🔊 Vyskúšať hlas</button></div><div class="row" style="flex-direction:column;align-items:flex-start;gap:6px"><span>🌗 Vzhľad apky</span><div class="seg" style="width:100%">${[['auto', '🔄 Automaticky'], ['light', '☀️ Svetlý'], ['dark', '🌙 Tmavý']].map(([k, n]) => `<button class="${DATA.settings.theme === k ? 'on' : ''}" data-a="theme" data-t="${k}">${n}</button>`).join('')}</div></div><div class="row" style="flex-direction:column;align-items:flex-start;gap:8px"><span>🎨 Farba pozadia apky</span><div class="swatches">${PAGE_BG.map(c => `<button class="sw press ${(DATA.settings.bgc || 'auto') === c[0] ? 'on' : ''} ${c[0] === 'auto' ? 'swauto' : ''}" style="background:${c[0] === 'auto' ? 'var(--bg)' : c[2]};${c[0] === 'cierna' ? 'border-color:#888' : ''}" data-a="set-bg" data-c="${c[0]}" aria-label="${c[1]}" title="${c[1]}"></button>`).join('')}</div></div><button class="row" data-a="tour-again"><span class="grow">🧸 Ukáž mi znova návod</span><span>›</span></button><button class="row" data-a="nav" data-v="room"><span class="grow">🖼️ Pozadie za postavičkou</span><span>›</span></button><button class="row" data-a="edit-prof"><span class="grow">✏️ Úvodné nastavenie<small class="muted" style="display:block;font-weight:700;font-size:.82rem">Meno, dievča/chlapec, ročník, zvieratko a účes. Body a odmeny zostanú.</small></span><span>›</span></button><button class="row" data-a="nav" data-v="profiles"><span class="grow">👥 Zmeniť hráča alebo pridať nového</span><span>›</span></button></div></section></main>${nav('')}`;
 };
 
 /* --- rodičovský účet --- */
@@ -1132,7 +1139,7 @@ function parentReads(p) {
 function checkPTasks(p, id, stars) {
   (p.ptasks || []).forEach(t => { if (!t.done && t.topic === id && stars >= t.stars) { t.done = Date.now(); p.coins = (p.coins || 0) + t.coins; p.log.unshift({ t: Date.now(), k: 'ptask', id, c: t.coins, n: t.stars }); setTimeout(() => achPop({ i: '📋', n: 'Úloha od rodiča splnená!', d: TOPIC[id].name, t: [t.coins] }, 0, t.coins), 1200); } });
 }
-const needBackup = () => DATA.profiles.some(p => p.xp > 0) && (!DATA.backupAt || Date.now() - DATA.backupAt > 7 * DAYMS);
+const needBackup = () => !(typeof SUPA_ON === 'function' && SUPA_ON() && AUTH) && DATA.profiles.some(p => p.xp > 0) && (!DATA.backupAt || Date.now() - DATA.backupAt > 7 * DAYMS);
 let RESTORE = false;
 /* Návod na AI kľúč */
 let AIG = 0;
@@ -1163,7 +1170,8 @@ function aiCard() {
 function backupCard() {
   const nb = needBackup(); const inClaude = !!(window.claude && window.claude.use);
   return `<section class="card pcard backup ${nb ? 'blink' : ''}"><span class="eyebrow">☁️ Ulož si postup</span>${nb ? '<p class="b" style="color:var(--bad);font-size:.9rem;padding:4px 0">⚠️ Zatiaľ nemáte zálohu. Ak sa vymažú údaje prehliadača alebo prejdete na iný telefón, deti by prišli o levely, mince a oblečenie.</p>' : (DATA.backupAt ? `<p class="b" style="color:var(--good);font-size:.9rem;padding:4px 0">✅ Posledná záloha: ${fmtTime(DATA.backupAt)}</p>` : '<p class="muted b" style="font-size:.9rem;padding:4px 0">Zatiaľ nemáte zálohu.</p>')}
-  <p class="muted b" style="font-size:.82rem;padding-bottom:8px">Kód zálohy si skopírujte a pošlite si ho napríklad e-mailom. Na inom zariadení ho vložíte cez „Obnoviť zo zálohy“. Záloha obsahuje všetkých hráčov (bez nahrávok čítania).</p>
+  ${typeof SUPA_ON === 'function' && SUPA_ON() && AUTH ? '<p class="b" style="color:var(--good);font-size:.9rem;padding:4px 0">✅ Ste prihlásení, postup sa ukladá online sám. Záloha je len poistka navyše.</p>' : ''}
+  <div class="bkinfo"><div><b>Čo je záloha?</b><p>Kópia celého postupu: všetci hráči, levely, mince, oblečenie a nastavenia. Má podobu dlhého kódu alebo súboru. Nahrávky čítania v nej nie sú.</p></div><div><b>Kde sa uloží?</b><p>Len tam, kam si ju uložíte vy, napríklad do e-mailu, poznámok alebo ako súbor. Apka ju sama nikam neposiela.</p></div><div><b>Kedy sa zíde?</b><p>Pri novom telefóne alebo keď sa vymažú údaje prehliadača. Bez zálohy${typeof SUPA_ON === 'function' && SUPA_ON() && AUTH ? ' a bez prihlásenia' : ''} by sa postup stratil.</p></div><div><b>Ako ju obnovím?</b><p>Tu ťuknite na „Obnoviť zo zálohy“ a vložte uložený kód${inClaude ? '' : ' alebo vyberte súbor'}. Postup v tomto zariadení sa nahradí tým zo zálohy.</p></div></div>
   <div class="bkbtns"><button class="btn small primary" data-a="bk-copy">📋 Skopírovať kód zálohy</button>${inClaude ? '' : '<button class="btn small" data-a="bk-file">💾 Stiahnuť súbor</button>'}<button class="btn small" data-a="bk-restore">📥 Obnoviť zo zálohy</button></div>
   <textarea id="bkcode" class="bkcode" readonly hidden></textarea>
   ${RESTORE ? `<div class="bkrestore"><b>Vložte kód zálohy${inClaude ? '' : ' alebo vyberte súbor'}:</b><textarea id="bkin" class="bkcode" placeholder="Sem vložte kód…"></textarea>${inClaude ? '' : '<input type="file" id="bkfile" accept=".txt,.json,text/plain,application/json">'}<p class="muted b" style="font-size:.8rem">Pozor: obnovenie nahradí všetkých hráčov na tomto zariadení.</p><div class="rowbtns"><button class="btn" data-a="bk-cancel">Zrušiť</button><button class="btn primary" data-a="bk-apply">Obnoviť</button></div></div>` : ''}</section>`;
@@ -1299,7 +1307,7 @@ const ACT = {
   gender: d => { const p = P(); if (p.av.gender === d.g) return; const def = defaultAvatar(d.g); Object.assign(p.av, { gender: d.g, hair: def.hair, eyes: def.eyes }); for (const c of ['top', 'bottom', 'acc', 'pet']) { const it = itemOf(c, p.av[c]); if (it.g && it.g !== d.g) p.av[c] = def[c]; } for (const k of Object.keys(p.av.col)) { const list = k === 'hair' ? HAIRC : PAL; const it = list.find(x => x.id === p.av.col[k]); if (it && it.g && it.g !== d.g) p.av.col[k] = def.col[k]; } save(); sfx('pop'); render(null); $('#wfig .avatar').classList.add('jump'); },
   rtab: d => { RTAB = d.t; sfx('tap'); render(null); },
   toggle: d => { DATA.settings[d.k] = !DATA.settings[d.k]; save(); render(null); sfx('tap'); },
-  'parent-open': () => { sfx('tap'); PSEL = DATA.current; PTAB = 'over'; go('parent', {}, 'f'); },
+  'parent-open': () => { sfx('tap'); if (!DATA.parentSeen) { DATA.parentSeen = 1; save(); } PSEL = DATA.current; PTAB = 'over'; go('parent', {}, 'f'); },
   'parent-lock': () => { PARENT_OK = false; PDEL = false; go(P() ? 'home' : 'profiles', {}, 'b'); },
   'pin-back': () => go(P() ? 'settings' : 'profiles', {}, 'b'),
   pk: d => pinKey(d.k),
