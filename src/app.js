@@ -202,8 +202,8 @@ const need = L => 60 + 30 * (L - 1);
 function levelInfo(xp) { let L = 1, r = xp; while (r >= need(L)) { r -= need(L); L++; } return { L, cur: r, need: need(L), pct: Math.round(r / need(L) * 100) }; }
 const TITLES = ['Zvedavé vajíčko', 'Malý bystrík', 'Šikovná hlávka', 'Pátrač', 'Objaviteľ', 'Vynálezca', 'Majster slov', 'Kráľ čísel', 'Profesor', 'Génius', 'Legenda'];
 const title = L => TITLES[Math.min(TITLES.length - 1, Math.floor(L / 2))];
-const unlocked = (it, p) => (!it.lvl || levelInfo(p.xp).L >= it.lvl) && (!it.streak || (p.streak.best || 0) >= it.streak) && (!it.price || (p.owned || []).includes(it.sid));
-const lockLabel = it => it.price ? `Obchod 🪙 ${it.price}` : it.lvl ? `Level ${it.lvl}` : `Séria ${it.streak} dní`;
+const unlocked = (it, p) => (!it.lvl || levelInfo(p.xp).L >= it.lvl) && (!it.streak || (p.streak.best || 0) >= it.streak) && (!it.price || (p.owned || []).includes(it.sid)) && (!it.lb || (p.owned || []).includes('lb:' + it.id));
+const lockLabel = it => it.lb ? `Rebríček: ${it.lb}. miesto` : it.price ? `Obchod 🪙 ${it.price}` : it.lvl ? `Level ${it.lvl}` : `Séria ${it.streak} dní`;
 const REW_CATS = ['hair', 'top', 'bottom', 'shoes', 'acc', 'eyes', 'mouth', 'pet'];
 function allRewardItems(g) {
   const out = [];
@@ -1478,6 +1478,7 @@ const ACT = {
   },
   'duel-quit': () => { if (D && D.ws) D.ws.say('bye', {}); duelClose(); D = null; go('games', {}, 'b'); },
   'duel-again': () => { if (D && D.ws) D.ws.say('bye', {}); duelClose(); D = { st: 'lobby' }; render(null); },
+  'lbtab': d => { LBTAB = d.t; sfx('tap'); render(null); },
   'ai-del': () => { setApiKey(''); toast('AI kľúč odstránený.'); render(null); },
   'ai-test': async (d, el) => { el.disabled = true; el.textContent = '⏳ Testujem…'; try { const s2 = await getSample(); const r = await s2('Odpovedz po slovensky jednou krátkou vetou: pozdrav dieťa.', { cache: false }); toast('✅ Funguje! Bystrík hovorí: ' + r.text.slice(0, 80)); } catch (e) { toast(e && e.code === 'not_granted' ? '❌ Kľúč nie je platný. Skontrolujte ho.' : e && e.code === 'no_credit' ? '❌ Na účte chýba kredit (Billing).' : e && e.code === 'rate_limited' ? '⏳ Dnešný limit je minutý alebo príliš veľa požiadaviek. Skúste neskôr.' : '❌ Nepodarilo sa: ' + ((e && e.message) || 'chyba')); } render(null); },
   'pt-add': () => { const p = DATA.profiles.find(x => x.id === PSEL); p.ptasks = p.ptasks || []; if (p.ptasks.filter(t => !t.done).length >= 3) { toast('Naraz môžu byť najviac 3 aktívne úlohy.'); return; } p.ptasks.unshift({ id: 'pt' + Date.now().toString(36), topic: $('#pt-topic').value, stars: +$('#pt-stars').value, coins: +$('#pt-coins').value, t: Date.now(), done: 0 }); if (p.ptasks.length > 20) p.ptasks.length = 20; save(); sfx('pop'); toast('Úloha zadaná ✓ Dieťa ju uvidí na domovskej obrazovke.'); render(null); },
@@ -1658,31 +1659,57 @@ VIEWS.duel = () => {
   if (D.st === 'waitend') return `<main class="view nonav">${head}${bars}<section class="card duelbox">${bearSvg('')}<h2>Hotovo! ${D.s} z 8</h2><div class="typing" style="margin:8px auto"><i></i><i></i><i></i></div><p class="muted b">Čakám, kým dokončí súper…</p></section></main>`;
   const o = D.odone; return `<main class="view nonav">${head}<section class="card duelbox">${bearSvg(D.win >= 0 ? 'cheer' : 'comfort')}<h1>${D.win > 0 ? (P().av.gender === 'd' ? '🏆 Vyhrala si!' : '🏆 Vyhral si!') : D.win < 0 ? 'Tentoraz vyhral súper' : '🤝 Remíza!'}</h1><div class="duelres"><div class="${D.win >= 0 ? 'w' : ''}"><span>${esc(D.me)}</span><b>${D.mdone.s}</b><small>${(D.mdone.ms / 1000).toFixed(1)} s</small></div><div class="${D.win <= 0 && o ? 'w' : ''}"><span>${esc(D.opp.name)}</span><b>${o ? o.s : '–'}</b><small>${o ? (o.ms / 1000).toFixed(1) + ' s' : 'nedokončil'}</small></div></div><div class="xpgain">+${D.xp} bodov</div><div class="rowbtns"><button class="btn primary" data-a="duel-quit">✓ Hotovo</button><button class="btn" data-a="duel-again">🔁 Ďalší súboj</button></div></section></main>`;
 };
+const LB_PRIZE = [['sampion', 300], ['vavrin', 200], ['bronz', 100]];
+let LBTAB = 'n', LBAW = false;
+const lbHdr = t => ({ apikey: SUPA.key, Authorization: 'Bearer ' + t });
 function lbPush() {
   if (!(SUPA_ON() && AUTH) || DATA.settings.lb === false) return; clearTimeout(lbT);
-  lbT = setTimeout(async () => { try { const w = weekId(); const rows = DATA.profiles.filter(p => p.wk && p.wk.w === w && (p.wk.xp > 0 || p.wk.n > 0)).map(p => ({ user_id: AUTH.uid, pid: String(p.id), name: String(p.name).slice(0, 14), grade: p.grade, week: w, xp: Math.min(2000, p.wk.n || 0) * LBK + Math.min(LBK - 1, p.wk.xp || 0), updated_at: new Date().toISOString() })); if (!rows.length) return; const t = await supaToken(); await fetch(SUPA.url + '/rest/v1/scores?on_conflict=user_id,pid,week', { method: 'POST', headers: { apikey: SUPA.key, Authorization: 'Bearer ' + t, 'content-type': 'application/json', Prefer: 'resolution=merge-duplicates,return=minimal' }, body: JSON.stringify(rows) }); } catch (e) { } }, 4000);
+  lbT = setTimeout(async () => { try { const w = weekId(); const now = new Date().toISOString(); const rows = []; DATA.profiles.forEach(p => { const k = p.wk && p.wk.w === w ? p.wk : { xp: 0, n: 0 }; const base = { user_id: AUTH.uid, name: String(p.name).slice(0, 14), grade: p.grade, week: w, updated_at: now }; rows.push({ ...base, pid: String(p.id), xp: Math.min(2000, k.n || 0) * LBK + Math.min(LBK - 1, k.xp || 0) }); rows.push({ ...base, pid: p.id + '#s', xp: Math.min(9999, (p.streak && p.streak.count) || 0) }); }); if (!rows.length) return; const t = await supaToken(); await fetch(SUPA.url + '/rest/v1/scores?on_conflict=user_id,pid,week', { method: 'POST', headers: { ...lbHdr(t), 'content-type': 'application/json', Prefer: 'resolution=merge-duplicates,return=minimal' }, body: JSON.stringify(rows) }); } catch (e) { } }, 4000);
 }
+function lbParse(raw) { const st = {}; raw.forEach(x => { if (String(x.pid).endsWith('#s')) st[x.user_id + '|' + String(x.pid).slice(0, -2)] = x.xp || 0; }); return raw.filter(x => !String(x.pid).endsWith('#s')).map(x => ({ ...lbRow(x), st: st[x.user_id + '|' + x.pid] || 0 })); }
+async function lbFetch(w) { const t = await supaToken(); const r = await fetch(SUPA.url + '/rest/v1/scores?select=user_id,pid,name,grade,xp&week=eq.' + w + '&order=xp.desc&limit=600', { headers: lbHdr(t) }); if (!r.ok) throw { status: r.status }; return lbParse(await r.json()); }
 async function lbLoad() {
-  if (LB && LB.loading) return; const prev = LB; LB = { loading: true, rows: prev && prev.rows, at: Date.now() }; const w = weekId(); let out;
-  try { if (!(SUPA_ON() && AUTH)) throw { off: true }; const t = await supaToken(); const r = await fetch(SUPA.url + '/rest/v1/scores?select=user_id,pid,name,grade,xp&week=eq.' + w + '&order=xp.desc&limit=50', { headers: { apikey: SUPA.key, Authorization: 'Bearer ' + t } }); if (!r.ok) throw { status: r.status }; out = { rows: (await r.json()).map(lbRow) }; }
+  if (LB && LB.loading) return; const prev = LB; LB = { loading: true, rows: prev && prev.rows, at: Date.now() }; let out;
+  try { if (!(SUPA_ON() && AUTH)) throw { off: true }; out = { rows: await lbFetch(weekId()) }; }
   catch (e) { out = { err: e && e.off ? 'off' : e && e.status === 404 ? 'missing' : 'net' }; }
   out.at = Date.now(); LB = out;
   if (UI.view === 'board') render(null); else if (UI.view === 'home') { const el = $('#homelb'); if (el) el.outerHTML = homeBoard(P()); }
+  if (!LBAW && out.rows) { LBAW = true; lbAwards(); }
 }
 function lbFresh() { if (!LB || (!LB.loading && Date.now() - (LB.at || 0) > 20000)) lbLoad(); }
-function lbLocal(p) { const w = weekId(); return DATA.profiles.map(x => ({ name: x.name, grade: x.grade, n: x.wk && x.wk.w === w ? x.wk.n || 0 : 0, pts: x.wk && x.wk.w === w ? x.wk.xp || 0 : 0, mine: true, me: x.id === p.id })).sort((a, b) => b.n - a.n || b.pts - a.pts); }
-function lbRows(p) { return LB && LB.rows ? LB.rows.map(x => ({ ...x, mine: !!AUTH && x.user_id === AUTH.uid, me: !!AUTH && x.user_id === AUTH.uid && x.pid === String(p.id) })) : lbLocal(p); }
+const lbSort = { n: (a, b) => b.n - a.n || b.pts - a.pts, s: (a, b) => b.st - a.st || b.n - a.n, x: (a, b) => b.pts - a.pts || b.n - a.n };
+function lbLocal(p) { const w = weekId(); return DATA.profiles.map(x => ({ name: x.name, grade: x.grade, n: x.wk && x.wk.w === w ? x.wk.n || 0 : 0, pts: x.wk && x.wk.w === w ? x.wk.xp || 0 : 0, st: (x.streak && x.streak.count) || 0, mine: true, me: x.id === p.id })); }
+function lbRows(p, tab = 'n') { const rows = LB && LB.rows ? LB.rows.map(x => ({ ...x, mine: !!AUTH && x.user_id === AUTH.uid, me: !!AUTH && x.user_id === AUTH.uid && x.pid === String(p.id) })) : lbLocal(p); return rows.sort(lbSort[tab]); }
 const lbMedal = i => ['🥇', '🥈', '🥉'][i] || (i + 1) + '.';
-const lbLine = (x, i) => `<div class="lbrow ${x.me ? 'me' : x.mine ? 'mine' : ''}"><span class="rk">${lbMedal(i)}</span><span class="nm">${esc(x.name)}<small>${x.grade}. ročník · ${x.pts} bodov</small></span><b>${x.n}<small>${plural(x.n, 'zadanie', 'zadania', 'zadaní')}</small></b></div>`;
+const lbVal = (x, tab) => tab === 's' ? [x.st, plural(x.st, 'deň', 'dni', 'dní')] : tab === 'x' ? [x.pts, plural(x.pts, 'bod', 'body', 'bodov')] : [x.n, plural(x.n, 'zadanie', 'zadania', 'zadaní')];
+const lbLine = (x, i, tab = 'n') => { const [v, u] = lbVal(x, tab); return `<div class="lbrow ${x.me ? 'me' : x.mine ? 'mine' : ''}"><span class="rk">${lbMedal(i)}</span><span class="nm">${esc(x.name)}<small>${x.grade}. ročník${tab === 'n' ? ' · ' + x.pts + ' bodov' : tab === 's' ? ' · ' + x.n + ' zadaní' : ' · séria ' + x.st}</small></span><b>${v}<small>${u}</small></b></div>`; };
 function homeBoard(p) {
   const rows = lbRows(p); const mi = rows.findIndex(x => x.me); const top = rows.slice(0, 3); const mine = p.wk && p.wk.w === weekId() ? p.wk.n || 0 : 0;
-  return `<button class="card homelb press" id="homelb" data-a="nav" data-v="board"><div class="sec"><h2>🏆 Rebríček týždňa</h2><span class="eyebrow">Všetko ›</span></div>${top.length ? top.map(lbLine).join('') : '<p class="muted b" style="padding:6px 0">Zatiaľ nikto. Sprav prvé zadanie a budeš na čele!</p>'}${mi > 2 ? `<div class="lbgap">⋯</div>${lbLine(rows[mi], mi)}` : ''}<p class="muted b" style="font-size:.84rem;padding-top:6px">${mi < 0 ? `Ty máš tento týždeň ${mine} ${plural(mine, 'zadanie', 'zadania', 'zadaní')}. Sprav kvíz alebo hru a dostaneš sa do rebríčka.` : mi === 0 ? 'Si na 1. mieste, udrž si ho! 💪' : (() => { const need = rows[mi - 1].n - rows[mi].n + 1; return `Si na ${mi + 1}. mieste. Na ${mi}. miesto ti ${plural(need, 'chýba', 'chýbajú', 'chýba')} ${need} ${plural(need, 'zadanie', 'zadania', 'zadaní')}.`; })()}</p></button>`;
+  return `<button class="card homelb press" id="homelb" data-a="nav" data-v="board"><div class="sec"><h2>🏆 Rebríček týždňa</h2><span class="eyebrow">Všetko ›</span></div>${top.length ? top.map((x, i) => lbLine(x, i)).join('') : '<p class="muted b" style="padding:6px 0">Zatiaľ nikto. Sprav prvé zadanie a budeš na čele!</p>'}${mi > 2 ? `<div class="lbgap">⋯</div>${lbLine(rows[mi], mi)}` : ''}<p class="muted b" style="font-size:.84rem;padding-top:6px">${mi < 0 ? `Ty máš tento týždeň ${mine} ${plural(mine, 'zadanie', 'zadania', 'zadaní')}. Sprav kvíz alebo hru a dostaneš sa do rebríčka.` : mi === 0 ? 'Si na 1. mieste, udrž si ho do nedele a získaš Korunu šampióna! 👑' : (() => { const need = rows[mi - 1].n - rows[mi].n + 1; return `Si na ${mi + 1}. mieste. Na ${mi}. miesto ti ${plural(need, 'chýba', 'chýbajú', 'chýba')} ${need} ${plural(need, 'zadanie', 'zadania', 'zadaní')}.`; })()}</p></button>`;
+}
+/* odmeny pre prvých troch za minulý týždeň (podľa zadaní) */
+const prevWeekId = () => { const d = new Date(); d.setDate(d.getDate() - 7 - (d.getDay() + 6) % 7); return dkey(d); };
+async function lbAwards() {
+  try {
+    if (!(SUPA_ON() && AUTH)) return; const pw = prevWeekId(); const todo = DATA.profiles.filter(p => p.lbChecked !== pw); if (!todo.length) return;
+    const rows = (await lbFetch(pw)).sort(lbSort.n); const wins = [];
+    todo.forEach(p => { p.lbChecked = pw; const r = rows.findIndex(x => x.user_id === AUTH.uid && x.pid === String(p.id)); if (r < 0 || r > 2 || !rows[r].n) return; const [item, coins] = LB_PRIZE[r]; p.owned = p.owned || []; const had = p.owned.includes('lb:' + item); if (!had) p.owned.push('lb:' + item); const c = coins + (had ? 50 : 0); p.coins = (p.coins || 0) + c; p.lbWins = (p.lbWins || 0) + 1; p.log.unshift({ t: Date.now(), k: 'gift', id: null, c, n: 0 }); wins.push({ p, r, item, c, had }); });
+    save(); const w = wins.find(x => x.p.id === DATA.current) || wins[0]; if (!w) return;
+    const it = itemOf('acc', w.item); const o = document.createElement('div'); o.className = 'over';
+    o.innerHTML = `<div class="card box">${bearSvg('cheer')}<h2>${lbMedal(w.r)} ${w.r + 1}. miesto v rebríčku!</h2><p class="b">${esc(w.p.name)}, minulý týždeň ${w.p.av.gender === 'd' ? 'si patrila' : 'si patril'} medzi troch najlepších.</p><div class="lbprize"><span class="pth">${itemThumb('acc', it, w.p.av)}</span><div><b>${it.n}</b><small>${w.had ? 'Už ju máš, preto mince navyše' : 'Vzácny doplnok, v obchode ho nekúpiš'}</small><b>+${w.c} ${COIN}</b></div></div><button class="btn primary block" data-a="ov-close">Paráda!</button></div>`;
+    document.body.appendChild(o); sfx('level'); try { confetti(160, .3); } catch (e) { } if (UI.view === 'home' || UI.view === 'board') render(null);
+  } catch (e) { }
 }
 VIEWS.board = () => {
-  const p = P(); const rows = lbRows(p); const first = !LB || (LB.loading && !LB.rows);
+  const p = P(); const rows = lbRows(p, LBTAB); const first = !LB || (LB.loading && !LB.rows); const top = rows.slice(0, 20); const mi = rows.findIndex(x => x.me);
   const note = LB && LB.err ? `<p class="muted b" style="font-size:.88rem;padding:4px 0">${LB.err === 'net' ? 'Spoločný rebríček sa nepodarilo načítať. Zatiaľ vidíš hráčov z tohto zariadenia.' : LB.err === 'missing' ? 'Spoločný rebríček ešte nie je zapnutý. Zatiaľ vidíš hráčov z tohto zariadenia.' : 'Spoločný rebríček uvidíš po prihlásení. Zatiaľ vidíš hráčov z tohto zariadenia.'}</p>` : '';
-  const body = first ? '<div class="typing" style="margin:14px auto"><i></i><i></i><i></i></div>' : note + (rows.length ? rows.map(lbLine).join('') : '<p class="muted b" style="padding:10px 0">Tento týždeň ešte nikto nič nesplnil. Buď prvý!</p>');
-  return `${topbar()}<main class="view pop-in"><div><h1 style="font-size:2rem">🏆 Rebríček</h1><p class="muted b">Kto tento týždeň splnil najviac zadaní. Počíta sa každý dokončený kvíz, hra, čítanie, písanie aj súboj. V pondelok sa začína odznova.</p></div><section class="card lb">${body}</section><p class="muted b" style="font-size:.8rem">V rebríčku je len meno, ročník, počet zadaní a body. Rodič ho vie vypnúť v rodičovskom účte.</p></main>${nav('board')}`;
+  const body = first ? '<div class="typing" style="margin:14px auto"><i></i><i></i><i></i></div>' : note + (top.length ? top.map((x, i) => lbLine(x, i, LBTAB)).join('') + (mi >= 20 ? `<div class="lbgap">⋯</div>${lbLine(rows[mi], mi, LBTAB)}` : '') : '<p class="muted b" style="padding:10px 0">Tento týždeň ešte nikto nič nesplnil. Buď prvý!</p>');
+  const left = 7 - (new Date().getDay() + 6) % 7; const desc = { n: 'Kto tento týždeň splnil najviac zadaní: každý dokončený kvíz, hra, čítanie, písanie aj súboj.', s: 'Kto sa učí najviac dní po sebe bez prestávky.', x: 'Kto tento týždeň nazbieral najviac bodov.' }[LBTAB];
+  return `${topbar()}<main class="view pop-in"><div><h1 style="font-size:2rem">🏆 Rebríček</h1><p class="muted b">Top 20 hráčov. Do rebríčka sa dostaneš sám, stačí byť prihlásený.</p></div>
+  <div class="seg lbseg">${[['n', '✅ Zadania'], ['s', '🔥 Séria'], ['x', '⭐ Body']].map(([k, n]) => `<button class="${LBTAB === k ? 'on' : ''}" data-a="lbtab" data-t="${k}">${n}</button>`).join('')}</div><p class="muted b" style="font-size:.88rem;margin-top:-6px">${desc}</p>
+  <section class="card lb">${body}</section>
+  <section class="card lbprizes"><div class="sec"><h2>🎁 Odmeny pre troch najlepších</h2><span class="eyebrow">ešte ${left} ${plural(left, 'deň', 'dni', 'dní')}</span></div><p class="muted b" style="font-size:.86rem">Kto je v nedeľu večer v rebríčku <b>Zadania</b> na 1. až 3. mieste, dostane v pondelok vzácny doplnok. V obchode sa kúpiť nedá.</p><div class="lbpz">${LB_PRIZE.map(([id, c], i) => { const it = itemOf('acc', id); return `<div class="pz p${i + 1}"><span class="pth">${itemThumb('acc', it, p.av)}</span><b>${lbMedal(i)} ${it.n}</b><small>+${c} mincí</small></div>`; }).join('')}</div></section>
+  <p class="muted b" style="font-size:.8rem">V rebríčku je len meno, ročník a výsledky. Rodič ho vie vypnúť v rodičovskom účte.</p></main>${nav('board')}`;
 };
 AFTER.board = () => lbFresh();
 const _afterHome = AFTER.home; AFTER.home = () => { _afterHome && _afterHome(); lbFresh(); };

@@ -993,6 +993,16 @@ img.emo{width:1.18em;min-width:1.18em;height:1.18em;flex:none;vertical-align:-.2
 .lbrow .rk{width:38px;text-align:center;font-family:var(--f-display);font-weight:800;font-size:1.2rem;flex:none}.lbrow .nm{flex:1;min-width:0;font-weight:800;display:flex;flex-direction:column}.lbrow .nm small{font-weight:700;color:var(--muted);font-size:.78rem}
 .lbrow b{font-family:var(--f-display);font-size:1.4rem;display:flex;flex-direction:column;align-items:flex-end;line-height:1}.lbrow b small{font-family:var(--f-body);font-size:.68rem;font-weight:700;color:var(--muted)}
 .homelb{display:block;width:100%;box-sizing:border-box;padding:12px 14px;text-align:left;font-family:inherit;color:var(--ink);cursor:pointer}.homelb .sec h2{font-size:1.25rem}.lbgap{text-align:center;font-weight:800;color:var(--muted);line-height:.8}.lbrow.me{background:var(--sun-soft);border-radius:12px;padding-inline:8px;margin-inline:-8px}.lbrow.mine .nm{color:var(--accent)}
+.over .box>svg.bear{width:120px;height:120px;flex:none}
+.lbseg{width:100%;box-sizing:border-box}.lbseg button{flex:1;font-size:.9rem;padding:8px 2px}
+.lbprizes{padding:12px 14px;display:flex;flex-direction:column;gap:8px}.lbprizes .sec h2{font-size:1.15rem}
+.lbpz{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.pz{display:flex;flex-direction:column;align-items:center;text-align:center;gap:2px;padding:8px 4px;border-radius:16px;border:2px solid var(--line);background:var(--paper2)}
+.pz.p1{background:var(--sun-soft);border-color:var(--sun)}
+.pz b{font-family:var(--f-display);font-size:.86rem;line-height:1.15}.pz small{font-weight:700;color:var(--muted);font-size:.76rem}
+.pth{width:66px;height:66px;display:block}.pth svg{width:100%;height:100%}
+.lbprize{display:flex;align-items:center;gap:12px;text-align:left;background:var(--sun-soft);border-radius:16px;padding:10px;width:100%;box-sizing:border-box}
+.lbprize .pth{width:84px;height:84px;flex:none}.lbprize div{display:flex;flex-direction:column;gap:2px}.lbprize b{font-family:var(--f-display);font-size:1.15rem}.lbprize small{font-weight:700;color:var(--muted)}
 /* ===== Vlastný vzhľad „mapa dobrodružstva“ ===== */
 .card{border-width:2px;box-shadow:0 6px 0 var(--drop),0 14px 24px -14px var(--drop)}
 .btn{border-width:2px;border-radius:999px;letter-spacing:.01em}
@@ -1986,7 +1996,7 @@ const CATALOG = {
   ],
   bottom: [{ id: 'nohavice', n: 'Nohavice' }, { id: 'riflove', n: 'Rifle' }, { id: 'kratasy', n: 'Kraťasy' }, { id: 'sukna', n: 'Sukňa' }, { id: 'leginy', n: 'Legíny' }, { id: 'teplaky', n: 'Tepláky', lvl: 3 }, { id: 'tutu', n: 'Tutu sukňa', lvl: 9, g: 'd' }, { id: 'kapsace', n: 'Kapsáče', lvl: 9, g: 'c' }],
   shoes: [{ id: 'tenisky', n: 'Tenisky' }, { id: 'balerinky', n: 'Balerínky' }, { id: 'cizmy', n: 'Čižmy', lvl: 2 }, { id: 'sandale', n: 'Sandále', lvl: 5 }, { id: 'kopacky', n: 'Kopačky', lvl: 7 }, { id: 'gumaky', n: 'Gumáky', lvl: 9 }, { id: 'svietiace', n: 'Svietiace tenisky', lvl: 11 }, { id: 'korcule', n: 'Kolieskové korčule', lvl: 17 }, { id: 'clogy', n: 'Gumené šľapky' }, { id: 'kovbojky', n: 'Kovbojské čižmy', lvl: 14 }, { id: 'papuce', n: 'Zajačie papuče', price: 70 }, { id: 'zlate', n: 'Zlaté tenisky', price: 250 }, { id: 'raketove', n: 'Raketové topánky', price: 300 }, { id: 'hviezdne', n: 'Hviezdne tenisky', price: 80 }],
-  acc: [{ id: 'nic', n: 'Nič' }, { id: 'celenka', n: 'Čelenka' }, { id: 'siltovka', n: 'Šiltovka' }, { id: 'okuliare', n: 'Okuliare' }, { id: 'masla', n: 'Mašľa', lvl: 2, g: 'd' }, { id: 'helma', n: 'Cyklistická prilba', lvl: 2, g: 'c' }, { id: 'kvet', n: 'Kvietok', lvl: 3, g: 'd' }, { id: 'kapitan', n: 'Kapitánska čiapka', lvl: 3, g: 'c' }, { id: 'usi', n: 'Mačacie ušká', streak: 3, g: 'd' }, { id: 'satka', n: 'Pirátska šatka', streak: 3, g: 'c' }, { id: 'klobuk', n: 'Letný klobúk', lvl: 5 }, { id: 'sluchadla', n: 'Slúchadlá', lvl: 8 }, { id: 'slnecne', n: 'Slnečné okuliare', lvl: 9 }, { id: 'party', n: 'Párty klobúčik', lvl: 10 }, { id: 'carodej', n: 'Čarodejný klobúk', lvl: 13 }, { id: 'korunka', n: 'Korunka', lvl: 15 }, { id: 'cepicka', n: 'Zimná čiapka', price: 50 }, { id: 'svatoziara', n: 'Svätožiara', price: 250 }, { id: 'kridla', n: 'Anjelské krídla', price: 300 }, { id: 'diamant', n: 'Diamantová koruna', price: 400 }, { id: 'okusrdce', n: 'Srdiečkové okuliare', price: 70 }, { id: 'roh', n: 'Jednorožcový roh', price: 100, g: 'd' }, { id: 'kovboj', n: 'Kovbojský klobúk', price: 100, g: 'c' }],
+  acc: [{ id: 'nic', n: 'Nič' }, { id: 'sampion', n: 'Koruna šampióna', lb: 1 }, { id: 'vavrin', n: 'Strieborný vavrín', lb: 2 }, { id: 'bronz', n: 'Bronzová hviezda', lb: 3 }, { id: 'celenka', n: 'Čelenka' }, { id: 'siltovka', n: 'Šiltovka' }, { id: 'okuliare', n: 'Okuliare' }, { id: 'masla', n: 'Mašľa', lvl: 2, g: 'd' }, { id: 'helma', n: 'Cyklistická prilba', lvl: 2, g: 'c' }, { id: 'kvet', n: 'Kvietok', lvl: 3, g: 'd' }, { id: 'kapitan', n: 'Kapitánska čiapka', lvl: 3, g: 'c' }, { id: 'usi', n: 'Mačacie ušká', streak: 3, g: 'd' }, { id: 'satka', n: 'Pirátska šatka', streak: 3, g: 'c' }, { id: 'klobuk', n: 'Letný klobúk', lvl: 5 }, { id: 'sluchadla', n: 'Slúchadlá', lvl: 8 }, { id: 'slnecne', n: 'Slnečné okuliare', lvl: 9 }, { id: 'party', n: 'Párty klobúčik', lvl: 10 }, { id: 'carodej', n: 'Čarodejný klobúk', lvl: 13 }, { id: 'korunka', n: 'Korunka', lvl: 15 }, { id: 'cepicka', n: 'Zimná čiapka', price: 50 }, { id: 'svatoziara', n: 'Svätožiara', price: 250 }, { id: 'kridla', n: 'Anjelské krídla', price: 300 }, { id: 'diamant', n: 'Diamantová koruna', price: 400 }, { id: 'okusrdce', n: 'Srdiečkové okuliare', price: 70 }, { id: 'roh', n: 'Jednorožcový roh', price: 100, g: 'd' }, { id: 'kovboj', n: 'Kovbojský klobúk', price: 100, g: 'c' }],
   pet: [
     { id: 'nic', n: 'Žiadne' }, { id: 'medved', n: 'Macko', e: '🐻' }, { id: 'pes', n: 'Psík', e: '🐶' }, { id: 'macka', n: 'Mačička', e: '🐱' }, { id: 'zajac', n: 'Zajko', e: '🐰' }, { id: 'skrecok', n: 'Škrečok', e: '🐹' }, { id: 'zaba', n: 'Žabka', e: '🐸' },
     { id: 'panda', n: 'Panda', e: '🐼', lvl: 4 }, { id: 'koala', n: 'Koala', e: '🐨', lvl: 6 }, { id: 'liska', n: 'Líštička', e: '🦊', streak: 7 }, { id: 'opica', n: 'Opička', e: '🐵', lvl: 8 }, { id: 'tiger', n: 'Tigrík', e: '🐯', lvl: 10 },
@@ -2033,45 +2043,60 @@ function avatarSvg(av, opts = {}) {
   if (opts.mood === 'happy') { mouth = 'smiech'; if (eyes === 'bodky') eyes = 'stastne'; }
   if (opts.mood === 'sad') mouth = 'o';
 
-  let s = `<defs><linearGradient id="G${id}" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#FF6A8A"/><stop offset=".33" stop-color="#FFC23C"/><stop offset=".66" stop-color="#2FC08A"/><stop offset="1" stop-color="#6B7BFF"/></linearGradient><clipPath id="T${id}"><path d="M66 142 Q100 128 134 142 L138 212 H62 Z"/></clipPath><clipPath id="L${id}"><path d="M76 196 H124 L124 282 H102 L100 214 L98 282 H76 Z"/></clipPath>${bgPatternDef(av, id)}</defs>`;
+  let s = `<defs><linearGradient id="G${id}" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#FF6A8A"/><stop offset=".33" stop-color="#FFC23C"/><stop offset=".66" stop-color="#2FC08A"/><stop offset="1" stop-color="#6B7BFF"/></linearGradient><clipPath id="T${id}"><path d="M66 142 Q100 128 134 142 L138 212 H62 Z"/></clipPath><clipPath id="L${id}"><path d="M76 196 H124 L124 282 H102 L100 214 L98 282 H76 Z"/></clipPath>${bgPatternDef(av, id)}
+<radialGradient id="SK${id}" cx="42%" cy="34%" r="75%"><stop offset="0" stop-color="${shade(skin, .12)}"/><stop offset=".6" stop-color="${skin}"/><stop offset="1" stop-color="${shade(skin, -.1)}"/></radialGradient>
+<pattern id="HT${id}" width="22" height="60" patternUnits="userSpaceOnUse" patternTransform="rotate(8)"><path d="M4 0 q6 15 0 30 t0 30" stroke="#000" stroke-opacity=".15" stroke-width="1.8" fill="none"/><path d="M12 0 q-5 15 0 30 t0 30" stroke="#fff" stroke-opacity=".22" stroke-width="1.5" fill="none"/><path d="M18 0 q4 15 0 30 t0 30" stroke="#000" stroke-opacity=".09" stroke-width="1.1" fill="none"/></pattern>
+<pattern id="HC${id}" width="20" height="20" patternUnits="userSpaceOnUse"><path d="M3 8 a5 5 0 1 1 8 4" stroke="#000" stroke-opacity=".16" stroke-width="1.8" fill="none" stroke-linecap="round"/><path d="M12 16 a4 4 0 1 1 6 -3" stroke="#fff" stroke-opacity=".22" stroke-width="1.5" fill="none" stroke-linecap="round"/></pattern>
+<linearGradient id="HG${id}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff" stop-opacity=".3"/><stop offset=".4" stop-color="#fff" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity=".2"/></linearGradient>
+<linearGradient id="CS${id}" gradientUnits="userSpaceOnUse" x1="62" y1="0" x2="138" y2="0"><stop offset="0" stop-color="#000" stop-opacity=".22"/><stop offset=".28" stop-color="#000" stop-opacity="0"/><stop offset=".55" stop-color="#fff" stop-opacity=".1"/><stop offset=".78" stop-color="#000" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity=".2"/></linearGradient>
+<linearGradient id="CV${id}" gradientUnits="userSpaceOnUse" x1="0" y1="140" x2="0" y2="212"><stop offset="0" stop-color="#fff" stop-opacity=".1"/><stop offset=".6" stop-color="#000" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity=".14"/></linearGradient>
+<linearGradient id="LG${id}" gradientUnits="userSpaceOnUse" x1="76" y1="0" x2="124" y2="0"><stop offset="0" stop-color="#000" stop-opacity=".2"/><stop offset=".22" stop-color="#000" stop-opacity="0"/><stop offset=".47" stop-color="#000" stop-opacity=".14"/><stop offset=".53" stop-color="#000" stop-opacity=".14"/><stop offset=".78" stop-color="#000" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity=".2"/></linearGradient></defs>`;
+  const curly = ['afro', 'kucery', 'kuceryd', 'vlny', 'vlnkyk'].includes(av.hair); const HTX = `url(#${curly ? 'HC' : 'HT'}${id})`, HGL = `url(#HG${id})`;
+  const hairB = hairBack(av.hair, hc, hcD), hairF = hairFront(av.hair, hc, hcD);
+  const hairLayer = (fn, base) => base ? base + `<g class="htex" pointer-events="none">${fn(av.hair, HTX, 'none')}${fn(av.hair, HGL, 'none')}</g>` : '';
   if (!opts.noBg) s += bgLayer(av, id);
 
   if (top === 'kral') s += `<path d="M66 144 L36 276 Q100 294 164 276 L134 144 Z" fill="${tc}"/><path d="M36 276 Q100 294 164 276" stroke="#fff" stroke-width="8" fill="none"/>`;
   if (av.acc === 'kridla') s += `<g class="wings"><path d="M84 156 C40 120 6 140 14 186 C30 176 46 182 60 196 C66 180 76 170 88 168Z" fill="#fff" stroke="${ac}" stroke-width="3"/><path d="M116 156 C160 120 194 140 186 186 C170 176 154 182 140 196 C134 180 124 170 112 168Z" fill="#fff" stroke="${ac}" stroke-width="3"/><path d="M30 160 Q50 160 70 176 M170 160 Q150 160 130 176" stroke="${a2}" stroke-width="3" fill="none"/></g>`;
   if (top === 'super') s += `<path d="M70 144 L44 268 Q100 284 156 268 L130 144 Z" fill="${t2}"/>`;
   if (top === 'kuzelnik') s += `<path d="M68 144 L40 272 Q100 290 160 272 L132 144 Z" fill="${tcD}"/>${[[62, 230], [140, 250], [120, 268], [80, 262]].map(([x, y]) => `<text x="${x}" y="${y}" font-size="10" fill="${t2}">★</text>`).join('')}`;
-  s += `<g transform="translate(12 3) scale(.88)">${hairBack(av.hair, hc, hcD)}</g>`;
+  s += `<g transform="translate(12 3) scale(.88)">${hairLayer(hairBack, hairB)}</g>`;
 
   s += `<rect x="80" y="200" width="18" height="84" rx="8" fill="${skin}"/><rect x="102" y="200" width="18" height="84" rx="8" fill="${skin}"/>`;
   if (top === 'astronaut') s += `<path d="M76 196 H124 L124 284 H102 L100 214 L98 284 H76 Z" fill="#EEF1F8"/><rect x="76" y="250" width="22" height="6" fill="${t2}"/><rect x="102" y="250" width="22" height="6" fill="${t2}"/>`;
   else if (!dress) s += bottomSvg(av.bottom, bc, b2, bcD, id);
   else if (top === 'saty') s += `<path d="M70 196 H130 L144 250 Q100 260 56 250 Z" fill="${tc}"/><path d="M58 244 Q100 256 142 244" stroke="${t2}" stroke-width="5" fill="none"/>`;
   else s += `<path d="M72 192 H128 L156 270 Q100 286 44 270 Z" fill="${tc}"/><path d="M60 258 Q100 272 140 258" stroke="${t2}" stroke-width="4" fill="none"/><g fill="#fff" class="spark"><circle cx="80" cy="230" r="2.5"/><circle cx="118" cy="246" r="2"/><circle cx="100" cy="218" r="2"/><circle cx="132" cy="226" r="2.5"/><circle cx="70" cy="256" r="2"/></g>`;
+  s += `<rect x="70" y="196" width="60" height="90" fill="url(#LG${id})" clip-path="url(#L${id})"/>`;
   s += shoesSvg(top === 'astronaut' ? 'astro' : av.shoes, sc, s2);
 
   const torsoFill = top === 'astronaut' ? '#EEF1F8' : top === 'rytier' ? '#C9CED9' : top === 'ninja' ? '#2A2A35' : tc;
   s += `<path d="M66 142 Q100 128 134 142 L138 212 H62 Z" fill="${torsoFill}"/>`;
   s += topDetail(top, tc, t2, tcD, id);
+  s += `<path d="M66 142 Q100 128 134 142 L138 212 H62 Z" fill="url(#CS${id})"/><path d="M66 142 Q100 128 134 142 L138 212 H62 Z" fill="url(#CV${id})"/><path d="M73 158 q5 16 1 34 M127 158 q-5 16 -1 34" stroke="#000" stroke-opacity=".1" stroke-width="2.2" fill="none" stroke-linecap="round"/>`;
+  if (['tricko', 'pruhy', 'dres', 'tdino', 'tsrdce', 'tfutbal', 'traketa', 'tjednorozec', 'overal'].includes(top)) s += `<path d="M85 137.5 Q100 151 115 137.5" stroke="${tcD}" stroke-width="4.5" fill="none" stroke-linecap="round"/>`;
+  if (!dress && top !== 'astronaut' && top !== 'sveter') s += `<path d="M63 207 H137" stroke="#000" stroke-opacity=".16" stroke-width="2.5"/>`;
   const sleeve = top === 'astronaut' ? '#EEF1F8' : top === 'rytier' ? '#AEB4C2' : top === 'ninja' ? '#2A2A35' : (top === 'dres' ? t2 : tc);
   const arm = side => {
     const x1 = side < 0 ? 70 : 130, x2 = side < 0 ? 54 : 146;
-    return `<g${side > 0 ? ' class="wave"' : ''}><path d="M${x1} 148 L${x2} 204" stroke="${skin}" stroke-width="15" stroke-linecap="round"/><path d="M${x1} 148 L${longSleeve ? x2 + (side < 0 ? 1 : -1) : (x1 + x2) / 2} ${longSleeve ? 196 : 172}" stroke="${sleeve}" stroke-width="18" stroke-linecap="round"/>${top === 'tricko' ? `<path d="M${(x1 + x2) / 2 - 8} ${174} l16 -2" stroke="${t2}" stroke-width="4" stroke-linecap="round"/>` : ''}<circle cx="${x2}" cy="208" r="9" fill="${top === 'astronaut' ? '#EEF1F8' : skin}"/></g>`;
+    return `<g${side > 0 ? ' class="wave"' : ''}><path d="M${x1} 148 L${x2} 204" stroke="${skin}" stroke-width="15" stroke-linecap="round"/><path d="M${x1 - side * 4} 152 L${x2 - side * 4} 204" stroke="#000" stroke-opacity=".1" stroke-width="5" stroke-linecap="round"/><path d="M${x1} 148 L${longSleeve ? x2 + (side < 0 ? 1 : -1) : (x1 + x2) / 2} ${longSleeve ? 196 : 172}" stroke="${sleeve}" stroke-width="18" stroke-linecap="round"/><path d="M${x1 - side * 5} 153 L${(longSleeve ? x2 + (side < 0 ? 1 : -1) : (x1 + x2) / 2) - side * 5} ${longSleeve ? 196 : 172}" stroke="#000" stroke-opacity=".13" stroke-width="5" stroke-linecap="round"/><path d="M${x1 + side * 4} 150 L${(longSleeve ? x2 + (side < 0 ? 1 : -1) : (x1 + x2) / 2) + side * 4} ${longSleeve ? 194 : 170}" stroke="#fff" stroke-opacity=".14" stroke-width="3" stroke-linecap="round"/>${top === 'tricko' ? `<path d="M${(x1 + x2) / 2 - 8} ${174} l16 -2" stroke="${t2}" stroke-width="4" stroke-linecap="round"/>` : ''}<circle cx="${x2}" cy="208" r="9" fill="${top === 'astronaut' ? '#EEF1F8' : skin}"/></g>`;
   };
   s += arm(-1) + arm(1);
-  s += `<rect x="91" y="118" width="18" height="22" rx="7" fill="${skinD}"/>`;
+  s += `<rect x="91" y="118" width="18" height="22" rx="7" fill="${skinD}"/><ellipse cx="100" cy="130" rx="10" ry="4.5" fill="#000" opacity=".14"/>`;
   if (top === 'kosela') s += `<path d="M88 136 L100 150 L94 156 L82 142 Z M112 136 L100 150 L106 156 L118 142 Z" fill="${t2}" stroke="${tcD}" stroke-width="1.5"/>`;
   if (top === 'mikina') s += `<path d="M76 140 Q100 126 124 140 L118 150 Q100 140 82 150 Z" fill="${t2}"/>`;
   if (top === 'bunda') s += `<path d="M80 138 L100 150 L120 138 L124 146 L100 160 L76 146Z" fill="${tcD}"/>`;
 
   s += `<g transform="translate(12 3) scale(.88)" class="head">`;
   if (av.acc === 'usi') s += `<path d="M56 60 L62 18 L90 44 Z M144 60 L138 18 L110 44 Z" fill="${ac}"/><path d="M64 50 L66 30 L80 44Z M136 50 L134 30 L120 44Z" fill="${a2}"/>`;
-  s += `<circle cx="51" cy="96" r="11" fill="${skin}"/><circle cx="149" cy="96" r="11" fill="${skin}"/>`;
-  s += `<ellipse cx="100" cy="90" rx="50" ry="52" fill="${skin}"/>`;
+  s += `<circle cx="51" cy="96" r="11" fill="${skin}"/><circle cx="149" cy="96" r="11" fill="${skin}"/><path d="M47 92 q5 4 2 10 M153 92 q-5 4 -2 10" stroke="${skinD}" stroke-width="2.2" fill="none" stroke-linecap="round"/>`;
+  s += `<path d="M50 86 C50 52 72 38 100 38 C128 38 150 52 150 86 C150 116 131 143.5 100 143.5 C69 143.5 50 116 50 86Z" fill="url(#SK${id})"/>`;
+  s += `<path d="M71 81 Q81 75.5 91 80 M109 80 Q119 75.5 129 81" stroke="${hcD.startsWith('url') ? '#6B4FD6' : shade(hcD.startsWith('#') ? hcD : '#5A3B2A', -.15)}" stroke-width="3.2" fill="none" stroke-linecap="round" opacity=".75"/>`;
   s += `<ellipse cx="70" cy="113" rx="9" ry="5.5" fill="#FF7F9B" opacity=".4"/><ellipse cx="130" cy="113" rx="9" ry="5.5" fill="#FF7F9B" opacity=".4"/>`;
   s += `<path d="M96 104 Q100 109 104 104" stroke="${skinD}" stroke-width="3" fill="none" stroke-linecap="round"/>`;
   s += `<g class="eyes">${eyesSvg(eyes, ink, av.gender)}</g>`;
   s += mouthSvg(mouth, ink);
-  s += hairFront(av.hair, hc, hcD);
+  s += hairLayer(hairFront, hairF);
   if (top === 'astronaut' && opts.crop !== 'head') s += `<circle cx="100" cy="88" r="70" fill="rgba(180,220,255,.22)" stroke="#EEF1F8" stroke-width="7"/><path d="M58 50 Q70 32 92 26" stroke="#fff" stroke-width="6" fill="none" stroke-linecap="round" opacity=".8"/>`;
   else s += accSvg(av.acc, ac, a2, ink);
   s += `</g>`;
@@ -2180,6 +2205,9 @@ function mouthSvg(m, ink) {
 }
 function accSvg(a, c, c2, ink) {
   switch (a) {
+    case 'sampion': return `<path d="M60 54 L62 14 L82 36 L100 4 L118 36 L138 14 L140 54 Z" fill="#FFD23F" stroke="#C98A00" stroke-width="3" stroke-linejoin="round"/><path d="M60 54 H140 V62 Q100 70 60 62Z" fill="#F5B301" stroke="#C98A00" stroke-width="3" stroke-linejoin="round"/><circle cx="100" cy="36" r="7" fill="#E8456B" stroke="#9B1B3D" stroke-width="2"/><circle cx="76" cy="44" r="4.5" fill="#4CC3FF" stroke="#1877B0" stroke-width="1.5"/><circle cx="124" cy="44" r="4.5" fill="#57D38C" stroke="#1E8A53" stroke-width="1.5"/><circle cx="62" cy="14" r="4" fill="#fff"/><circle cx="100" cy="4" r="4.5" fill="#fff"/><circle cx="138" cy="14" r="4" fill="#fff"/><path d="M68 30 L72 46 M132 30 L128 46" stroke="#fff" stroke-width="2.5" opacity=".6" stroke-linecap="round"/>`;
+    case 'vavrin': return `<g fill="#D7DEE8" stroke="#8C98A8" stroke-width="1.6">${[0, 1, 2, 3, 4, 5].map(i => { const a1 = Math.PI * (1.02 + i * .075), a2 = Math.PI * (1.98 - i * .075); const e = (a, f) => `<ellipse cx="${(100 + 54 * Math.cos(a)).toFixed(1)}" cy="${(84 + 50 * Math.sin(a)).toFixed(1)}" rx="11" ry="5.5" transform="rotate(${(a * 180 / Math.PI + f).toFixed(0)} ${(100 + 54 * Math.cos(a)).toFixed(1)} ${(84 + 50 * Math.sin(a)).toFixed(1)})"/>`; return e(a1, 60) + e(a2, -60); }).join('')}</g><circle cx="100" cy="34" r="6" fill="#F4F7FB" stroke="#8C98A8" stroke-width="2"/>`;
+    case 'bronz': return `<path d="M50 70 C56 36 144 36 150 70" stroke="#B8733A" stroke-width="8" fill="none" stroke-linecap="round"/><polygon points="${Array.from({ length: 10 }, (_, i) => { const r = i % 2 ? 8 : 18, a = -Math.PI / 2 + i * Math.PI / 5; return (100 + r * Math.cos(a)).toFixed(1) + ',' + (40 + r * Math.sin(a)).toFixed(1); }).join(' ')}" fill="#E39A56" stroke="#8A5220" stroke-width="2.5" stroke-linejoin="round"/><circle cx="100" cy="40" r="4" fill="#FFD9B0"/>`;
     case 'okuliare': return `<g stroke="${c}" stroke-width="4.5" fill="rgba(255,255,255,.18)"><circle cx="82" cy="96" r="15"/><circle cx="118" cy="96" r="15"/></g><path d="M97 95 Q100 92 103 95" stroke="${c}" stroke-width="4" fill="none"/>`;
     case 'slnecne': return `<g fill="#1E2240" stroke="${c}" stroke-width="3.5"><rect x="64" y="86" width="32" height="20" rx="8"/><rect x="104" y="86" width="32" height="20" rx="8"/></g><path d="M96 94 H104" stroke="${c}" stroke-width="4"/><path d="M70 92 L78 92 M110 92 L118 92" stroke="#fff" stroke-width="3" stroke-linecap="round" opacity=".7"/>`;
     case 'siltovka': return `<path d="M48 74 C48 26 152 26 152 74 Z" fill="${c}"/><path d="M100 70 L176 68 Q182 80 162 82 L100 80 Z" fill="${c2}"/><circle cx="100" cy="30" r="5" fill="${c2}"/>`;
@@ -2494,8 +2522,8 @@ const need = L => 60 + 30 * (L - 1);
 function levelInfo(xp) { let L = 1, r = xp; while (r >= need(L)) { r -= need(L); L++; } return { L, cur: r, need: need(L), pct: Math.round(r / need(L) * 100) }; }
 const TITLES = ['Zvedavé vajíčko', 'Malý bystrík', 'Šikovná hlávka', 'Pátrač', 'Objaviteľ', 'Vynálezca', 'Majster slov', 'Kráľ čísel', 'Profesor', 'Génius', 'Legenda'];
 const title = L => TITLES[Math.min(TITLES.length - 1, Math.floor(L / 2))];
-const unlocked = (it, p) => (!it.lvl || levelInfo(p.xp).L >= it.lvl) && (!it.streak || (p.streak.best || 0) >= it.streak) && (!it.price || (p.owned || []).includes(it.sid));
-const lockLabel = it => it.price ? `Obchod 🪙 ${it.price}` : it.lvl ? `Level ${it.lvl}` : `Séria ${it.streak} dní`;
+const unlocked = (it, p) => (!it.lvl || levelInfo(p.xp).L >= it.lvl) && (!it.streak || (p.streak.best || 0) >= it.streak) && (!it.price || (p.owned || []).includes(it.sid)) && (!it.lb || (p.owned || []).includes('lb:' + it.id));
+const lockLabel = it => it.lb ? `Rebríček: ${it.lb}. miesto` : it.price ? `Obchod 🪙 ${it.price}` : it.lvl ? `Level ${it.lvl}` : `Séria ${it.streak} dní`;
 const REW_CATS = ['hair', 'top', 'bottom', 'shoes', 'acc', 'eyes', 'mouth', 'pet'];
 function allRewardItems(g) {
   const out = [];
@@ -3770,6 +3798,7 @@ const ACT = {
   },
   'duel-quit': () => { if (D && D.ws) D.ws.say('bye', {}); duelClose(); D = null; go('games', {}, 'b'); },
   'duel-again': () => { if (D && D.ws) D.ws.say('bye', {}); duelClose(); D = { st: 'lobby' }; render(null); },
+  'lbtab': d => { LBTAB = d.t; sfx('tap'); render(null); },
   'ai-del': () => { setApiKey(''); toast('AI kľúč odstránený.'); render(null); },
   'ai-test': async (d, el) => { el.disabled = true; el.textContent = '⏳ Testujem…'; try { const s2 = await getSample(); const r = await s2('Odpovedz po slovensky jednou krátkou vetou: pozdrav dieťa.', { cache: false }); toast('✅ Funguje! Bystrík hovorí: ' + r.text.slice(0, 80)); } catch (e) { toast(e && e.code === 'not_granted' ? '❌ Kľúč nie je platný. Skontrolujte ho.' : e && e.code === 'no_credit' ? '❌ Na účte chýba kredit (Billing).' : e && e.code === 'rate_limited' ? '⏳ Dnešný limit je minutý alebo príliš veľa požiadaviek. Skúste neskôr.' : '❌ Nepodarilo sa: ' + ((e && e.message) || 'chyba')); } render(null); },
   'pt-add': () => { const p = DATA.profiles.find(x => x.id === PSEL); p.ptasks = p.ptasks || []; if (p.ptasks.filter(t => !t.done).length >= 3) { toast('Naraz môžu byť najviac 3 aktívne úlohy.'); return; } p.ptasks.unshift({ id: 'pt' + Date.now().toString(36), topic: $('#pt-topic').value, stars: +$('#pt-stars').value, coins: +$('#pt-coins').value, t: Date.now(), done: 0 }); if (p.ptasks.length > 20) p.ptasks.length = 20; save(); sfx('pop'); toast('Úloha zadaná ✓ Dieťa ju uvidí na domovskej obrazovke.'); render(null); },
@@ -3950,31 +3979,57 @@ VIEWS.duel = () => {
   if (D.st === 'waitend') return `<main class="view nonav">${head}${bars}<section class="card duelbox">${bearSvg('')}<h2>Hotovo! ${D.s} z 8</h2><div class="typing" style="margin:8px auto"><i></i><i></i><i></i></div><p class="muted b">Čakám, kým dokončí súper…</p></section></main>`;
   const o = D.odone; return `<main class="view nonav">${head}<section class="card duelbox">${bearSvg(D.win >= 0 ? 'cheer' : 'comfort')}<h1>${D.win > 0 ? (P().av.gender === 'd' ? '🏆 Vyhrala si!' : '🏆 Vyhral si!') : D.win < 0 ? 'Tentoraz vyhral súper' : '🤝 Remíza!'}</h1><div class="duelres"><div class="${D.win >= 0 ? 'w' : ''}"><span>${esc(D.me)}</span><b>${D.mdone.s}</b><small>${(D.mdone.ms / 1000).toFixed(1)} s</small></div><div class="${D.win <= 0 && o ? 'w' : ''}"><span>${esc(D.opp.name)}</span><b>${o ? o.s : '–'}</b><small>${o ? (o.ms / 1000).toFixed(1) + ' s' : 'nedokončil'}</small></div></div><div class="xpgain">+${D.xp} bodov</div><div class="rowbtns"><button class="btn primary" data-a="duel-quit">✓ Hotovo</button><button class="btn" data-a="duel-again">🔁 Ďalší súboj</button></div></section></main>`;
 };
+const LB_PRIZE = [['sampion', 300], ['vavrin', 200], ['bronz', 100]];
+let LBTAB = 'n', LBAW = false;
+const lbHdr = t => ({ apikey: SUPA.key, Authorization: 'Bearer ' + t });
 function lbPush() {
   if (!(SUPA_ON() && AUTH) || DATA.settings.lb === false) return; clearTimeout(lbT);
-  lbT = setTimeout(async () => { try { const w = weekId(); const rows = DATA.profiles.filter(p => p.wk && p.wk.w === w && (p.wk.xp > 0 || p.wk.n > 0)).map(p => ({ user_id: AUTH.uid, pid: String(p.id), name: String(p.name).slice(0, 14), grade: p.grade, week: w, xp: Math.min(2000, p.wk.n || 0) * LBK + Math.min(LBK - 1, p.wk.xp || 0), updated_at: new Date().toISOString() })); if (!rows.length) return; const t = await supaToken(); await fetch(SUPA.url + '/rest/v1/scores?on_conflict=user_id,pid,week', { method: 'POST', headers: { apikey: SUPA.key, Authorization: 'Bearer ' + t, 'content-type': 'application/json', Prefer: 'resolution=merge-duplicates,return=minimal' }, body: JSON.stringify(rows) }); } catch (e) { } }, 4000);
+  lbT = setTimeout(async () => { try { const w = weekId(); const now = new Date().toISOString(); const rows = []; DATA.profiles.forEach(p => { const k = p.wk && p.wk.w === w ? p.wk : { xp: 0, n: 0 }; const base = { user_id: AUTH.uid, name: String(p.name).slice(0, 14), grade: p.grade, week: w, updated_at: now }; rows.push({ ...base, pid: String(p.id), xp: Math.min(2000, k.n || 0) * LBK + Math.min(LBK - 1, k.xp || 0) }); rows.push({ ...base, pid: p.id + '#s', xp: Math.min(9999, (p.streak && p.streak.count) || 0) }); }); if (!rows.length) return; const t = await supaToken(); await fetch(SUPA.url + '/rest/v1/scores?on_conflict=user_id,pid,week', { method: 'POST', headers: { ...lbHdr(t), 'content-type': 'application/json', Prefer: 'resolution=merge-duplicates,return=minimal' }, body: JSON.stringify(rows) }); } catch (e) { } }, 4000);
 }
+function lbParse(raw) { const st = {}; raw.forEach(x => { if (String(x.pid).endsWith('#s')) st[x.user_id + '|' + String(x.pid).slice(0, -2)] = x.xp || 0; }); return raw.filter(x => !String(x.pid).endsWith('#s')).map(x => ({ ...lbRow(x), st: st[x.user_id + '|' + x.pid] || 0 })); }
+async function lbFetch(w) { const t = await supaToken(); const r = await fetch(SUPA.url + '/rest/v1/scores?select=user_id,pid,name,grade,xp&week=eq.' + w + '&order=xp.desc&limit=600', { headers: lbHdr(t) }); if (!r.ok) throw { status: r.status }; return lbParse(await r.json()); }
 async function lbLoad() {
-  if (LB && LB.loading) return; const prev = LB; LB = { loading: true, rows: prev && prev.rows, at: Date.now() }; const w = weekId(); let out;
-  try { if (!(SUPA_ON() && AUTH)) throw { off: true }; const t = await supaToken(); const r = await fetch(SUPA.url + '/rest/v1/scores?select=user_id,pid,name,grade,xp&week=eq.' + w + '&order=xp.desc&limit=50', { headers: { apikey: SUPA.key, Authorization: 'Bearer ' + t } }); if (!r.ok) throw { status: r.status }; out = { rows: (await r.json()).map(lbRow) }; }
+  if (LB && LB.loading) return; const prev = LB; LB = { loading: true, rows: prev && prev.rows, at: Date.now() }; let out;
+  try { if (!(SUPA_ON() && AUTH)) throw { off: true }; out = { rows: await lbFetch(weekId()) }; }
   catch (e) { out = { err: e && e.off ? 'off' : e && e.status === 404 ? 'missing' : 'net' }; }
   out.at = Date.now(); LB = out;
   if (UI.view === 'board') render(null); else if (UI.view === 'home') { const el = $('#homelb'); if (el) el.outerHTML = homeBoard(P()); }
+  if (!LBAW && out.rows) { LBAW = true; lbAwards(); }
 }
 function lbFresh() { if (!LB || (!LB.loading && Date.now() - (LB.at || 0) > 20000)) lbLoad(); }
-function lbLocal(p) { const w = weekId(); return DATA.profiles.map(x => ({ name: x.name, grade: x.grade, n: x.wk && x.wk.w === w ? x.wk.n || 0 : 0, pts: x.wk && x.wk.w === w ? x.wk.xp || 0 : 0, mine: true, me: x.id === p.id })).sort((a, b) => b.n - a.n || b.pts - a.pts); }
-function lbRows(p) { return LB && LB.rows ? LB.rows.map(x => ({ ...x, mine: !!AUTH && x.user_id === AUTH.uid, me: !!AUTH && x.user_id === AUTH.uid && x.pid === String(p.id) })) : lbLocal(p); }
+const lbSort = { n: (a, b) => b.n - a.n || b.pts - a.pts, s: (a, b) => b.st - a.st || b.n - a.n, x: (a, b) => b.pts - a.pts || b.n - a.n };
+function lbLocal(p) { const w = weekId(); return DATA.profiles.map(x => ({ name: x.name, grade: x.grade, n: x.wk && x.wk.w === w ? x.wk.n || 0 : 0, pts: x.wk && x.wk.w === w ? x.wk.xp || 0 : 0, st: (x.streak && x.streak.count) || 0, mine: true, me: x.id === p.id })); }
+function lbRows(p, tab = 'n') { const rows = LB && LB.rows ? LB.rows.map(x => ({ ...x, mine: !!AUTH && x.user_id === AUTH.uid, me: !!AUTH && x.user_id === AUTH.uid && x.pid === String(p.id) })) : lbLocal(p); return rows.sort(lbSort[tab]); }
 const lbMedal = i => ['🥇', '🥈', '🥉'][i] || (i + 1) + '.';
-const lbLine = (x, i) => `<div class="lbrow ${x.me ? 'me' : x.mine ? 'mine' : ''}"><span class="rk">${lbMedal(i)}</span><span class="nm">${esc(x.name)}<small>${x.grade}. ročník · ${x.pts} bodov</small></span><b>${x.n}<small>${plural(x.n, 'zadanie', 'zadania', 'zadaní')}</small></b></div>`;
+const lbVal = (x, tab) => tab === 's' ? [x.st, plural(x.st, 'deň', 'dni', 'dní')] : tab === 'x' ? [x.pts, plural(x.pts, 'bod', 'body', 'bodov')] : [x.n, plural(x.n, 'zadanie', 'zadania', 'zadaní')];
+const lbLine = (x, i, tab = 'n') => { const [v, u] = lbVal(x, tab); return `<div class="lbrow ${x.me ? 'me' : x.mine ? 'mine' : ''}"><span class="rk">${lbMedal(i)}</span><span class="nm">${esc(x.name)}<small>${x.grade}. ročník${tab === 'n' ? ' · ' + x.pts + ' bodov' : tab === 's' ? ' · ' + x.n + ' zadaní' : ' · séria ' + x.st}</small></span><b>${v}<small>${u}</small></b></div>`; };
 function homeBoard(p) {
   const rows = lbRows(p); const mi = rows.findIndex(x => x.me); const top = rows.slice(0, 3); const mine = p.wk && p.wk.w === weekId() ? p.wk.n || 0 : 0;
-  return `<button class="card homelb press" id="homelb" data-a="nav" data-v="board"><div class="sec"><h2>🏆 Rebríček týždňa</h2><span class="eyebrow">Všetko ›</span></div>${top.length ? top.map(lbLine).join('') : '<p class="muted b" style="padding:6px 0">Zatiaľ nikto. Sprav prvé zadanie a budeš na čele!</p>'}${mi > 2 ? `<div class="lbgap">⋯</div>${lbLine(rows[mi], mi)}` : ''}<p class="muted b" style="font-size:.84rem;padding-top:6px">${mi < 0 ? `Ty máš tento týždeň ${mine} ${plural(mine, 'zadanie', 'zadania', 'zadaní')}. Sprav kvíz alebo hru a dostaneš sa do rebríčka.` : mi === 0 ? 'Si na 1. mieste, udrž si ho! 💪' : (() => { const need = rows[mi - 1].n - rows[mi].n + 1; return `Si na ${mi + 1}. mieste. Na ${mi}. miesto ti ${plural(need, 'chýba', 'chýbajú', 'chýba')} ${need} ${plural(need, 'zadanie', 'zadania', 'zadaní')}.`; })()}</p></button>`;
+  return `<button class="card homelb press" id="homelb" data-a="nav" data-v="board"><div class="sec"><h2>🏆 Rebríček týždňa</h2><span class="eyebrow">Všetko ›</span></div>${top.length ? top.map((x, i) => lbLine(x, i)).join('') : '<p class="muted b" style="padding:6px 0">Zatiaľ nikto. Sprav prvé zadanie a budeš na čele!</p>'}${mi > 2 ? `<div class="lbgap">⋯</div>${lbLine(rows[mi], mi)}` : ''}<p class="muted b" style="font-size:.84rem;padding-top:6px">${mi < 0 ? `Ty máš tento týždeň ${mine} ${plural(mine, 'zadanie', 'zadania', 'zadaní')}. Sprav kvíz alebo hru a dostaneš sa do rebríčka.` : mi === 0 ? 'Si na 1. mieste, udrž si ho do nedele a získaš Korunu šampióna! 👑' : (() => { const need = rows[mi - 1].n - rows[mi].n + 1; return `Si na ${mi + 1}. mieste. Na ${mi}. miesto ti ${plural(need, 'chýba', 'chýbajú', 'chýba')} ${need} ${plural(need, 'zadanie', 'zadania', 'zadaní')}.`; })()}</p></button>`;
+}
+/* odmeny pre prvých troch za minulý týždeň (podľa zadaní) */
+const prevWeekId = () => { const d = new Date(); d.setDate(d.getDate() - 7 - (d.getDay() + 6) % 7); return dkey(d); };
+async function lbAwards() {
+  try {
+    if (!(SUPA_ON() && AUTH)) return; const pw = prevWeekId(); const todo = DATA.profiles.filter(p => p.lbChecked !== pw); if (!todo.length) return;
+    const rows = (await lbFetch(pw)).sort(lbSort.n); const wins = [];
+    todo.forEach(p => { p.lbChecked = pw; const r = rows.findIndex(x => x.user_id === AUTH.uid && x.pid === String(p.id)); if (r < 0 || r > 2 || !rows[r].n) return; const [item, coins] = LB_PRIZE[r]; p.owned = p.owned || []; const had = p.owned.includes('lb:' + item); if (!had) p.owned.push('lb:' + item); const c = coins + (had ? 50 : 0); p.coins = (p.coins || 0) + c; p.lbWins = (p.lbWins || 0) + 1; p.log.unshift({ t: Date.now(), k: 'gift', id: null, c, n: 0 }); wins.push({ p, r, item, c, had }); });
+    save(); const w = wins.find(x => x.p.id === DATA.current) || wins[0]; if (!w) return;
+    const it = itemOf('acc', w.item); const o = document.createElement('div'); o.className = 'over';
+    o.innerHTML = `<div class="card box">${bearSvg('cheer')}<h2>${lbMedal(w.r)} ${w.r + 1}. miesto v rebríčku!</h2><p class="b">${esc(w.p.name)}, minulý týždeň ${w.p.av.gender === 'd' ? 'si patrila' : 'si patril'} medzi troch najlepších.</p><div class="lbprize"><span class="pth">${itemThumb('acc', it, w.p.av)}</span><div><b>${it.n}</b><small>${w.had ? 'Už ju máš, preto mince navyše' : 'Vzácny doplnok, v obchode ho nekúpiš'}</small><b>+${w.c} ${COIN}</b></div></div><button class="btn primary block" data-a="ov-close">Paráda!</button></div>`;
+    document.body.appendChild(o); sfx('level'); try { confetti(160, .3); } catch (e) { } if (UI.view === 'home' || UI.view === 'board') render(null);
+  } catch (e) { }
 }
 VIEWS.board = () => {
-  const p = P(); const rows = lbRows(p); const first = !LB || (LB.loading && !LB.rows);
+  const p = P(); const rows = lbRows(p, LBTAB); const first = !LB || (LB.loading && !LB.rows); const top = rows.slice(0, 20); const mi = rows.findIndex(x => x.me);
   const note = LB && LB.err ? `<p class="muted b" style="font-size:.88rem;padding:4px 0">${LB.err === 'net' ? 'Spoločný rebríček sa nepodarilo načítať. Zatiaľ vidíš hráčov z tohto zariadenia.' : LB.err === 'missing' ? 'Spoločný rebríček ešte nie je zapnutý. Zatiaľ vidíš hráčov z tohto zariadenia.' : 'Spoločný rebríček uvidíš po prihlásení. Zatiaľ vidíš hráčov z tohto zariadenia.'}</p>` : '';
-  const body = first ? '<div class="typing" style="margin:14px auto"><i></i><i></i><i></i></div>' : note + (rows.length ? rows.map(lbLine).join('') : '<p class="muted b" style="padding:10px 0">Tento týždeň ešte nikto nič nesplnil. Buď prvý!</p>');
-  return `${topbar()}<main class="view pop-in"><div><h1 style="font-size:2rem">🏆 Rebríček</h1><p class="muted b">Kto tento týždeň splnil najviac zadaní. Počíta sa každý dokončený kvíz, hra, čítanie, písanie aj súboj. V pondelok sa začína odznova.</p></div><section class="card lb">${body}</section><p class="muted b" style="font-size:.8rem">V rebríčku je len meno, ročník, počet zadaní a body. Rodič ho vie vypnúť v rodičovskom účte.</p></main>${nav('board')}`;
+  const body = first ? '<div class="typing" style="margin:14px auto"><i></i><i></i><i></i></div>' : note + (top.length ? top.map((x, i) => lbLine(x, i, LBTAB)).join('') + (mi >= 20 ? `<div class="lbgap">⋯</div>${lbLine(rows[mi], mi, LBTAB)}` : '') : '<p class="muted b" style="padding:10px 0">Tento týždeň ešte nikto nič nesplnil. Buď prvý!</p>');
+  const left = 7 - (new Date().getDay() + 6) % 7; const desc = { n: 'Kto tento týždeň splnil najviac zadaní: každý dokončený kvíz, hra, čítanie, písanie aj súboj.', s: 'Kto sa učí najviac dní po sebe bez prestávky.', x: 'Kto tento týždeň nazbieral najviac bodov.' }[LBTAB];
+  return `${topbar()}<main class="view pop-in"><div><h1 style="font-size:2rem">🏆 Rebríček</h1><p class="muted b">Top 20 hráčov. Do rebríčka sa dostaneš sám, stačí byť prihlásený.</p></div>
+  <div class="seg lbseg">${[['n', '✅ Zadania'], ['s', '🔥 Séria'], ['x', '⭐ Body']].map(([k, n]) => `<button class="${LBTAB === k ? 'on' : ''}" data-a="lbtab" data-t="${k}">${n}</button>`).join('')}</div><p class="muted b" style="font-size:.88rem;margin-top:-6px">${desc}</p>
+  <section class="card lb">${body}</section>
+  <section class="card lbprizes"><div class="sec"><h2>🎁 Odmeny pre troch najlepších</h2><span class="eyebrow">ešte ${left} ${plural(left, 'deň', 'dni', 'dní')}</span></div><p class="muted b" style="font-size:.86rem">Kto je v nedeľu večer v rebríčku <b>Zadania</b> na 1. až 3. mieste, dostane v pondelok vzácny doplnok. V obchode sa kúpiť nedá.</p><div class="lbpz">${LB_PRIZE.map(([id, c], i) => { const it = itemOf('acc', id); return `<div class="pz p${i + 1}"><span class="pth">${itemThumb('acc', it, p.av)}</span><b>${lbMedal(i)} ${it.n}</b><small>+${c} mincí</small></div>`; }).join('')}</div></section>
+  <p class="muted b" style="font-size:.8rem">V rebríčku je len meno, ročník a výsledky. Rodič ho vie vypnúť v rodičovskom účte.</p></main>${nav('board')}`;
 };
 AFTER.board = () => lbFresh();
 const _afterHome = AFTER.home; AFTER.home = () => { _afterHome && _afterHome(); lbFresh(); };
