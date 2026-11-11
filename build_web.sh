@@ -23,6 +23,9 @@ mkdir -p web
 cat > web/manifest.webmanifest <<'EOF'
 {
   "name": "Bystrík – hravé učenie",
+  "id": "./",
+  "description": "Hravé učenie matematiky, slovenčiny a prehľadu pre 1. až 4. ročník.",
+  "categories": ["education", "kids"],
   "short_name": "Bystrík",
   "lang": "sk",
   "start_url": "./",
@@ -38,7 +41,7 @@ cat > web/manifest.webmanifest <<'EOF'
 }
 EOF
 cat > web/sw.js <<'EOF'
-const CACHE = 'bystrik-v1';
+const CACHE = 'bystrik-v2';
 const FILES = ['./', './index.html', './manifest.webmanifest', './icon-192.png', './icon-512.png'];
 self.addEventListener('install', e => { e.waitUntil(caches.open(CACHE).then(c => c.addAll(FILES))); self.skipWaiting(); });
 self.addEventListener('activate', e => { e.waitUntil(caches.keys().then(k => Promise.all(k.filter(x => x !== CACHE).map(x => caches.delete(x))))); self.clients.claim(); });

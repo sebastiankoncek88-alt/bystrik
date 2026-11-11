@@ -1,5 +1,8 @@
 {
   "name": "Bystrík – hravé učenie",
+  "id": "./",
+  "description": "Hravé učenie matematiky, slovenčiny a prehľadu pre 1. až 4. ročník.",
+  "categories": ["education", "kids"],
   "short_name": "Bystrík",
   "lang": "sk",
   "start_url": "./",
