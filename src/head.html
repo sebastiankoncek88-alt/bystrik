@@ -975,7 +975,8 @@ img.emo{width:1.18em;min-width:1.18em;height:1.18em;flex:none;vertical-align:-.2
 .tile2.duelt{background:linear-gradient(135deg,var(--bad-soft),var(--paper))}.tile2.boardt{background:linear-gradient(135deg,var(--sun-soft),var(--paper))}
 .lb{padding:8px 14px}.lbrow{display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:2px dashed var(--line)}.lbrow:last-child{border-bottom:0}
 .lbrow .rk{width:38px;text-align:center;font-family:var(--f-display);font-weight:800;font-size:1.2rem;flex:none}.lbrow .nm{flex:1;min-width:0;font-weight:800;display:flex;flex-direction:column}.lbrow .nm small{font-weight:700;color:var(--muted);font-size:.78rem}
-.lbrow b{font-family:var(--f-display);font-size:1.3rem}.lbrow.me{background:var(--sun-soft);border-radius:12px;padding-inline:8px;margin-inline:-8px}.lbrow.mine .nm{color:var(--accent)}
+.lbrow b{font-family:var(--f-display);font-size:1.4rem;display:flex;flex-direction:column;align-items:flex-end;line-height:1}.lbrow b small{font-family:var(--f-body);font-size:.68rem;font-weight:700;color:var(--muted)}
+.homelb{display:block;width:100%;box-sizing:border-box;padding:12px 14px;text-align:left;font-family:inherit;color:var(--ink);cursor:pointer}.homelb .sec h2{font-size:1.25rem}.lbgap{text-align:center;font-weight:800;color:var(--muted);line-height:.8}.lbrow.me{background:var(--sun-soft);border-radius:12px;padding-inline:8px;margin-inline:-8px}.lbrow.mine .nm{color:var(--accent)}
 /* ===== Vlastný vzhľad „mapa dobrodružstva“ ===== */
 .card{border-width:2px;box-shadow:0 6px 0 var(--drop),0 14px 24px -14px var(--drop)}
 .btn{border-width:2px;border-radius:999px;letter-spacing:.01em}
@@ -997,13 +998,16 @@ h1,h2,.logintitle{letter-spacing:-.01em}
 .bkinfo>div{background:var(--paper2);border:2px solid var(--line);border-radius:14px;padding:9px 12px}
 .bkinfo b{font-family:var(--f-display);font-size:1rem}
 .bkinfo p{margin:2px 0 0;font-weight:600;font-size:.86rem;line-height:1.35;color:var(--muted)}
+.nav .in{grid-template-columns:repeat(6,1fr);gap:2px}
+.nav button{font-size:.7rem}.nav button .ni{font-size:1.45rem}
 @media (min-width:900px){
   .app{max-width:1080px}
   .nav .in,.tutsheet .in,.fb .in{max-width:1080px}
   .calcdock{max-width:720px}
   .view{padding-inline:28px;gap:18px}
   .gamelist{display:grid;grid-template-columns:1fr 1fr}
-  .subjects{grid-template-columns:repeat(4,1fr)}
+  .subjects{grid-template-columns:repeat(3,1fr)}.subj.prv{grid-column:auto;min-height:156px}
+  .nav button{font-size:.82rem}
   .tiles2{grid-template-columns:repeat(4,1fr)}
   .items{grid-template-columns:repeat(6,1fr)}
   .ptiles{grid-template-columns:repeat(3,1fr)}
