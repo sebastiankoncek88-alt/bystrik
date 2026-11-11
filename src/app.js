@@ -1375,7 +1375,7 @@ let PLOCKT = null; const plockArm = () => { clearTimeout(PLOCKT); if (typeof PAR
 document.addEventListener('visibilitychange', () => { if (document.hidden && typeof PARENT_OK !== 'undefined' && PARENT_OK && ['parent', 'remote'].includes(UI.view)) { PARENT_OK = false; go(P() ? 'home' : 'profiles', {}, 'b'); } });
 function paccWrap(html, tab, openFirst) {
   const parts = html.split('<h3 class="pgroup">'); let out = parts[0];
-  parts.slice(1).forEach((part, n) => { const e = part.indexOf('</h3>'); const title = part.slice(0, e); let rest = part.slice(e + 5); let sub = ''; const m = rest.match(/^<p class="pgsub">([^<]*)<\/p>/); if (m) { sub = m[1]; rest = rest.slice(m[0].length); } const k = tab + n; const open = k in PACC ? PACC[k] : (openFirst && n === 0); out += `<details class="pacc" data-k="${k}" ${open ? 'open' : ''}><summary><span class="pt">${title}${sub ? `<small>${sub}</small>` : ''}</span><i>›</i></summary><div class="paccb">${rest}</div></details>`; });
+  parts.slice(1).forEach((part, n) => { const e = part.indexOf('</h3>'); const title = part.slice(0, e); let rest = part.slice(e + 5); let sub = ''; const m = rest.match(/^<p class="pgsub">([^<]*)<\/p>/); if (m) { sub = m[1]; rest = rest.slice(m[0].length); } const k = tab + n; const todo = rest.includes('backup blink'); const open = k in PACC ? PACC[k] : (todo || (openFirst && n === 0)); out += `<details class="pacc ${todo ? 'todo' : ''}" data-k="${k}" ${open ? 'open' : ''}><summary><span class="pt">${title}${todo ? ' <span class="blinkdot"></span>' : ''}${sub ? `<small>${todo ? '👉 Tu treba uložiť zálohu postupu' : sub}</small>` : ''}</span><i>›</i></summary><div class="paccb">${rest}</div></details>`; });
   return out;
 }
 document.addEventListener('toggle', e => { const d = e.target; if (d && d.matches && d.matches('details.pacc')) PACC[d.dataset.k] = d.open; }, true);
@@ -1579,7 +1579,7 @@ const ACT = {
     try { fetch(SUPA.url + '/auth/v1/logout', { method: 'POST', headers: { apikey: SUPA.key, Authorization: 'Bearer ' + AUTH.at } }).catch(() => { }); } catch (e) { }
     setAuth(null); DBREF = null; try { localStorage.removeItem('bystrik.owner'); } catch (e) { } resetData(); PARENT_OK = false; go('login', {}, 'u');
   },
-  'ptab': d => { PTAB = d.t; sfx('tap'); render(null); scrollTo({ top: 0 }); },
+  'ptab': d => { PTAB = d.t; sfx('tap'); render(null); scrollTo({ top: 0 }); const td = $('.pacc.todo'); if (td) setTimeout(() => td.scrollIntoView({ behavior: 'smooth', block: 'start' }), 150); },
   'set-bg': d => { DATA.settings.bgc = d.c; const c = PAGE_BG.find(x => x[0] === d.c); if (c && c[4]) { DATA.settings.theme = c[4]; applyTheme(); } save(); applyPageBg(); sfx('pop'); render(null); if (c && c[4]) toast(c[4] === 'dark' ? 'Čierne pozadie zapína tmavý režim 🌙' : 'Toto pozadie zapína svetlý režim ☀️'); },
   'ev-practice': () => { const r = UI.params; const ids = [...new Set((r.tlog || []).filter(x => !x.ok && x.id && TOPIC[x.id]).map(x => x.id))]; if (!ids.length) return; sfx('tap'); startQuiz(ids, 'quiz', r.back || { v: 'home', p: {} }, ids.length > 1 ? { seq: Array.from({ length: 10 }, (_, i) => ids[i % ids.length]) } : {}); },
   'review': () => { sfx('tap'); startReview(); },
