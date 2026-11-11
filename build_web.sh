@@ -16,6 +16,7 @@ mkdir -p web
     '<meta name="apple-mobile-web-app-title" content="Bystrík">' \
     '<style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0;font:14px system-ui,sans-serif}img{max-width:100%}[hidden]{display:none!important}</style>' \
     '</head>' '<body>'
+  printf '%s\n' "<script>window.EMO_BASE='emoji/';</script>"
   cat bystrik.html
   printf '%s\n' "<script>if('serviceWorker' in navigator){addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(()=>{}));}</script>" '</body>' '</html>'
 } > web/index.html
