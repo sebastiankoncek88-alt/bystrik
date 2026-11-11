@@ -2962,7 +2962,7 @@ function wavRecorder(stream) {
 async function recStart() {
   const inClaude = !!(window.claude && window.claude.use);
   try { speechSynthesis.cancel(); } catch (e) { }
-  if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) { MIC_BLOCKED = true; render(null); return inClaude ? openDiktafon() : micHelp('nosupport'); }
+  if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) { MICERR = 'no mediaDevices'; MIC_BLOCKED = true; render(null); return inClaude ? openDiktafon() : micHelp('nosupport'); }
   try {
     let stream; try { stream = await navigator.mediaDevices.getUserMedia({ audio: { echoCancellation: true, noiseSuppression: true } }); } catch (e1) { if (e1 && (e1.name === 'NotAllowedError' || e1.name === 'SecurityError' || e1.name === 'PermissionDeniedError')) throw e1; stream = await navigator.mediaDevices.getUserMedia({ audio: true }); }
     const done = blob => { stream.getTracks().forEach(t => t.stop()); gotRecording(blob); };
@@ -2973,23 +2973,26 @@ async function recStart() {
     MIC_BLOCKED = false; RD.recording = true; render(null); sfx('pop');
     TIMERS.push(setInterval(() => { const e = $('#rectime'); if (e && REC) e.textContent = Math.round((Date.now() - REC.t0) / 1000) + ' s'; }, 500));
   } catch (e) {
+    MICERR = String((e && e.name) || '') + (e && e.message ? ': ' + String(e.message).slice(0, 60) : '');
     MIC_BLOCKED = true; render(null);
     if (inClaude) return openDiktafon();
     micHelp(e && (e.name === 'NotAllowedError' || e.name === 'SecurityError' || e.name === 'PermissionDeniedError') ? 'denied' : e && (e.name === 'NotFoundError' || e.name === 'DevicesNotFoundError') ? 'nomic' : e && e.name === 'NotReadableError' ? 'busy' : 'other');
   }
 }
+let MICERR = '';
 function micHelp(kind) {
-  closeSheet(); sfx('no');
+  closeSheet(); sfx('no'); const inapp = /FBAN|FBAV|FB_IAB|Instagram|Messenger|TikTok|musical_ly|Snapchat|Line\/|wv\)/i.test(navigator.userAgent); if (inapp && kind !== 'denied') kind = 'inapp';
   const ios = /iPhone|iPad|iPod/.test(navigator.userAgent), android = /Android/.test(navigator.userAgent);
   const txt = {
     denied: ['🔒 Mikrofón je zablokovaný', 'Telefón si zapamätal, že táto stránka nesmie používať mikrofón. Povoľte ho takto:', ios ? ['V Safari ťuknite vľavo hore na <b>aA</b> (alebo ikonu vedľa adresy).', 'Vyberte <b>Nastavenia webovej stránky</b>.', 'Pri <b>Mikrofón</b> zvoľte <b>Povoliť</b>.', 'Ak to nepomôže: Nastavenia telefónu → Safari → Mikrofón → Povoliť.'] : android ? ['V Chrome ťuknite vedľa adresy na ikonu <b>🔒</b> (alebo ⓘ).', 'Ťuknite na <b>Povolenia</b> alebo <b>Nastavenia stránky</b>.', 'Pri <b>Mikrofón</b> zvoľte <b>Povoliť</b>.', 'Ak to nepomôže: Nastavenia telefónu → Aplikácie → Chrome → Povolenia → Mikrofón → Povoliť.'] : ['Ťuknite na ikonu <b>🔒</b> vedľa adresy stránky.', 'Pri <b>Mikrofón</b> zvoľte <b>Povoliť</b>.', 'Obnovte stránku.']],
     nomic: ['🎤 Nenašiel sa mikrofón', 'Zariadenie nemá zapojený alebo zapnutý mikrofón.', ['Skontrolujte, či máte mikrofón alebo slúchadlá s mikrofónom.', 'Potom to skúste znova.']],
     busy: ['🎤 Mikrofón práve používa iná aplikácia', 'Napríklad hovor, nahrávanie alebo iná stránka.', ['Zavrite ostatné aplikácie, ktoré nahrávajú.', 'Potom to skúste znova.']],
+    inapp: ['🎤 Tu sa nahrávať nedá', 'Apka je otvorená vnútri inej aplikácie (napríklad Messenger, Instagram alebo TikTok). Tá mikrofón nepovolí.', ['Ťuknite hore na <b>⋮</b> alebo <b>⋯</b>.', 'Zvoľte <b>Otvoriť v prehliadači</b> (Chrome alebo Safari).', 'Tam sa prihláste a nahrávanie pôjde.']],
     nosupport: ['🎤 Tento prehliadač nevie nahrávať', 'Skúste otvoriť apku v inom prehliadači.', [ios ? 'Na iPhone použite Safari (aktuálnu verziu).' : 'Použite Google Chrome (aktuálnu verziu).']],
     other: ['🎤 Mikrofón sa nepodarilo zapnúť', 'Skúste to ešte raz. Ak to nepôjde, zatvorte a znova otvorte prehliadač.', ['Skontrolujte, či má prehliadač povolený mikrofón v nastaveniach telefónu.']]
   }[kind];
   const w = document.createElement('div'); w.id = 'sheetwrap';
-  w.innerHTML = `<div class="scrim" data-a="close-sheet"></div><div class="sheet" role="dialog" aria-label="Pomoc s mikrofónom"><div class="grab"></div><h2>${txt[0]}</h2><p class="muted b" style="font-size:.9rem;margin-bottom:10px">${txt[1]}</p><div class="dsteps">${txt[2].map((t, i) => `<div><span>${i + 1}</span><p>${t}</p></div>`).join('')}</div><button class="btn primary block" style="margin-top:12px" data-a="mic-retry">🔁 Skúsiť znova</button><button class="btn block" style="margin-top:10px" data-a="dikt-open">🎙️ Radšej cez diktafón</button><p class="muted b" style="font-size:.78rem;margin-top:8px;text-align:center">Tip: toto okno je pre rodiča. Dieťa môže zatiaľ text prečítať a ťuknúť „Prečítal(a) som bez nahrávky“.</p></div>`;
+  w.innerHTML = `<div class="scrim" data-a="close-sheet"></div><div class="sheet" role="dialog" aria-label="Pomoc s mikrofónom"><div class="grab"></div><h2>${txt[0]}</h2><p class="muted b" style="font-size:.9rem;margin-bottom:10px">${txt[1]}</p><div class="dsteps">${txt[2].map((t, i) => `<div><span>${i + 1}</span><p>${t}</p></div>`).join('')}</div><button class="btn primary block" style="margin-top:12px" data-a="mic-retry">🔁 Skúsiť znova</button><button class="btn block" style="margin-top:10px" data-a="dikt-open">🎙️ Radšej cez diktafón</button><p class="muted b" style="font-size:.78rem;margin-top:8px;text-align:center">Tip: toto okno je pre rodiča. Dieťa môže zatiaľ text prečítať a ťuknúť „Prečítal(a) som bez nahrávky“.</p><p class="muted" style="font-size:.7rem;text-align:center;opacity:.7">Kód pre podporu: ${kind}${MICERR ? ' · ' + esc(MICERR) : ''}${window.isSecureContext === false ? ' · nezabezpečené' : ''}</p></div>`;
   document.body.appendChild(w);
 }
 let MIC_BLOCKED = false;
