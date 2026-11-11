@@ -685,6 +685,22 @@ img.emo{width:1.18em;min-width:1.18em;height:1.18em;flex:none;vertical-align:-.2
 .fb{position:fixed;left:0;right:0;bottom:0;z-index:33;padding:16px max(16px,env(safe-area-inset-right,0px)) calc(16px + env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px));border-top:2.5px solid var(--edge);border-radius:24px 24px 0 0;animation:up .32s cubic-bezier(.2,.9,.3,1.15);max-height:80vh;overflow:auto}
 .fb .in{max-width:520px;margin:0 auto;display:flex;flex-direction:column;gap:10px}
 .fb.ok{background:var(--good-soft)} .fb.no{background:var(--bad-soft)}
+.fbtop{display:flex;align-items:center;gap:10px}
+.fbbear{flex:none;width:92px;height:92px;animation:fbpop .55s cubic-bezier(.3,1.7,.5,1)}
+.fbbear svg{width:100%;height:100%;filter:drop-shadow(0 5px 0 rgba(0,0,0,.12))}
+@keyframes fbpop{0%{transform:translateY(70px) scale(.4);opacity:0}60%{transform:translateY(-10px) scale(1.08);opacity:1}}
+.fbbub{position:relative;flex:1;background:var(--paper);border:2px solid var(--edge);border-radius:18px 18px 18px 4px;padding:10px 12px;box-shadow:0 4px 0 var(--drop);animation:fbbub .4s .18s backwards cubic-bezier(.3,1.6,.5,1)}
+@keyframes fbbub{from{transform:scale(.6);opacity:0}}
+.fbbub h3{font-size:1.2rem!important;line-height:1.2}
+.evsum{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.evsum>div{border-radius:16px;padding:10px;text-align:center;border:2px solid var(--line)}
+.evsum .ok{background:var(--good-soft)}.evsum .no{background:var(--bad-soft)}
+.evsum b{display:block;font-family:var(--f-display);font-size:2rem;line-height:1}.evsum span{font-weight:700;font-size:.85rem}
+.evrep{background:var(--sun-soft);border:2px solid var(--line);border-radius:16px;padding:12px;display:flex;flex-direction:column;gap:8px}
+.tlog h3{font-size:1.1rem;margin-top:4px}
+.evt{display:flex;justify-content:space-between;align-items:center;gap:8px;font-weight:800}.evt small{font-weight:700;opacity:.7;white-space:nowrap}
+.evok summary{font-family:var(--f-display);font-weight:800;font-size:1.1rem;cursor:pointer;padding:6px 0}
+.evok[open]{display:flex;flex-direction:column;gap:8px}
 .fb h3{font-size:1.5rem;display:flex;align-items:center;gap:8px}
 .fb.ok h3{color:var(--good)} .fb.no h3{color:var(--bad)}
 .fb p{font-weight:700}

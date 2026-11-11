@@ -701,6 +701,22 @@ img.emo{width:1.18em;min-width:1.18em;height:1.18em;flex:none;vertical-align:-.2
 .fb{position:fixed;left:0;right:0;bottom:0;z-index:33;padding:16px max(16px,env(safe-area-inset-right,0px)) calc(16px + env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px));border-top:2.5px solid var(--edge);border-radius:24px 24px 0 0;animation:up .32s cubic-bezier(.2,.9,.3,1.15);max-height:80vh;overflow:auto}
 .fb .in{max-width:520px;margin:0 auto;display:flex;flex-direction:column;gap:10px}
 .fb.ok{background:var(--good-soft)} .fb.no{background:var(--bad-soft)}
+.fbtop{display:flex;align-items:center;gap:10px}
+.fbbear{flex:none;width:92px;height:92px;animation:fbpop .55s cubic-bezier(.3,1.7,.5,1)}
+.fbbear svg{width:100%;height:100%;filter:drop-shadow(0 5px 0 rgba(0,0,0,.12))}
+@keyframes fbpop{0%{transform:translateY(70px) scale(.4);opacity:0}60%{transform:translateY(-10px) scale(1.08);opacity:1}}
+.fbbub{position:relative;flex:1;background:var(--paper);border:2px solid var(--edge);border-radius:18px 18px 18px 4px;padding:10px 12px;box-shadow:0 4px 0 var(--drop);animation:fbbub .4s .18s backwards cubic-bezier(.3,1.6,.5,1)}
+@keyframes fbbub{from{transform:scale(.6);opacity:0}}
+.fbbub h3{font-size:1.2rem!important;line-height:1.2}
+.evsum{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.evsum>div{border-radius:16px;padding:10px;text-align:center;border:2px solid var(--line)}
+.evsum .ok{background:var(--good-soft)}.evsum .no{background:var(--bad-soft)}
+.evsum b{display:block;font-family:var(--f-display);font-size:2rem;line-height:1}.evsum span{font-weight:700;font-size:.85rem}
+.evrep{background:var(--sun-soft);border:2px solid var(--line);border-radius:16px;padding:12px;display:flex;flex-direction:column;gap:8px}
+.tlog h3{font-size:1.1rem;margin-top:4px}
+.evt{display:flex;justify-content:space-between;align-items:center;gap:8px;font-weight:800}.evt small{font-weight:700;opacity:.7;white-space:nowrap}
+.evok summary{font-family:var(--f-display);font-weight:800;font-size:1.1rem;cursor:pointer;padding:6px 0}
+.evok[open]{display:flex;flex-direction:column;gap:8px}
 .fb h3{font-size:1.5rem;display:flex;align-items:center;gap:8px}
 .fb.ok h3{color:var(--good)} .fb.no h3{color:var(--bad)}
 .fb p{font-weight:700}
@@ -2966,11 +2982,12 @@ function answer(val, el) {
   if (Q.mode === 'test') {
     const ts = topicStat(p, q.topic); ts.total++; p.stats.answered++; countDay(ok); bump(q.s);
     if (ok) { ts.correct++; p.stats.correct++; Q.correct++; bump('correct'); Q.xp += 12; }
-    Q.tlog.push({ t: q.text, a: q.full || q.answer, g: q.input ? fmt(String(val)) : String(val), ok, ex: q.ex || '' });
+    Q.tlog.push({ t: q.text, a: q.full || q.answer, g: q.input ? fmt(String(val)) : String(val), ok, ex: q.ex || '', id: q.topic });
     sfx('tap'); if (q.input) $('#padshow').classList.add('picked'); else { const o = $('#opts'); if (o) o.classList.add('locked'); if (el) el.classList.add('picked'); }
     TIMERS.push(setTimeout(() => { Q.i++; if (Q.i >= Q.total) return finishQuiz(); nextQ(); renderQ(); }, 450)); return;
   }
   const ts = topicStat(p, q.topic); ts.total++; p.stats.answered++; countDay(ok); bump(q.s);
+  if (Q.mode !== 'time') Q.tlog.push({ t: q.text, a: q.full || q.answer, g: q.input ? fmt(String(val)) : String(val), ok, ex: q.ex || '', id: q.topic });
   if (ok) { ts.correct++; p.stats.correct++; Q.correct++; Q.combo++; bump('correct'); let g = (Q.mode === 'time' ? 8 : 10) + (Q.combo >= 3 ? 2 : 0); if (q.calcUsed) g = Math.max(1, Math.round(g / 2)); Q.xp += g; sfx('ok'); buzz(15); floatXp(el, '+' + g + (q.calcUsed ? ' 🧮' : '')); burst(el); setMood('happy'); const pk = $('.peek'); if (pk) { pk.classList.remove('happy'); void pk.offsetWidth; pk.classList.add('happy'); if (Math.random() < .5) peekSay(pick(PRAISE)); } if (Q.combo >= 3 && Q.combo % 3 === 0) confetti(40, .55); }
   else { Q.combo = 0; sfx('no'); buzz([30, 40, 30]); setMood('sad'); }
   const cb = $('#combo'); if (cb) { cb.textContent = Q.combo >= 2 ? '🔥' + Q.combo : ''; if (ok && Q.combo >= 2) { cb.classList.remove('pop'); void cb.offsetWidth; cb.classList.add('pop'); } }
@@ -2979,7 +2996,9 @@ function answer(val, el) {
   else { const opts = $('#opts'); opts.classList.add('locked'); opts.querySelectorAll('.opt').forEach(b => { const v = q.options[+b.dataset.i]; if (v === q.answer) b.classList.add('right'); else if (b === el) b.classList.add('wrong'); else b.classList.add('dim'); }); }
   if (Q.mode === 'time') { TIMERS.push(setTimeout(() => { if (!Q || Q.left <= 0 || UI.view !== 'quiz') return; Q.i++; nextQ(); renderQ(); }, ok ? 450 : 1100)); return; }
   const fb = document.createElement('div'); fb.className = 'fb ' + (ok ? 'ok' : 'no'); fb.id = 'fb';
-  fb.innerHTML = `<div class="in"><h3>${ok ? '✓ ' + pick(PRAISE) : '✗ ' + pick(COMFORT)}</h3>${ok && q.calcUsed ? '<p class="muted">🧮 Použil(a) si kalkulačku, preto len polovica bodov.</p>' : ''}${!ok && !q.ex ? `<p class="muted">💡 Zapamätaj si správnu odpoveď. Nabudúce to už budeš vedieť!</p>` : ''}${!ok ? `<p>Správna odpoveď: <b>${esc(q.full || q.answer)}</b></p>` : ''}${q.ex && (!ok || q.full) ? `<p class="muted">${esc(q.ex)}</p>` : ''}<div id="explain"></div><div class="rowbtns" style="grid-template-columns:${!ok && CHAT_ON() ? '1fr 1fr' : '1fr'}">${!ok && CHAT_ON() ? '<button class="btn lilac" data-a="explain">🧸 Vysvetli mi to</button>' : ''}<button class="btn ${ok ? 'good' : 'primary'}" data-a="next">${Q.i + 1 >= Q.total ? 'Výsledok' : 'Ďalej'}</button></div></div>`;
+  const fem = p.av && p.av.gender === 'd'; const bsay = ok ? pick([`Super, si ${fem ? 'šikovná' : 'šikovný'}!`, 'Výborne, ide ti to!', `Paráda, si ${fem ? 'jednotka' : 'jednotka'}!`, 'Presne tak, len tak ďalej!', `Bravo, ${fem ? 'zvládla' : 'zvládol'} si to!`]) : pick(['Nevadí, skús to znova!', 'Nič sa nedeje, nabudúce to dáš!', 'Nevadí, chybami sa učíme!', 'Skoro! Skúsime to ešte raz.']);
+  if (!(q.sayAfter || q.speakLang)) setTimeout(() => say(bsay), 200);
+  fb.innerHTML = `<div class="in"><div class="fbtop"><span class="fbbear">${bearSvg(ok ? 'cheer' : 'comfort')}</span><div class="fbbub"><h3>${ok ? '✓' : '✗'} ${bsay}</h3></div></div>${ok && q.calcUsed ? '<p class="muted">🧮 Použil(a) si kalkulačku, preto len polovica bodov.</p>' : ''}${!ok && !q.ex ? `<p class="muted">💡 Zapamätaj si správnu odpoveď. Nabudúce to už budeš vedieť!</p>` : ''}${!ok ? `<p>Správna odpoveď: <b>${esc(q.full || q.answer)}</b></p>` : ''}${q.ex && (!ok || q.full) ? `<p class="muted">${esc(q.ex)}</p>` : ''}<div id="explain"></div><div class="rowbtns" style="grid-template-columns:${!ok && CHAT_ON() ? '1fr 1fr' : '1fr'}">${!ok && CHAT_ON() ? '<button class="btn lilac" data-a="explain">🧸 Vysvetli mi to</button>' : ''}<button class="btn ${ok ? 'good' : 'primary'}" data-a="next">${Q.i + 1 >= Q.total ? 'Výsledok' : 'Ďalej'}</button></div></div>`;
   document.body.appendChild(fb);
 }
 function nextStep() { const fb = $('#fb'); if (fb) fb.remove(); Q.i++; if (Q.i >= Q.total) return finishQuiz(); nextQ(); renderQ(); sfx('tap'); }
@@ -3005,6 +3024,17 @@ async function explainQ() {
   catch (e) { const el = $('#extext'); if (el) el.textContent = e && e.code === 'rate_limited' ? 'Bystrík si musí chvíľu oddýchnuť. Skús to o chvíľu.' : 'Teraz sa to nepodarilo. Skús to neskôr.'; }
 }
 
+/* --- vyhodnotenie kvízu --- */
+function evalHTML(r) {
+  if (!r.tlog || !r.tlog.length || !['quiz', 'daily', 'test'].includes(r.kind)) return '';
+  const good = r.tlog.filter(x => x.ok), bad = r.tlog.filter(x => !x.ok);
+  const byT = {}; bad.forEach(x => { if (x.id && TOPIC[x.id]) byT[x.id] = (byT[x.id] || 0) + 1; }); const rep = Object.entries(byT).sort((a, b) => b[1] - a[1]);
+  const line = x => `<div class="tl ${x.ok ? 'ok' : 'no'}"><b>${x.ok ? '✅' : '❌'} ${esc(x.t)}</b>${x.ok ? `<span>Tvoja odpoveď: ${esc(x.g)}</span>` : `<span>Tvoja odpoveď: <s>${esc(x.g)}</s></span><span>Správne: <b>${esc(x.a)}</b></span>${x.ex ? `<span class="muted">💡 ${esc(x.ex)}</span>` : ''}`}</div>`;
+  return `<section class="card tlog"><h2>📋 Vyhodnotenie</h2><div class="evsum"><div class="ok"><b>${good.length}</b><span>správne</span></div><div class="no"><b>${bad.length}</b><span>${plural(bad.length, 'chyba', 'chyby', 'chýb')}</span></div></div>
+  ${rep.length ? `<div class="evrep"><h3>🔁 Toto si zopakuj</h3>${rep.map(([id, n]) => `<div class="evt"><span>${TOPIC[id].icon || '📘'} ${esc(TOPIC[id].name)}</span><small>${n} ${plural(n, 'chyba', 'chyby', 'chýb')}</small></div>`).join('')}<button class="btn primary block" data-a="ev-practice">💪 Precvičiť chyby</button></div>` : bad.length ? '' : `<p class="b" style="color:var(--good)">🌟 Bez jedinej chyby. Nič netreba opakovať!</p>`}
+  ${bad.length ? `<h3>❌ Čo sa nepodarilo</h3>${bad.map(line).join('')}` : ''}
+  ${good.length ? `<details class="evok"><summary>✅ Čo si ${P() && P().av.gender === 'd' ? 'vedela' : 'vedel'} (${good.length})</summary>${good.map(line).join('')}</details>` : ''}</section>`;
+}
 /* --- výsledok --- */
 VIEWS.result = r => {
   const p = P(); const b = levelInfo(r.before);
@@ -3017,7 +3047,7 @@ VIEWS.result = r => {
           : r.kind === 'game' ? big(GAMES[r.game].i, `${r.score} ${plural(r.score, 'bod', 'body', 'bodov')}!`, `<div class="score muted">Najlepšie: ${p.best[r.game] || 0}</div>`)
             : `<div class="bigstars">${[0, 1, 2].map(i => `<span class="${i < r.stars ? '' : 'off'}" style="animation-delay:${300 + i * 300}ms">⭐</span>`).join('')}</div><h1>${r.correct === 10 ? 'Dokonalé!' : r.correct >= 8 ? 'Výborne!' : r.correct >= 5 ? 'Dobrá práca!' : 'Ide to, trénuj ďalej!'}</h1><div class="score">${r.correct} z ${r.total} správne</div>`;
   const good = r.kind === 'quiz' || r.kind === 'daily' || r.kind === 'test' ? r.stars >= 2 : true; const bsay = good ? pick(['Si úžasný!', 'Paráda, len tak ďalej!', 'Som na teba hrdý!', 'Výborne si to zvládol!']) : pick(['Nevadí, nabudúce to bude lepšie!', 'Skús to ešte raz, dáš to!', 'Každý sa učí, aj ja!']);
-  return `<main class="view nonav" style="justify-content:center"><div class="resbear ${good ? 'cheer' : 'comfort'}">${bearSvg(good ? 'cheer' : 'comfort')}<span class="rbub">${bsay}</span></div><section class="card result">${head}<div class="xpgain">+<span id="xpc">0</span> bodov · +${Math.max(1, Math.round(r.xp / 5))} ${COIN}${r.bonus ? ` <span class="muted" style="font-size:1rem">(bonus ${r.bonus})</span>` : ''}</div><div style="width:100%"><div style="display:flex;justify-content:space-between;font-weight:800"><span>Level <span id="lvn">${b.L}</span></span><span class="muted" id="lvt">${b.cur} / ${b.need}</span></div><div class="xpbar" style="height:18px"><i id="xpb" style="width:${b.pct}%"></i></div></div><div class="rowbtns"><button class="btn primary" data-a="res-back">✓ Hotovo</button><button class="btn" data-a="res-again">🔁 Skúsiť znova</button></div></section>${r.tlog && r.tlog.length && r.kind === 'test' ? `<section class="card tlog"><h2>📝 Výsledky testu</h2>${r.tlog.map((x, i) => `<div class="tl ${x.ok ? 'ok' : 'no'}"><b>${i + 1}. ${x.ok ? '✅' : '❌'} ${x.t}</b>${x.ok ? `<span>Tvoja odpoveď: ${esc(x.g)}</span>` : `<span>Tvoja odpoveď: <s>${esc(x.g)}</s></span><span>Správne: <b>${esc(x.a)}</b></span>${x.ex ? `<span class="muted">💡 ${esc(x.ex)}</span>` : ''}`}</div>`).join('')}</section>` : ''}</main>`;
+  return `<main class="view nonav" style="justify-content:center"><div class="resbear ${good ? 'cheer' : 'comfort'}">${bearSvg(good ? 'cheer' : 'comfort')}<span class="rbub">${bsay}</span></div><section class="card result">${head}<div class="xpgain">+<span id="xpc">0</span> bodov · +${Math.max(1, Math.round(r.xp / 5))} ${COIN}${r.bonus ? ` <span class="muted" style="font-size:1rem">(bonus ${r.bonus})</span>` : ''}</div><div style="width:100%"><div style="display:flex;justify-content:space-between;font-weight:800"><span>Level <span id="lvn">${b.L}</span></span><span class="muted" id="lvt">${b.cur} / ${b.need}</span></div><div class="xpbar" style="height:18px"><i id="xpb" style="width:${b.pct}%"></i></div></div><div class="rowbtns"><button class="btn primary" data-a="res-back">✓ Hotovo</button><button class="btn" data-a="res-again">🔁 Skúsiť znova</button></div></section>${evalHTML(r)}</main>`;
 };
 AFTER.result = () => {
   const r = UI.params; const a = levelInfo(r.after), b = levelInfo(r.before);
@@ -3622,6 +3652,7 @@ const ACT = {
   },
   'ptab': d => { PTAB = d.t; sfx('tap'); render(null); scrollTo({ top: 0 }); },
   'set-bg': d => { DATA.settings.bgc = d.c; const c = PAGE_BG.find(x => x[0] === d.c); if (c && c[4]) { DATA.settings.theme = c[4]; applyTheme(); } save(); applyPageBg(); sfx('pop'); render(null); if (c && c[4]) toast(c[4] === 'dark' ? 'Čierne pozadie zapína tmavý režim 🌙' : 'Toto pozadie zapína svetlý režim ☀️'); },
+  'ev-practice': () => { const r = UI.params; const ids = [...new Set((r.tlog || []).filter(x => !x.ok && x.id && TOPIC[x.id]).map(x => x.id))]; if (!ids.length) return; sfx('tap'); startQuiz(ids, 'quiz', r.back || { v: 'home', p: {} }, ids.length > 1 ? { seq: Array.from({ length: 10 }, (_, i) => ids[i % ids.length]) } : {}); },
   'ai-del': () => { setApiKey(''); toast('AI kľúč odstránený.'); render(null); },
   'ai-test': async (d, el) => { el.disabled = true; el.textContent = '⏳ Testujem…'; try { const s2 = await getSample(); const r = await s2('Odpovedz po slovensky jednou krátkou vetou: pozdrav dieťa.', { cache: false }); toast('✅ Funguje! Bystrík hovorí: ' + r.text.slice(0, 80)); } catch (e) { toast(e && e.code === 'not_granted' ? '❌ Kľúč nie je platný. Skontrolujte ho.' : e && e.code === 'no_credit' ? '❌ Na účte chýba kredit (Billing).' : e && e.code === 'rate_limited' ? '⏳ Dnešný limit je minutý alebo príliš veľa požiadaviek. Skúste neskôr.' : '❌ Nepodarilo sa: ' + ((e && e.message) || 'chyba')); } render(null); },
   'pt-add': () => { const p = DATA.profiles.find(x => x.id === PSEL); p.ptasks = p.ptasks || []; if (p.ptasks.filter(t => !t.done).length >= 3) { toast('Naraz môžu byť najviac 3 aktívne úlohy.'); return; } p.ptasks.unshift({ id: 'pt' + Date.now().toString(36), topic: $('#pt-topic').value, stars: +$('#pt-stars').value, coins: +$('#pt-coins').value, t: Date.now(), done: 0 }); if (p.ptasks.length > 20) p.ptasks.length = 20; save(); sfx('pop'); toast('Úloha zadaná ✓ Dieťa ju uvidí na domovskej obrazovke.'); render(null); },
