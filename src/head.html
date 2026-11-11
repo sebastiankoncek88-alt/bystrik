@@ -130,8 +130,17 @@ p{margin:0}
 .tutrow{display:flex;gap:12px;align-items:center}
 .tutrow p{font-weight:800;font-size:1.1rem;line-height:1.35}
 .tutemoji{font-size:2.8rem;line-height:1;animation:wig 1.6s infinite;flex:none}
-.tutfocus{outline:4px dashed var(--accent);outline-offset:4px;animation:tutpulse 1.2s infinite;position:relative;z-index:2}
-@keyframes tutpulse{50%{outline-color:var(--sun)}}
+.tutfocus{outline:5px solid #FFC94D;outline-offset:5px;border-radius:18px;animation:tutpulse 1.1s ease-in-out infinite;position:relative;z-index:40;box-shadow:0 0 0 5px #FF7A59,0 0 0 200vmax rgba(12,10,40,.62)!important}
+@keyframes tutpulse{50%{outline-offset:11px;outline-color:#fff}}
+body{background:var(--pg,var(--bg))!important}
+body:has(#app){background-image:none!important}
+body::before{background:var(--pg,var(--bg))!important}
+.blobs,#pagebg{display:none!important}
+.grades button,.grades button b{color:#2A2650!important}
+.list .swatches{display:flex;flex-wrap:wrap;gap:10px}
+.list .swatches .sw{width:40px;height:40px;min-width:40px;border-radius:50%;border:2.5px solid var(--edge);box-shadow:0 3px 0 var(--drop);padding:0;cursor:pointer}
+.list .swatches .sw.on{outline:4px solid var(--accent);outline-offset:2px}
+.sw.swauto{background-image:linear-gradient(135deg,transparent 45%,rgba(128,128,128,.5) 45% 55%,transparent 55%)!important}
 .ptext{display:flex;flex-direction:column;gap:8px;padding:12px 0;border-bottom:2px dashed var(--line)}
 .ptext:last-child{border-bottom:0}
 .ptextbody{background:var(--paper2);border:2px solid var(--line);border-radius:14px;padding:10px 12px;font-weight:700;line-height:1.55}
@@ -294,7 +303,7 @@ body.calcopen .peek,body.calcopen .peekbub{display:none}
 @keyframes down{from{transform:translateY(-100%)}}
 .tutbear{width:86px;height:86px;flex:none;animation:bob 2s ease-in-out infinite}
 .tutbear svg{width:100%;height:100%}
-.nav .tutfocus,.top .tutfocus{z-index:50;background:var(--sun)!important;border-radius:14px}
+.nav .tutfocus,.top .tutfocus{z-index:50;background:var(--sun)!important;border-radius:14px;box-shadow:0 0 0 5px #FF7A59!important}
 .areahead{display:flex;align-items:center;gap:10px;font-family:var(--f-display);font-weight:800;font-size:1.3rem;padding:6px 4px 0}
 .areahead span{width:40px;height:40px;border-radius:12px;display:grid;place-items:center;font-size:1.4rem;border:2px solid var(--edge);background:var(--paper)}
 .areahead.a-bio span{background:#D9F5E3} .areahead.a-geo span{background:#DCE8FF} .areahead.a-anj span{background:#FFE0EA}
