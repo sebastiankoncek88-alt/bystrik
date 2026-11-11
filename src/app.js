@@ -1415,7 +1415,7 @@ document.addEventListener('keydown', e => {
   else if (e.target.id === 'flip' && (e.key === ' ' || e.key === 'Enter')) { e.preventDefault(); ACT.flip(); }
 });
 /* ===== Prihlásenie e-mailom (Supabase) – len na webe ===== */
-const SUPA = { url: '', key: '' };
+const SUPA = { url: 'https://nxxltcpjdvoxomogzwaj.supabase.co', key: 'sb_publishable_49nPt0wrOCp04qyhoJbn2g_M1BriXDQ' };
 const SUPA_ON = () => !!(SUPA.url && SUPA.key && !(window.claude && window.claude.use));
 let AUTH = null; try { AUTH = JSON.parse(localStorage.getItem('bystrik.auth') || 'null'); } catch (e) { }
 let LOGIN = { mode: 'in', busy: false, msg: '' };
