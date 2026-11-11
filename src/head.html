@@ -1053,6 +1053,21 @@ img.emo{width:1.18em;min-width:1.18em;height:1.18em;flex:none;vertical-align:-.2
 div.frrow{cursor:default}.frrow .btn.small{flex:none;min-height:40px;padding:4px 12px;font-size:.9rem}
 .invbox{width:100%;text-align:left;background:var(--paper2);border-radius:16px;padding:10px 12px;box-sizing:border-box}.invbox>b{font-family:var(--f-display);font-size:1.05rem}
 .over.invite .box{gap:10px}
+.thx,.thx *,.thx *::before,.thx *::after{transition:background-color .45s ease,color .45s ease,border-color .45s ease,box-shadow .45s ease,fill .45s ease!important}
+.drcard{box-sizing:border-box;display:flex;align-items:center;gap:12px;padding:14px;text-align:left;width:100%;font-family:inherit;color:#33203A;background:linear-gradient(120deg,#FFE08A,#FFC24B);position:relative;animation:pcpulse 1.6s ease-in-out infinite}
+.drcard .ic{flex:none;font-size:2.2rem;width:54px;height:54px;border-radius:16px;background:#fff8;border:2px solid var(--edge);display:grid;place-items:center;animation:wig 1.6s infinite}
+.drcard>span:nth-child(2){flex:1;min-width:0;display:flex;flex-direction:column}.drcard b{font-family:var(--f-display);font-size:1.2rem;line-height:1.15}
+.drcard em{flex:none;width:30px;height:30px;border-radius:50%;background:var(--accent);color:#fff;font-style:normal;font-weight:900;display:grid;place-items:center}
+.top .parbtn{font-size:1.05rem}
+@media (max-width:380px){.top .parbtn{display:none}}
+.dictbox{padding:14px;display:flex;flex-direction:column;align-items:center;gap:10px}
+.dictbear{width:96px;height:96px}.dictbear svg{width:100%;height:100%}
+.dictin{width:100%;box-sizing:border-box;font-size:1.35rem;padding:12px;text-align:center;font-family:var(--f-display);font-weight:700}
+.dictpeek{min-height:0;font-family:var(--f-display);font-weight:800;font-size:1.5rem;text-align:center;transition:opacity .2s}.dictpeek.on{background:var(--sun-soft);border-radius:14px;padding:8px 14px;animation:popUp .25s}
+.dictres{width:100%;box-sizing:border-box;border-radius:16px;padding:12px;display:flex;flex-direction:column;gap:6px;align-items:center;text-align:center}.dictres.ok{background:var(--good-soft)}.dictres.no{background:var(--bad-soft)}
+.dictres b{font-family:var(--f-display);font-size:1.15rem}.dictres small{font-weight:700;color:var(--muted)}
+.dictdiff{display:flex;flex-wrap:wrap;justify-content:center;gap:1px;font-family:var(--f-display);font-weight:800;font-size:1.6rem}.dictdiff i{font-style:normal;padding:0 1px;border-radius:5px}.dictdiff i.bad{background:var(--bad);color:#fff}.dictdiff i.ok{color:var(--good)}
+.wprog i{font-size:1.05rem}
 /* ===== Vlastný vzhľad „mapa dobrodružstva“ ===== */
 .card{border-width:2px;box-shadow:0 6px 0 var(--drop),0 14px 24px -14px var(--drop)}
 .btn{border-width:2px;border-radius:999px;letter-spacing:.01em}

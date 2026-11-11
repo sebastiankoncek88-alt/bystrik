@@ -26,7 +26,7 @@ function migrate(p) {
   p.coins = p.coins || 0; p.owned = p.owned || []; p.readings = p.readings || [];
   if (!p.room) p.room = defaultRoom(p.av.gender); p.room.stickers = p.room.stickers || [];
 }
-function applyTheme() { setTimeout(applyPageBg, 0); const t = DATA.settings.theme; if (t === 'light' || t === 'dark') document.documentElement.dataset.theme = t; else if (document.documentElement.dataset.theme && THEME_SET) delete document.documentElement.dataset.theme; THEME_SET = t !== 'auto'; }
+function applyTheme() { try { const de = document.documentElement; de.classList.add('thx'); clearTimeout(applyTheme.t); applyTheme.t = setTimeout(() => de.classList.remove('thx'), 520); } catch (e) { } setTimeout(applyPageBg, 0); const t = DATA.settings.theme; if (t === 'light' || t === 'dark') document.documentElement.dataset.theme = t; else if (document.documentElement.dataset.theme && THEME_SET) delete document.documentElement.dataset.theme; THEME_SET = t !== 'auto'; }
 let THEME_SET = false;
 function load() { try { const s = localStorage.getItem(KEY); if (s) DATA = Object.assign(DATA, JSON.parse(s)); } catch (e) { } normalize(); }
 function save() { DATA.t = Date.now(); try { localStorage.setItem(KEY, JSON.stringify(DATA)); } catch (e) { } queueSync(); if (typeof lbPush === 'function') lbPush(); }
@@ -320,6 +320,8 @@ let UI = { view: 'home', params: {} };
 let TIMERS = [];
 function clearTimers() { TIMERS.forEach(t => { clearInterval(t); clearTimeout(t); }); TIMERS = []; }
 function go(view, params = {}, dir = 'f') {
+  if (typeof PARENT_OK !== 'undefined' && PARENT_OK && !['parent', 'psetup', 'pin', 'remote', 'onboard'].includes(view)) PARENT_OK = false;
+  try { if (typeof REC !== 'undefined' && REC && REC.mr && REC.mr.state !== 'inactive' && view !== 'read') { REC.mr.onstop = null; REC.mr.stop(); REC.stream && REC.stream.getTracks().forEach(t => t.stop()); if (typeof RD !== 'undefined' && RD) RD.recording = false; } } catch (e) { }
   if (view !== 'fchat' && typeof fcClose === 'function') fcClose();
   if (GUIDE && !GUIDE.nav) GUIDE = null;
   clearTimers(); closeSheet(); clearTut(); $$('.fb,.peek,.peekbub,.over').forEach(e => e.remove());
@@ -347,7 +349,7 @@ let LASTCOINS = -1;
 function topbar(back) {
   const p = P(); const li = levelInfo(p.xp); setTimeout(() => { LASTCOINS = p.coins || 0; }, 0);
   const left = back ? `<button class="iconbtn press" data-a="${back}" aria-label="Späť">←</button>` : `<button class="headbub press" data-a="nav" data-v="wardrobe" aria-label="Môj avatar">${avatarSvg(p.av, { crop: 'head' })}</button>`;
-  return `<header class="top">${left}<div class="who"><b>${esc(p.name)}</b><div class="xpbar" title="${li.cur} / ${li.need} bodov"><i style="width:${li.pct}%"></i></div></div><button class="lvl press" data-a="nav" data-v="rewards" aria-label="Level ${li.L}, otvoriť odmeny">Lv ${li.L}</button><button class="lvl coinchip press ${(p.coins || 0) > LASTCOINS && LASTCOINS >= 0 ? 'bump' : ''}" data-a="nav" data-v="shop" aria-label="Mince: ${p.coins || 0}, otvoriť obchod">${COIN} ${p.coins || 0}</button><button class="iconbtn press" data-a="nav" data-v="settings" aria-label="Nastavenia" style="position:relative">⚙️${needBackup() ? '<span class="blinkdot" style="position:absolute;top:-4px;right:-4px;margin:0"></span>' : ''}</button></header>`;
+  return `<header class="top">${left}<div class="who"><b>${esc(p.name)}</b><div class="xpbar" title="${li.cur} / ${li.need} bodov"><i style="width:${li.pct}%"></i></div></div><button class="lvl press" data-a="nav" data-v="rewards" aria-label="Level ${li.L}, otvoriť odmeny">Lv ${li.L}</button><button class="lvl coinchip press ${(p.coins || 0) > LASTCOINS && LASTCOINS >= 0 ? 'bump' : ''}" data-a="nav" data-v="shop" aria-label="Mince: ${p.coins || 0}, otvoriť obchod">${COIN} ${p.coins || 0}</button>${UI.view === 'home' && !back ? '<button class="iconbtn press parbtn" data-a="parent-open" aria-label="Rodičovský účet" title="Rodičovský účet">👨‍👩‍👧</button>' : ''}<button class="iconbtn press" data-a="nav" data-v="settings" aria-label="Nastavenia" style="position:relative">⚙️${needBackup() ? '<span class="blinkdot" style="position:absolute;top:-4px;right:-4px;margin:0"></span>' : ''}</button></header>`;
 }
 function nav(on) {
   const p = P(); const d = ensureDay(p); const claimable = d.tasks.some(id => { const T = TASKS.find(x => x.id === id); return !d.claimed.includes(id) && (d.cnt[T.k] || 0) >= T.t; }) || drReady(p);
@@ -425,7 +427,7 @@ VIEWS.learn = () => {
   return `${topbar()}<main class="view pop-in"><div><h1 style="font-size:2rem">Učenie</h1><p class="muted b">Vyber si predmet. Učivo je pre ${p.grade}. ročník, iný ročník si vyberieš v predmete.</p></div>${card('mat')}${card('sjl')}${card('prv')}
   ${reviewCard(p)}
   <div class="sec"><h2>Ďalšie učenie</h2></div>
-  <div class="tiles2 ltiles"><button class="card tile2 press" data-a="nav" data-v="reads"><span class="i">📖</span><b>Čítanka</b><span>Čítaj príbehy nahlas</span></button><button class="card tile2 press" data-a="nav" data-v="write"><span class="i">✍️</span><b>Písanie</b><span>Píš prstom písmená a čísla</span></button><button class="card tile2 press" data-a="daily"><span class="i">${dd ? '✅' : '🎯'}</span><b>Denná výzva</b><span>${dd ? 'Dnes splnená' : 'Mix otázok · +50 bodov'}</span></button><button class="card tile2 press" data-a="nav" data-v="notes"><span class="i">📸</span><b>Moje poznámky</b><span>Odfoť zošit, dostaneš kvíz</span></button>${CHAT_ON() ? '<button class="card tile2 press" data-a="nav" data-v="chat"><span class="i">🧸</span><b>Opýtaj sa Bystríka</b><span>Vysvetlí, čomu nerozumieš</span></button>' : ''}</div>
+  <div class="tiles2 ltiles"><button class="card tile2 press" data-a="nav" data-v="reads"><span class="i">📖</span><b>Čítanka</b><span>Čítaj príbehy nahlas</span></button><button class="card tile2 press" data-a="nav" data-v="write"><span class="i">✍️</span><b>${p.grade <= 1 ? 'Moje prvé čiary' : 'Písanie'}</b><span>${p.grade <= 1 ? 'Obťahuj čiary, tvary a písmená' : 'Píš prstom písmená a čísla'}</span></button><button class="card tile2 press" data-a="nav" data-v="dict"><span class="i">✏️</span><b>Diktát</b><span>Počúvaj a píš bez chýb</span></button><button class="card tile2 press" data-a="daily"><span class="i">${dd ? '✅' : '🎯'}</span><b>Denná výzva</b><span>${dd ? 'Dnes splnená' : 'Mix otázok · +50 bodov'}</span></button><button class="card tile2 press" data-a="nav" data-v="notes"><span class="i">📸</span><b>Moje poznámky</b><span>Odfoť zošit, dostaneš kvíz</span></button>${CHAT_ON() ? '<button class="card tile2 press" data-a="nav" data-v="chat"><span class="i">🧸</span><b>Opýtaj sa Bystríka</b><span>Vysvetlí, čomu nerozumieš</span></button>' : ''}</div>
   ${homeBoard(p)}</main>${nav('learn')}`;
 };
 /* --- obchod --- */
@@ -485,7 +487,7 @@ const TUT = [
 const TOUR = [
   { h: 'Ahoj, som Bystrík! 🧸', t: 'Ukážem ti, kde čo nájdeš. Trvá to len minútku.', v: 'home' },
   { h: 'Toto si ty', t: 'Keď na seba ťukneš, zamávaš. Vzhľad si zmeníš v šatníku.', v: 'home', f: '.stage' },
-  { h: 'Denná odmena', t: 'Každý deň si tu vyzdvihni darček.', v: 'home', f: '.float.chest' },
+  { h: 'Denná odmena', t: 'Každý deň ťa tu v časti Dnes čaká darček. Stačí naň ťuknúť.', v: 'home', f: '.drcard' },
   { h: 'Dnešné úlohy', t: 'Tri úlohy na dnes. Za splnené dostaneš body a mince.', v: 'home', f: '.tasks' },
   { h: 'Predmety', t: 'Tu sa učíš matematiku, slovenčinu a prehľad.', v: 'home', f: '.subjects' },
   { h: 'Ďalšie učenie', t: 'Čítanka, písanie prstom, denná výzva a tvoje poznámky.', v: 'learn', f: '.ltiles' },
@@ -534,17 +536,28 @@ function showTutOld(i = 0) {
 function endTut() { clearTut(); const p = P(); p.tutRead = true; save(); scrollTo({ top: 0, behavior: 'smooth' }); }
 AFTER.read = () => {
   if (!P().tutRead && !RD.tutShown) { RD.tutShown = true; setTimeout(() => showTut(0), 500); } const f = $('#recfile'); if (f) f.addEventListener('change', () => { const file = f.files && f.files[0]; if (file) gotRecording(file); }); };
+function wavRecorder(stream) {
+  const AC2 = window.AudioContext || window.webkitAudioContext; const ctx = new AC2(); const src = ctx.createMediaStreamSource(stream); const node = ctx.createScriptProcessor(4096, 1, 1); const mute = ctx.createGain(); mute.gain.value = 0; const chunks = []; let len = 0;
+  node.onaudioprocess = e => { const d = e.inputBuffer.getChannelData(0); chunks.push(new Float32Array(d)); len += d.length; }; src.connect(node); node.connect(mute); mute.connect(ctx.destination); if (ctx.state === 'suspended') ctx.resume();
+  const rec = { state: 'recording', mimeType: 'audio/wav', onstop: null, stop() { if (rec.state === 'inactive') return; rec.state = 'inactive'; try { node.disconnect(); src.disconnect(); } catch (e) { }
+      const rate = ctx.sampleRate, step = Math.max(1, Math.round(rate / 16000)), outRate = Math.round(rate / step); const n = Math.floor(len / step); const buf = new ArrayBuffer(44 + n * 2); const v = new DataView(buf); const W = (o, t) => { for (let k = 0; k < t.length; k++) v.setUint8(o + k, t.charCodeAt(k)); };
+      W(0, 'RIFF'); v.setUint32(4, 36 + n * 2, true); W(8, 'WAVE'); W(12, 'fmt '); v.setUint32(16, 16, true); v.setUint16(20, 1, true); v.setUint16(22, 1, true); v.setUint32(24, outRate, true); v.setUint32(28, outRate * 2, true); v.setUint16(32, 2, true); v.setUint16(34, 16, true); W(36, 'data'); v.setUint32(40, n * 2, true);
+      let o = 44, ci = 0, off = 0; for (let k = 0; k < n; k++) { let idx = k * step - off; while (ci < chunks.length && idx >= chunks[ci].length) { off += chunks[ci].length; idx -= chunks[ci].length; ci++; } const x = ci < chunks.length ? Math.max(-1, Math.min(1, chunks[ci][idx])) : 0; v.setInt16(o, x < 0 ? x * 0x8000 : x * 0x7FFF, true); o += 2; }
+      try { ctx.close(); } catch (e) { } rec.blob = new Blob([buf], { type: 'audio/wav' }); rec.onstop && rec.onstop(); } };
+  return rec;
+}
 async function recStart() {
   const inClaude = !!(window.claude && window.claude.use);
   try { speechSynthesis.cancel(); } catch (e) { }
-  if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia || !window.MediaRecorder) { MIC_BLOCKED = true; render(null); return inClaude ? openDiktafon() : micHelp('nosupport'); }
+  if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) { MIC_BLOCKED = true; render(null); return inClaude ? openDiktafon() : micHelp('nosupport'); }
   try {
-    const stream = await navigator.mediaDevices.getUserMedia({ audio: { echoCancellation: true, noiseSuppression: true } });
-    let mr; try { mr = new MediaRecorder(stream); } catch (e) { stream.getTracks().forEach(t => t.stop()); throw Object.assign(new Error('rec'), { name: 'RecorderError' }); }
-    REC = { mr, chunks: [], stream, t0: Date.now() };
-    mr.ondataavailable = e => { if (e.data && e.data.size) REC.chunks.push(e.data); };
-    mr.onstop = () => { stream.getTracks().forEach(t => t.stop()); gotRecording(new Blob(REC.chunks, { type: mr.mimeType || 'audio/webm' })); };
-    mr.start(250); MIC_BLOCKED = false; RD.recording = true; render(null); sfx('pop');
+    let stream; try { stream = await navigator.mediaDevices.getUserMedia({ audio: { echoCancellation: true, noiseSuppression: true } }); } catch (e1) { if (e1 && (e1.name === 'NotAllowedError' || e1.name === 'SecurityError' || e1.name === 'PermissionDeniedError')) throw e1; stream = await navigator.mediaDevices.getUserMedia({ audio: true }); }
+    const done = blob => { stream.getTracks().forEach(t => t.stop()); gotRecording(blob); };
+    let mr = null, own = false;
+    if (window.MediaRecorder) { try { mr = new MediaRecorder(stream); } catch (e) { mr = null; } }
+    if (mr) { REC = { mr, chunks: [], stream, t0: Date.now() }; mr.ondataavailable = e => { if (e.data && e.data.size) REC.chunks.push(e.data); }; mr.onstop = () => { const blob = new Blob(REC.chunks, { type: mr.mimeType || 'audio/webm' }); if (!blob.size && !own) { toast('Nahrávka je prázdna. Skús to ešte raz a hovor hlasnejšie.'); } done(blob); }; try { mr.start(250); } catch (e) { mr = null; } }
+    if (!mr) { own = true; const wr = wavRecorder(stream); REC = { mr: wr, chunks: [], stream, t0: Date.now() }; wr.onstop = () => done(wr.blob); }
+    MIC_BLOCKED = false; RD.recording = true; render(null); sfx('pop');
     TIMERS.push(setInterval(() => { const e = $('#rectime'); if (e && REC) e.textContent = Math.round((Date.now() - REC.t0) / 1000) + ' s'; }, 500));
   } catch (e) {
     MIC_BLOCKED = true; render(null);
@@ -609,7 +622,6 @@ VIEWS.home = () => {
   const nr = nextL ? rewardsAt(nextL, p.av.gender) : [];
   const toNext = nextL ? (() => { let x = li.need - li.cur; for (let L = li.L + 1; L < nextL; L++) x += need(L); return x; })() : 0;
   const stage = `<section class="card stage"><div class="bgav">${roomHTML(p.room)}</div><div class="fig" data-a="wave">${avatarSvg(p.av, { cls: 'idle', noBg: true })}</div>
-    <button class="float chest press ${drReady(p) ? 'ready' : ''}" data-a="dreward"><span class="fi">${drReady(p) ? '🎁' : '✅'}</span>${drReady(p) ? 'Denná odmena' : 'Zajtra ďalšia'}</button>
     <button class="float fire press" data-a="rtab-go" data-t="streak"><span class="fi">🔥</span>${p.streak.count} ${plural(p.streak.count, 'deň', 'dni', 'dní')}</button>
     <div class="float owlb">${owlSvg('')}<span>${pick(TIPS)}</span></div>
     <div class="nameplate">${esc(p.name)}<small>${title(li.L)}</small>${pet.e ? `<small>${pet.e} ${esc(petName(p.av))}</small>` : ''}</div><button class="float press" style="right:12px;top:92px;min-width:0;padding:6px 8px" data-a="nav" data-v="room" aria-label="Upraviť pozadie"><span class="fi" style="font-size:1.4rem">🎨</span></button><button class="float press" style="left:12px;top:92px;min-width:0;padding:6px 8px" data-a="nav" data-v="rewards" aria-label="Odmeny"><span class="fi" style="font-size:1.4rem">🏆</span></button></section>`;
@@ -624,6 +636,7 @@ VIEWS.home = () => {
   const dd = p.dailyDone === today();
   return `${topbar()}<main class="view pop-in">${stage}
   <div class="sec"><h2>Dnes</h2><span class="eyebrow">${p.grade}. ročník</span></div>
+  ${drReady(p) ? `<button class="card drcard press" data-a="dreward"><span class="ic">🎁</span><span><b>Denná odmena čaká!</b><span class="b" style="font-size:.9rem">Ťukni a vyzdvihni si dnešný darček.</span></span><em>!</em></button>` : ''}
   ${reviewCard(p)}
   <button class="card daily press ${dd ? 'done' : ''}" data-a="daily"><span class="ic">${dd ? '✅' : '🎯'}</span><span><b>${dd ? 'Denná výzva splnená!' : 'Denná výzva'}</b><span class="b" style="font-size:.9rem">${dd ? 'Môžeš si ju zahrať znova, len tak pre radosť.' : 'Opakovanie toho, čo si nedávno precvičoval(a), a ľahké otázky o svete · +50 bodov'}</span></span></button>
   ${ptaskCard(p)}${taskCard}
@@ -823,20 +836,55 @@ async function explainQ() {
   catch (e) { const el = $('#extext'); if (el) el.textContent = e && e.code === 'rate_limited' ? 'Bystrík si musí chvíľu oddýchnuť. Skús to o chvíľu.' : 'Teraz sa to nepodarilo. Skús to neskôr.'; }
 }
 
+/* --- diktát --- */
+const DICT = {
+  1: ['mama', 'oco', 'dom', 'pes', 'les', 'lopta', 'ruka', 'noha', 'oko', 'ryba', 'auto', 'vlak', 'koza', 'kino', 'voda', 'mapa', 'sova', 'zima', 'leto', 'mesto'],
+  2: ['mačka', 'škola', 'žaba', 'čaj', 'ďateľ', 'ťava', 'koláč', 'ľad', 'dážď', 'kôň', 'stôl', 'nôž', 'mäso', 'päť', 'deväť', 'lúka', 'ruža', 'hruška', 'čerešňa', 'učiteľ', 'Mama varí čaj.', 'Pes má búdu.'],
+  3: ['bývať', 'bystrý', 'myš', 'mydlo', 'mlyn', 'pýtať sa', 'pýcha', 'rýchly', 'syn', 'syr', 'výlet', 'vysoký', 'jazyk', 'kobyla', 'Mama pečie koláč.', 'V lese rastú huby.', 'Sýkorka sedí na strome.', 'Myš sa bojí mačky.', 'Babka býva na dedine.', 'Na výlet ideme vlakom.'],
+  4: ['Babička býva v malom dome.', 'Na výlete sme videli vysoký hrad.', 'Bystrý žiak rýchlo počíta.', 'V zime si obliekam teplý kabát.', 'Môj brat rád číta knihy.', 'Na lúke kvitnú biele margaréty.', 'Dnes je pekný slnečný deň.', 'Sýkorky a vrabce lietajú k rybníku.', 'Pri mlyne tečie čistý potok.', 'Učiteľka nám prečítala zaujímavý príbeh.', 'Rytier býval vo vysokej veži.', 'Mamička umyla riad a utrela stôl.']
+};
+let DK = null;
+const dkNorm = t => String(t || '').trim().replace(/\s+/g, ' ').replace(/[.!?]+$/, '').toLowerCase();
+const dkPlain = t => dkNorm(t).normalize('NFD').replace(/[̀-ͯ]/g, '');
+function dkSay(slow) { if (!DK) return; const t = DK.list[DK.i]; try { speechSynthesis.cancel(); if (!VOICES.length) loadVoices(); const u = new SpeechSynthesisUtterance(t); const v = pickVoice('sk-SK'); if (v) { u.voice = v; u.lang = v.lang; } else u.lang = 'sk-SK'; u.rate = slow ? .5 : .78; u.pitch = 1.02; speechSynthesis.speak(u); } catch (e) { } }
+function dkStart() { const p = P(); DK = { list: shuffle(DICT[p.grade] || DICT[1]).slice(0, 6), i: 0, ok: 0, done: null, peeks: 0, tries: 0 }; }
+VIEWS.dict = () => {
+  if (!DK || DK.i >= DK.list.length) dkStart(); const t = DK.list[DK.i]; const hasVoice = 'speechSynthesis' in window; const res = DK.done;
+  const diff = () => { const a = [...res.typed], b = [...t]; return b.map((c, i) => `<i class="${(a[i] || '').toLowerCase() === c.toLowerCase() ? 'ok' : 'bad'}">${c === ' ' ? '&nbsp;' : esc(c)}</i>`).join(''); };
+  return `${topbar('learn-back')}<main class="view nonav dictv"><div><h1 style="font-size:1.8rem">✏️ Diktát</h1><p class="muted b">Vypočuj si, čo Bystrík hovorí, a napíš to. Pozor na mäkčene a dĺžne!</p></div>
+  <div class="wprog">${DK.list.map((_, i) => `<i class="${i < DK.i ? 'done' : i === DK.i ? 'on' : ''}">${i < DK.i ? '✓' : i + 1}</i>`).join('')}</div>
+  <section class="card dictbox"><div class="dictbear">${bearSvg('')}</div>${hasVoice ? `<div class="rowbtns" style="grid-template-columns:3fr 2fr;width:100%"><button class="btn primary" data-a="dk-say">🔊 Vypočuť</button><button class="btn" data-a="dk-slow">🐢 Pomaly</button></div>` : '<p class="b">Tento telefón nevie čítať nahlas. Použi „Ukáž na chvíľu“.</p>'}
+  <div class="dictpeek" id="dkpeek"></div>
+  ${res ? `<div class="dictres ${res.ok ? 'ok' : 'no'}"><b>${res.ok ? '✅ Správne!' : res.near ? '❌ Skoro! Pozor na mäkčene a dĺžne.' : '❌ Pozri sa, ako sa to píše:'}</b><div class="dictdiff">${diff()}</div>${res.ok ? '' : `<small>Ty: ${esc(res.typed) || '(nič)'}</small>`}</div><button class="btn primary block" data-a="dk-next">${DK.i + 1 >= DK.list.length ? 'Výsledok' : 'Ďalej →'}</button>`
+    : `<input class="field dictin" id="dkin" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" lang="sk" placeholder="Sem napíš, čo počuješ"><div class="rowbtns" style="grid-template-columns:1fr 2fr;width:100%"><button class="btn" data-a="dk-peek">👀 Ukáž</button><button class="btn primary" data-a="dk-check">✓ Skontrolovať</button></div><p class="muted b" style="font-size:.8rem;margin:0">Dlhé a mäkké písmená nájdeš na klávesnici, keď písmeno podržíš.</p>`}</section></main>`;
+};
+AFTER.dict = () => { if (DK && !DK.done) { if (!DK.spoken) { DK.spoken = true; setTimeout(() => dkSay(false), 450); } const el = $('#dkin'); if (el) el.addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); ACT['dk-check'](); } }); } };
+function dkFinish() { const p = P(); const before = p.xp; const xp = DK.ok * 8 + 6; gain(p, xp); logAct('dict', null, DK.ok, DK.list.length); touchStreak(p); checkBadges(p); save(); const r = { kind: 'dict', correct: DK.ok, total: DK.list.length, xp, bonus: 0, before, after: p.xp, back: { v: 'learn', p: {} } }; DK = null; go('result', r, 'u'); }
 /* --- písanie prstom --- */
-const WSETS = { num: ['Čísla', '0123456789'], big: ['Veľké písmená', 'ABCDEFGHIJKLMNOPRSTUVZ'], small: ['Malé písmená', 'abcdefghijklmnoprstuvz'] };
+const WSHAPES = { v: ['Zvislá čiara', '│'], h: ['Ležatá čiara', '─'], d: ['Šikmá čiara', '╱'], z: ['Zúbky', '⩘'], w: ['Vlnka', '∿'], u: ['Kopčeky', '∩'], l: ['Slučky', '∞'], o: ['Kruh', '◯'], s: ['Štvorec', '□'], t: ['Trojuholník', '△'] };
+const wLabel = ch => ch[0] === '~' ? WSHAPES[ch[1]][0] : ch, wMini = ch => ch[0] === '~' ? WSHAPES[ch[1]][1] : ch;
+const WSETS = { lines: ['Moje prvé čiary', Object.keys(WSHAPES).map(k => '~' + k)], num: ['Čísla', '0123456789'], big: ['Veľké písmená', 'ABCDEFGHIJKLMNOPRSTUVZ'], small: ['Malé písmená', 'abcdefghijklmnoprstuvz'] };
 let W = null;
-function writeStart(set) { const p = P(); set = set || (W && W.set) || (p.grade <= 1 ? 'num' : 'big'); W = { set, list: shuffle(WSETS[set][1].split('')).slice(0, 6), i: 0, ok: 0, tries: 0, drawn: false, busy: false }; }
+function writeStart(set) { const p = P(); set = set || (W && W.set) || (p.grade <= 1 ? 'lines' : 'big'); W = { set, list: shuffle(Array.isArray(WSETS[set][1]) ? WSETS[set][1].slice() : WSETS[set][1].split('')).slice(0, 6), i: 0, ok: 0, tries: 0, drawn: false, busy: false }; }
 VIEWS.write = () => {
   if (!W || W.i >= W.list.length) writeStart();
-  return `${topbar('learn-back')}<main class="view nonav writev"><div><h1 style="font-size:1.8rem">Písanie prstom</h1><p class="muted b">Obtiahni prstom písmeno alebo číslo. Snaž sa ostať na sivej predlohe.</p></div>
+  return `${topbar('learn-back')}<main class="view nonav writev"><div><h1 style="font-size:1.8rem">Písanie prstom</h1><p class="muted b">Obtiahni prstom čiaru, tvar, písmeno alebo číslo. Snaž sa ostať na sivej predlohe.</p></div>
   <div class="chips">${Object.entries(WSETS).map(([k, v]) => `<button class="chip ${W.set === k ? 'on' : ''}" data-a="write-set" data-s="${k}">${v[0]}</button>`).join('')}</div>
-  <div class="wprog">${W.list.map((ch, i) => `<i class="${i < W.i ? 'done' : i === W.i ? 'on' : ''}">${i < W.i ? '✓' : ch}</i>`).join('')}</div>
-  <section class="card wbox"><div class="wwrap"><canvas id="wguide" width="340" height="340"></canvas><canvas id="wdraw" width="340" height="340"></canvas></div><p class="wmsg" id="wmsg">Napíš: <b>${W.list[W.i]}</b></p></section>
+  <div class="wprog">${W.list.map((ch, i) => `<i class="${i < W.i ? 'done' : i === W.i ? 'on' : ''}">${i < W.i ? '✓' : wMini(ch)}</i>`).join('')}</div>
+  <section class="card wbox"><div class="wwrap"><canvas id="wguide" width="340" height="340"></canvas><canvas id="wdraw" width="340" height="340"></canvas></div><p class="wmsg" id="wmsg">${W.list[W.i][0] === '~' ? 'Obtiahni' : 'Napíš'}: <b>${wLabel(W.list[W.i])}</b></p></section>
   <div class="rowbtns" style="grid-template-columns:1fr 2fr"><button class="btn" data-a="write-clear">🧽 Zmazať</button><button class="btn primary" data-a="write-done">✓ Hotovo</button></div></main>`;
 };
 const WFONT = '700 250px Lexend, Nunito, system-ui, sans-serif';
-function wGlyph(ctx, ch, fill) { ctx.font = WFONT; ctx.textAlign = 'center'; ctx.textBaseline = 'alphabetic'; const m = ctx.measureText(ch); const h = (m.actualBoundingBoxAscent || 180) + (m.actualBoundingBoxDescent || 0); const y = 170 + h / 2 - (m.actualBoundingBoxDescent || 0); if (fill) ctx.fillText(ch, 170, y); else ctx.strokeText(ch, 170, y); }
+function wShape(ctx, k) {
+  ctx.beginPath();
+  if (k === 'v') { ctx.moveTo(170, 60); ctx.lineTo(170, 280); } else if (k === 'h') { ctx.moveTo(60, 170); ctx.lineTo(280, 170); } else if (k === 'd') { ctx.moveTo(80, 270); ctx.lineTo(260, 70); }
+  else if (k === 'z') { ctx.moveTo(50, 230); ctx.lineTo(110, 110); ctx.lineTo(170, 230); ctx.lineTo(230, 110); ctx.lineTo(290, 230); }
+  else if (k === 'w') { ctx.moveTo(40, 170); ctx.quadraticCurveTo(85, 70, 130, 170); ctx.quadraticCurveTo(175, 270, 220, 170); ctx.quadraticCurveTo(265, 70, 310, 170); }
+  else if (k === 'u') { ctx.moveTo(50, 245); ctx.quadraticCurveTo(110, 40, 170, 245); ctx.quadraticCurveTo(230, 40, 290, 245); }
+  else if (k === 'l') { ctx.moveTo(50, 235); ctx.bezierCurveTo(95, 235, 150, 65, 110, 65); ctx.bezierCurveTo(70, 65, 115, 235, 170, 235); ctx.bezierCurveTo(215, 235, 270, 65, 230, 65); ctx.bezierCurveTo(190, 65, 235, 235, 290, 235); }
+  else if (k === 'o') { ctx.arc(170, 170, 100, 0, Math.PI * 2); } else if (k === 's') { ctx.rect(80, 80, 180, 180); } else { ctx.moveTo(170, 70); ctx.lineTo(280, 260); ctx.lineTo(60, 260); ctx.closePath(); }
+}
+function wGlyph(ctx, ch, fill) { if (ch[0] === '~') { ctx.lineCap = 'round'; ctx.lineJoin = 'round'; wShape(ctx, ch[1]); if (fill) { const lw = ctx.lineWidth, ss = ctx.strokeStyle; ctx.lineWidth = 38; ctx.strokeStyle = ctx.fillStyle; ctx.stroke(); ctx.lineWidth = lw; ctx.strokeStyle = ss; } else ctx.stroke(); return; } ctx.font = WFONT; ctx.textAlign = 'center'; ctx.textBaseline = 'alphabetic'; const m = ctx.measureText(ch); const h = (m.actualBoundingBoxAscent || 180) + (m.actualBoundingBoxDescent || 0); const y = 170 + h / 2 - (m.actualBoundingBoxDescent || 0); if (fill) ctx.fillText(ch, 170, y); else ctx.strokeText(ch, 170, y); }
 function wDrawGuide() { const g = $('#wguide'); if (!g) return; const c = g.getContext('2d'); c.clearRect(0, 0, 340, 340); const ink = getComputedStyle(document.documentElement).getPropertyValue('--ink').trim() || '#333'; c.globalAlpha = .13; c.fillStyle = ink; wGlyph(c, W.list[W.i], true); c.globalAlpha = .45; c.strokeStyle = ink; c.lineWidth = 2.5; c.setLineDash([7, 7]); wGlyph(c, W.list[W.i], false); c.setLineDash([]); c.globalAlpha = 1; }
 function wScore() {
   const d = $('#wdraw'); const m = document.createElement('canvas'); m.width = m.height = 340; const mc = m.getContext('2d'); mc.fillStyle = '#000'; mc.lineWidth = 16; mc.lineJoin = 'round'; mc.strokeStyle = '#000'; wGlyph(mc, W.list[W.i], true); wGlyph(mc, W.list[W.i], false);
@@ -872,6 +920,7 @@ VIEWS.result = r => {
     : r.kind === 'cards' ? big('🃏', 'Všetky kartičky zvládnuté!')
       : r.kind === 'pex' ? big('🧩', 'Pexeso hotové!', `<div class="score">Počet ťahov: ${r.moves}</div>`)
         : r.kind === 'match' ? big('🔗', r.sort ? 'Všetko roztriedené!' : 'Všetko pospájané!', `<div class="score">${r.sort ? `Správne: ${r.correct} z ${r.total}` : `Chyby: ${r.mistakes}`}</div>`)
+          : r.kind === 'dict' ? big('✏️', r.correct === r.total ? 'Diktát bez chyby!' : 'Diktát hotový!', `<div class="score">Správne: ${r.correct} z ${r.total}</div>`)
           : r.kind === 'write' ? big('✍️', 'Pekne napísané!', `<div class="score">Na prvý pokus: ${r.correct} z ${r.total}</div>`)
           : r.kind === 'read' ? big('📖', 'Výborne si čítal(a)!', `<div class="score">Otázky: ${r.correct} z ${r.total} správne</div>`)
           : r.kind === 'game' ? big(GAMES[r.game].i, `${r.score} ${plural(r.score, 'bod', 'body', 'bodov')}!`, `<div class="score muted">Najlepšie: ${p.best[r.game] || 0}</div>`)
@@ -1314,9 +1363,12 @@ function dailySeq(p) {
 function giftsToday(p) { const t = today(); return (p.log || []).filter(l => l.k === 'gift' && dkey(new Date(l.t)) === t).length; }
 let VIEWDATA = null, PSEL_SAVED = null;
 VIEWS.remote = () => { const saved = DATA, ok = PARENT_OK; DATA = VIEWDATA; PARENT_OK = true; if (!DATA.profiles.find(x => x.id === PSEL)) PSEL = DATA.current || (DATA.profiles[0] && DATA.profiles[0].id); let html; try { html = VIEWS.parent(); } finally { DATA = saved; PARENT_OK = ok; } return `<div class="remotebar">👀 Len na pozretie: postup z iného zariadenia (záloha z ${fmtTime(VIEWDATA._at || Date.now())})<button class="btn small" data-a="remote-close">Zavrieť</button></div><div class="readonly">${html}</div>`; };
-const KIND = { 'game-word': 'Minihra Poskladaj slovo', 'game-frog': 'Minihra Žabka', review: 'Opakovanie chýb', write: 'Písanie prstom', duel: 'Súboj', test: 'Test', ptask: 'Splnená úloha od rodiča', gift: 'Odmena od rodiča', 'game-mole': 'Minihra Chyť škrečka', read: 'Čítanka – nahrávka', readq: 'Čítanka – otázky', quiz: 'Kvíz', time: 'Na čas', daily: 'Denná výzva', cards: 'Kartičky', pex: 'Pexeso', match: 'Spájačka', sort: 'Triedička', 'game-balloons': 'Minihra Balóny', 'game-rain': 'Minihra Slovný dážď', 'game-tf': 'Minihra Pravda či nie' };
+const KIND = { dict: 'Diktát', 'game-word': 'Minihra Poskladaj slovo', 'game-frog': 'Minihra Žabka', review: 'Opakovanie chýb', write: 'Písanie prstom', duel: 'Súboj', test: 'Test', ptask: 'Splnená úloha od rodiča', gift: 'Odmena od rodiča', 'game-mole': 'Minihra Chyť škrečka', read: 'Čítanka – nahrávka', readq: 'Čítanka – otázky', quiz: 'Kvíz', time: 'Na čas', daily: 'Denná výzva', cards: 'Kartičky', pex: 'Pexeso', match: 'Spájačka', sort: 'Triedička', 'game-balloons': 'Minihra Balóny', 'game-rain': 'Minihra Slovný dážď', 'game-tf': 'Minihra Pravda či nie' };
 function fmtTime(t) { const d = new Date(t); const k = dkey(d); const hm = `${d.getHours()}:${String(d.getMinutes()).padStart(2, '0')}`; return k === today() ? `dnes ${hm}` : k === daysAgo(1) ? `včera ${hm}` : `${d.getDate()}. ${d.getMonth() + 1}. ${hm}`; }
 let PTAB = 'over'; let PS = null; const PACC = {};
+let PLOCKT = null; const plockArm = () => { clearTimeout(PLOCKT); if (typeof PARENT_OK !== 'undefined' && PARENT_OK) PLOCKT = setTimeout(() => { if (PARENT_OK && ['parent', 'remote'].includes(UI.view)) { PARENT_OK = false; go(P() ? 'home' : 'profiles', {}, 'b'); toast('🔒 Rodičovský účet sa sám zamkol.'); } }, 180000); };
+['pointerdown', 'keydown'].forEach(ev => document.addEventListener(ev, plockArm, true));
+document.addEventListener('visibilitychange', () => { if (document.hidden && typeof PARENT_OK !== 'undefined' && PARENT_OK && ['parent', 'remote'].includes(UI.view)) { PARENT_OK = false; go(P() ? 'home' : 'profiles', {}, 'b'); } });
 function paccWrap(html, tab, openFirst) {
   const parts = html.split('<h3 class="pgroup">'); let out = parts[0];
   parts.slice(1).forEach((part, n) => { const e = part.indexOf('</h3>'); const title = part.slice(0, e); let rest = part.slice(e + 5); let sub = ''; const m = rest.match(/^<p class="pgsub">([^<]*)<\/p>/); if (m) { sub = m[1]; rest = rest.slice(m[0].length); } const k = tab + n; const open = k in PACC ? PACC[k] : (openFirst && n === 0); out += `<details class="pacc" data-k="${k}" ${open ? 'open' : ''}><summary><span class="pt">${title}${sub ? `<small>${sub}</small>` : ''}</span><i>›</i></summary><div class="paccb">${rest}</div></details>`; });
@@ -1428,7 +1480,7 @@ const ACT = {
   tf: (d, el) => { if (GM.ended || GM.lock) return; tfResolve((d.v === '1') === GM.st.truth, el); },
   'gdiff': d => { $$('.over').forEach(e => e.remove()); sfx('tap'); startGame(d.g, d.d); },
   'res-back': () => { const r = UI.params; go(r.back.v, r.back.p, 'b'); },
-  'res-again': () => { const r = UI.params; if (r.kind === 'read') return go('reads', {}, 'b'); if (r.kind === 'review') { if (reviewDue(P()).length) return startReview(); return go('home', {}, 'b'); } if (r.kind === 'write') return go('write', {}, 'b'); if (r.kind === 'game') return startGame(r.game, (P().gdiff || {})[r.game]); if (r.kind === 'test' || r.kind === 'quiz' || r.kind === 'time' || r.kind === 'daily') return startQuiz(r.retry, r.kind, r.back); startMode(r.retry[0]); },
+  'res-again': () => { const r = UI.params; if (r.kind === 'read') return go('reads', {}, 'b'); if (r.kind === 'review') { if (reviewDue(P()).length) return startReview(); return go('home', {}, 'b'); } if (r.kind === 'write') return go('write', {}, 'b'); if (r.kind === 'dict') return go('dict', {}, 'b'); if (r.kind === 'game') return startGame(r.game, (P().gdiff || {})[r.game]); if (r.kind === 'test' || r.kind === 'quiz' || r.kind === 'time' || r.kind === 'daily') return startQuiz(r.retry, r.kind, r.back); startMode(r.retry[0]); },
   gift: (d, el) => { el.classList.add('open'); sfx('gift'); confetti(80, .4); setTimeout(() => { el.remove(); $('.over .rewards').hidden = false; $('[data-a="ov-wear"]').hidden = false; }, 450); },
   'ov-close': () => { $('.over')?.remove(); setTimeout(flushPending, 200); },
   'ov-wear': () => { $('.over')?.remove(); PENDING = []; go('wardrobe', {}, 'f'); },
@@ -1533,7 +1585,11 @@ const ACT = {
     const ics = ['BEGIN:VCALENDAR', 'VERSION:2.0', 'PRODID:-//Bystrik//SK', 'CALSCALE:GREGORIAN', 'BEGIN:VEVENT', 'UID:bystrik-ucenie-' + day + '@bystrik', 'DTSTAMP:' + day + 'T000000Z', 'DTSTART:' + day + 'T' + hh + mm + '00', 'DURATION:PT15M', 'RRULE:FREQ=DAILY', 'SUMMARY:Bystrík: čas na učenie 🧸', 'DESCRIPTION:Desať minút s Bystríkom. Otvor apku: ' + url, 'URL:' + url, 'BEGIN:VALARM', 'ACTION:DISPLAY', 'DESCRIPTION:Bystrík čaká! Poď sa učiť 🧸', 'TRIGGER:PT0M', 'END:VALARM', 'END:VEVENT', 'END:VCALENDAR'].join('\r\n');
     const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([ics], { type: 'text/calendar' })); a.download = 'bystrik-pripomienka.ics'; document.body.appendChild(a); a.click(); setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 1000); toast('Súbor stiahnutý. Otvorte ho a potvrďte pridanie do kalendára.');
   },
-  'learn-back': () => go('learn', {}, 'b'),
+  'learn-back': () => { try { speechSynthesis.cancel(); } catch (e) { } go('learn', {}, 'b'); },
+  'dk-say': () => { sfx('tap'); dkSay(false); }, 'dk-slow': () => { sfx('tap'); dkSay(true); },
+  'dk-peek': () => { const el = $('#dkpeek'); if (!el || !DK) return; DK.peeks++; DK.peeked = true; el.textContent = DK.list[DK.i]; el.classList.add('on'); sfx('pop'); setTimeout(() => { el.classList.remove('on'); el.textContent = ''; }, DK.list[DK.i].length > 12 ? 3500 : 2200); },
+  'dk-check': () => { if (!DK || DK.done) return; const typed = ($('#dkin').value || '').trim(); if (!typed) { toast('Najprv napíš, čo počuješ.'); sfx('no'); return; } const t = DK.list[DK.i]; const ok = dkNorm(typed) === dkNorm(t); const near = !ok && dkPlain(typed) === dkPlain(t); if (ok) { if (!DK.peeked) DK.ok++; sfx('ok'); try { burst($('.dictbox'), 18); } catch (e) { } } else sfx('no'); const p = P(); p.stats.answered++; if (ok) p.stats.correct++; countDay(ok); DK.done = { ok, near, typed }; render(null); },
+  'dk-next': () => { if (!DK) return; DK.i++; DK.done = null; DK.peeked = false; DK.spoken = false; if (DK.i >= DK.list.length) return dkFinish(); render(null); },
   'write-set': d => { sfx('tap'); writeStart(d.s); render(null); },
   'write-clear': () => { const d = $('#wdraw'); if (d) d.getContext('2d').clearRect(0, 0, 340, 340); W.drawn = false; sfx('tap'); },
   'write-done': () => {
