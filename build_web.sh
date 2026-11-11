@@ -7,15 +7,27 @@ mkdir -p web
   printf '%s\n' '<!doctype html>' '<html lang="sk">' '<head>' \
     '<meta charset="utf-8">' \
     '<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">' \
-    '<meta name="theme-color" content="#FFE6F1">' \
-    '<meta name="description" content="Bystrík – hravé učenie matematiky, slovenčiny a prehľadu pre 1. až 4. ročník.">' \
+    '<title>Bystrík – hravé učenie pre 1. až 4. ročník</title>' \
+    '<meta name="theme-color" content="#2B1B30">' \
+    '<meta name="description" content="Bystrík je bezplatná apka na hravé učenie pre deti 1. až 4. ročníka: matematika, slovenčina, prehľad, čítanie, minihry, súboje s kamarátmi a rebríček.">' \
+    '<meta name="keywords" content="Bystrík, bystrik, učenie pre deti, matematika 1. ročník, slovenčina, vybrané slová, násobilka, apka pre prvákov">' \
+    '<meta name="robots" content="index,follow">' \
+    '<link rel="canonical" href="https://sebastiankoncek88-alt.github.io/bystrik/">' \
+    '<meta property="og:type" content="website">' \
+    '<meta property="og:title" content="Bystrík – hravé učenie pre 1. až 4. ročník">' \
+    '<meta property="og:description" content="Matematika, slovenčina, čítanie, minihry a súboje s kamarátmi. Zadarmo.">' \
+    '<meta property="og:url" content="https://sebastiankoncek88-alt.github.io/bystrik/">' \
+    '<meta property="og:image" content="https://sebastiankoncek88-alt.github.io/bystrik/icon-512.png">' \
+    '<meta property="og:locale" content="sk_SK">' \
+    '<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"Bystrík","alternateName":"Bystrik","url":"https://sebastiankoncek88-alt.github.io/bystrik/","applicationCategory":"EducationalApplication","operatingSystem":"Android, iOS, Windows","inLanguage":"sk","offers":{"@type":"Offer","price":"0","priceCurrency":"EUR"},"description":"Hravé učenie pre deti 1. až 4. ročníka: matematika, slovenčina, prehľad, čítanie a minihry."}</script>' \
     '<link rel="manifest" href="manifest.webmanifest">' \
     '<link rel="icon" href="icon-192.png">' \
     '<link rel="apple-touch-icon" href="icon-512.png">' \
     '<meta name="apple-mobile-web-app-capable" content="yes">' \
     '<meta name="apple-mobile-web-app-title" content="Bystrík">' \
     '<style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0;font:14px system-ui,sans-serif}img{max-width:100%}[hidden]{display:none!important}</style>' \
-    '</head>' '<body>'
+    '</head>' '<body>' \
+    '<noscript><h1>Bystrík – hravé učenie pre 1. až 4. ročník</h1><p>Bezplatná apka pre deti: matematika, slovenčina, prehľad, čítanie, minihry, súboje s kamarátmi a rebríček. Na spustenie zapnite JavaScript.</p></noscript>'
   printf '%s\n' "<script>window.EMO_BASE='emoji/';</script>"
   cat bystrik.html
   printf '%s\n' "<script>if('serviceWorker' in navigator){addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(()=>{}));}</script>" '</body>' '</html>'
@@ -32,17 +44,18 @@ cat > web/manifest.webmanifest <<'EOF'
   "scope": "./",
   "display": "standalone",
   "orientation": "portrait",
-  "background_color": "#FFF4F8",
-  "theme_color": "#FFE6F1",
+  "background_color": "#2B1B30",
+  "theme_color": "#2B1B30",
   "icons": [
-    { "src": "icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any maskable" },
-    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }
+    { "src": "icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
   ]
 }
 EOF
 cat > web/sw.js <<'EOF'
-const CACHE = 'bystrik-v2';
-const FILES = ['./', './index.html', './manifest.webmanifest', './icon-192.png', './icon-512.png'];
+const CACHE = 'bystrik-v3';
+const FILES = ['./', './index.html', './manifest.webmanifest', './icon-192.png', './icon-512.png', './icon-maskable-512.png'];
 self.addEventListener('install', e => { e.waitUntil(caches.open(CACHE).then(c => c.addAll(FILES))); self.skipWaiting(); });
 self.addEventListener('activate', e => { e.waitUntil(caches.keys().then(k => Promise.all(k.filter(x => x !== CACHE).map(x => caches.delete(x))))); self.clients.claim(); });
 self.addEventListener('fetch', e => {

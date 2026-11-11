@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://sebastiankoncek88-alt.github.io/bystrik/sitemap.xml
