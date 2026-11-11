@@ -220,6 +220,8 @@ body.calcopen .peek,body.calcopen .peekbub{display:none}
 .loginbox{display:flex;flex-direction:column;gap:8px;padding:16px}
 .loginbox .lbl{font-weight:800;font-size:.9rem;margin-top:4px}
 .loginbox .field{font-size:1.05rem;padding:12px;text-align:left;width:100%;box-sizing:border-box}
+.loginmsg.ok{color:var(--good)}
+.linkbtn{background:none;border:none;color:var(--accent);font-family:inherit;font-weight:800;font-size:.92rem;text-decoration:underline;padding:8px;cursor:pointer;align-self:center}
 .loginmsg{min-height:1.3em;color:var(--bad);font-weight:800;font-size:.9rem;margin:0}
 .diffs{display:grid;grid-template-columns:1fr 1fr;gap:10px;width:100%}
 .diff{display:flex;flex-direction:column;align-items:center;gap:2px;padding:12px 6px;border-radius:18px;border:2.5px solid var(--edge);box-shadow:0 4px 0 var(--drop);background:var(--paper2);color:var(--ink);font-family:inherit;cursor:pointer}
@@ -3517,10 +3519,10 @@ const ACT = {
       el.disabled = false; el.textContent = '✅ Uložiť a vyskúšať'; sfx('no');
     }
   },
-  'auth-mode': d => { LOGIN.email = ($('#aemail') || {}).value || ''; LOGIN.mode = d.m; LOGIN.msg = ''; sfx('tap'); render(null); },
+  'auth-mode': d => { LOGIN.email = ($('#aemail') || {}).value || ''; LOGIN.mode = d.m; LOGIN.msg = ''; LOGIN.ok = false; sfx('tap'); render(null); },
   'auth-go': async () => {
     if (LOGIN.busy) return; const email = ($('#aemail').value || '').trim().toLowerCase(), pass = $('#apass').value || ''; LOGIN.email = email;
-    const fail = m => { LOGIN.busy = false; LOGIN.msg = m; sfx('no'); render(null); };
+    const fail = m => { LOGIN.busy = false; LOGIN.ok = false; LOGIN.msg = m; sfx('no'); render(null); };
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)) return fail('Zadajte platný e-mail.');
     if (pass.length < 6) return fail('Heslo musí mať aspoň 6 znakov.');
     LOGIN.busy = true; LOGIN.msg = ''; render(null);
@@ -3532,6 +3534,27 @@ const ACT = {
     try { await supaSync(); } catch (e) { DBREF = SUPADB; toast('Postup sa zatiaľ nepodarilo načítať. Skúsime to neskôr.'); }
     LOGIN = { mode: 'in', busy: false, msg: '' }; sfx('coin'); boot();
   },
+  'auth-forgot': async () => {
+    if (LOGIN.busy) return; const email = ($('#aemail').value || '').trim().toLowerCase(); LOGIN.email = email; LOGIN.ok = false;
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)) { LOGIN.msg = 'Najprv hore napíšte svoj e-mail.'; sfx('no'); return render(null); }
+    LOGIN.busy = true; LOGIN.msg = ''; render(null);
+    try { await supaAuth('recover?redirect_to=' + encodeURIComponent(location.origin + location.pathname), { email }); LOGIN.ok = true; LOGIN.msg = 'Ak účet existuje, poslali sme naň e-mail s odkazom na nové heslo. Pozrite aj spam.'; }
+    catch (e) { LOGIN.msg = /rate|429/i.test((e.message || '') + (e.code || '') + (e.status || '')) ? 'Teraz sa nedá poslať ďalší e-mail. Skúste to o hodinu.' : authErr(e); }
+    LOGIN.busy = false; render(null);
+  },
+  'auth-newpass': async () => {
+    if (LOGIN.busy || !RECOVER) return; const pass = $('#npass').value || '';
+    if (pass.length < 6) { LOGIN.msg = 'Heslo musí mať aspoň 6 znakov.'; sfx('no'); return render(null); }
+    LOGIN.busy = true; LOGIN.msg = ''; render(null);
+    try {
+      const r = await fetch(SUPA.url + '/auth/v1/user', { method: 'PUT', headers: { apikey: SUPA.key, Authorization: 'Bearer ' + RECOVER.at, 'content-type': 'application/json' }, body: JSON.stringify({ password: pass }) });
+      const j = await r.json().catch(() => ({})); if (!r.ok) throw { message: j.msg || j.message || ('HTTP ' + r.status), code: j.error_code || '' };
+      setAuth({ at: RECOVER.at, rt: RECOVER.rt, exp: RECOVER.exp, uid: j.id, email: j.email }); RECOVER = null;
+    } catch (e) { LOGIN.busy = false; LOGIN.msg = /same_password|different/i.test((e.message || '') + (e.code || '')) ? 'Nové heslo musí byť iné ako staré.' : /expired|invalid|JWT|401|403/i.test((e.message || '') + (e.code || '')) ? 'Odkaz už neplatí. Požiadajte o nový.' : authErr(e); sfx('no'); return render(null); }
+    try { await supaSync(); } catch (e) { DBREF = SUPADB; }
+    LOGIN = { mode: 'in', busy: false, msg: '' }; sfx('coin'); toast('Heslo je zmenené ✓'); boot();
+  },
+  'auth-newpass-cancel': () => { RECOVER = null; LOGIN = { mode: 'in', busy: false, msg: '' }; boot(); },
   'auth-out': async (d, el) => {
     el.disabled = true; el.textContent = '⏳ Ukladám…';
     try { clearTimeout(syncT); if (DATA.profiles.length) await SUPADB.set({ json: JSON.stringify(DATA), t: DATA.t }); } catch (e) { toast('Bez internetu sa nedá odhlásiť, postup by sa neuložil.'); return render(null); }
@@ -3608,6 +3631,8 @@ const SUPA = { url: 'https://nxxltcpjdvoxomogzwaj.supabase.co', key: 'sb_publish
 const SUPA_ON = () => !!(SUPA.url && SUPA.key && !(window.claude && window.claude.use));
 let AUTH = null; try { AUTH = JSON.parse(localStorage.getItem('bystrik.auth') || 'null'); } catch (e) { }
 let LOGIN = { mode: 'in', busy: false, msg: '' };
+let RECOVER = null;
+try { if (SUPA_ON() && /type=recovery/.test(location.hash) && /access_token=/.test(location.hash)) { const q = new URLSearchParams(location.hash.slice(1)); RECOVER = { at: q.get('access_token'), rt: q.get('refresh_token'), exp: Date.now() + (+q.get('expires_in') || 3600) * 1000 }; history.replaceState(null, '', location.pathname + location.search); } else if (SUPA_ON() && /error_code=/.test(location.hash)) { LOGIN.msg = 'Odkaz na obnovu hesla už neplatí. Požiadajte o nový.'; history.replaceState(null, '', location.pathname + location.search); } } catch (e) { }
 function setAuth(a) { AUTH = a; try { if (a) localStorage.setItem('bystrik.auth', JSON.stringify(a)); else localStorage.removeItem('bystrik.auth'); } catch (e) { } }
 async function supaAuth(path, body) {
   let r; try { r = await fetch(SUPA.url + '/auth/v1/' + path, { method: 'POST', headers: { apikey: SUPA.key, 'content-type': 'application/json' }, body: JSON.stringify(body) }); } catch (e) { throw { net: true, message: 'Bez pripojenia na internet.' }; }
@@ -3651,15 +3676,18 @@ VIEWS.login = () => `<main class="view nonav loginv"><div class="loginbear">${be
 <section class="card loginbox"><div class="seg" role="tablist"><button class="${LOGIN.mode === 'in' ? 'on' : ''}" data-a="auth-mode" data-m="in">Prihlásiť sa</button><button class="${LOGIN.mode === 'up' ? 'on' : ''}" data-a="auth-mode" data-m="up">Nový účet</button></div>
 <label class="lbl" for="aemail">E-mail</label><input class="field" id="aemail" type="email" inputmode="email" autocomplete="email" autocapitalize="off" placeholder="rodic@email.sk" value="${esc(LOGIN.email || '')}">
 <label class="lbl" for="apass">Heslo${LOGIN.mode === 'up' ? ' (aspoň 6 znakov)' : ''}</label><input class="field" id="apass" type="password" autocomplete="${LOGIN.mode === 'in' ? 'current-password' : 'new-password'}" placeholder="••••••">
-<p class="loginmsg" id="amsg">${esc(LOGIN.msg)}</p>
-<button class="btn primary block" data-a="auth-go" ${LOGIN.busy ? 'disabled' : ''}>${LOGIN.busy ? '⏳ Chvíľku…' : LOGIN.mode === 'in' ? '➡️ Prihlásiť sa' : '✨ Vytvoriť účet'}</button></section>
+<p class="loginmsg ${LOGIN.ok ? 'ok' : ''}" id="amsg">${esc(LOGIN.msg)}</p>
+<button class="btn primary block" data-a="auth-go" ${LOGIN.busy ? 'disabled' : ''}>${LOGIN.busy ? '⏳ Chvíľku…' : LOGIN.mode === 'in' ? '➡️ Prihlásiť sa' : '✨ Vytvoriť účet'}</button>${LOGIN.mode === 'in' ? '<button class="linkbtn" data-a="auth-forgot">Zabudli ste heslo?</button>' : ''}</section>
 <p class="muted b" style="text-align:center;font-size:.8rem">E-mail slúži len na prihlásenie. Nikomu ho nedávame a neposielame reklamu.</p></main>`;
+VIEWS.newpass = () => `<main class="view nonav loginv"><div class="loginbear">${bearSvg('')}</div><h1 class="logintitle">Nové heslo</h1><p class="muted b" style="text-align:center">Zadajte nové heslo k svojmu účtu.</p>
+<section class="card loginbox"><label class="lbl" for="npass">Nové heslo (aspoň 6 znakov)</label><input class="field" id="npass" type="password" autocomplete="new-password" placeholder="••••••"><p class="loginmsg" id="amsg">${esc(LOGIN.msg)}</p><button class="btn primary block" data-a="auth-newpass" ${LOGIN.busy ? 'disabled' : ''}>${LOGIN.busy ? '⏳ Chvíľku…' : '💾 Uložiť heslo'}</button><button class="linkbtn" data-a="auth-newpass-cancel">Zrušiť</button></section></main>`;
 function accCard() {
   if (!SUPA_ON() || !AUTH) return '';
   return `<section class="card pcard"><span class="eyebrow">👤 Účet</span><p class="b" style="padding:4px 0;word-break:break-all">Prihlásený: ${esc(AUTH.email || '')}</p><p class="muted b" style="font-size:.82rem;padding-bottom:8px">Postup sa ukladá online. Na inom zariadení sa stačí prihlásiť tým istým e-mailom.</p><div class="bkbtns"><button class="btn small" data-a="auth-out">🚪 Odhlásiť sa</button></div></section>`;
 }
 document.addEventListener('visibilitychange', () => { if (document.hidden && DBREF === SUPADB && AUTH && DATA.profiles.length) { clearTimeout(syncT); SUPADB.set({ json: JSON.stringify(DATA), t: DATA.t }, true).catch(() => { }); } });
 function boot() {
+  if (SUPA_ON() && RECOVER) return go('newpass', {}, 'u');
   if (SUPA_ON() && !AUTH) return go('login', {}, 'u');
   if (!DATA.profiles.length) { OB = { step: 0, name: '', gender: 'd', grade: 1, av: defaultAvatar('d'), room: defaultRoom('d') }; return go('onboard', {}, 'u'); }
   if (!P()) return go('profiles', {}, 'u');
