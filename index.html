@@ -214,6 +214,13 @@ body.calcopen .peek,body.calcopen .peekbub{display:none}
 .lsubj.mat{background:var(--c-mat-soft)} .lsubj.mat .big{color:var(--c-mat)}
 .lsubj.sjl{background:var(--c-sjl-soft)} .lsubj.sjl .big{color:var(--c-sjl)}
 .lsubj.prv{background:var(--c-prv-soft)}
+.loginv{display:flex;flex-direction:column;gap:12px;align-items:stretch;padding-top:18px}
+.loginbear{width:150px;height:150px;align-self:center;animation:bob 3s ease-in-out infinite}.loginbear svg{width:100%;height:100%}
+.logintitle{text-align:center;font-size:2rem}
+.loginbox{display:flex;flex-direction:column;gap:8px;padding:16px}
+.loginbox .lbl{font-weight:800;font-size:.9rem;margin-top:4px}
+.loginbox .field{font-size:1.05rem;padding:12px;text-align:left;width:100%;box-sizing:border-box}
+.loginmsg{min-height:1.3em;color:var(--bad);font-weight:800;font-size:.9rem;margin:0}
 .diffs{display:grid;grid-template-columns:1fr 1fr;gap:10px;width:100%}
 .diff{display:flex;flex-direction:column;align-items:center;gap:2px;padding:12px 6px;border-radius:18px;border:2.5px solid var(--edge);box-shadow:0 4px 0 var(--drop);background:var(--paper2);color:var(--ink);font-family:inherit;cursor:pointer}
 .diff .de{font-size:2rem;line-height:1.1}.diff b{font-family:var(--f-display);font-size:1.05rem}.diff small{font-weight:700;opacity:.7;font-size:.75rem}
@@ -3389,7 +3396,7 @@ VIEWS.parent = () => {
   <section class="card pcard"><span class="eyebrow">Treba precvičiť</span>${weak.length ? weak.map(topicLine).join('') : '<p class="muted b" style="padding:8px 0">Zatiaľ nič. Témy s úspešnosťou pod 70 % sa zobrazia tu.</p>'}</section>
   <section class="card pcard"><span class="eyebrow">Matematika – hviezdy podľa ročníkov</span>${subjProg('mat')}<span class="eyebrow">Slovenčina – hviezdy podľa ročníkov</span>${subjProg('sjl')}<span class="eyebrow">Prehľad (príroda, svet, angličtina) – hviezdy podľa ročníkov</span>${subjProg('prv')}</section>
   <section class="card pcard"><span class="eyebrow">História aktivít</span>${p.log.slice(0, 15).map(l => `<div class="statrow"><span>${KIND[l.k] || l.k}${l.id && TOPIC[l.id] ? ' · ' + TOPIC[l.id].name : ''}</span><b>${l.k === 'gift' || l.k === 'ptask' ? '+' + l.c + ' mincí' : l.k.startsWith('game') ? l.c + ' b.' : l.k === 'pex' ? l.n + ' ťahov' : `${l.c}/${l.n}`}</b><small>${fmtTime(l.t)}</small></div>`).join('') || '<p class="muted b" style="padding:8px 0">Zatiaľ prázdne.</p>'}</section>
-  ${aiCard()}${backupCard()}${UI.view === 'remote' ? '' : `<section class="card pcard"><span class="eyebrow">👀 Pozrieť postup z iného zariadenia</span><p class="muted b" style="font-size:.85rem;padding:4px 0">Na telefóne dieťaťa otvorte Rodičovský účet → „Skopírovať kód zálohy“ a pošlite si ho. Tu ho vložte a uvidíte, čo dieťa robilo. Nič sa tým tu neprepíše.</p><textarea id="rmcode" class="bkcode" placeholder="Sem vložte kód…"></textarea><button class="btn small primary" data-a="remote-open">👀 Zobraziť postup</button></section>`}<section class="card pcard"><span class="eyebrow">📋 Úlohy pre dieťa</span><p class="muted b" style="font-size:.85rem;padding:4px 0">Vyberte tému a koľko hviezd má dieťa v kvíze získať. Keď to splní, apka mu automaticky pridá mince.</p>
+  ${accCard()}${aiCard()}${backupCard()}${UI.view === 'remote' ? '' : `<section class="card pcard"><span class="eyebrow">👀 Pozrieť postup z iného zariadenia</span><p class="muted b" style="font-size:.85rem;padding:4px 0">Na telefóne dieťaťa otvorte Rodičovský účet → „Skopírovať kód zálohy“ a pošlite si ho. Tu ho vložte a uvidíte, čo dieťa robilo. Nič sa tým tu neprepíše.</p><textarea id="rmcode" class="bkcode" placeholder="Sem vložte kód…"></textarea><button class="btn small primary" data-a="remote-open">👀 Zobraziť postup</button></section>`}<section class="card pcard"><span class="eyebrow">📋 Úlohy pre dieťa</span><p class="muted b" style="font-size:.85rem;padding:4px 0">Vyberte tému a koľko hviezd má dieťa v kvíze získať. Keď to splní, apka mu automaticky pridá mince.</p>
   <div class="ptform"><label>Téma<select id="pt-topic">${['mat', 'sjl', 'prv'].map(k => `<optgroup label="${SUBJECTS[k].name}">${SUBJECTS[k].topics.filter(t => t.g === p.grade).map(t => `<option value="${t.id}">${t.name}</option>`).join('')}</optgroup>`).join('')}</select></label><label>Hviezdy<select id="pt-stars"><option value="1">⭐ aspoň 5 z 10</option><option value="2" selected>⭐⭐ aspoň 8 z 10</option><option value="3">⭐⭐⭐ 10 z 10</option></select></label><label>Odmena<select id="pt-coins">${[5, 10, 15, 20].map(n => `<option value="${n}" ${n === 10 ? 'selected' : ''}>${n} mincí</option>`).join('')}</select></label><button class="btn primary small" data-a="pt-add">➕ Zadať úlohu</button></div>
   ${(p.ptasks || []).slice(0, 8).map(t => TOPIC[t.topic] ? `<div class="statrow"><span>${t.done ? '✅' : '⏳'} ${TOPIC[t.topic].name} · ${'⭐'.repeat(t.stars)}</span><b>${t.done ? 'splnené' : `<button class="chip" data-a="pt-del" data-id="${t.id}">Zrušiť</button>`}</b><small>+${t.coins} mincí${t.done ? ' · ' + fmtTime(t.done) : ''}</small></div>` : '').join('')}</section>
   <section class="card pcard"><span class="eyebrow">🎁 Odmeniť mincami</span><p class="muted b" style="font-size:.85rem;padding:4px 0">Pochváľte dieťa za snahu, domáce úlohy alebo pomoc doma. Mince si minie v obchode. Teraz má ${COIN} ${p.coins || 0}.</p>${(() => { const used = giftsToday(p); const left = 2 - used; return `<div class="chips" style="padding:4px 0 4px">${[5, 10, 15, 20].map(n => `<button class="chip" data-a="p-gift" data-n="${n}" ${left > 0 ? '' : 'disabled style="opacity:.45"'}>+${n} ${COIN}</button>`).join('')}</div><p class="b" style="font-size:.85rem;padding-bottom:8px;color:${left > 0 ? 'var(--muted)' : 'var(--bad)'}">${left > 0 ? `Dnes môžete odmeniť ešte ${left}×.` : 'Dnes ste už odmenili 2×. Ďalšia odmena bude možná zajtra.'}</p>`; })()}</section>
@@ -3500,6 +3507,27 @@ const ACT = {
       el.disabled = false; el.textContent = '✅ Uložiť a vyskúšať'; sfx('no');
     }
   },
+  'auth-mode': d => { LOGIN.email = ($('#aemail') || {}).value || ''; LOGIN.mode = d.m; LOGIN.msg = ''; sfx('tap'); render(null); },
+  'auth-go': async () => {
+    if (LOGIN.busy) return; const email = ($('#aemail').value || '').trim().toLowerCase(), pass = $('#apass').value || ''; LOGIN.email = email;
+    const fail = m => { LOGIN.busy = false; LOGIN.msg = m; sfx('no'); render(null); };
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)) return fail('Zadajte platný e-mail.');
+    if (pass.length < 6) return fail('Heslo musí mať aspoň 6 znakov.');
+    LOGIN.busy = true; LOGIN.msg = ''; render(null);
+    try {
+      const j = LOGIN.mode === 'in' ? await supaAuth('token?grant_type=password', { email, password: pass }) : await supaAuth('signup', { email, password: pass });
+      if (!j.access_token) { LOGIN.mode = 'in'; return fail('Poslali sme vám e-mail. Potvrďte ho odkazom a potom sa prihláste.'); }
+      setAuth(authFrom(j));
+    } catch (e) { return fail(authErr(e)); }
+    try { await supaSync(); } catch (e) { DBREF = SUPADB; toast('Postup sa zatiaľ nepodarilo načítať. Skúsime to neskôr.'); }
+    LOGIN = { mode: 'in', busy: false, msg: '' }; sfx('coin'); boot();
+  },
+  'auth-out': async (d, el) => {
+    el.disabled = true; el.textContent = '⏳ Ukladám…';
+    try { clearTimeout(syncT); if (DATA.profiles.length) await SUPADB.set({ json: JSON.stringify(DATA), t: DATA.t }); } catch (e) { toast('Bez internetu sa nedá odhlásiť, postup by sa neuložil.'); return render(null); }
+    try { fetch(SUPA.url + '/auth/v1/logout', { method: 'POST', headers: { apikey: SUPA.key, Authorization: 'Bearer ' + AUTH.at } }).catch(() => { }); } catch (e) { }
+    setAuth(null); DBREF = null; try { localStorage.removeItem('bystrik.owner'); } catch (e) { } resetData(); PARENT_OK = false; go('login', {}, 'u');
+  },
   'ai-del': () => { setApiKey(''); toast('AI kľúč odstránený.'); render(null); },
   'ai-test': async (d, el) => { el.disabled = true; el.textContent = '⏳ Testujem…'; try { const s2 = await getSample(); const r = await s2('Odpovedz po slovensky jednou krátkou vetou: pozdrav dieťa.', { cache: false }); toast('✅ Funguje! Bystrík hovorí: ' + r.text.slice(0, 80)); } catch (e) { toast(e && e.code === 'not_granted' ? '❌ Kľúč nie je platný. Skontrolujte ho.' : e && e.code === 'no_credit' ? '❌ Na účte chýba kredit (Billing).' : e && e.code === 'rate_limited' ? '⏳ Dnešný limit je minutý alebo príliš veľa požiadaviek. Skúste neskôr.' : '❌ Nepodarilo sa: ' + ((e && e.message) || 'chyba')); } render(null); },
   'pt-add': () => { const p = DATA.profiles.find(x => x.id === PSEL); p.ptasks = p.ptasks || []; if (p.ptasks.filter(t => !t.done).length >= 3) { toast('Naraz môžu byť najviac 3 aktívne úlohy.'); return; } p.ptasks.unshift({ id: 'pt' + Date.now().toString(36), topic: $('#pt-topic').value, stars: +$('#pt-stars').value, coins: +$('#pt-coins').value, t: Date.now(), done: 0 }); if (p.ptasks.length > 20) p.ptasks.length = 20; save(); sfx('pop'); toast('Úloha zadaná ✓ Dieťa ju uvidí na domovskej obrazovke.'); render(null); },
@@ -3564,7 +3592,64 @@ document.addEventListener('keydown', e => {
   else if (UI.view === 'quiz' && $('#fb') && e.key === 'Enter') nextStep();
   else if (e.target.id === 'flip' && (e.key === ' ' || e.key === 'Enter')) { e.preventDefault(); ACT.flip(); }
 });
+/* ===== Prihlásenie e-mailom (Supabase) – len na webe ===== */
+const SUPA = { url: '', key: '' };
+const SUPA_ON = () => !!(SUPA.url && SUPA.key && !(window.claude && window.claude.use));
+let AUTH = null; try { AUTH = JSON.parse(localStorage.getItem('bystrik.auth') || 'null'); } catch (e) { }
+let LOGIN = { mode: 'in', busy: false, msg: '' };
+function setAuth(a) { AUTH = a; try { if (a) localStorage.setItem('bystrik.auth', JSON.stringify(a)); else localStorage.removeItem('bystrik.auth'); } catch (e) { } }
+async function supaAuth(path, body) {
+  let r; try { r = await fetch(SUPA.url + '/auth/v1/' + path, { method: 'POST', headers: { apikey: SUPA.key, 'content-type': 'application/json' }, body: JSON.stringify(body) }); } catch (e) { throw { net: true, message: 'Bez pripojenia na internet.' }; }
+  let j = {}; try { j = await r.json(); } catch (e) { }
+  if (!r.ok) throw { status: r.status, code: j.error_code || '', message: j.msg || j.error_description || j.message || ('HTTP ' + r.status) };
+  return j;
+}
+const authFrom = j => ({ at: j.access_token, rt: j.refresh_token, exp: Date.now() + (j.expires_in || 3600) * 1000, uid: j.user.id, email: j.user.email });
+async function supaToken() {
+  if (!AUTH) throw { message: 'no auth' };
+  if (AUTH.exp < Date.now() + 60000) { try { setAuth(authFrom(await supaAuth('token?grant_type=refresh_token', { refresh_token: AUTH.rt }))); } catch (e) { if (!e.net) { setAuth(null); DBREF = null; go('login', {}, 'u'); } throw e; } }
+  return AUTH.at;
+}
+const SUPADB = {
+  async get() { const t = await supaToken(); const r = await fetch(SUPA.url + '/rest/v1/saves?select=data&user_id=eq.' + AUTH.uid, { headers: { apikey: SUPA.key, Authorization: 'Bearer ' + t } }); if (!r.ok) throw { message: 'HTTP ' + r.status }; const a = await r.json(); return { exists: !!a.length, data: () => a[0].data }; },
+  async set(v, keep) { const t = await supaToken(); const r = await fetch(SUPA.url + '/rest/v1/saves?on_conflict=user_id', { method: 'POST', keepalive: !!keep, headers: { apikey: SUPA.key, Authorization: 'Bearer ' + t, 'content-type': 'application/json', Prefer: 'resolution=merge-duplicates,return=minimal' }, body: JSON.stringify({ user_id: AUTH.uid, data: v, updated_at: new Date().toISOString() }) }); if (!r.ok) throw { message: 'HTTP ' + r.status }; }
+};
+function resetData() { DATA = { profiles: [], current: null, settings: {}, parent: { pin: null }, t: 0 }; normalize(); try { localStorage.setItem(KEY, JSON.stringify(DATA)); } catch (e) { } }
+async function supaSync() {
+  let owner = null; try { owner = localStorage.getItem('bystrik.owner'); } catch (e) { }
+  const foreign = !!owner && owner !== AUTH.uid; let changed = false;
+  const snap = await SUPADB.get(); const r = snap.exists ? snap.data() : null;
+  if (r && typeof r.json === 'string' && (foreign || r.t > DATA.t || !DATA.profiles.length)) { DATA = Object.assign({ profiles: [], current: null }, JSON.parse(r.json)); normalize(); try { localStorage.setItem(KEY, JSON.stringify(DATA)); } catch (e) { } changed = true; }
+  else if (foreign) { resetData(); changed = true; }
+  DBREF = SUPADB; try { localStorage.setItem('bystrik.owner', AUTH.uid); } catch (e) { }
+  if (!changed && DATA.profiles.length) queueSync();
+  return changed;
+}
+function authErr(e) {
+  const m = ((e && e.message) || '') + ' ' + ((e && e.code) || '');
+  if (e && e.net) return 'Bez pripojenia na internet. Skúste to znova.';
+  if (/invalid.*credentials|invalid_credentials/i.test(m)) return 'Nesprávny e-mail alebo heslo.';
+  if (/already registered|user_already_exists/i.test(m)) return 'Účet s týmto e-mailom už existuje. Prihláste sa.';
+  if (/not confirmed/i.test(m)) return 'Najprv potvrďte e-mail odkazom, ktorý vám prišiel do pošty.';
+  if (/password/i.test(m)) return 'Heslo musí mať aspoň 6 znakov.';
+  if (/email|valid/i.test(m)) return 'Skontrolujte e-mailovú adresu.';
+  if (/rate|429/i.test(m)) return 'Príliš veľa pokusov. Skúste to o chvíľu.';
+  return 'Nepodarilo sa: ' + ((e && e.message) || 'chyba');
+}
+VIEWS.login = () => `<main class="view nonav loginv"><div class="loginbear">${bearSvg('')}</div><h1 class="logintitle">${LOGIN.mode === 'in' ? 'Vitaj späť!' : 'Vytvor si účet'}</h1><p class="muted b" style="text-align:center">${LOGIN.mode === 'in' ? 'Prihláste sa e-mailom rodiča. Postup sa uloží a nájdete ho na každom zariadení.' : 'Stačí e-mail rodiča a heslo. Je to zadarmo.'}</p>
+<section class="card loginbox"><div class="seg" role="tablist"><button class="${LOGIN.mode === 'in' ? 'on' : ''}" data-a="auth-mode" data-m="in">Prihlásiť sa</button><button class="${LOGIN.mode === 'up' ? 'on' : ''}" data-a="auth-mode" data-m="up">Nový účet</button></div>
+<label class="lbl" for="aemail">E-mail</label><input class="field" id="aemail" type="email" inputmode="email" autocomplete="email" autocapitalize="off" placeholder="rodic@email.sk" value="${esc(LOGIN.email || '')}">
+<label class="lbl" for="apass">Heslo${LOGIN.mode === 'up' ? ' (aspoň 6 znakov)' : ''}</label><input class="field" id="apass" type="password" autocomplete="${LOGIN.mode === 'in' ? 'current-password' : 'new-password'}" placeholder="••••••">
+<p class="loginmsg" id="amsg">${esc(LOGIN.msg)}</p>
+<button class="btn primary block" data-a="auth-go" ${LOGIN.busy ? 'disabled' : ''}>${LOGIN.busy ? '⏳ Chvíľku…' : LOGIN.mode === 'in' ? '➡️ Prihlásiť sa' : '✨ Vytvoriť účet'}</button></section>
+<p class="muted b" style="text-align:center;font-size:.8rem">E-mail slúži len na prihlásenie. Nikomu ho nedávame a neposielame reklamu.</p></main>`;
+function accCard() {
+  if (!SUPA_ON() || !AUTH) return '';
+  return `<section class="card pcard"><span class="eyebrow">👤 Účet</span><p class="b" style="padding:4px 0;word-break:break-all">Prihlásený: ${esc(AUTH.email || '')}</p><p class="muted b" style="font-size:.82rem;padding-bottom:8px">Postup sa ukladá online. Na inom zariadení sa stačí prihlásiť tým istým e-mailom.</p><div class="bkbtns"><button class="btn small" data-a="auth-out">🚪 Odhlásiť sa</button></div></section>`;
+}
+document.addEventListener('visibilitychange', () => { if (document.hidden && DBREF === SUPADB && AUTH && DATA.profiles.length) { clearTimeout(syncT); SUPADB.set({ json: JSON.stringify(DATA), t: DATA.t }, true).catch(() => { }); } });
 function boot() {
+  if (SUPA_ON() && !AUTH) return go('login', {}, 'u');
   if (!DATA.profiles.length) { OB = { step: 0, name: '', gender: 'd', grade: 1, av: defaultAvatar('d'), room: defaultRoom('d') }; return go('onboard', {}, 'u'); }
   if (!P()) return go('profiles', {}, 'u');
   go('home', { wave: true }, 'u');
@@ -3572,6 +3657,7 @@ function boot() {
 load(); applyTheme(); registerNotes();
 try { const m = location.hash.match(/[#&]k=([^&]+)/); if (m && !(window.claude && window.claude.use)) { setApiKey(decodeURIComponent(m[1])); history.replaceState(null, '', location.pathname + location.search); setTimeout(() => toast('🧸 AI kľúč uložený. Bystrík teraz vie odpovedať!'), 900); } } catch (e) { }
 boot();
+if (SUPA_ON() && AUTH) supaSync().then(ch => { if (ch && !['quiz', 'cards', 'pexeso', 'match', 'sort', 'game', 'chat'].includes(UI.view)) boot(); }).catch(() => { DBREF = SUPADB; });
 setTimeout(initDb, 0);
 </script>
 <script>if('serviceWorker' in navigator){addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(()=>{}));}</script>
