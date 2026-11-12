@@ -44,8 +44,8 @@ cat > web/manifest.webmanifest <<'EOF'
   "scope": "./",
   "display": "standalone",
   "orientation": "portrait",
-  "background_color": "#2B1B30",
-  "theme_color": "#2B1B30",
+  "background_color": "#FFE9CF",
+  "theme_color": "#FFE9CF",
   "icons": [
     { "src": "icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
     { "src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
@@ -54,7 +54,7 @@ cat > web/manifest.webmanifest <<'EOF'
 }
 EOF
 cat > web/sw.js <<'EOF'
-const CACHE = 'bystrik-v3';
+const CACHE = 'bystrik-v4';
 const FILES = ['./', './index.html', './manifest.webmanifest', './icon-192.png', './icon-512.png', './icon-maskable-512.png'];
 self.addEventListener('install', e => { e.waitUntil(caches.open(CACHE).then(c => c.addAll(FILES))); self.skipWaiting(); });
 self.addEventListener('activate', e => { e.waitUntil(caches.keys().then(k => Promise.all(k.filter(x => x !== CACHE).map(x => caches.delete(x))))); self.clients.claim(); });
