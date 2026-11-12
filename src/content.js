@@ -100,7 +100,7 @@ const SYL = 'ma-ma,o-co,au-to,pes,dom,les,ru-ka,no-ha,la-vi-ca,ko-ru-na,ba-nán,
 
 const VYB = {
   b: 'b_k|ý|býk,b_t|y|byt,b_strý|y|bystrý,b_linky|y|bylinky,kob_la|y|kobyla,ob_vateľ|y|obyvateľ,b_dlisko|y|bydlisko,b_cykel|i|bicykel,b_ely|i|biely,b_tka|i|bitka',
-  m: 'm_š|y|myš,m_dlo|y|mydlo,hm_z|y|hmyz,m_liť sa|ý|mýliť sa,m_slieť|y|myslieť,m_nca|i|minca,m_ska|i|miska,m_lý|i|milý,priat_ľ? |x|x',
+  m: 'm_š|y|myš,m_dlo|y|mydlo,hm_z|y|hmyz,m_liť sa|ý|mýliť sa,m_slieť|y|myslieť,m_nca|i|slniečko,m_ska|i|miska,m_lý|i|milý,priat_ľ? |x|x',
   p: 'p_tať sa|ý|pýtať sa,p_cha|ý|pýcha,kop_to|y|kopyto,p_sk|y|pysk,p_lot|i|pilot,p_rát|i|pirát,p_vnica|i|pivnica,p_skor|i|piskor',
   r: 'r_ba|y|ryba,r_chlo|ý|rýchlo,r_s|y|rys,r_ža|y|ryža,r_bník|y|rybník,r_ť|y|ryť,hr_zť|ý|hrýzť,r_bezle|í|ríbezle,r_tier|y|rytier',
   s: 's_r|y|syr,s_n|y|syn,s_korka|ý|sýkorka,s_pať|y|sypať,s_tý|ý|sýty,s_la|i|sila,s_vý|i|sivý,s_rup|i|sirup,s_čať|y|syčať',
