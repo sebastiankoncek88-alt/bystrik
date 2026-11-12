@@ -1111,6 +1111,20 @@ body{background-attachment:fixed!important}
 .a2card .tutx{flex:none;font-size:1rem}
 .mailcard{display:flex;align-items:flex-start;gap:12px;padding:14px}.mailcard .pci{flex:none;width:52px;height:52px;border-radius:16px;background:var(--c-mat-soft);display:grid;place-items:center;font-size:1.7rem;border:2px solid var(--edge)}
 .mailcard.ok .pci{background:var(--good-soft)}.mailcard .grow{flex:1;min-width:0;display:flex;flex-direction:column;gap:4px;align-items:flex-start}.mailcard b{font-family:var(--f-display);font-size:1.15rem}.mailcard small{font-weight:600;font-size:.84rem;color:var(--muted);line-height:1.3}
+.vizcard{padding:12px 14px;display:flex;flex-direction:column;gap:10px}.vizcard .sec h2{font-size:1.25rem}
+.vrings{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
+.vring{display:flex;flex-direction:column;align-items:center;text-align:center;gap:0}.vring svg{width:78px;height:78px}
+.vring b{font-family:var(--f-display);font-size:.92rem;line-height:1.15}.vring small{font-weight:700;font-size:.72rem;color:var(--muted)}
+.vring .vr{animation:vrin 1s cubic-bezier(.3,1,.4,1) backwards}@keyframes vrin{from{stroke-dashoffset:var(--full)}}
+.vsub{display:flex;flex-direction:column}.vsub b{font-family:var(--f-display);font-size:1rem}.vsub span{font-weight:700;font-size:.78rem;color:var(--muted)}
+.vheat{display:flex;gap:8px;align-items:flex-start;flex-wrap:wrap}
+.vhd{display:grid;grid-template-rows:repeat(7,1fr);gap:4px;font-size:.62rem;font-weight:800;color:var(--muted)}.vhd span{height:20px;display:grid;place-items:center}
+.vhg{display:grid;grid-template-rows:repeat(7,20px);grid-auto-flow:column;grid-auto-columns:minmax(20px,1fr);gap:4px;flex:1;max-width:240px}
+.vhg i,.vhl i{border-radius:6px;background:var(--line);display:block}.vhg i.fut{opacity:.25}
+.vhg i.h1,.vhl i.h1{background:color-mix(in srgb,var(--good) 35%,var(--line))}.vhg i.h2,.vhl i.h2{background:color-mix(in srgb,var(--good) 70%,var(--line))}.vhg i.h3,.vhl i.h3{background:var(--good)}
+.vhg i.now{outline:2.5px solid var(--accent);outline-offset:1px}
+.vhl{display:flex;align-items:center;gap:4px;font-size:.66rem;font-weight:700;color:var(--muted);width:100%}.vhl i{width:14px;height:14px;border-radius:4px}
+.vspark{width:100%;height:96px;display:block}.vsl{display:flex;justify-content:space-between;font-size:.72rem;font-weight:700;color:var(--muted)}.vsl b{color:var(--ink)}
 /* ===== Vlastný vzhľad „mapa dobrodružstva“ ===== */
 .card{border-width:2px;box-shadow:0 6px 0 var(--drop),0 14px 24px -14px var(--drop)}
 .btn{border-width:2px;border-radius:999px;letter-spacing:.01em}

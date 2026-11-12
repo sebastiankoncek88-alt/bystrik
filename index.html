@@ -1139,6 +1139,20 @@ body{background-attachment:fixed!important}
 .a2card .tutx{flex:none;font-size:1rem}
 .mailcard{display:flex;align-items:flex-start;gap:12px;padding:14px}.mailcard .pci{flex:none;width:52px;height:52px;border-radius:16px;background:var(--c-mat-soft);display:grid;place-items:center;font-size:1.7rem;border:2px solid var(--edge)}
 .mailcard.ok .pci{background:var(--good-soft)}.mailcard .grow{flex:1;min-width:0;display:flex;flex-direction:column;gap:4px;align-items:flex-start}.mailcard b{font-family:var(--f-display);font-size:1.15rem}.mailcard small{font-weight:600;font-size:.84rem;color:var(--muted);line-height:1.3}
+.vizcard{padding:12px 14px;display:flex;flex-direction:column;gap:10px}.vizcard .sec h2{font-size:1.25rem}
+.vrings{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
+.vring{display:flex;flex-direction:column;align-items:center;text-align:center;gap:0}.vring svg{width:78px;height:78px}
+.vring b{font-family:var(--f-display);font-size:.92rem;line-height:1.15}.vring small{font-weight:700;font-size:.72rem;color:var(--muted)}
+.vring .vr{animation:vrin 1s cubic-bezier(.3,1,.4,1) backwards}@keyframes vrin{from{stroke-dashoffset:var(--full)}}
+.vsub{display:flex;flex-direction:column}.vsub b{font-family:var(--f-display);font-size:1rem}.vsub span{font-weight:700;font-size:.78rem;color:var(--muted)}
+.vheat{display:flex;gap:8px;align-items:flex-start;flex-wrap:wrap}
+.vhd{display:grid;grid-template-rows:repeat(7,1fr);gap:4px;font-size:.62rem;font-weight:800;color:var(--muted)}.vhd span{height:20px;display:grid;place-items:center}
+.vhg{display:grid;grid-template-rows:repeat(7,20px);grid-auto-flow:column;grid-auto-columns:minmax(20px,1fr);gap:4px;flex:1;max-width:240px}
+.vhg i,.vhl i{border-radius:6px;background:var(--line);display:block}.vhg i.fut{opacity:.25}
+.vhg i.h1,.vhl i.h1{background:color-mix(in srgb,var(--good) 35%,var(--line))}.vhg i.h2,.vhl i.h2{background:color-mix(in srgb,var(--good) 70%,var(--line))}.vhg i.h3,.vhl i.h3{background:var(--good)}
+.vhg i.now{outline:2.5px solid var(--accent);outline-offset:1px}
+.vhl{display:flex;align-items:center;gap:4px;font-size:.66rem;font-weight:700;color:var(--muted);width:100%}.vhl i{width:14px;height:14px;border-radius:4px}
+.vspark{width:100%;height:96px;display:block}.vsl{display:flex;justify-content:space-between;font-size:.72rem;font-weight:700;color:var(--muted)}.vsl b{color:var(--ink)}
 /* ===== Vlastný vzhľad „mapa dobrodružstva“ ===== */
 .card{border-width:2px;box-shadow:0 6px 0 var(--drop),0 14px 24px -14px var(--drop)}
 .btn{border-width:2px;border-radius:999px;letter-spacing:.01em}
@@ -1186,7 +1200,7 @@ h1,h2,.logintitle{letter-spacing:-.01em}
 <canvas id="fx"></canvas>
 <script>
 /* Emoji obrázky: Microsoft Fluent Emoji 3D (MIT) – len na webe, kde je priečinok emoji/ */
-const EMO_MAP = {"🪙":"1fa99","🚫":"1f6ab","✔️":"2714-fe0f","❓":"2753","💎":"1f48e","🔥":"1f525","⭐":"2b50","🔢":"1f522","📝":"1f4dd","🌍":"1f30d","📖":"1f4d6","🃏":"1f0cf","🔗":"1f517","🎮":"1f3ae","⚡":"26a1","✅":"2705","🎯":"1f3af","👑":"1f451","👗":"1f457","🛍️":"1f6cd-fe0f","🥉":"1f949","🥈":"1f948","🥇":"1f947","🎉":"1f389","⏱️":"23f1-fe0f","🎁":"1f381","⚙️":"2699-fe0f","🏠":"1f3e0","📚":"1f4da","🤝":"1f91d","👕":"1f455","🧩":"1f9e9","➖":"2796","➕":"2795","🗑️":"1f5d1-fe0f","🎨":"1f3a8","🔲":"1f532","➗":"2797","✏️":"270f-fe0f","🌿":"1f33f","🗺️":"1f5fa-fe0f","🇬🇧":"1f1ec-1f1e7","🔭":"1f52d","✍️":"270d-fe0f","📸":"1f4f8","🧸":"1f9f8","👟":"1f45f","🎩":"1f3a9","⏳":"23f3","🌟":"1f31f","🙂":"1f642","🔁":"1f501","💾":"1f4be","⏹️":"23f9-fe0f","🎤":"1f3a4","🎙️":"1f399-fe0f","📂":"1f4c2","🔊":"1f50a","👀":"1f440","🚀":"1f680","👍":"1f44d","🔒":"1f512","🔴":"1f534","🐣":"1f423","🐥":"1f425","🦊":"1f98a","🦁":"1f981","🅰️":"1f170-fe0f","🎈":"1f388","🏆":"1f3c6","👋":"1f44b","👥":"1f465","👨‍👩‍👧":"1f468-200d-1f469-200d-1f467","💪":"1f4aa","📜":"1f4dc","📋":"1f4cb","🖼️":"1f5bc-fe0f","😕":"1f615","📒":"1f4d2","✨":"2728","🧠":"1f9e0","🧮":"1f9ee","💡":"1f4a1","🐢":"1f422","❌":"274c","🧽":"1f9fd","📘":"1f4d8","👆":"1f446","🧺":"1f9fa","🪣":"1faa3","📦":"1f4e6","🎒":"1f392","🗃️":"1f5c3-fe0f","👜":"1f45c","🌧️":"1f327-fe0f","🐹":"1f439","🔤":"1f524","🐸":"1f438","🏎️":"1f3ce-fe0f","💀":"1f480","⏰":"23f0","🐱":"1f431","🐶":"1f436","🌞":"1f31e","🍎":"1f34e","🚗":"1f697","🐟":"1f41f","🌳":"1f333","🐻":"1f43b","🚂":"1f682","🧀":"1f9c0","🥛":"1f95b","🌙":"1f319","🦋":"1f98b","🍓":"1f353","🐝":"1f41d","🏫":"1f3eb","🌈":"1f308","🐘":"1f418","🍞":"1f35e","🥕":"1f955","🐭":"1f42d","❄️":"2744-fe0f","🐴":"1f434","🌹":"1f339","🔑":"1f511","🍰":"1f370","🚲":"1f6b2","🦉":"1f989","🍐":"1f350","🥚":"1f95a","👉":"1f449","🏡":"1f3e1","🎟️":"1f39f-fe0f","⚔️":"2694-fe0f","❤️":"2764-fe0f","🤍":"1f90d","🏁":"1f3c1","🚙":"1f699","🏅":"1f3c5","👇":"1f447","✖️":"2716-fe0f","📏":"1f4cf","🗣️":"1f5e3-fe0f","🐂":"1f402","🏷️":"1f3f7-fe0f","💬":"1f4ac","⚖️":"2696-fe0f","💶":"1f4b6","🟦":"1f7e6","👤":"1f464","⚠️":"26a0-fe0f","🌗":"1f317","🔄":"1f504","☀️":"2600-fe0f","▶️":"25b6-fe0f","🌐":"1f310","🔎":"1f50e","📲":"1f4f2","☁️":"2601-fe0f","📥":"1f4e5","👩":"1f469","👨":"1f468","🧓":"1f9d3","🔐":"1f510","📊":"1f4ca","🕑":"1f551","👧":"1f467","🎛️":"1f39b-fe0f","👫":"1f46b","🔓":"1f513","❗":"2757","🎧":"1f3a7","💛":"1f49b","💖":"1f496","💜":"1f49c","➡️":"27a1-fe0f","✉️":"2709-fe0f","📅":"1f4c5","🚪":"1f6aa","📨":"1f4e8","😄":"1f604","😀":"1f600","😂":"1f602","🥳":"1f973","😎":"1f60e","🤔":"1f914","😴":"1f634","👏":"1f44f","🐰":"1f430","🐼":"1f43c","🐨":"1f428","🐵":"1f435","🐯":"1f42f","🦖":"1f996","🐧":"1f427","🐲":"1f432","🦄":"1f984","🦔":"1f994","🦜":"1f99c","🐙":"1f419","🐬":"1f42c","🦒":"1f992","🦩":"1f9a9","🦕":"1f995","🦚":"1f99a","🐳":"1f433","🦈":"1f988","♥":"2665-fe0f","❄":"2744-fe0f","⚽":"26bd","🍕":"1f355","🍦":"1f366","🤖":"1f916","🎸":"1f3b8","🌸":"1f338","🏀":"1f3c0","😍":"1f60d","🐠":"1f420","🐞":"1f41e","🌲":"1f332","🌻":"1f33b","🌼":"1f33c","🌷":"1f337","🍄":"1f344","🎀":"1f380","🍭":"1f36d","🧁":"1f9c1","🍉":"1f349","🎵":"1f3b5","🏰":"1f3f0","🪐":"1fa90","🍀":"1f340","🌵":"1f335","🍩":"1f369","🎃":"1f383","⛄":"26c4","🎂":"1f382","🏝️":"1f3dd-fe0f","🌊":"1f30a","🐉":"1f409","🎆":"1f386","🪁":"1fa81","🐦":"1f426","🧊":"1f9ca","♻️":"267b-fe0f","🥞":"1f95e","☔":"2614","🥖":"1f956","🏔️":"1f3d4-fe0f","🍌":"1f34c","🐛":"1f41b","🔺":"1f53a","💯":"1f4af","🕒":"1f552","🏗️":"1f3d7-fe0f","🌌":"1f30c","🦆":"1f986","🐌":"1f40c","🍋":"1f34b","🐓":"1f413","🐑":"1f411","🐍":"1f40d","🍇":"1f347","🐄":"1f404","☂️":"2602-fe0f","🦀":"1f980","🐐":"1f410","🧦":"1f9e6","🐿️":"1f43f-fe0f","🔠":"1f520","🧱":"1f9f1","👪":"1f46a","🥄":"1f944","🔍":"1f50d","🥁":"1f941","📐":"1f4d0","🏛️":"1f3db-fe0f","🟩":"1f7e9","🙈":"1f648","🔈":"1f508","👂":"1f442","🗂️":"1f5c2-fe0f","🔷":"1f537","🔟":"1f51f","🧾":"1f9fe","✂️":"2702-fe0f","🙋":"1f64b","🏙️":"1f3d9-fe0f","🍂":"1f342","🖐️":"1f590-fe0f","🍒":"1f352","🍊":"1f34a","🍑":"1f351","🥔":"1f954","🥒":"1f952","🥬":"1f96c","🧅":"1f9c5","🫑":"1fad1","🧄":"1f9c4","🌽":"1f33d","🚦":"1f6a6","🔵":"1f535","🟢":"1f7e2","🟡":"1f7e1","🟠":"1f7e0","🟣":"1f7e3","⚫":"26ab","⚪":"26aa","🟤":"1f7e4","🐔":"1f414","🐷":"1f437","🪿":"1fabf","🐺":"1f43a","🦌":"1f98c","🐗":"1f417","🌱":"1f331","👩‍🚒":"1f469-200d-1f692","🌦️":"1f326-fe0f","💧":"1f4a7","🍲":"1f372","🧃":"1f9c3","👦":"1f466","👵":"1f475","👴":"1f474","👶":"1f476","🦎":"1f98e","🦇":"1f987","🐋":"1f40b","🐊":"1f40a","🐜":"1f41c","🧭":"1f9ed","🏘️":"1f3d8-fe0f","🖊️":"1f58a-fe0f","📕":"1f4d5","🪑":"1fa91","🧑‍🏫":"1f9d1-200d-1f3eb","🖍️":"1f58d-fe0f","👁️":"1f441-fe0f","👃":"1f443","👄":"1f444","✋":"270b","🦵":"1f9b5","🦶":"1f9b6","🦷":"1f9b7","💇":"1f487","📆":"1f4c6","🌬️":"1f32c-fe0f","🏖️":"1f3d6-fe0f","🏃":"1f3c3","🤸":"1f938","🏊":"1f3ca","💃":"1f483","🍽️":"1f37d-fe0f","🥤":"1f964","🌅":"1f305","🙏":"1f64f","↔️":"2194-fe0f","🕐":"1f550","〰️":"3030-fe0f","🧐":"1f9d0","🤲":"1f932","😔":"1f614","🪆":"1fa86"};
+const EMO_MAP = {"🪙":"1fa99","🚫":"1f6ab","✔️":"2714-fe0f","❓":"2753","💎":"1f48e","🔥":"1f525","⭐":"2b50","🔢":"1f522","📝":"1f4dd","🌍":"1f30d","📖":"1f4d6","🃏":"1f0cf","🔗":"1f517","🎮":"1f3ae","⚡":"26a1","✅":"2705","🎯":"1f3af","👑":"1f451","👗":"1f457","🛍️":"1f6cd-fe0f","🥉":"1f949","🥈":"1f948","🥇":"1f947","🎉":"1f389","⏱️":"23f1-fe0f","🎁":"1f381","⚙️":"2699-fe0f","🏠":"1f3e0","📚":"1f4da","🤝":"1f91d","👕":"1f455","🧩":"1f9e9","➖":"2796","➕":"2795","🗑️":"1f5d1-fe0f","🎨":"1f3a8","🔲":"1f532","➗":"2797","✏️":"270f-fe0f","🌿":"1f33f","🗺️":"1f5fa-fe0f","🇬🇧":"1f1ec-1f1e7","🔭":"1f52d","✍️":"270d-fe0f","📸":"1f4f8","🧸":"1f9f8","👟":"1f45f","🎩":"1f3a9","⏳":"23f3","🌟":"1f31f","🙂":"1f642","🔁":"1f501","💾":"1f4be","⏹️":"23f9-fe0f","🎤":"1f3a4","🎙️":"1f399-fe0f","📂":"1f4c2","🔊":"1f50a","👀":"1f440","🚀":"1f680","👋":"1f44b","👨‍👩‍👧":"1f468-200d-1f469-200d-1f467","📲":"1f4f2","👍":"1f44d","🔒":"1f512","🔴":"1f534","🐣":"1f423","🐥":"1f425","🦊":"1f98a","🦁":"1f981","🅰️":"1f170-fe0f","🎈":"1f388","🏆":"1f3c6","👥":"1f465","💪":"1f4aa","📜":"1f4dc","📋":"1f4cb","🖼️":"1f5bc-fe0f","😕":"1f615","📒":"1f4d2","✨":"2728","🧠":"1f9e0","🧮":"1f9ee","💡":"1f4a1","🐢":"1f422","❌":"274c","🧽":"1f9fd","📘":"1f4d8","👆":"1f446","🧺":"1f9fa","🪣":"1faa3","📦":"1f4e6","🎒":"1f392","🗃️":"1f5c3-fe0f","👜":"1f45c","🌧️":"1f327-fe0f","🐹":"1f439","🔤":"1f524","🐸":"1f438","🏎️":"1f3ce-fe0f","💀":"1f480","⏰":"23f0","🐱":"1f431","🐶":"1f436","🌞":"1f31e","🍎":"1f34e","🚗":"1f697","🐟":"1f41f","🌳":"1f333","🐻":"1f43b","🚂":"1f682","🧀":"1f9c0","🥛":"1f95b","🌙":"1f319","🦋":"1f98b","🍓":"1f353","🐝":"1f41d","🏫":"1f3eb","🌈":"1f308","🐘":"1f418","🍞":"1f35e","🥕":"1f955","🐭":"1f42d","❄️":"2744-fe0f","🐴":"1f434","🌹":"1f339","🔑":"1f511","🍰":"1f370","🚲":"1f6b2","🦉":"1f989","🍐":"1f350","🥚":"1f95a","👉":"1f449","🏡":"1f3e1","🎟️":"1f39f-fe0f","⚔️":"2694-fe0f","❤️":"2764-fe0f","🤍":"1f90d","🏁":"1f3c1","🚙":"1f699","🏅":"1f3c5","👇":"1f447","✖️":"2716-fe0f","📏":"1f4cf","🗣️":"1f5e3-fe0f","🐂":"1f402","🏷️":"1f3f7-fe0f","💬":"1f4ac","⚖️":"2696-fe0f","💶":"1f4b6","🟦":"1f7e6","👤":"1f464","⚠️":"26a0-fe0f","🌗":"1f317","🔄":"1f504","☀️":"2600-fe0f","▶️":"25b6-fe0f","🌐":"1f310","🔎":"1f50e","☁️":"2601-fe0f","📥":"1f4e5","👩":"1f469","👨":"1f468","🧓":"1f9d3","🔐":"1f510","📊":"1f4ca","🕑":"1f551","👧":"1f467","🎛️":"1f39b-fe0f","👫":"1f46b","📧":"1f4e7","🔓":"1f513","❗":"2757","✉️":"2709-fe0f","🎧":"1f3a7","💛":"1f49b","💖":"1f496","💜":"1f49c","➡️":"27a1-fe0f","📅":"1f4c5","📈":"1f4c8","🚪":"1f6aa","📨":"1f4e8","😄":"1f604","😀":"1f600","😂":"1f602","🥳":"1f973","😎":"1f60e","🤔":"1f914","😴":"1f634","👏":"1f44f","🐰":"1f430","🐼":"1f43c","🐨":"1f428","🐵":"1f435","🐯":"1f42f","🦖":"1f996","🐧":"1f427","🐲":"1f432","🦄":"1f984","🦔":"1f994","🦜":"1f99c","🐙":"1f419","🐬":"1f42c","🦒":"1f992","🦩":"1f9a9","🦕":"1f995","🦚":"1f99a","🐳":"1f433","🦈":"1f988","♥":"2665-fe0f","❄":"2744-fe0f","⚽":"26bd","🍕":"1f355","🍦":"1f366","🤖":"1f916","🎸":"1f3b8","🌸":"1f338","🏀":"1f3c0","😍":"1f60d","🐠":"1f420","🐞":"1f41e","🌲":"1f332","🌻":"1f33b","🌼":"1f33c","🌷":"1f337","🍄":"1f344","🎀":"1f380","🍭":"1f36d","🧁":"1f9c1","🍉":"1f349","🎵":"1f3b5","🏰":"1f3f0","🪐":"1fa90","🍀":"1f340","🌵":"1f335","🍩":"1f369","🎃":"1f383","⛄":"26c4","🎂":"1f382","🏝️":"1f3dd-fe0f","🌊":"1f30a","🐉":"1f409","🎆":"1f386","🪁":"1fa81","🐦":"1f426","🧊":"1f9ca","♻️":"267b-fe0f","🥞":"1f95e","☔":"2614","🥖":"1f956","🏔️":"1f3d4-fe0f","🍌":"1f34c","🐛":"1f41b","🔺":"1f53a","💯":"1f4af","🕒":"1f552","🏗️":"1f3d7-fe0f","🌌":"1f30c","🦆":"1f986","🐌":"1f40c","🍋":"1f34b","🐓":"1f413","🐑":"1f411","🐍":"1f40d","🍇":"1f347","🐄":"1f404","☂️":"2602-fe0f","🦀":"1f980","🐐":"1f410","🧦":"1f9e6","🐿️":"1f43f-fe0f","🔠":"1f520","🧱":"1f9f1","👪":"1f46a","🥄":"1f944","🔍":"1f50d","🥁":"1f941","📐":"1f4d0","🏛️":"1f3db-fe0f","🟩":"1f7e9","🙈":"1f648","🔈":"1f508","👂":"1f442","🗂️":"1f5c2-fe0f","🔷":"1f537","🔟":"1f51f","🧾":"1f9fe","✂️":"2702-fe0f","🙋":"1f64b","🏙️":"1f3d9-fe0f","🍂":"1f342","🖐️":"1f590-fe0f","🍒":"1f352","🍊":"1f34a","🍑":"1f351","🥔":"1f954","🥒":"1f952","🥬":"1f96c","🧅":"1f9c5","🫑":"1fad1","🧄":"1f9c4","🌽":"1f33d","🚦":"1f6a6","🔵":"1f535","🟢":"1f7e2","🟡":"1f7e1","🟠":"1f7e0","🟣":"1f7e3","⚫":"26ab","⚪":"26aa","🟤":"1f7e4","🐔":"1f414","🐷":"1f437","🪿":"1fabf","🐺":"1f43a","🦌":"1f98c","🐗":"1f417","🌱":"1f331","👩‍🚒":"1f469-200d-1f692","🌦️":"1f326-fe0f","💧":"1f4a7","🍲":"1f372","🧃":"1f9c3","👦":"1f466","👵":"1f475","👴":"1f474","👶":"1f476","🦎":"1f98e","🦇":"1f987","🐋":"1f40b","🐊":"1f40a","🐜":"1f41c","🧭":"1f9ed","🏘️":"1f3d8-fe0f","🖊️":"1f58a-fe0f","📕":"1f4d5","🪑":"1fa91","🧑‍🏫":"1f9d1-200d-1f3eb","🖍️":"1f58d-fe0f","👁️":"1f441-fe0f","👃":"1f443","👄":"1f444","✋":"270b","🦵":"1f9b5","🦶":"1f9b6","🦷":"1f9b7","💇":"1f487","📆":"1f4c6","🌬️":"1f32c-fe0f","🏖️":"1f3d6-fe0f","🏃":"1f3c3","🤸":"1f938","🏊":"1f3ca","💃":"1f483","🍽️":"1f37d-fe0f","🥤":"1f964","🌅":"1f305","🙏":"1f64f","↔️":"2194-fe0f","🕐":"1f550","〰️":"3030-fe0f","🧐":"1f9d0","🤲":"1f932","😔":"1f614","🪆":"1fa86","✌️":"270c-fe0f","🪶":"1fab6","🪨":"1faa8","🔡":"1f521","🚆":"1f686","🥗":"1f957","👖":"1f456","👒":"1f452","🧥":"1f9e5","🧣":"1f9e3","🧤":"1f9e4","🪟":"1fa9f","🛏️":"1f6cf-fe0f","🍳":"1f373","🛁":"1f6c1"};
 const EMO_RE = /(?:[#*0-9]️?⃣)|(?:\p{Extended_Pictographic}(?:️|[\u{1F3FB}-\u{1F3FF}])?(?:‍\p{Extended_Pictographic}(?:️|[\u{1F3FB}-\u{1F3FF}])?)*)/gu;
 let EMO_BAD = false;
 function emoNode(t) {
@@ -2178,6 +2192,154 @@ const U1_PRV = [
 for (const t of U1_MATH) { MATH.push(t); const x = { ...t, s: 'mat' }; ALL_TOPICS.push(x); TOPIC[t.id] = x; }
 for (const t of U1_SJL) { SJL.push(t); const x = { ...t, s: 'sjl' }; ALL_TOPICS.push(x); TOPIC[t.id] = x; }
 for (const t of U1_PRV) { PRV.push(t); const x = { ...t, s: 'prv' }; ALL_TOPICS.push(x); TOPIC[t.id] = x; }
+/* ===== Doplnené učivo pre 2. ročník ===== */
+const u2near = (a, d = 3) => { const o = new Set(); let g = 0; while (o.size < 3 && g++ < 80) { const x = a + R(-d, d); if (x !== a && x >= 0) o.add(x); } return [...o]; };
+const U2_HL = [['dom', 3], ['mama', 4], ['ryba', 4], ['slon', 4], ['auto', 4], ['lopta', 5], ['koza', 4], ['vlak', 4], ['strom', 5], ['ruka', 4], ['okno', 4], ['kniha', 5], ['pes', 3], ['les', 3], ['mesto', 5], ['zebra', 5], ['banán', 5], ['mrkva', 5], ['sova', 4], ['kvet', 4], ['tráva', 5], ['oblak', 5]];
+const U2_END = [['Ako sa voláš', '?'], ['Dnes je pekne', '.'], ['Pozor, ide auto', '!'], ['Kde bývaš', '?'], ['Mama varí obed', '.'], ['Hurá, vyhrali sme', '!'], ['Koľko máš rokov', '?'], ['V lese rastú huby', '.'], ['Poď rýchlo sem', '!'], ['Máš rád zmrzlinu', '?'], ['Zajtra ideme na výlet', '.'], ['Kto je tam', '?'], ['Jaj, to bolí', '!'], ['Pes šteká na dvore', '.'], ['Prečo plačeš', '?'], ['Stoj', '!']];
+const U2_MATH = [
+  { id: 'm2-zaokr', g: 2, name: 'Zaokrúhľovanie na desiatky', icon: '🎯', gen() { let n; do { n = R(11, 98); } while (n % 10 === 0); const a = Math.round(n / 10) * 10; const o = new Set([Math.floor(n / 10) * 10, Math.ceil(n / 10) * 10, a + 10, a - 10]); o.delete(a); return { q: `Zaokrúhli číslo ${n} na desiatky.`, a, w: [...o].filter(x => x >= 0).slice(0, 3), ex: `Pozeráme na jednotky. ${n % 10 >= 5 ? '5 a viac zaokrúhľujeme nahor' : 'Menej ako 5 zaokrúhľujeme nadol'}: ${n} → ${a}.` }; } },
+  { id: 'm2-dvoj', g: 2, name: 'Dvojnásobok a polovica', icon: '✌️', gen() { if (Math.random() < .5) { const n = R(2, 25); return { q: `Aký je dvojnásobok čísla ${n}?`, a: n * 2, w: u2near(n * 2, 4), ex: `Dvojnásobok znamená dvakrát toľko: ${n} + ${n} = ${n * 2}.` }; } const n = R(2, 25) * 2; return { q: `Aká je polovica čísla ${n}?`, a: n / 2, w: u2near(n / 2, 3), ex: `Polovica znamená rozdeliť na dve rovnaké časti: ${n / 2} + ${n / 2} = ${n}.` }; } },
+  { id: 'm2-retaz', g: 2, name: 'Tri čísla za sebou', icon: '🔗', gen() { const a = R(10, 50), b = R(5, 30), c = R(2, Math.min(20, a + b - 1)); const r = a + b - c; return { q: `${a} + ${b} − ${c} = ?`, a: r, w: u2near(r, 5), ex: `Postupne zľava: ${a} + ${b} = ${a + b}, potom ${a + b} − ${c} = ${r}.` }; } },
+  { id: 'm2-neznamy', g: 2, name: 'Nájdi chýbajúce číslo', icon: '❓', gen() { const b = R(20, 99), a = R(5, b - 3); return Math.random() < .5 ? { q: `${a} + ? = ${b}`, a: b - a, w: u2near(b - a, 5), ex: `Od výsledku odčítame známe číslo: ${b} − ${a} = ${b - a}.` } : { q: `${b} − ? = ${a}`, a: b - a, w: u2near(b - a, 5), ex: `${b} − ${b - a} = ${a}. Chýbajúce číslo je ${b - a}.` }; } },
+  { id: 'm2-parne', g: 2, name: 'Párne a nepárne do 100', icon: '👫', gen() { const n = R(10, 100); return { q: `Je číslo ${n} párne alebo nepárne?`, a: n % 2 ? 'nepárne' : 'párne', w: [n % 2 ? 'párne' : 'nepárne'], ex: 'Rozhoduje posledná číslica. Párne končia na 0, 2, 4, 6, 8.' }; } },
+  { id: 'm2-desat', g: 2, name: 'O 10 viac, o 10 menej', icon: '🔟', gen() { const n = R(12, 89); const up = Math.random() < .5; const a = up ? n + 10 : n - 10; return { q: `Ktoré číslo je o 10 ${up ? 'väčšie' : 'menšie'} ako ${n}?`, a, w: [up ? n + 1 : n - 1, up ? n - 10 : n + 10, up ? n + 20 : n - 20].filter(x => x >= 0 && x !== a), ex: `Mení sa len počet desiatok: ${n} ${up ? '+' : '−'} 10 = ${a}.` }; } },
+  { id: 'm2-dlzka', g: 2, name: 'Centimetre a metre', icon: '📏', gen() { const k = R(0, 2); if (k === 0) { const m = R(1, 9); return { q: `Koľko centimetrov je ${m} m?`, a: m * 100, w: [m * 10, m * 1000, m * 100 + 10], ex: `1 m = 100 cm, takže ${m} m = ${m * 100} cm.` }; } if (k === 1) { const c = R(1, 9) * 100; return { q: `Koľko metrov je ${c} cm?`, a: c / 100, w: u2near(c / 100, 3), ex: `100 cm = 1 m, takže ${c} cm = ${c / 100} m.` }; } const a = R(10, 60), b = R(10, 39); return { q: `Stuha má ${a} cm. Druhá má ${b} cm. Koľko cm majú spolu?`, a: a + b, w: u2near(a + b, 5), ex: `${a} cm + ${b} cm = ${a + b} cm.` }; } }
+];
+const U2_SJL = [
+  { id: 's2-makke', g: 2, type: 'qa', name: 'Po mäkkej spoluhláske i/í', icon: '🪶', ex: 'Po mäkkých spoluhláskach (č, dž, š, ž, c, dz, j, ď, ť, ň, ľ) píšeme mäkké i, í.', items: lines(`
+    Ktoré slovo je napísané správne?|čistý|čystý;čýstý;čysty
+    Ktoré slovo je napísané správne?|život|žyvot;živod;žyvod
+    Ktoré slovo je napísané správne?|šiška|šyška;šiškä;šýška
+    Ktoré slovo je napísané správne?|cibuľa|cybuľa;cíbuľa;cýbuľa
+    Ktoré slovo je napísané správne?|číslo|čýslo;číslou;čyslo
+    Ktoré slovo je napísané správne?|žirafa|žyrafa;žírafa;žýrafa
+    Ktoré slovo je napísané správne?|šípka|šýpka;šypka;šipká
+    Ktoré slovo je napísané správne?|cirkus|cyrkus;církus;cýrkus
+    Ktoré slovo je napísané správne?|jahoda|yahoda;jahóda;jáhoda
+    Ktoré slovo je napísané správne?|čiapka|čyapka;čiápka;čýapka
+    Ktoré slovo je napísané správne?|žiak|žyak;žýak;žiák
+    Ktoré slovo je napísané správne?|šiť|šyť;šýť;šit
+    Ktoré slovo je napísané správne?|cítiť|cýtiť;cítyť;cýtyť
+    Ktoré slovo je napísané správne?|jazero|yazero;jazéro;jázero`) },
+  { id: 's2-tvrde', g: 2, type: 'qa', name: 'Po tvrdej spoluhláske y/ý', icon: '🪨', ex: 'Po tvrdých spoluhláskach (h, ch, k, g, d, t, n, l) píšeme tvrdé y, ý.', items: lines(`
+    Ktoré slovo je napísané správne?|hory|hori;hóry;horí
+    Ktoré slovo je napísané správne?|chyba|chiba;chíba;hyba
+    Ktoré slovo je napísané správne?|kytica|kitica;kytyca;kitaca
+    Ktoré slovo je napísané správne?|dym|dim;dím;dimy
+    Ktoré slovo je napísané správne?|gymnastika|gimnastika;gymnastyka;gimnastyka
+    Ktoré slovo je napísané správne?|hýbať|híbať;hibať;hybať
+    Ktoré slovo je napísané správne?|chytiť|chitiť;chytyť;chitať
+    Ktoré slovo je napísané správne?|tyč|tič;týč;tíč
+    Ktoré slovo je napísané správne?|kyslý|kislý;kyzlý;kizlý
+    Ktoré slovo je napísané správne?|dýchať|díchať;dychať;dichať
+    Ktoré slovo je napísané správne?|hydina|hidina;hydyna;hidyna
+    Ktoré slovo je napísané správne?|nohy|nohi;nóhy;nohí
+    Ktoré slovo je napísané správne?|rukavice a ruky|rukavice a ruki;rukavyce a ruky;rukavyce a ruki
+    Ktoré slovo je napísané správne?|hymna|himna;hímna;hymná`) },
+  { id: 's2-vlastne', g: 2, type: 'qa', name: 'Veľké písmeno v menách', icon: '🏙️', ex: 'Mená ľudí, zvierat, miest, riek a štátov píšeme s veľkým písmenom.', items: lines(`
+    Ktoré slovo píšeme s veľkým písmenom?|Bratislava|mesto;dedina;ulica
+    Ktoré slovo píšeme s veľkým písmenom?|Dunaj|rieka;potok;voda
+    Ktoré slovo píšeme s veľkým písmenom?|Peter|chlapec;brat;žiak
+    Ktoré slovo píšeme s veľkým písmenom?|Slovensko|štát;krajina;vlasť
+    Ktoré slovo píšeme s veľkým písmenom?|Tatry|hory;kopec;les
+    Ktoré slovo píšeme s veľkým písmenom?|Zuzana|dievča;sestra;kamarátka
+    Ktoré slovo píšeme s veľkým písmenom?|Košice|námestie;mesto;park
+    Ktoré slovo píšeme s veľkým písmenom?|Dunčo|pes;šteňa;zviera
+    Ktoré slovo píšeme s veľkým písmenom?|Váh|rieka;most;breh
+    Ktoré slovo píšeme s veľkým písmenom?|Európa|svetadiel;mapa;zem
+    Ktorá veta je napísaná správne?|Bývam v Nitre.|bývam v nitre.;Bývam v nitre.;bývam v Nitre.
+    Ktorá veta je napísaná správne?|Môj pes sa volá Rex.|Môj pes sa volá rex.;môj pes sa volá Rex.;Môj Pes sa volá rex.
+    Ktorá veta je napísaná správne?|Eva a Adam idú do školy.|eva a adam idú do školy.;Eva a adam idú do školy.;Eva a Adam idú do Školy.
+    Ktorá veta je napísaná správne?|Cez Trenčín tečie Váh.|Cez trenčín tečie váh.;cez Trenčín tečie Váh.;Cez Trenčín tečie váh.`) },
+  { id: 's2-koniec', g: 2, name: 'Bodka, otáznik, výkričník', icon: '❗', gen() { const [t, a] = pick(U2_END); return { q: 'Aké znamienko patrí na koniec vety?', html: `<div class="bigeq small">${t}<span class="slot">_</span></div>`, a, w: ['.', '?', '!'].filter(x => x !== a), speak: `Aké znamienko patrí na koniec vety: ${t}`, ex: 'Bodka: oznamujeme. Otáznik: pýtame sa. Výkričník: zvolanie alebo rozkaz.' }; } },
+  { id: 's2-hlasky', g: 2, name: 'Koľko hlások má slovo?', icon: '🔡', gen() { const [w, n] = pick(U2_HL); const o = new Set(); while (o.size < 3) { const x = n + R(-2, 2); if (x !== n && x > 0) o.add(x); } return { q: `Koľko hlások má slovo „${w}“?`, a: n, w: [...o], speak: `Koľko hlások má slovo ${w}?`, ex: `Hlásky: ${[...w].join(' – ')}. Spolu ${n}.` }; } },
+  { id: 's2-o', g: 2, type: 'qa', name: 'Kedy píšeme ô', icon: '🐴', ex: 'Dvojhlásku „uo“ píšeme ako ô: kôň, stôl, nôž, môj.', items: lines(`
+    Ktoré slovo je napísané správne?|kôň|kuoň;koň;kóň
+    Ktoré slovo je napísané správne?|stôl|stuol;stol;stól
+    Ktoré slovo je napísané správne?|nôž|nuož;nož;nóž
+    Ktoré slovo je napísané správne?|môj|muoj;moj;mój
+    Ktoré slovo je napísané správne?|vôňa|vuoňa;voňa;vóňa
+    Ktoré slovo je napísané správne?|kôš|kuoš;koš;kóš
+    Ktoré slovo je napísané správne?|pôda|puoda;poda;póda
+    Ktoré slovo je napísané správne?|môžem|muožem;možem;móžem
+    Ktoré slovo je napísané správne?|kôra|kuora;kora;kóra
+    Ktoré slovo je napísané správne?|vôl|vuol;vol;vól`) }
+];
+const U2_PRV = [
+  { id: 'p2-doprava', g: 2, type: 'cat', area: 'geo', name: 'Dopravné prostriedky', icon: '🚆', choices: ['po zemi', 'po vode', 'vo vzduchu'], prompt: 'Kde sa pohybuje {x}?', ex: 'Autá a vlaky jazdia po zemi, lode plávajú po vode, lietadlá lietajú vo vzduchu.', items: lines(`
+    auto|po zemi
+    vlak|po zemi
+    autobus|po zemi
+    bicykel|po zemi
+    električka|po zemi
+    loď|po vode
+    čln|po vode
+    ponorka|po vode
+    plachetnica|po vode
+    lietadlo|vo vzduchu
+    vrtuľník|vo vzduchu
+    balón|vo vzduchu
+    raketa|vo vzduchu`) },
+  { id: 'p2-stromy', g: 2, type: 'cat', area: 'bio', name: 'Listnaté a ihličnaté stromy', icon: '🌲', choices: ['listnatý', 'ihličnatý'], prompt: 'Aký strom je {x}?', ex: 'Listnaté stromy majú listy a na jeseň ich zhadzujú. Ihličnaté majú ihličie.', items: lines(`
+    dub|listnatý
+    buk|listnatý
+    lipa|listnatý
+    breza|listnatý
+    javor|listnatý
+    gaštan|listnatý
+    jabloň|listnatý
+    smrek|ihličnatý
+    jedľa|ihličnatý
+    borovica|ihličnatý
+    smrekovec|ihličnatý`) },
+  { id: 'p2-zdravie', g: 2, type: 'qa', area: 'bio', name: 'Zdravé jedlo a pohyb', icon: '🥗', items: lines(`
+    Čo je zdravšie na desiatu?|jablko|čokoláda;čipsy;cukríky
+    Čo by sme mali piť najčastejšie?|vodu|sladkú limonádu;kolu;energetický nápoj
+    Koľkokrát denne máme jesť ovocie a zeleninu?|viackrát|nikdy;raz za týždeň;len v nedeľu
+    Čo robí naše kosti silnými?|mlieko a mliečne výrobky|cukríky;hranolky;žuvačky
+    Prečo si umývame ruky pred jedlom?|aby sme zmyli bacily|aby boli studené;aby voňali;aby sa leskli
+    Čo pomáha telu, aby bolo zdravé?|pohyb na čerstvom vzduchu|celý deň pri tablete;málo spánku;veľa sladkostí
+    Koľko hodín spánku potrebuje školák?|asi 10|asi 4;asi 2;asi 6
+    Čo si dáme na hlavu pri bicyklovaní?|prilbu|šiltovku;kapucňu;nič
+    Kto nám lieči zuby?|zubár|pekár;poštár;hasič
+    Čo robíme, keď kýchame?|zakryjeme si ústa|kýchame na kamaráta;nič;utekáme preč`) },
+  { id: 'p2-obec', g: 2, type: 'qa', area: 'geo', name: 'Kde bývam', icon: '🏡', items: lines(`
+    Čo všetko patrí do adresy?|ulica, číslo domu a obec|farba domu;meno psa;počet okien
+    Kto riadi obec alebo mesto?|starosta alebo primátor|učiteľ;lekár;šofér
+    Kam ideme, keď chceme poslať list?|na poštu|do lekárne;do knižnice;na stanicu
+    Kam ideme, keď sme chorí?|k lekárovi|do kina;do obchodu;na ihrisko
+    Kde si požičiame knihy?|v knižnici|v pekárni;v lekárni;na pošte
+    Kde kúpime lieky?|v lekárni|na pošte;v knižnici;v škole
+    Ktoré číslo voláme v núdzi?|112|100;555;999
+    Kto hasí požiare?|hasiči|poštári;pekári;kuchári
+    Čo je väčšie?|mesto|dedina;ulica;dom
+    Ako sa volá naša krajina?|Slovensko|Európa;Bratislava;Tatry`) },
+  { id: 'p2-oblecenie', g: 2, type: 'vocab', area: 'anj', name: 'Angličtina: oblečenie', icon: '👕', items: lines(`
+    T-shirt|tričko|👕
+    trousers|nohavice|👖
+    dress|šaty|👗
+    shoes|topánky|👟
+    hat|klobúk|👒
+    socks|ponožky|🧦
+    jacket|bunda|🧥
+    scarf|šál|🧣
+    gloves|rukavice|🧤
+    skirt|sukňa|🎀`) },
+  { id: 'p2-dom', g: 2, type: 'vocab', area: 'anj', name: 'Angličtina: doma', icon: '🏠', items: lines(`
+    house|dom|🏠
+    door|dvere|🚪
+    window|okno|🪟
+    bed|posteľ|🛏️
+    chair|stolička|🪑
+    table|stôl|🍽️
+    kitchen|kuchyňa|🍳
+    bathroom|kúpeľňa|🛁
+    garden|záhrada|🌷
+    lamp|lampa|💡`) }
+];
+for (const t of U2_MATH) { MATH.push(t); const x = { ...t, s: 'mat' }; ALL_TOPICS.push(x); TOPIC[t.id] = x; }
+for (const t of U2_SJL) { SJL.push(t); const x = { ...t, s: 'sjl' }; ALL_TOPICS.push(x); TOPIC[t.id] = x; }
+for (const t of U2_PRV) { PRV.push(t); const x = { ...t, s: 'prv' }; ALL_TOPICS.push(x); TOPIC[t.id] = x; }
 /* ===== Čítanka: krátke texty s otázkami ===== */
 const READS = [
   { id: 'r1-mica', g: 1, icon: '🐱', title: 'Mačka Mica', text: 'Mama má mačku Micu. Mica je malá a biela. Rada pije mlieko. Ema sa s Micou hrá s loptou.',
@@ -3261,6 +3423,7 @@ VIEWS.home = () => {
   <button class="card daily press ${dd ? 'done' : ''}" data-a="daily"><span class="ic">${dd ? '✅' : '🎯'}</span><span><b>${dd ? 'Denná výzva splnená!' : 'Denná výzva'}</b><span class="b" style="font-size:.9rem">${dd ? 'Môžeš si ju zahrať znova, len tak pre radosť.' : 'Opakovanie toho, čo si nedávno precvičoval(a), a ľahké otázky o svete · +50 bodov'}</span></span></button>
   ${ptaskCard(p)}${taskCard}
   <div style="display:flex;flex-direction:column;gap:8px"><div class="sec"><h2>Učenie</h2><span class="eyebrow">${p.grade}. ročník</span></div><div class="subjects">${subj('mat')}${subj('sjl')}${subj('prv')}</div><p class="muted b" style="font-size:.85rem">Prehľad: príroda, Slovensko a svet okolo nás a angličtina.</p></div>
+  ${progressCard(p)}
   ${homeBoard(p)}
   ${streak}
   ${nextL ? `<button class="card next press" data-a="nav" data-v="rewards"><span class="thumb">${itemThumb(nr[0][0], nr[0][1], p.av)}</span><span style="min-width:0"><span class="eyebrow">Ďalšia odmena · level ${nextL}</span><b style="display:block;font-family:var(--f-display);font-size:1.1rem;line-height:1.15">${nr.map(x => rewardName(...x)).join(', ')}</b><span class="muted b" style="font-size:.88rem">Chýba ti ešte ${toNext} bodov</span></span></button>` : ''}
@@ -4041,7 +4204,7 @@ VIEWS.parent = () => {
   const tg = (k, n, d) => `<button class="row" data-a="toggle" data-k="${k}"><span class="grow">${n}${d ? `<small class="muted" style="display:block;font-weight:700;font-size:.82rem">${d}</small>` : ''}</span><span class="toggle ${DATA.settings[k] ? 'on' : ''}"></span></button>`;
   const topicLine = x => `<div class="statrow"><span>${x.t.name} <span class="muted">(${SUBJECTS[x.t.s].name}, ${x.t.g}. r.)</span></span><b style="color:${x.pct < 70 ? 'var(--bad)' : 'var(--good)'}">${x.pct} %</b><small>${x.n} odpovedí</small></div>`;
   const T_over = () => `${weekCard(p)}<h3 class="pgroup">📊 Čísla a graf</h3><p class="pgsub">Úspešnosť, séria, slniečka, odpovede za 7 dní</p><div class="ptiles"><div class="card ptile"><b>${acc} %</b><span>úspešnosť odpovedí</span></div><div class="card ptile"><b>${p.stats.correct}</b><span>správnych z ${p.stats.answered}</span></div><div class="card ptile"><b>🔥 ${p.streak.count}</b><span>dní po sebe (najviac ${p.streak.best || 0})</span></div><div class="card ptile"><b>${active30}</b><span>aktívnych dní za 30 dní</span></div><div class="card ptile"><b>${COIN} ${p.coins || 0}</b><span>slniečok, ${p.owned.length} vecí kúpených v obchode</span></div><div class="card ptile"><b>📖 ${p.readings.length}</b><span>nahrávok čítania (${p.readings.filter(x => !x.rating).length} čaká na vypočutie)</span></div></div>
-  <section class="card pcard"><span class="eyebrow">Odpovede za posledných 7 dní</span><div class="chart">${days.map(d => `<div class="bar"><i style="height:${d.v / mx * 100}%;${d.v ? '' : 'background:var(--line)'}"><em>${d.v || ''}</em></i>${d.n}</div>`).join('')}</div></section>
+  <section class="card pcard"><span class="eyebrow">Odpovede za posledných 7 dní</span><div class="chart">${days.map(d => `<div class="bar"><i style="height:${d.v / mx * 100}%;${d.v ? '' : 'background:var(--line)'}"><em>${d.v || ''}</em></i>${d.n}</div>`).join('')}</div></section>${vizParent(p)}
   <h3 class="pgroup">📚 Na čom pracuje a čo precvičiť</h3><p class="pgsub">Posledné témy, silné a slabé miesta</p><section class="card pcard"><span class="eyebrow">Na čom teraz pracuje</span>${recentIds.length ? recentIds.map(id => { const t = TOPIC[id]; const s = p.topics[id]; const last = p.log.find(l => l.id === id); return `<div class="statrow"><span>${t.icon} ${t.name} <span class="muted">(${SUBJECTS[t.s].name}, ${t.g}. r.)</span></span><b>${s && s.total ? Math.round(s.correct / s.total * 100) + ' %' : '–'}</b><small>Naposledy ${fmtTime(last.t)} · ${KIND[last.k] || last.k} · hviezdy: ${s?.stars || 0}/3</small></div>`; }).join('') : '<p class="muted b" style="padding:8px 0">Zatiaľ žiadna aktivita.</p>'}</section>
   <section class="card pcard"><span class="eyebrow">Darí sa</span>${strong.length ? strong.map(topicLine).join('') : '<p class="muted b" style="padding:8px 0">Zobrazí sa, keď bude mať v téme aspoň 5 odpovedí s úspešnosťou nad 80 %.</p>'}</section>
   <section class="card pcard"><span class="eyebrow">Treba precvičiť</span>${weak.length ? weak.map(topicLine).join('') : '<p class="muted b" style="padding:8px 0">Zatiaľ nič. Témy s úspešnosťou pod 70 % sa zobrazia tu.</p>'}</section><h3 class="pgroup">⭐ Pokrok v predmetoch</h3><p class="pgsub">Hviezdy podľa ročníkov</p><section class="card pcard"><span class="eyebrow">Matematika – hviezdy podľa ročníkov</span>${subjProg('mat')}<span class="eyebrow">Slovenčina – hviezdy podľa ročníkov</span>${subjProg('sjl')}<span class="eyebrow">Prehľad (príroda, svet, angličtina) – hviezdy podľa ročníkov</span>${subjProg('prv')}</section>
@@ -4449,6 +4612,13 @@ function installCard() {
   const ios = /iphone|ipad|ipod/i.test(navigator.userAgent);
   return `<section class="card instcard"><span class="pci">📲</span><div class="grow"><b>Pridať apku na plochu</b><small>${A2HS ? 'Bystrík bude mať vlastnú ikonku a otvorí sa na celú obrazovku ako bežná apka.' : ios ? 'V Safari ťuknite dole na Zdieľať (štvorček so šípkou) a zvoľte „Pridať na plochu“.' : 'V prehliadači otvorte ponuku ⋮ a zvoľte „Pridať na plochu“ alebo „Inštalovať aplikáciu“.'}</small>${A2HS ? '<button class="btn small primary" data-a="install">📲 Nainštalovať</button>' : ''}</div></section>`;
 }
+/* ===== Vizualizácie pokroku ===== */
+function vizRing(pct, col, label, sub) { const r = 30, c = 2 * Math.PI * r; const v = Math.max(0, Math.min(100, pct)); return `<div class="vring"><svg viewBox="0 0 80 80" aria-hidden="true"><circle cx="40" cy="40" r="${r}" fill="none" stroke="var(--line)" stroke-width="9"/><circle class="vr" cx="40" cy="40" r="${r}" fill="none" stroke="${col}" stroke-width="9" stroke-linecap="round" stroke-dasharray="${c.toFixed(1)}" stroke-dashoffset="${(c * (1 - v / 100)).toFixed(1)}" style="--full:${c.toFixed(1)}" transform="rotate(-90 40 40)"/><text x="40" y="45" text-anchor="middle" font-size="17" font-weight="800" fill="currentColor">${Math.round(v)}%</text></svg><b>${label}</b><small>${sub}</small></div>`; }
+function vizSubj(p) { return ['mat', 'sjl', 'prv'].map(k => { const ts = SUBJECTS[k].topics.filter(t => t.g === p.grade); const st = ts.reduce((a, t) => a + (p.topics[t.id]?.stars || 0), 0); const mx = ts.length * 3 || 1; return vizRing(st / mx * 100, `var(--c-${k})`, SUBJECTS[k].short || SUBJECTS[k].name, `${st}/${mx} ⭐`); }).join(''); }
+function vizHeat(p) { const now = new Date(); const dow = (now.getDay() + 6) % 7; const cells = []; for (let w = 4; w >= 0; w--) for (let d = 0; d < 7; d++) { const off = w * 7 + (dow - d); if (off < 0) { cells.push('<i class="fut"></i>'); continue; } const day = p.days[daysAgo(off)]; const q = day ? day.q || 0 : 0; const n = day ? day.n || 0 : 0; const lv = !day ? 0 : q >= 25 || n >= 3 ? 3 : q >= 10 || n >= 2 ? 2 : 1; cells.push(`<i class="h${lv} ${off === 0 ? 'now' : ''}" title="${q} odpovedí"></i>`); } return `<div class="vheat"><div class="vhd">${['Po', 'Ut', 'St', 'Št', 'Pi', 'So', 'Ne'].map(x => `<span>${x}</span>`).join('')}</div><div class="vhg">${cells.join('')}</div><div class="vhl"><span>menej</span><i class="h0"></i><i class="h1"></i><i class="h2"></i><i class="h3"></i><span>viac</span></div></div>`; }
+function vizSpark(p, days = 14) { const pts = []; for (let i = days - 1; i >= 0; i--) { const d = p.days[daysAgo(i)]; pts.push(d && d.q ? Math.round((d.c || 0) / d.q * 100) : null); } const have = pts.filter(x => x != null); if (have.length < 2) return '<p class="muted b" style="font-size:.85rem;padding:6px 0">Graf sa ukáže, keď sa dieťa bude učiť aspoň dva dni.</p>'; const W = 300, H = 90, px = i => 10 + i * (W - 20) / (days - 1), py = v => H - 12 - v / 100 * (H - 26); let path = '', dots = '', first = true; pts.forEach((v, i) => { if (v == null) return; path += (first ? 'M' : 'L') + px(i).toFixed(1) + ' ' + py(v).toFixed(1) + ' '; first = false; dots += `<circle cx="${px(i).toFixed(1)}" cy="${py(v).toFixed(1)}" r="4" fill="var(--accent)" stroke="var(--paper)" stroke-width="2"/>`; }); return `<svg class="vspark" viewBox="0 0 ${W} ${H}" preserveAspectRatio="none" aria-hidden="true">${[0, 50, 100].map(v => `<line x1="10" x2="${W - 10}" y1="${py(v)}" y2="${py(v)}" stroke="var(--line)" stroke-width="1.5" stroke-dasharray="4 4"/>`).join('')}<path d="${path}" fill="none" stroke="var(--accent)" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>${dots}</svg><div class="vsl"><span>pred ${days} dňami</span><b>${have[have.length - 1]} % naposledy</b><span>dnes</span></div>`; }
+function progressCard(p) { const wk = p.wk && p.wk.w === weekId() ? p.wk.n || 0 : 0; const act = Array.from({ length: 35 }, (_, i) => p.days[daysAgo(i)]).filter(Boolean).length; return `<section class="card vizcard"><div class="sec"><h2>📈 Môj pokrok</h2><span class="eyebrow">${p.grade}. ročník</span></div><div class="vrings">${vizSubj(p)}</div><div class="vsub"><b>Kedy som sa učil(a)</b><span>${act} ${plural(act, 'deň', 'dni', 'dní')} za 5 týždňov · tento týždeň ${wk} ${plural(wk, 'zadanie', 'zadania', 'zadaní')}</span></div>${vizHeat(p)}</section>`; }
+function vizParent(p) { return `<section class="card pcard"><span class="eyebrow">Úspešnosť za posledných 14 dní</span>${vizSpark(p)}</section><section class="card pcard"><span class="eyebrow">Hviezdy v ${p.grade}. ročníku</span><div class="vrings">${vizSubj(p)}</div></section><section class="card pcard"><span class="eyebrow">Kedy sa dieťa učilo (5 týždňov)</span>${vizHeat(p)}</section>`; }
 function accCard() {
   if (window.claude && window.claude.use) return `<section class="card pcard"><span class="eyebrow">📧 Prihlásenie e-mailom</span><p class="b" style="font-size:.9rem;padding:4px 0">V tejto verzii sa postup ukladá cez váš Claude účet.</p><p class="muted b" style="font-size:.82rem;padding-bottom:8px">Prihlásenie e-mailom, priatelia a spoločný rebríček sú na webovej verzii. Postup medzi verziami prenesiete cez zálohu nižšie.</p><div class="bkbtns"><a class="btn small primary" href="https://sebastiankoncek88-alt.github.io/bystrik/" target="_blank" rel="noopener" style="text-decoration:none">🌐 Otvoriť webovú verziu</a></div></section>`;
   if (!SUPA_ON()) return '';
