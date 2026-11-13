@@ -283,6 +283,12 @@ function achPop(a, k, custom) {
   document.body.appendChild(d); sfx('level'); buzz([20, 40, 20]); confetti(70, .12); setTimeout(() => d.classList.add('out'), 3000); setTimeout(() => d.remove(), 3600);
 }
 
+/* uloženie súboru: v artefakte cez schválenie (downloads), na webe obyčajným odkazom */
+const IN_ART = () => !!(window.claude && window.claude.use);
+async function saveFile(name, text, type) {
+  if (IN_ART()) { try { const dl = await window.claude.use('downloads'); if (!dl) { toast('Ukladanie súborov tu nie je dostupné.'); return false; } await dl.save({ filename: name, data: new Blob([text], { type }) }); return true; } catch (e) { if (!(e && e.code === 'declined')) toast('Súbor sa nepodarilo uložiť.'); return false; } }
+  const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([text], { type })); a.download = name; document.body.appendChild(a); a.click(); setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 1000); return true;
+}
 /* ===== Dni, séria, úlohy, denné odmeny ===== */
 const dkey = d => `${d.getFullYear()}-${d.getMonth() + 1}-${d.getDate()}`;
 const today = () => dkey(new Date());
@@ -1775,7 +1781,7 @@ const ACT = {
   psel: d => { PSEL = d.id; PDEL = false; render(null); },
   'p-grade': d => { const p = DATA.profiles.find(x => x.id === PSEL); p.grade = +d.g; save(); toast(`Ročník: ${d.g}.`); render(null); },
   'bk-copy': async (d, el) => { const code = await makeBackup(); const ta = $('#bkcode'); ta.value = code; ta.hidden = false; let ok = false; try { await navigator.clipboard.writeText(code); ok = true; } catch (e) { ta.focus(); ta.select(); } DATA.backupAt = Date.now(); save(); toast(ok ? 'Kód zálohy je skopírovaný ✓ Uložte si ho, napríklad do e-mailu.' : 'Kód je označený. Skopírujte ho a uložte si ho.'); sfx('coin'); burst(el, 24); setTimeout(() => { const card = $('.backup'); if (card) { card.classList.remove('blink'); } }, 50); },
-  'bk-file': async () => { const code = await makeBackup(); const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([code], { type: 'text/plain' })); const d = new Date(); a.download = `bystrik-zaloha-${d.getFullYear()}-${d.getMonth() + 1}-${d.getDate()}.txt`; document.body.appendChild(a); a.click(); setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 1000); DATA.backupAt = Date.now(); save(); toast('Súbor so zálohou sa sťahuje ✓'); render(null); },
+  'bk-file': async () => { const code = await makeBackup(); const d = new Date(); const ok = await saveFile(`bystrik-zaloha-${d.getFullYear()}-${d.getMonth() + 1}-${d.getDate()}.txt`, code, 'text/plain'); if (!ok) return; DATA.backupAt = Date.now(); save(); toast('Súbor so zálohou je uložený ✓'); render(null); },
   'bk-restore': () => { RESTORE = true; render(null); setTimeout(() => { const f = $('#bkfile'); if (f) f.addEventListener('change', async () => { const file = f.files && f.files[0]; if (file) $('#bkin').value = await file.text(); }); const b = $('.bkrestore'); if (b) b.scrollIntoView({ block: 'center' }); }, 50); },
   'bk-cancel': () => { RESTORE = false; render(null); },
   'bk-apply': async () => { try { const o = await readBackup($('#bkin').value); const data = o.data || o; if (!data || !Array.isArray(data.profiles)) throw new Error('bad'); DATA = Object.assign({ profiles: [], current: null }, data); normalize(); DATA.backupAt = Date.now(); if (!P()) DATA.current = DATA.profiles[0] ? DATA.profiles[0].id : null; save(); RESTORE = false; PSEL = DATA.current; toast(`Obnovené ✓ Hráči: ${DATA.profiles.map(p => p.name).join(', ')}`); sfx('level'); confetti(120); render(null); } catch (e) { sfx('no'); toast('Tento kód zálohy sa nedá prečítať. Skontrolujte, či je celý.'); } },
@@ -1881,10 +1887,11 @@ const ACT = {
   'ev-practice': () => { const r = UI.params; const ids = [...new Set((r.tlog || []).filter(x => !x.ok && x.id && TOPIC[x.id]).map(x => x.id))]; if (!ids.length) return; sfx('tap'); startQuiz(ids, 'quiz', r.back || { v: 'home', p: {} }, ids.length > 1 ? { seq: Array.from({ length: 10 }, (_, i) => ids[i % ids.length]) } : {}); },
   'review': () => { sfx('tap'); startReview(); },
   'remind-t': d => { DATA.settings.remind = d.t; save(); sfx('tap'); render(null); },
-  'remind-add': () => {
+  'remind-add': async () => {
     const t = DATA.settings.remind || '17:00'; const [hh, mm] = t.split(':'); const d = new Date(); const z = n => String(n).padStart(2, '0'); const day = `${d.getFullYear()}${z(d.getMonth() + 1)}${z(d.getDate())}`; const url = location.origin + location.pathname;
     const ics = ['BEGIN:VCALENDAR', 'VERSION:2.0', 'PRODID:-//Bystrik//SK', 'CALSCALE:GREGORIAN', 'BEGIN:VEVENT', 'UID:bystrik-ucenie-' + day + '@bystrik', 'DTSTAMP:' + day + 'T000000Z', 'DTSTART:' + day + 'T' + hh + mm + '00', 'DURATION:PT15M', 'RRULE:FREQ=DAILY', 'SUMMARY:Bystrík: čas na učenie 🧸', 'DESCRIPTION:Desať minút s Bystríkom. Otvor apku: ' + url, 'URL:' + url, 'BEGIN:VALARM', 'ACTION:DISPLAY', 'DESCRIPTION:Bystrík čaká! Poď sa učiť 🧸', 'TRIGGER:PT0M', 'END:VALARM', 'END:VEVENT', 'END:VCALENDAR'].join('\r\n');
-    const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([ics], { type: 'text/calendar' })); a.download = 'bystrik-pripomienka.ics'; document.body.appendChild(a); a.click(); setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 1000); toast('Súbor stiahnutý. Otvorte ho a potvrďte pridanie do kalendára.');
+    if (IN_ART()) { toast('Pripomienku do kalendára pridáte vo webovej verzii Bystríka (sebastiankoncek88-alt.github.io/bystrik).'); return; }
+    await saveFile('bystrik-pripomienka.ics', ics, 'text/calendar'); toast('Súbor stiahnutý. Otvorte ho a potvrďte pridanie do kalendára.');
   },
   'learn-back': () => { try { speechSynthesis.cancel(); } catch (e) { } go('learn', {}, 'b'); },
   'dk-say': () => { sfx('tap'); dkSay(false); }, 'dk-slow': () => { sfx('tap'); dkSay(true); },
