@@ -567,13 +567,15 @@ function bearCorner(p) {
   const b = bearInit(p); const m = bearMood(p); const h = b.honey || 0; const st = bearStats(b); const lo = bearLove(b);
   const bar = (i, n, v, c) => `<div class="brst"><span>${i}</span><div><small>${n}</small><div class="brbar"><i style="width:${v}%;background:${c}"></i></div></div></div>`;
   return `<section class="card bearroom bm-${m}" id="bearcorner"><div class="brhead"><b>🧸 Bystríkov kútik</b><span class="brlove" title="Priateľstvo">💖 Lv ${lo.lv}<i><b style="width:${lo.pr * 10}%"></b></i></span></div>
-  <div class="brscene ${b.asleep ? 'night' : ''}" id="brscene"><i class="brwin"></i><i class="brshelf"><span>📚</span><span>🪴</span><span>🏆</span></i><i class="brfloor"></i><i class="brplinth"></i>${b.asleep ? '<i class="brbed"></i>' : ''}
-  <button class="bcfig press" data-a="bear-tap" aria-label="Ťukni na Bystríka">${bearSvg(m === 'sick' || m === 'tired' ? 'comfort' : '')}</button>${m === 'sleep' ? '<span class="bzz" aria-hidden="true">💤</span>' : m === 'sick' ? '<span class="bzz" aria-hidden="true">🤧</span>' : ''}
+  <div class="brscene ${b.asleep ? 'night' : ''}" id="brscene"><i class="brwin"><b class="brsun"></b><b class="brmoon"></b><b class="brwstars"></b></i><i class="brshelf"><span>📚</span><span>🪴</span><span>🏆</span></i><i class="brfloor"></i><i class="brdark"></i><i class="brstars"></i><i class="brplinth"></i><i class="brbed"></i>
+  <button class="bcfig press" data-a="bear-tap" aria-label="Ťukni na Bystríka">${bearSvg(!b.asleep && (m === 'sick' || m === 'tired') ? 'comfort' : '')}</button><span class="bzz" aria-hidden="true">💤</span>${m === 'sick' ? '<span class="bzz sick" aria-hidden="true">🤧</span>' : ''}
   <div class="brbub" id="brbub">${BEAR_TXT[m]}</div><span class="brhoney">🍯 ${h}</span></div>
   <div class="brstats">${bar('🍯', 'Hlad', st.food, 'linear-gradient(90deg,#FFB13C,#FFD45C)')}${bar('⚡', 'Energia', st.energy, 'linear-gradient(90deg,#4C86F7,#7EC8FF)')}${bar('😊', 'Radosť', st.joy, 'linear-gradient(90deg,#F25C8B,#FF9FBF)')}</div>
   <div class="bract"><button class="brb press" data-a="bear-feed" ${h ? '' : 'aria-disabled="true"'}><span>🍯</span>Nakŕmiť</button><button class="brb press" data-a="bear-pet"><span>🤗</span>Pohladkať</button><button class="brb press" data-a="bear-dance"><span>💃</span>Tanec</button><button class="brb press" data-a="bear-sleep"><span>${b.asleep ? '☀️' : '🌙'}</span>${b.asleep ? 'Zobudiť' : 'Spať'}</button><button class="brb press" data-a="bear-rec" aria-label="Podrž a povedz niečo, Bystrík to zopakuje"><span>🎤</span>Zopakuj</button></div>
   <small class="bchint">🍯 Med dostaneš za každé dokončené učenie alebo hru. Za starostlivosť rastie priateľstvo 💖.</small></section>`;
 }
+let BEARIV = null; const BEAR_IDLE = ['bhappy', 'bwiggle', 'bpeek', 'bhop'];
+function bearIdleStart() { clearInterval(BEARIV); BEARIV = setInterval(() => { const fig = $('.bearroom .bcfig svg'), room = $('#bearcorner'); if (!fig) { clearInterval(BEARIV); return; } if (document.hidden || room.classList.contains('busy') || $('#brscene.night') || fig.classList.contains('bdance')) return; const c = pick(BEAR_IDLE); fig.classList.add(c); setTimeout(() => fig.classList.remove(c), 1400); }, 6500); }
 function bearSay(t) { const el = $('#brbub'); if (el) { el.textContent = t; el.classList.remove('pop'); void el.offsetWidth; el.classList.add('pop'); } }
 function bearLoveUp(p, n) { const b = bearInit(p); const before = bearLove(b).lv; b.love = (b.love || 0) + n; const after = bearLove(b).lv; bearCare(p); const el = $('.brlove'); if (el) el.innerHTML = `💖 Lv ${after}<i><b style="width:${bearLove(b).pr * 10}%"></b></i>`; if (after > before) { toast(`💖 Priateľstvo s Bystríkom: level ${after}!`); sfx('level'); try { confetti(80, .4); } catch (e) { } } }
 let BREC = null;
@@ -1896,7 +1898,15 @@ const ACT = {
     sfx('pop'); setTimeout(() => { try { bearJoy($('.bcfig svg')); } catch (e) { } bearSay('Mňam, mňam! Ďakujem 🍯'); bearLoveUp(p, 2); setTimeout(() => { if (UI.view === 'home') { const c = $('#bearcorner'); if (c) c.outerHTML = bearCorner(P()); } }, 1500); }, 700); },
   'bear-pet': () => { const p = P(); const b = bearInit(p); if (b.asleep) { bearSay('Psst… Bystrík spí 💤'); return; } try { bearJoy($('.bcfig svg')); } catch (e) { } sfx('pop'); const t = pick(BEAR_PET); bearSay(t); say(t); bearLoveUp(p, 1); },
   'bear-dance': () => { const p = P(); const b = bearInit(p); if (b.asleep) { bearSay('Najprv ma zobuď ☀️'); return; } const fig = $('.bcfig svg'); if (!fig || fig.classList.contains('bdance')) return; fig.classList.add('bdance'); bearSay('Tancujeme! 🎶'); sfx('level'); const sc = $('#brscene'); for (let i = 0; i < 6; i++) setTimeout(() => { if (!sc) return; const n = document.createElement('span'); n.className = 'brnote'; n.textContent = pick(['🎵', '🎶', '✨']); n.style.left = (20 + Math.random() * 60) + '%'; sc.appendChild(n); setTimeout(() => n.remove(), 1600); }, i * 350); setTimeout(() => { fig.classList.remove('bdance'); bearSay('Uf, to bola zábava! 😄'); }, 2600); bearLoveUp(p, 1); },
-  'bear-sleep': () => { const p = P(); const b = bearInit(p); b.asleep = !b.asleep; if (b.asleep) b.slept = Date.now(); bearCare(p); sfx('tap'); const c = $('#bearcorner'); if (c) c.outerHTML = bearCorner(p); else render(null); },
+  'bear-sleep': () => {
+    const p = P(); const b = bearInit(p); const room = $('#bearcorner'), sc = $('#brscene'), fig = $('.bcfig svg'); if (room && room.classList.contains('busy')) return;
+    const going = !b.asleep; b.asleep = going; if (going) b.slept = Date.now(); bearCare(p); sfx('tap');
+    if (!room || !sc || !fig) { render(null); return; }
+    room.classList.add('busy'); fig.classList.remove('comfort'); const btn = $('[data-a="bear-sleep"]'); if (btn) btn.innerHTML = going ? '<span>☀️</span>Zobudiť' : '<span>🌙</span>Spať';
+    const fin = () => { room.classList.remove('busy'); const e = $('.brst:nth-child(2) .brbar i'); if (e) e.style.width = bearStats(b).energy + '%'; };
+    if (going) { fig.classList.add('byawn'); bearSay('Uaaah… som ospalý 🥱'); setTimeout(() => { fig.classList.remove('byawn'); sc.classList.add('night'); room.className = room.className.replace(/bm-\w+/, 'bm-sleep'); bearSay('Dobrú noc… 🌙'); }, 1300); setTimeout(() => { bearSay(BEAR_TXT.sleep); fin(); }, 3000); }
+    else { sc.classList.remove('night'); room.className = room.className.replace(/bm-\w+/, 'bm-' + bearMood(p)); setTimeout(() => { fig.classList.add('bstretch'); bearSay('Dobré ráno! ☀️ Poďme sa učiť!'); sfx('level'); }, 900); setTimeout(() => { fig.classList.remove('bstretch'); fin(); }, 2600); }
+  },
   'bear-rec': async (d, el) => {
     if (BREC) { try { BREC.mr.stop(); } catch (e) { } return; }
     if (!navigator.mediaDevices || !window.MediaRecorder) { toast('Tu sa mikrofón zapnúť nedá.'); return; }
@@ -2330,7 +2340,7 @@ VIEWS.board = () => {
 AFTER.board = () => lbFresh();
 AFTER.duel = () => { if (FR_ON()) frFresh(20000); };
 const _afterLearn = AFTER.learn; AFTER.learn = () => { _afterLearn && _afterLearn(); lbFresh(); };
-const _afterHome = AFTER.home; AFTER.home = () => { _afterHome && _afterHome(); lbFresh(); if (FR_ON()) { frFresh(60000); inboxStart(); } };
+const _afterHome = AFTER.home; AFTER.home = () => { _afterHome && _afterHome(); lbFresh(); bearIdleStart(); if (FR_ON()) { frFresh(60000); inboxStart(); } };
 function duelCreate() { const p = P(); if (D) duelClose(); D = { st: 'wait', host: true, code: String(R(1000, 9999)), me: String(p.name).slice(0, 14), id: Math.random().toString(36).slice(2, 10) }; D.ws = duelWs(D.code, duelMsg); return D.code; }
 function duelJoin(code) { const p = P(); if (D) duelClose(); D = { st: 'joining', host: false, code, me: String(p.name).slice(0, 14), id: Math.random().toString(36).slice(2, 10) }; D.ws = duelWs(code, duelMsg, () => { const hi = () => D && D.ws && D.ws.say('join', { id: D.id, name: D.me }); hi(); D.tick = setInterval(hi, 1000); }); D.to = setTimeout(() => { if (D && D.st === 'joining') { duelClose(); D = { st: 'lobby', err: 'Súboj s týmto kódom sa nenašiel. Skontroluj kód.' }; if (UI.view === 'duel') render(null); } }, 15000); }
 /* ===== Priatelia a správy ===== */

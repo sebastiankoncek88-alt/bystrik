@@ -1297,22 +1297,60 @@ body{background-attachment:fixed!important}
 .brlove{display:flex;align-items:center;gap:6px;font-family:var(--f-display);font-weight:800;font-size:.9rem;background:var(--c-sjl-soft);border:2px solid var(--edge);border-radius:12px;padding:3px 8px}
 .brlove i{display:block;width:46px;height:7px;border-radius:5px;background:rgba(0,0,0,.12);overflow:hidden}.brlove i b{display:block;height:100%;background:linear-gradient(90deg,#F25C8B,#FF9FBF);border-radius:5px;transition:width .5s}
 .brscene{position:relative;height:220px;border-radius:18px;border:2.5px solid var(--edge);overflow:hidden;perspective:700px;background:radial-gradient(ellipse 60% 70% at 50% 42%,#FFF6DD,transparent 70%),linear-gradient(180deg,#FFE7C2,#FFD9A8 70%);transition:background .5s}
-.brscene.night{background:radial-gradient(ellipse 50% 60% at 50% 45%,rgba(140,130,255,.35),transparent 70%),linear-gradient(180deg,#2C2A66,#3F3478 70%)}
 .brscene i{position:absolute;display:block}
-.brwin{left:7%;top:10%;width:58px;height:64px;border:3px solid var(--edge);border-radius:30px 30px 6px 6px;background:radial-gradient(circle at 70% 30%,#FFE066 0 10px,transparent 11px),linear-gradient(180deg,#9ED8FF,#DDF3FF);box-shadow:0 4px 0 var(--drop)}
-.night .brwin{background:radial-gradient(circle at 65% 32%,#FFF6C8 0 9px,transparent 10px),radial-gradient(circle at 25% 60%,#fff 0 1.5px,transparent 2px),radial-gradient(circle at 50% 75%,#fff 0 1px,transparent 2px),linear-gradient(180deg,#141244,#2B2A6E)}
+.brwin{left:7%;top:10%;width:58px;height:64px;border:3px solid var(--edge);border-radius:30px 30px 6px 6px;overflow:hidden;background:linear-gradient(180deg,#9ED8FF,#DDF3FF);box-shadow:0 4px 0 var(--drop);transition:background 1.6s}
 .brshelf{right:7%;top:20%;width:86px;height:8px;background:#B67A3E;border:2px solid var(--edge);border-radius:4px;box-shadow:0 3px 0 var(--drop)}
 .brshelf span{position:relative;top:-27px;font-size:1.25rem;margin-right:2px}.brshelf img{width:24px;height:24px}
 .brfloor{left:0;right:0;bottom:0;height:30%;background:linear-gradient(180deg,#E3A86A,#C98A4E);border-top:3px solid #9A6532}
 .brfloor::before{content:"";position:absolute;inset:0;background:repeating-linear-gradient(90deg,transparent 0 40px,rgba(90,50,10,.18) 40px 42px)}
-.night .brfloor{background:linear-gradient(180deg,#6B4E7A,#4E3A60);border-top-color:#2E2140}
 .brplinth{left:41%;bottom:9%;width:150px;height:34px;transform:translateX(-50%);border-radius:50%;background:radial-gradient(ellipse at 50% 35%,#FFFFFF,#E6DDF6 55%,#BDB0D8 100%);border:2.5px solid var(--edge);box-shadow:0 10px 0 -2px #9C8CC4,0 10px 0 0.5px var(--edge),0 18px 14px rgba(0,0,0,.25)}
-.brbed{left:41%;bottom:5%;width:190px;height:62px;transform:translateX(-50%);border-radius:24px 24px 10px 10px;background:linear-gradient(180deg,#9C7CF4,#7A5BD6);border:2.5px solid var(--edge);z-index:2}
+.brbed{left:41%;bottom:5%;width:190px;height:62px;border-radius:24px 24px 10px 10px;background:linear-gradient(180deg,#9C7CF4,#7A5BD6);border:2.5px solid var(--edge);z-index:2}
 .brbed::before{content:"";position:absolute;left:10px;top:-12px;width:52px;height:24px;border-radius:12px;background:#fff;border:2.5px solid var(--edge)}
 .bearroom .bcfig{position:absolute;left:41%;bottom:13%;width:156px;height:156px;transform:translateX(-50%);transform-style:preserve-3d;z-index:1;background:none;border:0;padding:0;cursor:pointer}
 .bearroom .bcfig svg{width:100%;height:100%;filter:drop-shadow(0 8px 6px rgba(60,30,10,.28)) drop-shadow(0 0 1px rgba(0,0,0,.3));animation:br3d 6s ease-in-out infinite;transform-origin:50% 90%}
 @keyframes br3d{0%,100%{transform:rotateY(-14deg) rotateX(2deg)}50%{transform:rotateY(14deg) rotateX(-2deg)}}
-.bearroom.bm-sleep .bcfig{bottom:10%;z-index:1}.bearroom.bm-sleep .bcfig svg{animation:none;transform:rotate(-6deg);filter:saturate(.85) brightness(.88) drop-shadow(0 6px 6px rgba(0,0,0,.3))}.bearroom.bm-sleep .b-eyes{opacity:0;animation:none}.bearroom.bm-sleep .b-happyeyes{opacity:1;transform:scaleY(-1);transform-origin:center;transform-box:fill-box}.bearroom.bm-sleep .b-arm-r{animation:none}
+.brwin b{position:absolute;display:block;border-radius:50%;transition:transform 1.6s cubic-bezier(.5,0,.3,1),opacity 1.6s}
+.brsun{width:20px;height:20px;right:8px;top:8px;background:#FFE066;box-shadow:0 0 12px #FFD23F}
+.brmoon{width:18px;height:18px;right:10px;top:10px;background:#FFF6C8;box-shadow:inset -5px -2px 0 #E8D98A,0 0 10px rgba(255,246,200,.7);transform:translateY(70px);opacity:0}
+.brwstars{inset:0;border-radius:0!important;background:radial-gradient(circle at 25% 60%,#fff 0 1.4px,transparent 2px),radial-gradient(circle at 50% 80%,#fff 0 1px,transparent 1.8px),radial-gradient(circle at 18% 25%,#fff 0 1px,transparent 1.8px);opacity:0}
+.night .brwin{background:linear-gradient(180deg,#141244,#2B2A6E)}
+.night .brsun{transform:translateY(70px);opacity:0}.night .brmoon{transform:none;opacity:1}.night .brwstars{opacity:1}
+.brdark{inset:0;background:radial-gradient(ellipse 50% 60% at 45% 55%,rgba(120,110,255,.25),transparent 70%),linear-gradient(180deg,rgba(20,18,70,.82),rgba(45,30,90,.72));opacity:0;transition:opacity 1.6s ease-in-out;pointer-events:none}
+.night .brdark{opacity:1}
+.brstars{inset:0 0 35% 0;background-image:radial-gradient(circle,#fff 1.3px,transparent 2px),radial-gradient(circle,#FFF2B0 1px,transparent 1.6px);background-size:70px 50px,46px 38px;background-position:12px 8px,30px 22px;opacity:0;transition:opacity 2s 0s}
+.night .brstars{opacity:.9;transition-delay:.8s;animation:brtw 3s ease-in-out infinite}
+@keyframes brtw{50%{opacity:.45}}
+.brbed{transform:translate(-50%,130%)!important;transition:transform .9s cubic-bezier(.3,1.3,.5,1)}
+.night .brbed{transform:translate(-50%,0)!important;transition-delay:.5s}
+.brplinth{transition:opacity .8s}.night .brplinth{opacity:0}
+.bearroom .bcfig{transition:bottom 1s cubic-bezier(.4,0,.2,1)}
+.night .bcfig{bottom:10%!important}
+.bearroom .bcfig svg{transition:filter 1.6s}
+.night .bcfig svg{animation:bsleepy 4s ease-in-out infinite!important;filter:saturate(.85) brightness(.85) drop-shadow(0 6px 6px rgba(0,0,0,.3))}
+@keyframes bsleepy{0%,100%{transform:rotate(-6deg) scale(1)}50%{transform:rotate(-4deg) scale(1.025,1.04)}}
+.night .bear .b-eyes{opacity:0;animation:none}.night .bear .b-happyeyes{opacity:1;transform:scaleY(-1);transform-origin:center;transform-box:fill-box}
+.night .bear .b-arm-r,.night .bear .b-brows,.night .bear .b-look,.night .bear .b-hearts path{animation:none}
+.night .bear .b-smile{opacity:0;transition:opacity .6s}.night .bear .b-mouth{opacity:1;transform:scale(.45);animation:bsnore 4s ease-in-out infinite}
+@keyframes bsnore{50%{transform:scale(.6,.75)}}
+.brscene .bzz{opacity:0;transition:opacity .8s}.night .bzz{opacity:1;transition-delay:1.2s}.bzz.sick{opacity:1;left:30%}
+.bear.byawn .b-smile{opacity:0}.bear.byawn .b-mouth{opacity:1;animation:byawnm 1.3s ease-in-out}
+@keyframes byawnm{0%{transform:scaleY(.3)}35%,70%{transform:scale(1.15,1.5)}100%{transform:scaleY(.4)}}
+.bear.byawn .b-eyes{animation:byawne 1.3s ease-in-out}@keyframes byawne{20%,80%{transform:scaleY(.15)}}
+.bear.byawn .b-arm-l{animation:barmup-l 1.3s ease-in-out}.bear.byawn .b-arm-r{animation:barmup-r 1.3s ease-in-out}
+.bear.byawn .b-head{animation:byawnh 1.3s ease-in-out}@keyframes byawnh{40%,70%{transform:rotate(-6deg) translateY(-2px)}}
+.bear.bstretch .b-all{animation:bstretch 1.6s cubic-bezier(.3,1.4,.5,1)}
+@keyframes bstretch{0%{transform:scale(1,.92)}25%{transform:scale(.94,1.1) translateY(-4px)}50%{transform:translateY(-18px) scale(1.05,.97)}70%{transform:translateY(0) scale(1.08,.9)}85%{transform:translateY(-5px)}100%{transform:none}}
+.bear.bstretch .b-arm-l{animation:barmup-l 1.4s ease-in-out}.bear.bstretch .b-arm-r{animation:barmup-r 1.4s ease-in-out}
+.bear.bstretch .b-eyes{opacity:0}.bear.bstretch .b-happyeyes{opacity:1}.bear.bstretch .b-sparks path{animation:bspark 1.2s ease-out .5s}
+.bear.bwiggle .b-head{animation:bwig 1.3s ease-in-out}@keyframes bwig{20%{transform:rotate(-10deg)}45%{transform:rotate(9deg)}70%{transform:rotate(-5deg)}}
+.bear.bwiggle .b-ear-l{animation:bearl 1.3s ease-in-out}.bear.bwiggle .b-ear-r{animation:bearr 1.3s ease-in-out}
+.bear.bpeek .b-look{animation:bpeek 1.3s ease-in-out}@keyframes bpeek{30%,70%{transform:translate(0,-2px)}}
+.bear.bpeek .b-arm-r{animation:bsalute 1.3s ease-in-out}@keyframes bsalute{30%,70%{transform:rotate(-150deg)}}
+.bear.bhop .b-all{animation:bhop 1.2s ease-in-out}@keyframes bhop{15%,45%,75%{transform:translateY(-8px)}30%,60%,90%{transform:translateY(0) scale(1.04,.96)}}
+.brscene:not(.night) .bzz:not(.sick){visibility:hidden}
+.bearroom.busy .brb{pointer-events:none;opacity:.7}
+.brb{transition:transform .15s,box-shadow .15s}.brb:active{transform:translateY(3px);box-shadow:0 0 0 var(--drop)}
+.brb span{transition:transform .3s}.brb:hover span{transform:scale(1.15) rotate(-6deg)}
 .bearroom .bzz{top:14%;right:auto;left:52%;font-size:1.8rem;z-index:3;animation:bzz 2.4s ease-in-out infinite}
 @keyframes bzz{0%{transform:translate(0,0) scale(.7);opacity:0}30%{opacity:1}100%{transform:translate(16px,-26px) scale(1.15);opacity:0}}
 .brbub{position:absolute;right:8px;top:auto;bottom:calc(30% + 6px);max-width:33%;background:var(--paper);border:2.5px solid var(--edge);border-radius:16px 16px 4px 16px;padding:6px 9px;font-weight:800;font-size:.8rem;line-height:1.25;box-shadow:0 3px 0 var(--drop);z-index:3;color:var(--ink)}
