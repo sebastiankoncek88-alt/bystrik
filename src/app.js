@@ -30,7 +30,13 @@ function migrate(p) {
 /* keď Bystrík spí, celá appka prejde do nočného režimu */
 function nightOn() { const p = (DATA.profiles || []).find(x => x.id === DATA.current); return !!(p && p.bear && p.bear.asleep); }
 let LASTNIGHT = null;
-function applyTheme(slow) { LASTNIGHT = nightOn(); try { const de = document.documentElement; de.classList.add('thx'); de.classList.toggle('slow', !!slow); de.classList.toggle('bnight', LASTNIGHT); clearTimeout(applyTheme.t); applyTheme.t = setTimeout(() => de.classList.remove('thx', 'slow'), slow ? 1700 : 520); } catch (e) { } setTimeout(applyPageBg, 0); const t = LASTNIGHT ? 'dark' : DATA.settings.theme; if (t === 'light' || t === 'dark') document.documentElement.dataset.theme = t; else if (document.documentElement.dataset.theme && THEME_SET) delete document.documentElement.dataset.theme; THEME_SET = t !== 'auto'; }
+function applyTheme(slow) {
+  const run = () => { LASTNIGHT = nightOn(); document.documentElement.classList.toggle('bnight', LASTNIGHT); applyPageBg(); const t = LASTNIGHT ? 'dark' : DATA.settings.theme; if (t === 'light' || t === 'dark') document.documentElement.dataset.theme = t; else if (document.documentElement.dataset.theme && THEME_SET) delete document.documentElement.dataset.theme; THEME_SET = t !== 'auto'; };
+  /* plynulý prechod: prehliadač prelína dve snímky obrazovky (lacné), inak krátky prechod farieb */
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (slow && !reduce && document.startViewTransition) { document.documentElement.classList.add('vtslow'); const vt = document.startViewTransition(run); vt.finished.finally(() => document.documentElement.classList.remove('vtslow')); return; }
+  try { const de = document.documentElement; de.classList.add('thx'); clearTimeout(applyTheme.t); applyTheme.t = setTimeout(() => de.classList.remove('thx'), 520); } catch (e) { } run();
+}
 let THEME_SET = false;
 function load() { try { const s = localStorage.getItem(KEY); if (s) DATA = Object.assign(DATA, JSON.parse(s)); } catch (e) { } normalize(); }
 function save() { DATA.t = Date.now(); try { localStorage.setItem(KEY, JSON.stringify(DATA)); } catch (e) { } queueSync(); if (typeof lbPush === 'function') lbPush(); }

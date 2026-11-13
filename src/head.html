@@ -100,7 +100,7 @@ p{margin:0}
 .rfloor{left:-5%;right:-5%;bottom:0;height:24%;background:linear-gradient(180deg,color-mix(in srgb,var(--floor) 85%,#fff),var(--floor));border-top:3px solid color-mix(in srgb,var(--floor) 60%,#33203A);border-radius:50% 50% 0 0/22px 22px 0 0}
 .rfloor::before{content:"";position:absolute;inset:0;background:repeating-linear-gradient(90deg,transparent 0 46px,rgba(0,0,0,.06) 46px 49px);border-radius:inherit}
 .rrug{left:50%;bottom:4%;width:200px;height:34px;transform:translateX(-50%);border-radius:50%;background:radial-gradient(ellipse at 50% 40%,rgba(255,255,255,.75),rgba(255,255,255,.35) 55%,rgba(0,0,0,.12) 72%,transparent 74%)}
-.rdust{inset:0;background-image:radial-gradient(circle,rgba(255,255,255,.9) 1.4px,transparent 2px),radial-gradient(circle,rgba(255,255,255,.7) 1px,transparent 1.6px);background-size:90px 110px,60px 80px;background-position:10px 20px,40px 5px;animation:rdust 18s linear infinite;opacity:.6}
+.rdust{inset:0;background-image:radial-gradient(circle,rgba(255,255,255,.9) 1.4px,transparent 2px),radial-gradient(circle,rgba(255,255,255,.7) 1px,transparent 1.6px);background-size:90px 110px,60px 80px;background-position:10px 20px,40px 5px;opacity:.6}
 @keyframes rdust{to{background-position:10px -200px,40px -235px}}
 .int-nic{display:none}
 .roombg:has(.int-nic) .pat{opacity:1}
@@ -146,7 +146,7 @@ p{margin:0}
 .wardstage .rwin,.roomprev .rwin{display:none}
 .stage .stk,.wardstage .stk,.roomprev .stk{filter:drop-shadow(0 4px 3px rgba(0,0,0,.18))}
 .stage .stk{--rs:30px}
-.stage .fig svg,.wardstage .fig svg{filter:drop-shadow(0 6px 6px rgba(51,32,58,.18))}
+
 @media (prefers-reduced-motion: reduce){.rlight,.rdust{animation:none}}
 
 #pagebg .stk{opacity:.5;--rs:56px}
@@ -637,7 +637,7 @@ body.calcopen .view{padding-bottom:60vh}
 .stage .nameplate{position:absolute;right:12px;bottom:14px;background:var(--paper);border:2.5px solid var(--edge);border-radius:14px;padding:4px 10px;font-family:var(--f-display);font-weight:800;box-shadow:0 4px 0 var(--drop);max-width:40%;text-align:center;line-height:1.1}
 .stage .nameplate small{display:block;font-size:.72rem;color:var(--muted)}
 .avatar{display:block}
-.idle .avatar,.avatar.idle{animation:bob 3s ease-in-out infinite;transform-origin:50% 100%}
+.idle .avatar,.avatar.idle{animation:bob 3s ease-in-out infinite;transform-origin:50% 100%;will-change:transform}
 @keyframes bob{50%{transform:translateY(-5px) scale(1.01,.99)}}
 .avatar .eyes{animation:blink 4.5s infinite;transform-origin:100px 96px}
 @keyframes blink{0%,46%,50%,100%{transform:scaleY(1)}48%{transform:scaleY(.1)}}
@@ -1064,7 +1064,7 @@ img.emo{width:1.18em;min-width:1.18em;height:1.18em;flex:none;vertical-align:-.2
 .over .box>svg.bear{width:120px;height:120px;flex:none}
 .lbseg{width:100%;box-sizing:border-box}.lbseg button{flex:1;font-size:.9rem;padding:8px 2px}
 .lbstage{padding:38px 10px 0;overflow:hidden;background:radial-gradient(120% 90% at 50% 0%,#FFF6D6 0%,var(--lilac-soft) 55%,var(--c-mat-soft) 100%);position:relative}
-.lbstage::before{content:"";position:absolute;inset:0;background:conic-gradient(from 180deg at 50% 20%,transparent 0 20deg,rgba(255,255,255,.55) 25deg 35deg,transparent 40deg 70deg,rgba(255,255,255,.45) 75deg 85deg,transparent 90deg 270deg,rgba(255,255,255,.45) 275deg 285deg,transparent 290deg 320deg,rgba(255,255,255,.55) 325deg 335deg,transparent 340deg);animation:lbrays 14s linear infinite;opacity:.8;pointer-events:none}
+.lbstage::before{will-change:transform;content:"";position:absolute;inset:0;background:conic-gradient(from 180deg at 50% 20%,transparent 0 20deg,rgba(255,255,255,.55) 25deg 35deg,transparent 40deg 70deg,rgba(255,255,255,.45) 75deg 85deg,transparent 90deg 270deg,rgba(255,255,255,.45) 275deg 285deg,transparent 290deg 320deg,rgba(255,255,255,.55) 325deg 335deg,transparent 340deg);animation:lbrays 14s linear infinite;opacity:.8;pointer-events:none}
 @keyframes lbrays{to{transform:rotate(360deg)}}
 .podium{position:relative;display:grid;grid-template-columns:1fr 1.15fr 1fr;align-items:end;gap:6px;min-height:230px}
 .podium.sm{min-height:178px;margin:26px 0 2px}
@@ -1177,8 +1177,8 @@ div.frrow{cursor:default}.frrow .btn.small{flex:none;min-height:40px;padding:4px
 .invbox{width:100%;text-align:left;background:var(--paper2);border-radius:16px;padding:10px 12px;box-sizing:border-box}.invbox>b{font-family:var(--f-display);font-size:1.05rem}
 .over.invite .box{gap:10px}
 .thx,.thx *,.thx *::before,.thx *::after{transition:background-color .45s ease,color .45s ease,border-color .45s ease,box-shadow .45s ease,fill .45s ease!important}
-.thx.slow,.thx.slow *,.thx.slow *::before,.thx.slow *::after{transition-duration:1.5s!important}
-html.bnight body::after{content:"";position:fixed;inset:0;pointer-events:none;z-index:-1;background-image:radial-gradient(circle,rgba(255,255,255,.7) 1.2px,transparent 2px),radial-gradient(circle,rgba(255,240,180,.55) 1px,transparent 1.6px);background-size:120px 140px,80px 96px;background-position:20px 30px,60px 10px;animation:bnstars 4s ease-in-out infinite;opacity:.5}
+html.vtslow::view-transition-old(root),html.vtslow::view-transition-new(root){animation-duration:1.3s;animation-timing-function:ease-in-out}
+html.bnight body::after{content:"";position:fixed;inset:0;pointer-events:none;z-index:-1;background-image:radial-gradient(circle,rgba(255,255,255,.7) 1.2px,transparent 2px),radial-gradient(circle,rgba(255,240,180,.55) 1px,transparent 1.6px);background-size:120px 140px,80px 96px;background-position:20px 30px,60px 10px;animation:bnstars 4s ease-in-out infinite;opacity:.5;will-change:opacity}
 @keyframes bnstars{50%{opacity:.25}}
 @media (prefers-reduced-motion: reduce){html.bnight body::after{animation:none}}
 .drcard{box-sizing:border-box;display:flex;align-items:center;gap:12px;padding:14px;text-align:left;width:100%;font-family:inherit;color:#33203A;background:linear-gradient(120deg,#FFE08A,#FFC24B);position:relative;animation:pcpulse 1.6s ease-in-out infinite}
@@ -1311,7 +1311,7 @@ body{background-attachment:fixed!important}
 .brbed{left:41%;bottom:5%;width:190px;height:62px;border-radius:24px 24px 10px 10px;background:linear-gradient(180deg,#9C7CF4,#7A5BD6);border:2.5px solid var(--edge);z-index:2}
 .brbed::before{content:"";position:absolute;left:10px;top:-12px;width:52px;height:24px;border-radius:12px;background:#fff;border:2.5px solid var(--edge)}
 .bearroom .bcfig{position:absolute;left:41%;bottom:13%;width:156px;height:156px;transform:translateX(-50%);transform-style:preserve-3d;z-index:1;background:none;border:0;padding:0;cursor:pointer}
-.bearroom .bcfig svg{width:100%;height:100%;filter:drop-shadow(0 8px 6px rgba(60,30,10,.28)) drop-shadow(0 0 1px rgba(0,0,0,.3));animation:br3d 6s ease-in-out infinite;transform-origin:50% 90%}
+.bearroom .bcfig svg{width:100%;height:100%;animation:br3d 6s ease-in-out infinite;transform-origin:50% 90%;will-change:transform}
 @keyframes br3d{0%,100%{transform:rotateY(-14deg) rotateX(2deg)}50%{transform:rotateY(14deg) rotateX(-2deg)}}
 .brwin b{position:absolute;display:block;border-radius:50%;transition:transform 1.6s cubic-bezier(.5,0,.3,1),opacity 1.6s}
 .brsun{width:20px;height:20px;right:8px;top:8px;background:#FFE066;box-shadow:0 0 12px #FFD23F}
@@ -1321,7 +1321,7 @@ body{background-attachment:fixed!important}
 .night .brsun{transform:translateY(70px);opacity:0}.night .brmoon{transform:none;opacity:1}.night .brwstars{opacity:1}
 .brdark{inset:0;background:radial-gradient(ellipse 50% 60% at 45% 55%,rgba(120,110,255,.25),transparent 70%),linear-gradient(180deg,rgba(20,18,70,.82),rgba(45,30,90,.72));opacity:0;transition:opacity 1.6s ease-in-out;pointer-events:none}
 .night .brdark{opacity:1}
-.brstars{inset:0 0 35% 0;background-image:radial-gradient(circle,#fff 1.3px,transparent 2px),radial-gradient(circle,#FFF2B0 1px,transparent 1.6px);background-size:70px 50px,46px 38px;background-position:12px 8px,30px 22px;opacity:0;transition:opacity 2s 0s}
+.brstars{will-change:opacity;inset:0 0 35% 0;background-image:radial-gradient(circle,#fff 1.3px,transparent 2px),radial-gradient(circle,#FFF2B0 1px,transparent 1.6px);background-size:70px 50px,46px 38px;background-position:12px 8px,30px 22px;opacity:0;transition:opacity 2s 0s}
 .night .brstars{opacity:.9;transition-delay:.8s;animation:brtw 3s ease-in-out infinite}
 @keyframes brtw{50%{opacity:.45}}
 .brbed{transform:translate(-50%,130%)!important;transition:transform .9s cubic-bezier(.3,1.3,.5,1)}
@@ -1329,8 +1329,8 @@ body{background-attachment:fixed!important}
 .brplinth{transition:opacity .8s}.night .brplinth{opacity:0}
 .bearroom .bcfig{transition:bottom 1s cubic-bezier(.4,0,.2,1)}
 .night .bcfig{bottom:10%!important}
-.bearroom .bcfig svg{transition:filter 1.6s}
-.night .bcfig svg{animation:bsleepy 4s ease-in-out infinite!important;filter:saturate(.85) brightness(.85) drop-shadow(0 6px 6px rgba(0,0,0,.3))}
+.bearroom .bcfig svg{transition:opacity .3s}
+.night .bcfig svg{animation:bsleepy 4s ease-in-out infinite!important}
 @keyframes bsleepy{0%,100%{transform:rotate(-6deg) scale(1)}50%{transform:rotate(-4deg) scale(1.025,1.04)}}
 .night .bear .b-eyes{opacity:0;animation:none}.night .bear .b-happyeyes{opacity:1;transform:scaleY(-1);transform-origin:center;transform-box:fill-box}
 .night .bear .b-arm-r,.night .bear .b-brows,.night .bear .b-look,.night .bear .b-hearts path{animation:none}
