@@ -120,7 +120,7 @@ const ACT = {
     LOGIN.busy = true; LOGIN.msg = ''; render(null);
     try {
       const j = LOGIN.mode === 'in' ? await supaAuth('token?grant_type=password', { email, password: pass }) : await supaAuth('signup', { email, password: pass });
-      if (!j.access_token) { LOGIN.mode = 'in'; return fail('Poslali sme vám e-mail. Potvrďte ho odkazom a potom sa prihláste.'); }
+      if (!j.access_token) { LOGIN.mode = 'in'; LOGIN.busy = false; LOGIN.ok = true; LOGIN.msg = `📩 Poslali sme overovací e-mail na ${email}. Otvorte ho a kliknite na odkaz, prihlási vás to automaticky. Ak ho nevidíte, pozrite aj priečinok Spam.`; sfx('ok'); return render(null); }
       setAuth(authFrom(j));
     } catch (e) { return fail(authErr(e)); }
     try { await supaSync(); } catch (e) { DBREF = SUPADB; toast('Postup sa zatiaľ nepodarilo načítať. Skúsime to neskôr.'); }
