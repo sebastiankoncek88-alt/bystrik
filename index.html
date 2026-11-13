@@ -1175,6 +1175,9 @@ img.emo{width:1.18em;min-width:1.18em;height:1.18em;flex:none;vertical-align:-.2
 @keyframes tutfing{50%{transform:translate(-30%,-12px) scale(.92)}}
 .tutsheet.coach.nudge{animation:tutnudge .4s}
 @keyframes tutnudge{25%{translate:-8px 0}50%{translate:8px 0}75%{translate:-4px 0}}
+.aigcoach{position:fixed;left:12px;right:12px;bottom:calc(var(--nav-h) + 22px + env(safe-area-inset-bottom,0px));z-index:65;max-width:440px;margin:0 auto;display:flex;gap:10px;align-items:flex-start;background:var(--paper);border:2.5px solid var(--edge);border-radius:20px;padding:10px 12px;box-shadow:0 6px 0 var(--drop),0 14px 30px rgba(0,0,0,.3);animation:coachin .28s cubic-bezier(.3,1.4,.5,1)}
+.aigcoach.attop{bottom:auto;top:calc(env(safe-area-inset-top,0px) + 76px)}
+.aigcoach .tutbear{width:56px;height:56px}
 .tutarrow{position:absolute;width:20px;height:20px;background:var(--paper);border:2.5px solid var(--edge);transform:translateX(-50%) rotate(45deg);border-radius:4px}
 .tutsheet.coach.pup .tutarrow{top:-11px;border-right:0;border-bottom:0}.tutsheet.coach.pdown .tutarrow{bottom:-11px;border-left:0;border-top:0}.tutsheet.coach.mid .tutarrow{display:none}
 .setv .pgroup{margin-top:6px}
@@ -1317,6 +1320,47 @@ body{background-attachment:fixed!important}
 .mlv{font-family:var(--f-display);font-weight:800;font-size:.86rem}.mitems{display:flex;gap:6px;flex-wrap:wrap}.mile.l .mitems{justify-content:flex-end}
 .mit{display:flex;flex-direction:column;align-items:center;width:58px;text-align:center}.mit .t{width:46px;height:46px;display:block;border-radius:12px;overflow:hidden;background:var(--paper2)}.mit .t>*{width:100%;height:100%}.mit small{font-size:.58rem;font-weight:700;line-height:1.1;color:var(--muted)}
 .mmore{align-self:center;font-weight:800;font-size:.8rem;color:var(--muted)}.mprog{height:8px;border-radius:9px;background:var(--line);overflow:hidden}.mprog i{display:block;height:100%;background:var(--accent)}.mleft{font-weight:800;font-size:.72rem;color:var(--accent)}
+.bearroom{padding:12px;display:flex;flex-direction:column;gap:10px;overflow:hidden}
+.brhead{display:flex;align-items:center;justify-content:space-between;gap:8px}.brhead>b{font-family:var(--f-display);font-size:1.2rem}
+.brlove{display:flex;align-items:center;gap:6px;font-family:var(--f-display);font-weight:800;font-size:.9rem;background:var(--c-sjl-soft);border:2px solid var(--edge);border-radius:12px;padding:3px 8px}
+.brlove i{display:block;width:46px;height:7px;border-radius:5px;background:rgba(0,0,0,.12);overflow:hidden}.brlove i b{display:block;height:100%;background:linear-gradient(90deg,#F25C8B,#FF9FBF);border-radius:5px;transition:width .5s}
+.brscene{position:relative;height:220px;border-radius:18px;border:2.5px solid var(--edge);overflow:hidden;perspective:700px;background:radial-gradient(ellipse 60% 70% at 50% 42%,#FFF6DD,transparent 70%),linear-gradient(180deg,#FFE7C2,#FFD9A8 70%);transition:background .5s}
+.brscene.night{background:radial-gradient(ellipse 50% 60% at 50% 45%,rgba(140,130,255,.35),transparent 70%),linear-gradient(180deg,#2C2A66,#3F3478 70%)}
+.brscene i{position:absolute;display:block}
+.brwin{left:7%;top:10%;width:58px;height:64px;border:3px solid var(--edge);border-radius:30px 30px 6px 6px;background:radial-gradient(circle at 70% 30%,#FFE066 0 10px,transparent 11px),linear-gradient(180deg,#9ED8FF,#DDF3FF);box-shadow:0 4px 0 var(--drop)}
+.night .brwin{background:radial-gradient(circle at 65% 32%,#FFF6C8 0 9px,transparent 10px),radial-gradient(circle at 25% 60%,#fff 0 1.5px,transparent 2px),radial-gradient(circle at 50% 75%,#fff 0 1px,transparent 2px),linear-gradient(180deg,#141244,#2B2A6E)}
+.brshelf{right:7%;top:20%;width:86px;height:8px;background:#B67A3E;border:2px solid var(--edge);border-radius:4px;box-shadow:0 3px 0 var(--drop)}
+.brshelf span{position:relative;top:-27px;font-size:1.25rem;margin-right:2px}.brshelf img{width:24px;height:24px}
+.brfloor{left:0;right:0;bottom:0;height:30%;background:linear-gradient(180deg,#E3A86A,#C98A4E);border-top:3px solid #9A6532}
+.brfloor::before{content:"";position:absolute;inset:0;background:repeating-linear-gradient(90deg,transparent 0 40px,rgba(90,50,10,.18) 40px 42px)}
+.night .brfloor{background:linear-gradient(180deg,#6B4E7A,#4E3A60);border-top-color:#2E2140}
+.brplinth{left:41%;bottom:9%;width:150px;height:34px;transform:translateX(-50%);border-radius:50%;background:radial-gradient(ellipse at 50% 35%,#FFFFFF,#E6DDF6 55%,#BDB0D8 100%);border:2.5px solid var(--edge);box-shadow:0 10px 0 -2px #9C8CC4,0 10px 0 0.5px var(--edge),0 18px 14px rgba(0,0,0,.25)}
+.brbed{left:41%;bottom:5%;width:190px;height:62px;transform:translateX(-50%);border-radius:24px 24px 10px 10px;background:linear-gradient(180deg,#9C7CF4,#7A5BD6);border:2.5px solid var(--edge);z-index:2}
+.brbed::before{content:"";position:absolute;left:10px;top:-12px;width:52px;height:24px;border-radius:12px;background:#fff;border:2.5px solid var(--edge)}
+.bearroom .bcfig{position:absolute;left:41%;bottom:13%;width:156px;height:156px;transform:translateX(-50%);transform-style:preserve-3d;z-index:1;background:none;border:0;padding:0;cursor:pointer}
+.bearroom .bcfig svg{width:100%;height:100%;filter:drop-shadow(0 8px 6px rgba(60,30,10,.28)) drop-shadow(0 0 1px rgba(0,0,0,.3));animation:br3d 6s ease-in-out infinite;transform-origin:50% 90%}
+@keyframes br3d{0%,100%{transform:rotateY(-14deg) rotateX(2deg)}50%{transform:rotateY(14deg) rotateX(-2deg)}}
+.bearroom.bm-sleep .bcfig{bottom:10%;z-index:1}.bearroom.bm-sleep .bcfig svg{animation:none;transform:rotate(-6deg);filter:saturate(.85) brightness(.88) drop-shadow(0 6px 6px rgba(0,0,0,.3))}.bearroom.bm-sleep .b-eyes{opacity:0;animation:none}.bearroom.bm-sleep .b-happyeyes{opacity:1;transform:scaleY(-1);transform-origin:center;transform-box:fill-box}.bearroom.bm-sleep .b-arm-r{animation:none}
+.bearroom .bzz{top:14%;right:auto;left:52%;font-size:1.8rem;z-index:3;animation:bzz 2.4s ease-in-out infinite}
+@keyframes bzz{0%{transform:translate(0,0) scale(.7);opacity:0}30%{opacity:1}100%{transform:translate(16px,-26px) scale(1.15);opacity:0}}
+.brbub{position:absolute;right:8px;top:auto;bottom:calc(30% + 6px);max-width:33%;background:var(--paper);border:2.5px solid var(--edge);border-radius:16px 16px 4px 16px;padding:6px 9px;font-weight:800;font-size:.8rem;line-height:1.25;box-shadow:0 3px 0 var(--drop);z-index:3;color:var(--ink)}
+.brbub.pop{animation:popUp .4s cubic-bezier(.3,1.6,.5,1)}
+.brhoney{position:absolute;left:8px;bottom:8px;z-index:3;background:var(--sun);border:2.5px solid var(--edge);border-radius:12px;padding:2px 8px;font-family:var(--f-display);font-weight:800;color:#33203A}
+.brstats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.brst{display:flex;align-items:center;gap:5px;min-width:0}.brst>span{font-size:1.3rem}.brst>div{flex:1;min-width:0}.brst small{display:block;font-weight:800;font-size:.72rem;color:var(--muted)}
+.brbar{height:9px;border-radius:6px;background:var(--line);border:1.5px solid var(--edge);overflow:hidden}.brbar i{display:block;height:100%;border-radius:5px;transition:width .6s}
+.bract{display:grid;grid-template-columns:repeat(5,1fr);gap:6px}
+.brb{display:flex;flex-direction:column;align-items:center;gap:2px;padding:7px 2px;border:2.5px solid var(--edge);border-radius:16px;background:var(--paper);box-shadow:0 3px 0 var(--drop);font-family:inherit;font-weight:800;font-size:.68rem;color:var(--ink);cursor:pointer}
+.brb span{font-size:1.5rem;line-height:1}.brb img{width:28px;height:28px}.brb[aria-disabled="true"]{opacity:.5}.brb.on{background:var(--bad);color:#fff}
+.brfly{position:fixed;z-index:80;font-size:2rem;pointer-events:none;animation:brfly .7s cubic-bezier(.4,-.3,.6,1) forwards}
+@keyframes brfly{to{transform:translate(var(--dx),var(--dy)) scale(.4);opacity:.3}}
+.brnote{position:absolute;bottom:40%;font-size:1.4rem;z-index:3;animation:brnote 1.6s ease-out forwards}
+@keyframes brnote{0%{transform:translateY(0) scale(.5);opacity:0}20%{opacity:1}100%{transform:translateY(-90px) rotate(20deg);opacity:0}}
+.bear.bdance .b-all{animation:bdance .6s ease-in-out infinite alternate}
+@keyframes bdance{0%{transform:translateX(-6px) rotate(-8deg)}100%{transform:translateX(6px) rotate(8deg) translateY(-6px)}}
+.bear.bdance .b-arm-l{animation:bcl .6s ease-in-out infinite}.bear.bdance .b-arm-r{animation:bcr .6s ease-in-out infinite}
+.bear.bdance .b-eyes{opacity:0}.bear.bdance .b-happyeyes{opacity:1}
+@media (prefers-reduced-motion: reduce){.bearroom .bcfig svg,.bear.bdance *{animation:none!important}}
 .bearcorner{display:flex;gap:10px;align-items:center;padding:10px 12px;background:var(--paper2);box-shadow:none;border-style:dashed}
 .bcfig{position:relative;flex:none;width:118px;height:118px;background:none;border:0;padding:0;cursor:pointer}.bcfig svg{width:100%;height:100%}
 .bm-sleep .bcfig svg{filter:saturate(.7) brightness(.92);transform:rotate(-8deg)}.bm-sick .bcfig svg{filter:saturate(.6) hue-rotate(-8deg)}
@@ -3663,7 +3707,7 @@ function render(dir) {
   app.innerHTML = VIEWS[UI.view](UI.params);
   const v = app.querySelector('.view'); if (v && dir) v.classList.add('enter-' + dir);
   AFTER[UI.view] && AFTER[UI.view]();
-  applyRoom();
+  applyRoom(); if (CHG) setTimeout(chgStep, 260);
   if (!['quiz', 'cards', 'pexeso', 'match', 'sort', 'game', 'result', 'onboard'].includes(UI.view)) setTimeout(flushPending, 350);
 }
 let LASTCOINS = -1;
@@ -3855,10 +3899,22 @@ function bearInit(p) { if (!p.bear) p.bear = { fed: Date.now(), slept: Date.now(
 function bearMood(p) { const b = bearInit(p); const since = Date.now() - (b.care || 0); if (since > 48 * HRS) return 'sick'; if (b.asleep) return 'sleep'; if (Date.now() - (b.fed || 0) > 20 * HRS) return 'hungry'; if (Date.now() - (b.slept || 0) > 26 * HRS) return 'tired'; return 'happy'; }
 const BEAR_TXT = { sick: 'Bystrík je trochu nachladnutý 🤧. Stačí ho nakŕmiť alebo uložiť spať a hneď mu bude lepšie.', sleep: 'Bystrík sladko spí 💤. Zobuď ho, keď sa budeš chcieť učiť.', hungry: 'Bystrík by si dal trochu medu 🍯.', tired: 'Bystrík zíva. Možno by si rád zdriemol.', happy: 'Bystrík má dobrú náladu! Ťukni naňho.' };
 const BEAR_PEP = ['Ide ti to skvele! 💪', 'Ešte jedna úloha a dáme si pauzu?', 'Chyby sú v poriadku, z nich sa učíme.', 'Som na teba hrdý!', 'Poďme sa naučiť niečo nové!', 'Pamätáš si, čo sme sa učili včera?'];
+const BEAR_PET = ['Hihi, to šteklí! 🤭', 'Mám ťa rád! 💛', 'Si môj najlepší kamarát!', 'Ešte, ešte! 😊', 'Mňau… teda, chcel som povedať mrmr 🐻'];
+function bearStats(b) { const now = Date.now(), cl = v => Math.max(0, Math.min(100, Math.round(v))); return { food: cl(100 - (now - (b.fed || 0)) / (20 * HRS) * 100), energy: b.asleep ? 100 : cl(100 - (now - (b.slept || 0)) / (26 * HRS) * 100), joy: cl(100 - (now - (b.care || 0)) / (48 * HRS) * 100) }; }
+const bearLove = b => { const l = b.love || 0; return { lv: 1 + Math.floor(l / 10), pr: l % 10 }; };
 function bearCorner(p) {
-  const b = bearInit(p); const m = bearMood(p); const h = b.honey || 0;
-  return `<section class="card bearcorner bm-${m}" id="bearcorner"><button class="bcfig press" data-a="bear-tap" aria-label="Ťukni na Bystríka">${bearSvg(m === 'happy' ? '' : m === 'sick' || m === 'tired' ? 'comfort' : '')}${m === 'sleep' ? '<span class="bzz" aria-hidden="true">💤</span>' : m === 'sick' ? '<span class="bzz" aria-hidden="true">🤧</span>' : ''}</button><div class="bcinfo"><b>Bystríkov kútik</b><small>${BEAR_TXT[m]}</small><div class="bcact"><button class="btn small" data-a="bear-feed" ${h ? '' : 'aria-disabled="true"'}>🍯 Nakŕmiť <em>${h}</em></button><button class="btn small" data-a="bear-sleep">${b.asleep ? '☀️ Zobudiť' : '🌙 Uložiť spať'}</button><button class="btn small" data-a="bear-rec" aria-label="Podrž a povedz niečo, Bystrík to zopakuje">🎤 Zopakuj</button></div><small class="bchint">🍯 Med dostaneš za každé dokončené učenie alebo hru.</small></div></section>`;
+  const b = bearInit(p); const m = bearMood(p); const h = b.honey || 0; const st = bearStats(b); const lo = bearLove(b);
+  const bar = (i, n, v, c) => `<div class="brst"><span>${i}</span><div><small>${n}</small><div class="brbar"><i style="width:${v}%;background:${c}"></i></div></div></div>`;
+  return `<section class="card bearroom bm-${m}" id="bearcorner"><div class="brhead"><b>🧸 Bystríkov kútik</b><span class="brlove" title="Priateľstvo">💖 Lv ${lo.lv}<i><b style="width:${lo.pr * 10}%"></b></i></span></div>
+  <div class="brscene ${b.asleep ? 'night' : ''}" id="brscene"><i class="brwin"></i><i class="brshelf"><span>📚</span><span>🪴</span><span>🏆</span></i><i class="brfloor"></i><i class="brplinth"></i>${b.asleep ? '<i class="brbed"></i>' : ''}
+  <button class="bcfig press" data-a="bear-tap" aria-label="Ťukni na Bystríka">${bearSvg(m === 'sick' || m === 'tired' ? 'comfort' : '')}</button>${m === 'sleep' ? '<span class="bzz" aria-hidden="true">💤</span>' : m === 'sick' ? '<span class="bzz" aria-hidden="true">🤧</span>' : ''}
+  <div class="brbub" id="brbub">${BEAR_TXT[m]}</div><span class="brhoney">🍯 ${h}</span></div>
+  <div class="brstats">${bar('🍯', 'Hlad', st.food, 'linear-gradient(90deg,#FFB13C,#FFD45C)')}${bar('⚡', 'Energia', st.energy, 'linear-gradient(90deg,#4C86F7,#7EC8FF)')}${bar('😊', 'Radosť', st.joy, 'linear-gradient(90deg,#F25C8B,#FF9FBF)')}</div>
+  <div class="bract"><button class="brb press" data-a="bear-feed" ${h ? '' : 'aria-disabled="true"'}><span>🍯</span>Nakŕmiť</button><button class="brb press" data-a="bear-pet"><span>🤗</span>Pohladkať</button><button class="brb press" data-a="bear-dance"><span>💃</span>Tanec</button><button class="brb press" data-a="bear-sleep"><span>${b.asleep ? '☀️' : '🌙'}</span>${b.asleep ? 'Zobudiť' : 'Spať'}</button><button class="brb press" data-a="bear-rec" aria-label="Podrž a povedz niečo, Bystrík to zopakuje"><span>🎤</span>Zopakuj</button></div>
+  <small class="bchint">🍯 Med dostaneš za každé dokončené učenie alebo hru. Za starostlivosť rastie priateľstvo 💖.</small></section>`;
 }
+function bearSay(t) { const el = $('#brbub'); if (el) { el.textContent = t; el.classList.remove('pop'); void el.offsetWidth; el.classList.add('pop'); } }
+function bearLoveUp(p, n) { const b = bearInit(p); const before = bearLove(b).lv; b.love = (b.love || 0) + n; const after = bearLove(b).lv; bearCare(p); const el = $('.brlove'); if (el) el.innerHTML = `💖 Lv ${after}<i><b style="width:${bearLove(b).pr * 10}%"></b></i>`; if (after > before) { toast(`💖 Priateľstvo s Bystríkom: level ${after}!`); sfx('level'); try { confetti(80, .4); } catch (e) { } } }
 let BREC = null;
 function bearCare(p) { const b = bearInit(p); b.care = Date.now(); save(); }
 function parentNeedCard() { if (DATA.parent && DATA.parent.pin) return ''; return `<button class="card pneed press" data-a="pguide"><span class="ic">👨‍👩‍👧</span><span><b>Rodičia: vytvorte si účet</b><span class="b" style="font-size:.9rem">Trvá to minútu. Ťuknite a prevediem vás.</span></span><em>!</em></button>`; }
@@ -3873,6 +3929,32 @@ const PTOUR = [
   { h: 'Nastavenia', t: 'Ročník, čo je povolené, pripomienka, priatelia, účet aj PIN. Ťuknite na riadok a otvorí sa.', pt: 'set', f: '.pslist' },
   { h: 'Späť k dieťaťu', t: 'Šípkou vľavo hore účet zamknete a vrátite telefón dieťaťu.', pt: 'over', f: '.top .iconbtn' }
 ];
+/* sprievodca „ako zapnúť chat s Bystríkom“ – neblokuje, len ukazuje, kam ťuknúť */
+let CHG = null;
+function chgEnd(msg) { CHG = null; document.querySelectorAll('.aigcoach,.tutfinger.aig').forEach(e => e.remove()); document.querySelectorAll('.aigfocus').forEach(e => e.classList.remove('aigfocus', 'tutfocus')); if (msg) toast(msg); }
+function chgFind(sel, txt) { const els = [...document.querySelectorAll(sel)]; return txt ? els.find(e => txt.test(e.textContent)) : els[0]; }
+function chgStep() {
+  if (!CHG) return; document.querySelectorAll('.aigcoach,.tutfinger.aig').forEach(e => e.remove()); document.querySelectorAll('.aigfocus').forEach(e => e.classList.remove('aigfocus', 'tutfocus'));
+  if (CHAT_ON()) { chgEnd(); toast('🧸 Hotovo! Bystrík je zobudený a môžeš mu písať.'); sfx('level'); if (UI.view !== 'chat' && !['parent', 'pin', 'psetup'].includes(UI.view)) go('chat'); return; }
+  const v = UI.view, off = !DATA.settings.chat; let el = null, h = '', t = '';
+  if (v === 'chat') { el = chgFind('[data-a="aig-start"]'); h = 'Krok 1: Rodičovský účet'; t = 'Zavolaj rodiča. Potom ťuknite hore na ozubené koliesko.'; el = chgFind('.top [data-v="settings"]') || el; }
+  else if (v === 'settings') { el = chgFind('.parentcard'); h = 'Krok 2: Rodičovský účet'; t = 'Ťuknite na kartu Rodičovský účet. Rodič zadá PIN (alebo si účet vytvorí).'; }
+  else if (v === 'pin' || v === 'psetup' || (v === 'parent' && !PARENT_OK)) { h = 'Rodič zadá PIN'; t = 'Toto robí rodič. Ak ešte nemáte účet, vytvorte si ho, trvá to minútku.'; }
+  else if (v === 'parent') {
+    if (PTAB !== 'set') { el = chgFind('.pnav [data-t="set"]'); h = 'Krok 3: Nastavenia'; t = 'Ťuknite dole na Nastavenia.'; }
+    else if (PSET == null) { el = off ? chgFind('[data-a="pset"]', /Pravidlá pre dieťa/) : chgFind('[data-a="pset"]', /Účet a AI/); h = off ? 'Krok 4: Pravidlá' : 'Krok 4: Účet a AI'; t = off ? 'Najprv zapnite chat. Ťuknite na Pravidlá pre dieťa.' : 'Ťuknite na Účet a AI.'; }
+    else if (off) { el = chgFind('[data-a="toggle"][data-k="chat"]'); if (el) { h = 'Krok 5: Zapnúť chat'; t = 'Ťuknite na prepínač Chat s Bystríkom.'; } else { el = chgFind('[data-a="pset"][data-i="-1"]'); h = 'Späť'; t = 'Vráťte sa do Nastavení.'; } }
+    else { el = chgFind('.aiguidebtn'); if (el) { h = 'Posledný krok'; t = 'Ťuknite na Zapnúť AI s návodom. Prevedie vás krok za krokom, je to zadarmo.'; } else { el = chgFind('[data-a="pset"][data-i="-1"]'); h = 'Späť'; t = 'Vráťte sa do Nastavení a otvorte Účet a AI.'; } }
+  } else if (v === 'aiguide' || document.querySelector('.aiwiz')) { chgEnd(); return; }
+  else { el = chgFind('.top [data-v="settings"]'); h = 'Rodičovský účet'; t = 'Ťuknite hore na ozubené koliesko.'; }
+  const w = document.createElement('div'); w.className = 'aigcoach'; w.innerHTML = `<span class="tutbear">${owlSvg('')}</span><div class="tuttxt"><b>${h}</b><p>${t}</p></div><button class="tutx" data-a="aig-x" aria-label="Zavrieť">✕</button>`; document.body.appendChild(w);
+  if (el) {
+    const fixed = el.closest('.nav') || el.closest('.top'); el.classList.add('aigfocus', 'tutfocus'); if (!fixed) el.scrollIntoView({ block: 'center' });
+    const fg = document.createElement('span'); fg.className = 'tutfinger aig'; fg.textContent = '👆'; document.body.appendChild(fg);
+    const pos = () => { const r = el.getBoundingClientRect(); fg.style.left = (r.left + r.width / 2) + 'px'; fg.style.top = (r.top + r.height * .6) + 'px'; w.classList.toggle('attop', r.top > innerHeight / 2); }; pos(); setTimeout(pos, 120);
+  }
+  say(h + '. ' + t);
+}
 let GUIDE = null;
 function showGuide(steps, i, end) {
   const st = steps[i];
@@ -4646,8 +4728,8 @@ const SUGG = {
   4: ['Ako sa delí so zvyškom?', 'Ako vypočítam obvod obdĺžnika?', 'Koľko gramov má kilogram?', 'Čo sú vybrané slová po L?', 'Čo je zámeno a čo číslovka?', 'Čo je rytmické krátenie?']
 };
 VIEWS.chat = () => {
-  if (DATA.settings.chat && !CHAT_ON()) return `${topbar('home')}<main class="view"><section class="card duelbox">${bearSvg('')}<h2>AI Bystrík ešte spí</h2><p class="muted b">Aby vedel odpovedať na otázky, musí ho rodič raz zapnúť. Je to zadarmo a trvá to asi 2 minúty.</p><div class="gethow" style="text-align:left;width:100%;box-sizing:border-box"><b>Pre rodiča</b><p>1. Otvorte <b>Rodičovský účet</b>.<br>2. Záložka <b>Nastavenia</b> → <b>Účet a AI</b>.<br>3. Ťuknite na <b>Zapnúť AI s návodom</b>.</p></div><button class="btn primary block" data-a="parent-open">👨‍👩‍👧 Otvoriť rodičovský účet</button></section></main>${nav('')}`;
-  if (!DATA.settings.chat) return `${topbar('home')}<main class="view"><section class="card" style="padding:18px;text-align:center;display:flex;flex-direction:column;align-items:center;gap:8px">${owlSvg()}<h2>Chat je vypnutý</h2><p class="muted b">Rodičia ho môžu zapnúť v rodičovskom účte.</p></section></main>${nav('')}`;
+  if (DATA.settings.chat && !CHAT_ON()) return `${topbar('home')}<main class="view"><section class="card duelbox">${bearSvg('')}<h2>AI Bystrík ešte spí</h2><p class="muted b">Aby vedel odpovedať na otázky, musí ho rodič raz zapnúť. Je to zadarmo a trvá to asi 2 minúty.</p><div class="gethow" style="text-align:left;width:100%;box-sizing:border-box"><b>Pre rodiča</b><p>1. Otvorte <b>Rodičovský účet</b>.<br>2. Záložka <b>Nastavenia</b> → <b>Účet a AI</b>.<br>3. Ťuknite na <b>Zapnúť AI s návodom</b>.</p></div><button class="btn primary block" data-a="aig-start">👉 Ukáž mi, kam ťuknúť</button><p class="muted b" style="font-size:.82rem">Zavolaj mamu alebo ocka. Bystrík vám ukáže každý krok.</p></section></main>${nav('')}`;
+  if (!DATA.settings.chat) return `${topbar('home')}<main class="view"><section class="card" style="padding:18px;text-align:center;display:flex;flex-direction:column;align-items:center;gap:8px">${owlSvg()}<h2>Chat je vypnutý</h2><p class="muted b">Rodičia ho môžu zapnúť v rodičovskom účte.</p><button class="btn primary block" data-a="aig-start">👉 Ukáž mi, kam ťuknúť</button></section></main>${nav('')}`;
   return `${topbar('home')}<main class="view"><div style="display:flex;align-items:center;gap:12px"><span style="width:64px;height:64px;flex:none;display:block">${owlSvg('')}</span><div><h1 style="font-size:1.7rem">Opýtaj sa Bystríka</h1><p class="muted b" style="font-size:.9rem">Nerozumieš niečomu z matiky, slovenčiny, prírody alebo angličtiny? Napíš mi! Otázky dole sú pre ${P().grade}. ročník.</p></div></div>${aiMeter(true)}
   <div class="chatlog" id="chatlog">${CHAT.msgs.length ? CHAT.msgs.map((m, i) => m.r === 'me' ? `<div class="msg me">${esc(m.t)}</div>` : `<div class="msg bot">${owlSvg('')}<span ${i === CHAT.msgs.length - 1 ? 'id="lastbot"' : ''}>${m.t ? esc(m.t) : '<span class="typing"><i></i><i></i><i></i></span>'}</span></div>`).join('') : `<div class="msg bot">${owlSvg('')}<span>Ahoj, ${esc(P().name)}! Na čo sa chceš opýtať? Môžeš si vybrať aj otázku nižšie. 👇</span></div><div class="sugg">${[...(SUGG[P().grade] || SUGG[1]), SUGG_PRV[P().grade] || SUGG_PRV[1]].map(s => `<button class="press" data-a="ask" data-q="${esc(s)}">${esc(s)}</button>`).join('')}</div>`}</div>
   <form class="chatin" id="chatform"><input id="chatq" maxlength="300" autocomplete="off" placeholder="Napíš otázku…" ${CHAT.busy ? 'disabled' : ''}><button class="btn primary small" type="submit" ${CHAT.busy ? 'disabled' : ''} aria-label="Poslať">➤</button></form></main>${nav('')}`;
@@ -5082,7 +5164,7 @@ const ACT = {
   'bk-apply': async () => { try { const o = await readBackup($('#bkin').value); const data = o.data || o; if (!data || !Array.isArray(data.profiles)) throw new Error('bad'); DATA = Object.assign({ profiles: [], current: null }, data); normalize(); DATA.backupAt = Date.now(); if (!P()) DATA.current = DATA.profiles[0] ? DATA.profiles[0].id : null; save(); RESTORE = false; PSEL = DATA.current; toast(`Obnovené ✓ Hráči: ${DATA.profiles.map(p => p.name).join(', ')}`); sfx('level'); confetti(120); render(null); } catch (e) { sfx('no'); toast('Tento kód zálohy sa nedá prečítať. Skontrolujte, či je celý.'); } },
   'ai-save': () => { const v = ($('#aikey').value || '').trim(); if (!v) { toast('Najprv vložte AI kľúč.'); return; } if (v.length < 20 || /\s/.test(v)) { toast('Kľúč vyzerá neúplne. Skopírujte ho znova.'); return; } setApiKey(v); sfx('coin'); toast('AI kľúč uložený ✓ Bystrík teraz funguje aj na webe.'); render(null); },
   'ai-link': async () => { const u = location.origin + location.pathname + '#k=' + encodeURIComponent(getApiKey()); try { if (navigator.share) { await navigator.share({ title: 'Bystrík', url: u }); return; } } catch (e) { return; } try { await navigator.clipboard.writeText(u); toast('Odkaz skopírovaný. Pošlite si ho do druhého telefónu a otvorte. Nikomu inému ho nedávajte.'); } catch (e) { prompt('Skopírujte odkaz:', u); } },
-  'ai-guide': () => { sfx('whoosh'); aiGuide(0); },
+  'ai-guide': () => { if (CHG) chgEnd(); sfx('whoosh'); aiGuide(0); },
   'aig-go': (d, el) => { sfx('tap'); aiGuide(AIG + (+el.dataset.i)); },
   'aig-close': () => { try { speechSynthesis.cancel(); } catch (e) { } const o = $('#aigover'); if (o) o.remove(); },
   'aig-paste': async () => { const t = await readClip(); if (t) { $('#aigkey').value = t; sfx('pop'); } else toast('Ťuknite do políčka, podržte prst a zvoľte „Prilepiť“.'); },
@@ -5148,16 +5230,19 @@ const ACT = {
   'auth-chmail': () => { const w = document.createElement('div'); w.className = 'over'; w.innerHTML = `<div class="card box"><h2>✉️ Nový e-mail</h2><p class="muted b">Teraz: ${esc(AUTH.email || '')}. Zadajte novú adresu. Na potvrdenie vám príde e-mail.</p><input class="field" id="chm" type="email" inputmode="email" autocapitalize="off" autocomplete="email" placeholder="novy@email.sk" style="width:100%;box-sizing:border-box;font-size:1.05rem;padding:12px;text-align:left"><p class="loginmsg" id="chmmsg"></p><button class="btn primary block" data-a="auth-chmail-go">Poslať potvrdenie</button><button class="btn block" data-a="ov-close">Zavrieť</button></div>`; document.body.appendChild(w); },
   'auth-chmail-go': async (d, el) => { const v = ($('#chm').value || '').trim().toLowerCase(); const m = $('#chmmsg'); if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v)) { m.textContent = 'Zadajte platný e-mail.'; sfx('no'); return; } if (v === (AUTH.email || '').toLowerCase()) { m.textContent = 'To je váš terajší e-mail.'; sfx('no'); return; } el.disabled = true; try { const t = await supaToken(); const r = await fetch(SUPA.url + '/auth/v1/user?redirect_to=' + encodeURIComponent(location.origin + location.pathname), { method: 'PUT', headers: { apikey: SUPA.key, Authorization: 'Bearer ' + t, 'content-type': 'application/json' }, body: JSON.stringify({ email: v }) }); const j = await r.json().catch(() => ({})); if (!r.ok) throw { message: j.msg || j.message || '', code: j.error_code || '', status: r.status }; if (j.email && j.email.toLowerCase() === v) { setAuth({ ...AUTH, email: j.email }); m.className = 'loginmsg ok'; m.textContent = 'E-mail je zmenený ✓'; sfx('ok'); render(null); } else { m.className = 'loginmsg ok'; m.textContent = 'Poslali sme potvrdzovací e-mail. Kliknite na odkaz v ňom (pozrite starú aj novú schránku a spam). Dovtedy platí starý e-mail.'; sfx('ok'); } } catch (e) { el.disabled = false; const x = (e.message || '') + (e.code || '') + (e.status || ''); m.className = 'loginmsg'; m.textContent = /exists|registered|taken/i.test(x) ? 'Tento e-mail už používa iný účet.' : /rate|429/i.test(x) ? 'Teraz sa nedá poslať e-mail. Skúste to o hodinu.' : 'Nepodarilo sa. Skúste to znova.'; sfx('no'); } },
   'auth-switch': async (d, el) => { await ACT['auth-out'](d, el); if (UI.view === 'login') { LOGIN.mode = 'up'; LOGIN.msg = ''; render(null); toast('Odhlásené. Prihláste sa iným e-mailom alebo si vytvorte nový účet.'); } },
-  'bear-tap': () => { const p = P(); const b = bearInit(p); const fig = $('.bcfig svg'); if (b.asleep) { toast('Psst… Bystrík spí 💤'); return; } try { bearJoy(fig); } catch (e) { } const last = (p.lastEx && Date.now() - p.lastEx.t < 6 * HRS) ? 'Pamätáš? ' + p.lastEx.x : pick(BEAR_PEP); say(last); toast('🧸 ' + last); },
-  'bear-feed': () => { const p = P(); const b = bearInit(p); if (!b.honey) { toast('Med zatiaľ nemáš. Dokonči nejaké učenie a dostaneš 🍯'); sfx('no'); return; } b.honey--; b.fed = Date.now(); b.asleep = false; bearCare(p); sfx('pop'); toast('Mňam! Ďakujem 🍯'); render(null); },
-  'bear-sleep': () => { const p = P(); const b = bearInit(p); b.asleep = !b.asleep; if (b.asleep) b.slept = Date.now(); bearCare(p); sfx('tap'); render(null); },
+  'bear-tap': () => { const p = P(); const b = bearInit(p); const fig = $('.bcfig svg'); if (b.asleep) { bearSay('Psst… Bystrík spí 💤'); return; } try { bearJoy(fig); } catch (e) { } const last = (p.lastEx && Date.now() - p.lastEx.t < 6 * HRS) ? 'Pamätáš? ' + p.lastEx.x : pick(BEAR_PEP); say(last); if ($('#brbub')) bearSay(last); else toast('🧸 ' + last); },
+  'bear-feed': (d, el) => { const p = P(); const b = bearInit(p); if (!b.honey) { bearSay('Med zatiaľ nemáš. Dokonči nejaké učenie a dostaneš 🍯'); sfx('no'); return; } b.honey--; b.fed = Date.now(); b.asleep = false; const fig = $('.bcfig svg'); if (fig && el) { const a = el.getBoundingClientRect(), t = fig.getBoundingClientRect(); const j = document.createElement('span'); j.className = 'brfly'; j.textContent = '🍯'; j.style.left = a.left + a.width / 2 + 'px'; j.style.top = a.top + 'px'; j.style.setProperty('--dx', (t.left + t.width / 2 - a.left - a.width / 2) + 'px'); j.style.setProperty('--dy', (t.top + t.height * .55 - a.top) + 'px'); document.body.appendChild(j); setTimeout(() => j.remove(), 800); }
+    sfx('pop'); setTimeout(() => { try { bearJoy($('.bcfig svg')); } catch (e) { } bearSay('Mňam, mňam! Ďakujem 🍯'); bearLoveUp(p, 2); setTimeout(() => { if (UI.view === 'home') { const c = $('#bearcorner'); if (c) c.outerHTML = bearCorner(P()); } }, 1500); }, 700); },
+  'bear-pet': () => { const p = P(); const b = bearInit(p); if (b.asleep) { bearSay('Psst… Bystrík spí 💤'); return; } try { bearJoy($('.bcfig svg')); } catch (e) { } sfx('pop'); const t = pick(BEAR_PET); bearSay(t); say(t); bearLoveUp(p, 1); },
+  'bear-dance': () => { const p = P(); const b = bearInit(p); if (b.asleep) { bearSay('Najprv ma zobuď ☀️'); return; } const fig = $('.bcfig svg'); if (!fig || fig.classList.contains('bdance')) return; fig.classList.add('bdance'); bearSay('Tancujeme! 🎶'); sfx('level'); const sc = $('#brscene'); for (let i = 0; i < 6; i++) setTimeout(() => { if (!sc) return; const n = document.createElement('span'); n.className = 'brnote'; n.textContent = pick(['🎵', '🎶', '✨']); n.style.left = (20 + Math.random() * 60) + '%'; sc.appendChild(n); setTimeout(() => n.remove(), 1600); }, i * 350); setTimeout(() => { fig.classList.remove('bdance'); bearSay('Uf, to bola zábava! 😄'); }, 2600); bearLoveUp(p, 1); },
+  'bear-sleep': () => { const p = P(); const b = bearInit(p); b.asleep = !b.asleep; if (b.asleep) b.slept = Date.now(); bearCare(p); sfx('tap'); const c = $('#bearcorner'); if (c) c.outerHTML = bearCorner(p); else render(null); },
   'bear-rec': async (d, el) => {
     if (BREC) { try { BREC.mr.stop(); } catch (e) { } return; }
     if (!navigator.mediaDevices || !window.MediaRecorder) { toast('Tu sa mikrofón zapnúť nedá.'); return; }
     let st; try { st = await navigator.mediaDevices.getUserMedia({ audio: true }); } catch (e) { toast('Mikrofón nie je povolený. Rodič ho môže povoliť v prehliadači.'); return; }
-    const ch = []; const mr = new MediaRecorder(st); BREC = { mr }; el.classList.add('on'); el.innerHTML = '⏹️ Hotovo';
+    const ch = []; const mr = new MediaRecorder(st); BREC = { mr }; el.classList.add('on'); el.innerHTML = '<span>⏹️</span>Hotovo';
     mr.ondataavailable = e => { if (e.data && e.data.size) ch.push(e.data); };
-    mr.onstop = () => { st.getTracks().forEach(t => t.stop()); BREC = null; el.classList.remove('on'); el.innerHTML = '🎤 Zopakuj'; const url = URL.createObjectURL(new Blob(ch, { type: mr.mimeType || 'audio/webm' })); const a = new Audio(url); a.preservesPitch = false; a.mozPreservesPitch = false; a.webkitPreservesPitch = false; a.playbackRate = 1.45; const fig = $('.bcfig svg'); if (fig) fig.classList.add('talking'); a.onended = () => { URL.revokeObjectURL(url); if (fig) fig.classList.remove('talking'); }; a.play().catch(() => { }); bearCare(P()); };
+    mr.onstop = () => { st.getTracks().forEach(t => t.stop()); BREC = null; el.classList.remove('on'); el.innerHTML = '<span>🎤</span>Zopakuj'; const url = URL.createObjectURL(new Blob(ch, { type: mr.mimeType || 'audio/webm' })); const a = new Audio(url); a.preservesPitch = false; a.mozPreservesPitch = false; a.webkitPreservesPitch = false; a.playbackRate = 1.45; const fig = $('.bcfig svg'); if (fig) fig.classList.add('talking'); a.onended = () => { URL.revokeObjectURL(url); if (fig) fig.classList.remove('talking'); }; a.play().catch(() => { }); bearCare(P()); };
     mr.start(); setTimeout(() => { if (BREC && BREC.mr === mr) try { mr.stop(); } catch (e) { } }, 5000);
   },
   'pl-open': d => { const l = plinks()[+d.i]; if (l) openBrowser(l.u, l.n); },
@@ -5176,6 +5261,8 @@ const ACT = {
   'nav-settings': () => go('settings', {}, 'b'),
   'nav-me': () => go('me', {}, 'b'),
   'cset': d => { CSET = +d.i < 0 ? null : +d.i; sfx('tap'); render(null); scrollTo({ top: 0 }); },
+  'aig-start': () => { CHG = { on: 1 }; sfx('pop'); chgStep(); },
+  'aig-x': () => chgEnd(),
   'pset': d => { PSET = +d.i < 0 ? null : +d.i; sfx('tap'); render(null); scrollTo({ top: 0 }); },
   'ptab': d => { PSET = null; PTAB = d.t; sfx('tap'); render(null); scrollTo({ top: 0 }); const td = $('.pacc.todo'); if (td) setTimeout(() => td.scrollIntoView({ behavior: 'smooth', block: 'start' }), 150); },
   'set-bg': d => { DATA.settings.bgc = d.c; const c = PAGE_BG.find(x => x[0] === d.c); if (c && c[4]) { DATA.settings.theme = c[4]; applyTheme(); } save(); applyPageBg(); sfx('pop'); render(null); if (c && c[4]) toast(c[4] === 'dark' ? 'Čierne pozadie zapína tmavý režim 🌙' : 'Toto pozadie zapína svetlý režim ☀️'); },
