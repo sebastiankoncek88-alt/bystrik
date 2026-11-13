@@ -35,7 +35,6 @@ Písanie priateľom je predvolene vypnuté (`DATA.settings.msgOk`). Úsporný re
 ## Otvorené
 - Stripe + Bystrík Plus (rodičia budúci mesiac), AI cez server, automatický týždenný e-mail.
 - Kontaktný e-mail do zásad súkromia (spýtať sa používateľa).
-- Spustiť `supabase/2026-11-rebricek-cistenie.sql` (index, mazanie starých výsledkov, voliteľne pg_cron).
 
 ## Testovanie
 Playwright (chromium predinštalovaný), lokálny server, telefónna emulácia (iPhone 13). Supabase sa v testoch mockuje cez `page.route`.
