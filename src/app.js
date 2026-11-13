@@ -588,16 +588,26 @@ function openMystery(c, it, rk) {
   o.innerHTML = `<div class="mybig"><p class="chtip">Ťukni na truhlu! 👆</p><button class="chest mych shake" aria-label="Otvoriť"><i class="crays"></i><i class="cbody"></i><i class="clid"></i><b class="myq">?</b></button>
   <div class="myres" hidden><div class="myrar">${rk === 'leg' ? '🌟 ' : ''}${R.n.toUpperCase()}${rk === 'leg' ? ' 🌟' : ''}</div><div class="mycard"><span class="th">${itemThumb(c, it, p.av)}</span><b>${esc(it.n)}</b><small>${it.chest ? 'Exkluzívne, len zo záhadnej truhly' : CAT_LABEL[c]}</small></div><div class="myfig"></div><div class="rowbtns"><button class="btn primary" data-a="myst-wear" data-c="${c}" data-i="${it.id}">😎 Obliecť hneď</button><button class="btn" data-a="ov-close">Neskôr</button></div></div></div>`;
   document.body.appendChild(o); sfx('pop');
-  const ch = o.querySelector('.mych'), tip = o.querySelector('.chtip'); let step = 0, auto;
+  const ch = o.querySelector('.mych'), tip = o.querySelector('.chtip'); let started = false, auto;
   const lvl = { common: 0, rare: 1, epic: 2, leg: 3 }[rk];
-  const hit = () => { clearTimeout(auto); step++; ch.classList.remove('h1', 'h2', 'h3'); void ch.offsetWidth; ch.classList.add('h' + step); sfx('tap'); buzz(20 * step);
-    if (step === 2 && lvl >= 1) { ch.classList.add('glow'); tip.textContent = 'Niečo sa v nej svieti… ✨'; }
-    else if (step === 2) tip.textContent = 'Ešte raz!';
-    if (step >= 3) return boom(); auto = setTimeout(hit, 1400); };
-  const boom = () => { ch.classList.add('glow', 'open'); tip.textContent = lvl >= 2 ? 'NIEČO ÚŽASNÉ!!! 🤯' : 'Wow! 🤩'; sfx('gift'); const fl = document.createElement('div'); fl.className = 'myflash'; o.appendChild(fl); setTimeout(() => fl.remove(), 900);
+  const start = () => { if (started) return; started = true; clearTimeout(auto); ch.classList.add('open'); sfx('gift'); buzz(30); const fl = document.createElement('div'); fl.className = 'myflash'; o.appendChild(fl); setTimeout(() => fl.remove(), 900); setTimeout(() => { ch.classList.add('gone'); tip.textContent = 'Točí sa…'; spinReel(o, c, it, rk, () => reveal()); }, 600); };
+  const reveal = () => { tip.textContent = lvl >= 2 ? 'NIEČO ÚŽASNÉ!!! 🤯' : 'Wow! 🤩'; const fl = document.createElement('div'); fl.className = 'myflash'; o.appendChild(fl); setTimeout(() => fl.remove(), 900);
     if (lvl >= 2) { const root = document.documentElement; root.classList.remove('fxshake'); void root.offsetWidth; root.classList.add('fxshake'); setTimeout(() => root.classList.remove('fxshake'), 700); buzz([60, 40, 120]); }
-    setTimeout(() => { try { confetti(60 + lvl * 60, .35); } catch (e) { } ch.classList.add('gone'); tip.hidden = true; o.querySelector('.myres').hidden = false; sfx(lvl >= 2 ? 'level' : 'coin'); if (rk === 'leg') { o.querySelector('.mybig').insertAdjacentHTML('beforeend', `<span class="myrain">${'✦★✦★✦★✦★✦★✦★'.match(/./gu).map((e, i) => `<i style="left:${i * 8 + 3}%;animation-delay:${(i % 6) * .25}s">${e}</i>`).join('')}</span>`); } }, 650); };
-  ch.addEventListener('click', hit); auto = setTimeout(hit, 1200);
+    setTimeout(() => { try { confetti(60 + lvl * 60, .35); } catch (e) { } const rl = o.querySelector('.reel'); if (rl) rl.remove(); tip.hidden = true; o.querySelector('.myres').hidden = false; sfx(lvl >= 2 ? 'level' : 'coin'); if (rk === 'leg') { o.querySelector('.mybig').insertAdjacentHTML('beforeend', `<span class="myrain">${'✦★✦★✦★✦★✦★✦★'.match(/./gu).map((e, i) => `<i style="left:${i * 8 + 3}%;animation-delay:${(i % 6) * .25}s">${e}</i>`).join('')}</span>`); } }, 1100); };
+  ch.addEventListener('click', start); auto = setTimeout(start, 1600);
+}
+/* ruleta: pás vecí sa roztočí a zastaví pod šípkou na výhre */
+function spinReel(o, c, it, rk, done) {
+  const p = P(); const ex = ['top', 'bottom', 'shoes', 'acc'].flatMap(k => CATALOG[k].filter(x => x.chest && (!x.g || x.g === p.av.gender)).map(x => [k, x]));
+  const pool = [...shopItems(p), ...ex]; const by = t => pool.filter(([, x]) => rarity(x) === t);
+  const pickT = () => { const r = Math.random() * 100; return r < 4 ? 'leg' : r < 12 ? 'epic' : r < 32 ? 'rare' : 'common'; };
+  const N = 42, WIN = 36; const tiles = Array.from({ length: N }, (_, i) => { if (i === WIN) return [c, it, rk]; let t = pickT(), l = by(t); if (!l.length) { t = 'common'; l = by(t); } const x = l[Math.floor(Math.random() * l.length)]; return [x[0], x[1], t]; });
+  const R = document.createElement('div'); R.className = 'reel'; R.innerHTML = `<i class="reelptr"></i><i class="reelptr b"></i><div class="reelstrip">${tiles.map(([k, x, t]) => `<div class="rt" style="--rc:${RARE[t].c}"><span class="th">${itemThumb(k, x, p.av)}</span><small>${esc(x.n)}</small></div>`).join('')}</div>`;
+  o.querySelector('.mych').after(R); const strip = R.querySelector('.reelstrip');
+  const TW = 98; const W = R.clientWidth; const target = -(WIN * TW + TW / 2 - W / 2) + (Math.random() * 50 - 25);
+  let lastIdx = -1, raf; const tick = () => { const m = new DOMMatrix(getComputedStyle(strip).transform); const idx = Math.floor((-m.m41 + W / 2) / TW); if (idx !== lastIdx) { lastIdx = idx; sfx('tap'); buzz(6); } raf = requestAnimationFrame(tick); };
+  requestAnimationFrame(() => { strip.style.transform = `translateX(${target}px)`; raf = requestAnimationFrame(tick); });
+  strip.addEventListener('transitionend', () => { cancelAnimationFrame(raf); const win = strip.children[WIN]; win.classList.add('win'); R.classList.add('done'); setTimeout(done, 700); }, { once: true });
 }
 /* skutočné otočenie postavičky: prikrčí sa, vyskočí, otočí sa (vidno chrbát), dopadne */
 function celebrateWear(box, av) {

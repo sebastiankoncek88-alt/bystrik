@@ -1477,7 +1477,19 @@ html.fxshake #app{animation:fxshake .6s cubic-bezier(.36,.07,.19,.97)}
 .myrain{position:absolute;inset:-40px 0 0 0;pointer-events:none;overflow:visible}
 .myrain i{position:absolute;top:-20px;font-style:normal;color:#FFD23F;font-size:1.2rem;text-shadow:0 0 8px #FFB300;animation:myrain 2s linear infinite}
 @keyframes myrain{to{transform:translateY(520px) rotate(360deg);opacity:0}}
-@media (prefers-reduced-motion: reduce){.cwturn,.cwbeam,.cwring i,.mychest,.myrain{animation:none!important}}
+/* ruleta */
+.reel{position:relative;z-index:3;width:100vw;max-width:520px;height:142px;overflow:hidden;border-top:3px solid var(--edge);border-bottom:3px solid var(--edge);background:linear-gradient(180deg,#2A1F45,#1B1430);box-shadow:0 0 30px rgba(0,0,0,.5);-webkit-mask-image:linear-gradient(90deg,transparent,#000 14%,#000 86%,transparent);mask-image:linear-gradient(90deg,transparent,#000 14%,#000 86%,transparent);animation:popUp .4s}
+.reelstrip{position:absolute;left:0;top:10px;display:flex;gap:8px;padding-left:4px;transition:transform 5.6s cubic-bezier(.06,.62,.1,1);will-change:transform}
+.rt{flex:none;width:90px;height:118px;border-radius:12px;background:linear-gradient(180deg,#3B2E5E,#2B2148);border:2px solid rgba(255,255,255,.12);border-bottom:6px solid var(--rc);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;box-shadow:inset 0 -24px 30px -20px var(--rc)}
+.rt .th{width:70px;height:70px;display:block}.rt .th svg{width:100%;height:100%}
+.rt small{font-size:.62rem;font-weight:800;color:#fff;opacity:.85;text-align:center;line-height:1.1;padding:0 4px;max-height:2.2em;overflow:hidden}
+.reelptr{position:absolute;left:50%;top:0;z-index:2;width:0;height:0;margin-left:-11px;border-left:11px solid transparent;border-right:11px solid transparent;border-top:16px solid #FFD23F;filter:drop-shadow(0 2px 2px rgba(0,0,0,.5))}
+.reelptr.b{top:auto;bottom:0;border-top:0;border-bottom:16px solid #FFD23F}
+.reel::after{content:"";position:absolute;left:50%;top:0;bottom:0;width:3px;margin-left:-1.5px;background:linear-gradient(180deg,#FFD23F,rgba(255,210,63,.2) 30%,rgba(255,210,63,.2) 70%,#FFD23F);z-index:1}
+.rt.win{animation:rtwin .7s cubic-bezier(.3,1.7,.5,1) forwards;border-color:var(--rc);box-shadow:0 0 0 3px var(--rc),0 0 30px var(--rc),inset 0 -24px 30px -20px var(--rc);position:relative;z-index:2}
+@keyframes rtwin{40%{transform:scale(1.18)}100%{transform:scale(1.1)}}
+.reel.done .rt:not(.win){opacity:.35;transition:opacity .4s}
+@media (prefers-reduced-motion: reduce){.cwturn,.cwbeam,.cwring i,.mychest,.myrain{animation:none!important}.reelstrip{transition-duration:1.5s}}
 /* ročné obdobie v okne */
 .brwin .brfall{inset:0;border-radius:0;pointer-events:none}
 .brfall s{position:absolute;top:-8px;display:block;width:4px;height:4px;border-radius:50%;background:#fff;text-decoration:none;animation:brfall 4s linear infinite}
@@ -4111,16 +4123,26 @@ function openMystery(c, it, rk) {
   o.innerHTML = `<div class="mybig"><p class="chtip">Ťukni na truhlu! 👆</p><button class="chest mych shake" aria-label="Otvoriť"><i class="crays"></i><i class="cbody"></i><i class="clid"></i><b class="myq">?</b></button>
   <div class="myres" hidden><div class="myrar">${rk === 'leg' ? '🌟 ' : ''}${R.n.toUpperCase()}${rk === 'leg' ? ' 🌟' : ''}</div><div class="mycard"><span class="th">${itemThumb(c, it, p.av)}</span><b>${esc(it.n)}</b><small>${it.chest ? 'Exkluzívne, len zo záhadnej truhly' : CAT_LABEL[c]}</small></div><div class="myfig"></div><div class="rowbtns"><button class="btn primary" data-a="myst-wear" data-c="${c}" data-i="${it.id}">😎 Obliecť hneď</button><button class="btn" data-a="ov-close">Neskôr</button></div></div></div>`;
   document.body.appendChild(o); sfx('pop');
-  const ch = o.querySelector('.mych'), tip = o.querySelector('.chtip'); let step = 0, auto;
+  const ch = o.querySelector('.mych'), tip = o.querySelector('.chtip'); let started = false, auto;
   const lvl = { common: 0, rare: 1, epic: 2, leg: 3 }[rk];
-  const hit = () => { clearTimeout(auto); step++; ch.classList.remove('h1', 'h2', 'h3'); void ch.offsetWidth; ch.classList.add('h' + step); sfx('tap'); buzz(20 * step);
-    if (step === 2 && lvl >= 1) { ch.classList.add('glow'); tip.textContent = 'Niečo sa v nej svieti… ✨'; }
-    else if (step === 2) tip.textContent = 'Ešte raz!';
-    if (step >= 3) return boom(); auto = setTimeout(hit, 1400); };
-  const boom = () => { ch.classList.add('glow', 'open'); tip.textContent = lvl >= 2 ? 'NIEČO ÚŽASNÉ!!! 🤯' : 'Wow! 🤩'; sfx('gift'); const fl = document.createElement('div'); fl.className = 'myflash'; o.appendChild(fl); setTimeout(() => fl.remove(), 900);
+  const start = () => { if (started) return; started = true; clearTimeout(auto); ch.classList.add('open'); sfx('gift'); buzz(30); const fl = document.createElement('div'); fl.className = 'myflash'; o.appendChild(fl); setTimeout(() => fl.remove(), 900); setTimeout(() => { ch.classList.add('gone'); tip.textContent = 'Točí sa…'; spinReel(o, c, it, rk, () => reveal()); }, 600); };
+  const reveal = () => { tip.textContent = lvl >= 2 ? 'NIEČO ÚŽASNÉ!!! 🤯' : 'Wow! 🤩'; const fl = document.createElement('div'); fl.className = 'myflash'; o.appendChild(fl); setTimeout(() => fl.remove(), 900);
     if (lvl >= 2) { const root = document.documentElement; root.classList.remove('fxshake'); void root.offsetWidth; root.classList.add('fxshake'); setTimeout(() => root.classList.remove('fxshake'), 700); buzz([60, 40, 120]); }
-    setTimeout(() => { try { confetti(60 + lvl * 60, .35); } catch (e) { } ch.classList.add('gone'); tip.hidden = true; o.querySelector('.myres').hidden = false; sfx(lvl >= 2 ? 'level' : 'coin'); if (rk === 'leg') { o.querySelector('.mybig').insertAdjacentHTML('beforeend', `<span class="myrain">${'✦★✦★✦★✦★✦★✦★'.match(/./gu).map((e, i) => `<i style="left:${i * 8 + 3}%;animation-delay:${(i % 6) * .25}s">${e}</i>`).join('')}</span>`); } }, 650); };
-  ch.addEventListener('click', hit); auto = setTimeout(hit, 1200);
+    setTimeout(() => { try { confetti(60 + lvl * 60, .35); } catch (e) { } const rl = o.querySelector('.reel'); if (rl) rl.remove(); tip.hidden = true; o.querySelector('.myres').hidden = false; sfx(lvl >= 2 ? 'level' : 'coin'); if (rk === 'leg') { o.querySelector('.mybig').insertAdjacentHTML('beforeend', `<span class="myrain">${'✦★✦★✦★✦★✦★✦★'.match(/./gu).map((e, i) => `<i style="left:${i * 8 + 3}%;animation-delay:${(i % 6) * .25}s">${e}</i>`).join('')}</span>`); } }, 1100); };
+  ch.addEventListener('click', start); auto = setTimeout(start, 1600);
+}
+/* ruleta: pás vecí sa roztočí a zastaví pod šípkou na výhre */
+function spinReel(o, c, it, rk, done) {
+  const p = P(); const ex = ['top', 'bottom', 'shoes', 'acc'].flatMap(k => CATALOG[k].filter(x => x.chest && (!x.g || x.g === p.av.gender)).map(x => [k, x]));
+  const pool = [...shopItems(p), ...ex]; const by = t => pool.filter(([, x]) => rarity(x) === t);
+  const pickT = () => { const r = Math.random() * 100; return r < 4 ? 'leg' : r < 12 ? 'epic' : r < 32 ? 'rare' : 'common'; };
+  const N = 42, WIN = 36; const tiles = Array.from({ length: N }, (_, i) => { if (i === WIN) return [c, it, rk]; let t = pickT(), l = by(t); if (!l.length) { t = 'common'; l = by(t); } const x = l[Math.floor(Math.random() * l.length)]; return [x[0], x[1], t]; });
+  const R = document.createElement('div'); R.className = 'reel'; R.innerHTML = `<i class="reelptr"></i><i class="reelptr b"></i><div class="reelstrip">${tiles.map(([k, x, t]) => `<div class="rt" style="--rc:${RARE[t].c}"><span class="th">${itemThumb(k, x, p.av)}</span><small>${esc(x.n)}</small></div>`).join('')}</div>`;
+  o.querySelector('.mych').after(R); const strip = R.querySelector('.reelstrip');
+  const TW = 98; const W = R.clientWidth; const target = -(WIN * TW + TW / 2 - W / 2) + (Math.random() * 50 - 25);
+  let lastIdx = -1, raf; const tick = () => { const m = new DOMMatrix(getComputedStyle(strip).transform); const idx = Math.floor((-m.m41 + W / 2) / TW); if (idx !== lastIdx) { lastIdx = idx; sfx('tap'); buzz(6); } raf = requestAnimationFrame(tick); };
+  requestAnimationFrame(() => { strip.style.transform = `translateX(${target}px)`; raf = requestAnimationFrame(tick); });
+  strip.addEventListener('transitionend', () => { cancelAnimationFrame(raf); const win = strip.children[WIN]; win.classList.add('win'); R.classList.add('done'); setTimeout(done, 700); }, { once: true });
 }
 /* skutočné otočenie postavičky: prikrčí sa, vyskočí, otočí sa (vidno chrbát), dopadne */
 function celebrateWear(box, av) {
