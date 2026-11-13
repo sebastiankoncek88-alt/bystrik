@@ -579,7 +579,15 @@ function openChest(n) {
   const open = () => { if (done) return; done = true; ch.classList.remove('shake'); ch.classList.add('open'); o.querySelector('.chtip').textContent = 'Wow! 🤩'; sfx('gift'); buzz([30, 40, 60]); setTimeout(() => { confetti(160, .35); grant(n, ch); o.querySelector('.chok').hidden = false; }, 450); setTimeout(() => render(null), 600); };
   ch.addEventListener('click', open); setTimeout(open, 2600);
 }
-function fxComet(n) { const c = document.createElement('div'); c.className = 'fxcomet'; c.innerHTML = '<i></i>'; document.body.appendChild(c); setTimeout(() => c.remove(), 1500); const t = document.createElement('div'); t.className = 'fxstreak'; t.textContent = `${n} v rade! 🔥`; document.body.appendChild(t); setTimeout(() => t.remove(), 1700); const pk = $('.peekbear svg'); if (pk) { pk.classList.add('cheer'); setTimeout(() => pk.classList.remove('cheer'), 1600); } sfx('level'); }
+function fxComet(n) {
+  const big = n >= 10, root = document.documentElement; const L = document.createElement('div'); L.className = 'fxlayer' + (big ? ' big' : ''); L.setAttribute('aria-hidden', 'true');
+  const sparks = Array.from({ length: 16 }, (_, i) => `<b style="--d:${(i * 0.045).toFixed(2)}s;--o:${(i % 4) * 9 - 14}px">${i % 3 ? '✦' : '★'}</b>`).join('');
+  L.innerHTML = `<div class="fxflash"></div><div class="fxcomet"><i></i><span class="fxtrail">${sparks}</span></div><div class="fxwave"></div><div class="fxwave w2"></div><div class="fxstreak">${n} v rade! ${big ? '🌈' : '🔥'}</div>`;
+  document.body.appendChild(L); sfx('level'); setTimeout(() => sfx('coin'), 380);
+  setTimeout(() => { root.classList.remove('fxshake'); void root.offsetWidth; root.classList.add('fxshake'); buzz(big ? [60, 40, 90, 40, 60] : [50, 30, 70]); }, 430);
+  setTimeout(() => root.classList.remove('fxshake'), 1100); setTimeout(() => L.remove(), 2000);
+  const pk = $('.peekbear svg'); if (pk) { pk.classList.add('cheer'); setTimeout(() => pk.classList.remove('cheer'), 1800); } try { setTimeout(() => confetti(big ? 140 : 70, .3), 450); } catch (e) { }
+}
 const BEAR_PET = ['Hihi, to šteklí! 🤭', 'Mám ťa rád! 💛', 'Si môj najlepší kamarát!', 'Ešte, ešte! 😊', 'Mňau… teda, chcel som povedať mrmr 🐻'];
 function bearStats(b) { const now = Date.now(), cl = v => Math.max(0, Math.min(100, Math.round(v))); return { food: cl(100 - (now - (b.fed || 0)) / (20 * HRS) * 100), energy: b.asleep ? 100 : cl(100 - (now - (b.slept || 0)) / (26 * HRS) * 100), joy: cl(100 - (now - (b.care || 0)) / (48 * HRS) * 100) }; }
 const bearLove = b => { const l = b.love || 0; return { lv: 1 + Math.floor(l / 10), pr: l % 10 }; };

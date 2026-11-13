@@ -1387,12 +1387,29 @@ body{background-attachment:fixed!important}
 .bear.bhop .b-all{animation:bhop 1.2s ease-in-out}@keyframes bhop{15%,45%,75%{transform:translateY(-8px)}30%,60%,90%{transform:translateY(0) scale(1.04,.96)}}
 .brscene:not(.night) .bzz:not(.sick){visibility:hidden}
 /* kométa */
-.fxcomet{position:fixed;left:-20vw;top:18vh;width:140px;height:6px;z-index:90;pointer-events:none;transform:rotate(18deg);animation:fxcomet 1.3s cubic-bezier(.3,0,.4,1) forwards}
-.fxcomet i{position:absolute;right:0;top:50%;width:22px;height:22px;margin-top:-11px;border-radius:50%;background:radial-gradient(circle,#fff 0 30%,#FFE066 55%,rgba(255,180,60,0) 72%);box-shadow:0 0 18px 6px rgba(255,214,60,.7)}
-.fxcomet::before{content:"";position:absolute;inset:0;border-radius:6px;background:linear-gradient(90deg,transparent,rgba(255,220,120,.4),#FFE9A0);filter:blur(1px)}
-@keyframes fxcomet{to{transform:translate(140vw,30vh) rotate(18deg)}}
-.fxstreak{position:fixed;left:50%;top:30vh;z-index:91;pointer-events:none;transform:translate(-50%,0);font-family:var(--f-display);font-weight:900;font-size:2.2rem;color:#fff;text-shadow:0 3px 0 #E8456B,0 0 18px rgba(232,69,107,.6);animation:fxstreak 1.6s cubic-bezier(.3,1.5,.5,1) forwards;white-space:nowrap}
-@keyframes fxstreak{0%{opacity:0;transform:translate(-50%,20px) scale(.5)}20%{opacity:1;transform:translate(-50%,0) scale(1.1)}75%{opacity:1;transform:translate(-50%,-6px) scale(1)}100%{opacity:0;transform:translate(-50%,-30px) scale(.9)}}
+.fxlayer{position:fixed;inset:0;z-index:90;pointer-events:none;overflow:hidden}
+.fxflash{position:absolute;inset:0;background:radial-gradient(circle at 50% 40%,#fff,rgba(255,240,180,.85) 40%,rgba(255,200,120,0) 75%);opacity:0;animation:fxflash .9s ease-out .38s}
+@keyframes fxflash{0%{opacity:0}12%{opacity:.95}100%{opacity:0}}
+.fxcomet{position:absolute;left:-40vw;top:8vh;width:260px;height:14px;transform:rotate(22deg);animation:fxcomet .85s cubic-bezier(.5,0,.6,1) forwards;will-change:transform}
+.fxcomet>i{position:absolute;right:0;top:50%;width:54px;height:54px;margin-top:-27px;border-radius:50%;background:radial-gradient(circle,#fff 0 25%,#FFF2A8 45%,#FFC23C 62%,rgba(255,140,40,0) 72%);box-shadow:0 0 30px 14px rgba(255,214,60,.75),0 0 70px 30px rgba(255,140,60,.45);animation:fxpulse .15s ease-in-out infinite alternate}
+@keyframes fxpulse{to{transform:scale(1.15)}}
+.fxcomet::before{content:"";position:absolute;inset:-6px 20px -6px 0;border-radius:20px;background:linear-gradient(90deg,transparent,rgba(255,150,80,.35) 40%,rgba(255,230,140,.9) 85%,#fff);filter:blur(2px)}
+.big .fxcomet::before{background:linear-gradient(90deg,transparent,#FF6A8A 20%,#FFC23C 40%,#2FC08A 60%,#4C86F7 80%,#fff)}
+.fxtrail{position:absolute;inset:0}
+.fxtrail b{position:absolute;right:30px;top:50%;font-size:18px;color:#FFE066;text-shadow:0 0 8px #FFC23C;opacity:0;animation:fxspark .8s ease-out var(--d) forwards}
+.big .fxtrail b:nth-child(3n){color:#FF8FA3}.big .fxtrail b:nth-child(3n+1){color:#86E3C9}
+@keyframes fxspark{0%{opacity:1;transform:translate(0,var(--o)) scale(1.2)}100%{opacity:0;transform:translate(-160px,calc(var(--o) * 3 + 30px)) scale(.3) rotate(180deg)}}
+@keyframes fxcomet{to{transform:translate(160vw,62vh) rotate(22deg)}}
+.fxwave{position:absolute;left:50%;top:38vh;width:40px;height:40px;margin:-20px 0 0 -20px;border-radius:50%;border:6px solid rgba(255,214,60,.9);box-shadow:0 0 24px rgba(255,200,60,.8),inset 0 0 18px rgba(255,255,255,.6);opacity:0;animation:fxwave .8s cubic-bezier(.2,.7,.3,1) .42s forwards}
+.fxwave.w2{border-color:rgba(232,69,107,.8);animation-delay:.55s}
+.big .fxwave{border-color:#8AD8FF}.big .fxwave.w2{border-color:#FF8FD0}
+@keyframes fxwave{0%{opacity:1;transform:scale(.3)}100%{opacity:0;transform:scale(14);border-width:1px}}
+.fxstreak{position:absolute;left:50%;top:38vh;transform:translate(-50%,-50%);font-family:var(--f-display);font-weight:900;font-size:2.8rem;color:#fff;white-space:nowrap;text-shadow:0 4px 0 #E8456B,0 0 24px rgba(255,214,60,.9),0 0 50px rgba(232,69,107,.6);opacity:0;animation:fxstreak 1.5s cubic-bezier(.2,1.6,.4,1) .42s forwards}
+.big .fxstreak{background:linear-gradient(90deg,#FF6A8A,#FFC23C,#2FC08A,#4C86F7,#B98AFF);-webkit-background-clip:text;background-clip:text;color:transparent;text-shadow:none;filter:drop-shadow(0 4px 0 #33203A)}
+@keyframes fxstreak{0%{opacity:0;transform:translate(-50%,-50%) scale(3) rotate(-8deg)}18%{opacity:1;transform:translate(-50%,-50%) scale(.85) rotate(3deg)}30%{transform:translate(-50%,-50%) scale(1.12) rotate(-2deg)}42%,75%{opacity:1;transform:translate(-50%,-50%) scale(1) rotate(0)}100%{opacity:0;transform:translate(-50%,-90%) scale(.9)}}
+html.fxshake #app{animation:fxshake .6s cubic-bezier(.36,.07,.19,.97)}
+@keyframes fxshake{10%,90%{transform:translate(-2px,1px)}20%,80%{transform:translate(5px,-3px) rotate(.6deg)}30%,50%,70%{transform:translate(-9px,4px) rotate(-1deg)}40%,60%{transform:translate(9px,-4px) rotate(1deg)}}
+@media (prefers-reduced-motion: reduce){.fxlayer{display:none}html.fxshake #app{animation:none}}
 /* level */
 .lvwrap{position:relative;display:grid;place-items:center}
 .lvstars{position:absolute;left:50%;top:50%;width:0;height:0}
@@ -1444,7 +1461,7 @@ body{background-attachment:fixed!important}
 @keyframes chcoin{0%{opacity:0;transform:translate(-50%,0) scale(.4)}30%{opacity:1}100%{opacity:1;transform:translate(calc(var(--x) - 50%),var(--y)) scale(1) rotate(360deg)}}
 .cplus{position:relative;z-index:2;font-family:var(--f-display);font-size:1.4rem;color:#FFE066;text-shadow:0 2px 0 #33203A;background:#33203A;border-radius:16px;padding:6px 14px;opacity:0;transform:scale(.5);transition:all .4s .5s cubic-bezier(.3,1.6,.5,1)}
 .chest.open~.cplus{opacity:1;transform:none}
-@media (prefers-reduced-motion: reduce){.fxcomet,.lvstars,.brfall,.brfly2{display:none}.chest.shake,.chest.open .crays{animation:none!important}}
+@media (prefers-reduced-motion: reduce){.lvstars,.brfall,.brfly2{display:none}.chest.shake,.chest.open .crays{animation:none!important}}
 .bearroom.busy .brb{pointer-events:none;opacity:.7}
 .brb{transition:transform .15s,box-shadow .15s}.brb:active{transform:translateY(3px);box-shadow:0 0 0 var(--drop)}
 .brb span{transition:transform .3s}.brb:hover span{transform:scale(1.15) rotate(-6deg)}
@@ -4025,7 +4042,15 @@ function openChest(n) {
   const open = () => { if (done) return; done = true; ch.classList.remove('shake'); ch.classList.add('open'); o.querySelector('.chtip').textContent = 'Wow! 🤩'; sfx('gift'); buzz([30, 40, 60]); setTimeout(() => { confetti(160, .35); grant(n, ch); o.querySelector('.chok').hidden = false; }, 450); setTimeout(() => render(null), 600); };
   ch.addEventListener('click', open); setTimeout(open, 2600);
 }
-function fxComet(n) { const c = document.createElement('div'); c.className = 'fxcomet'; c.innerHTML = '<i></i>'; document.body.appendChild(c); setTimeout(() => c.remove(), 1500); const t = document.createElement('div'); t.className = 'fxstreak'; t.textContent = `${n} v rade! 🔥`; document.body.appendChild(t); setTimeout(() => t.remove(), 1700); const pk = $('.peekbear svg'); if (pk) { pk.classList.add('cheer'); setTimeout(() => pk.classList.remove('cheer'), 1600); } sfx('level'); }
+function fxComet(n) {
+  const big = n >= 10, root = document.documentElement; const L = document.createElement('div'); L.className = 'fxlayer' + (big ? ' big' : ''); L.setAttribute('aria-hidden', 'true');
+  const sparks = Array.from({ length: 16 }, (_, i) => `<b style="--d:${(i * 0.045).toFixed(2)}s;--o:${(i % 4) * 9 - 14}px">${i % 3 ? '✦' : '★'}</b>`).join('');
+  L.innerHTML = `<div class="fxflash"></div><div class="fxcomet"><i></i><span class="fxtrail">${sparks}</span></div><div class="fxwave"></div><div class="fxwave w2"></div><div class="fxstreak">${n} v rade! ${big ? '🌈' : '🔥'}</div>`;
+  document.body.appendChild(L); sfx('level'); setTimeout(() => sfx('coin'), 380);
+  setTimeout(() => { root.classList.remove('fxshake'); void root.offsetWidth; root.classList.add('fxshake'); buzz(big ? [60, 40, 90, 40, 60] : [50, 30, 70]); }, 430);
+  setTimeout(() => root.classList.remove('fxshake'), 1100); setTimeout(() => L.remove(), 2000);
+  const pk = $('.peekbear svg'); if (pk) { pk.classList.add('cheer'); setTimeout(() => pk.classList.remove('cheer'), 1800); } try { setTimeout(() => confetti(big ? 140 : 70, .3), 450); } catch (e) { }
+}
 const BEAR_PET = ['Hihi, to šteklí! 🤭', 'Mám ťa rád! 💛', 'Si môj najlepší kamarát!', 'Ešte, ešte! 😊', 'Mňau… teda, chcel som povedať mrmr 🐻'];
 function bearStats(b) { const now = Date.now(), cl = v => Math.max(0, Math.min(100, Math.round(v))); return { food: cl(100 - (now - (b.fed || 0)) / (20 * HRS) * 100), energy: b.asleep ? 100 : cl(100 - (now - (b.slept || 0)) / (26 * HRS) * 100), joy: cl(100 - (now - (b.care || 0)) / (48 * HRS) * 100) }; }
 const bearLove = b => { const l = b.love || 0; return { lv: 1 + Math.floor(l / 10), pr: l % 10 }; };
