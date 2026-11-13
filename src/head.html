@@ -1210,6 +1210,20 @@ body{background-attachment:fixed!important}
 .mbar{height:6px;border-radius:9px;background:var(--line);overflow:hidden;display:block}.mbar i{display:block;height:100%;border-radius:9px}
 .mpct{flex:none;font-style:normal;font-family:var(--f-display);font-weight:900;font-size:1rem}.mpct.ok{color:var(--good)}.mpct.bad{color:var(--bad)}.mpct.mid{color:#C98A00}
 @media (min-width:900px){.mestats{grid-template-columns:repeat(4,1fr)}}
+.wstabs{display:flex;margin:0 0 4px}.wstabs button{flex:1;font-size:1rem}
+.mequick{display:grid;grid-template-columns:1fr 1fr;gap:8px}.mefr{display:flex;flex-direction:column;align-items:center;gap:2px;padding:10px;font-family:inherit;color:var(--ink);cursor:pointer}.mefr .mqi{font-size:1.7rem;line-height:1}.mefr b{font-family:var(--f-display);font-size:1.05rem}.mefr small{font-weight:700;font-size:.74rem;color:var(--muted)}.mefr em{font-style:normal;color:#fff;background:var(--bad);border-radius:9px;padding:1px 7px}
+.gocard{display:flex;align-items:center;gap:14px;padding:16px;width:100%;box-sizing:border-box;text-align:left;font-family:inherit;color:#fff;cursor:pointer;background:linear-gradient(135deg,#2FB36B,#1E9A57);border-color:#167A44;box-shadow:0 6px 0 #167A44}
+.gocard .goplay{flex:none;width:58px;height:58px;border-radius:50%;display:grid;place-items:center;background:#fff;color:#1E9A57;font-size:1.7rem;padding-left:5px;box-sizing:border-box;box-shadow:0 3px 0 rgba(0,0,0,.18);animation:gopulse 2.2s ease-in-out infinite}
+.gocard .grow{flex:1;min-width:0;display:flex;flex-direction:column}.gocard .eyebrow{color:rgba(255,255,255,.85)!important}.gocard b{font-family:var(--f-display);font-size:1.7rem;line-height:1.05}.gocard small{font-weight:700;font-size:.8rem;opacity:.92;line-height:1.3}.gocard .goe{flex:none;font-size:2rem}
+@keyframes gopulse{0%,100%{transform:scale(1)}50%{transform:scale(1.08)}}@media (prefers-reduced-motion:reduce){.gocard .goplay{animation:none}}
+.fclock{display:flex;gap:10px;align-items:center;padding:10px 12px;border-radius:14px;background:var(--paper2);border:2px dashed var(--edge)}.fclock span{font-size:1.6rem}.fclock b{display:block;font-family:var(--f-display)}.fclock small{font-weight:700;font-size:.78rem;color:var(--muted)}
+.pmhist{display:flex;flex-direction:column;gap:6px;margin-top:10px;padding:10px;border-radius:14px;background:var(--paper2);max-height:420px;overflow:auto}.pmhist time{display:block;font-size:.66rem;font-weight:700;opacity:.65;margin-top:2px}.psrow.on{background:var(--c-mat-soft)}
+.consent{display:flex;gap:8px;align-items:flex-start;margin:10px 0 0;font-weight:700;font-size:.84rem;line-height:1.35}.consent input{width:20px;height:20px;flex:none;margin-top:1px;accent-color:var(--good)}.consent .linkbtn{display:inline;padding:0;font-size:inherit}
+.privtext h2{font-family:var(--f-display);margin:0 0 6px}.privtext h3{font-family:var(--f-display);font-size:1.05rem;margin:14px 0 4px}.privtext p,.privtext li{font-weight:600;font-size:.9rem;line-height:1.45}.privtext ul{margin:0;padding-left:20px}
+.delcard .btn.bad{background:var(--bad);color:#fff;border-color:#9b2c2c}
+.tcrow{display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:2px solid var(--line)}.tcrow:last-child{border-bottom:0}.tcrow .grow{flex:1;min-width:0;display:flex;flex-direction:column}.tcrow b{font-family:var(--f-display)}.tcrow small{font-weight:700;font-size:.72rem;color:var(--muted)}.tcrow .tcweak{color:var(--bad)}
+.tcnum{flex:none;display:flex;flex-direction:column;align-items:flex-end}.tcnum b{font-size:1.1rem}.iconbtn.sm{width:30px;height:30px;font-size:.8rem;box-shadow:none}
+.myclass{display:flex;flex-direction:column;gap:8px;padding:12px 14px}.tchead{display:flex;flex-direction:column;align-items:center;text-align:center;gap:6px}
 /* ===== Vlastný vzhľad „mapa dobrodružstva“ ===== */
 .card{border-width:2px;box-shadow:0 6px 0 var(--drop),0 14px 24px -14px var(--drop)}
 .btn{border-width:2px;border-radius:999px;letter-spacing:.01em}

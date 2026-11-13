@@ -171,7 +171,13 @@ const PRV = [
     Ktorý vták odlieta na zimu do teplých krajín?|lastovička|vrabec;sýkorka;straka
     Ako sa volá les, v ktorom rastú listnaté aj ihličnaté stromy?|zmiešaný les|ihličnatý les;prales;park
     Kto sa stará o les?|lesník|rybár;baník;pilot
-    Čo v lese nesmieme robiť?|zakladať oheň a odhadzovať odpadky|pozorovať zvieratá;chodiť po chodníku;počúvať vtáky`) },
+    Čo v lese nesmieme robiť?|zakladať oheň a odhadzovať odpadky|pozorovať zvieratá;chodiť po chodníku;počúvať vtáky
+    Ktorý strom je listnatý?|buk|smrek;borovica;jedľa
+    Ktoré zviera v lese spí celú zimu?|jazvec|srna;líška;diviak
+    Ako voláme mladú srnu?|srnča|teľa;žriebä;šteňa
+    Ktorý vták búcha zobákom do stromov?|ďateľ|sova;vrabec;bocian
+    Prečo je les dôležitý?|vyrába kyslík a je domovom zvierat|robí hluk;je len na drevo;nie je dôležitý
+    Ako voláme les, kde rastú ihličnaté aj listnaté stromy?|zmiešaný les|ihličnatý les;dažďový prales;park`) },
   { id: 'p3-voda', g: 3, type: 'qa', name: 'Voda a jej skupenstvá', icon: '💧', items: lines(`
     V akom skupenstve je ľad?|v pevnom|v kvapalnom;v plynnom;v žiadnom
     V akom skupenstve je voda v pohári?|v kvapalnom|v pevnom;v plynnom;v kamennom
@@ -181,7 +187,11 @@ const PRV = [
     Ako sa volá zmena vody na paru?|vyparovanie|topenie;tuhnutie;mrznutie
     Ako sa volá zmena ľadu na vodu?|topenie|vyparovanie;varenie;tuhnutie
     Kde je na Zemi najviac vody?|v moriach a oceánoch|v riekach;v jazerách;v oblakoch
-    Akú vodu môžeme piť?|pitnú vodu z vodovodu|morskú vodu;vodu z mláky;vodu z rieky`) },
+    Akú vodu môžeme piť?|pitnú vodu z vodovodu|morskú vodu;vodu z mláky;vodu z rieky
+    Ako sa volá zmena vody na ľad?|tuhnutie (mrznutie)|topenie;vyparovanie;var
+    Čo vzniká, keď sa vodná para ochladí na studenom skle?|kvapky vody|ľad hneď;piesok;dym
+    Prečo sa mláky po daždi stratia?|voda sa vyparí|voda zmrzne;voda zhorí;vypijú ju vtáky
+    Ako voláme kolobeh vody v prírode?|obeh vody|reťazec vody;kruh ohňa;ročné obdobie`) },
   { id: 'p3-materialy', g: 3, type: 'qa', name: 'Materiály a triedenie odpadu', icon: '♻️', items: lines(`
     Čo priťahuje magnet?|železný klinec|drevená ceruzka;plastová lyžica;sklený pohár
     Z čoho sa vyrába papier?|z dreva|zo skla;z kameňa;z plastu
@@ -214,7 +224,14 @@ const PRV = [
     Aké je hlavné mesto Slovenska?|Bratislava|Košice;Žilina;Nitra
     Ktoré je druhé najväčšie mesto Slovenska?|Košice|Prešov;Trnava;Martin
     Aké farby má slovenská vlajka?|biela, modrá, červená|červená, zelená, biela;žltá, modrá;čierna, žltá, červená
-    Ako sa volá slovenská hymna?|Nad Tatrou sa blýska|Tancuj, tancuj;Kto za pravdu horí;Hej, Slováci`) },
+    Ako sa volá slovenská hymna?|Nad Tatrou sa blýska|Tancuj, tancuj;Kto za pravdu horí;Hej, Slováci
+    Ako sa volá hlavné mesto Slovenska?|Bratislava|Košice;Žilina;Nitra
+    Kde nám pomôžu, keď sme chorí?|u lekára|v knižnici;na pošte;v kine
+    Kam pošleme list alebo balík?|na poštu|do lekárne;do školy;do obchodu s obuvou
+    Ktoré číslo voláme v núdzi (jednotné európske)?|112|111;123;999
+    Kto hasí požiare?|hasiči|policajti;lekári;poštári
+    Ako sa volá najväčší vrch Slovenska?|Gerlachovský štít|Kriváň;Lomnický štít;Chopok
+    Ktorá rieka preteká Bratislavou?|Dunaj|Váh;Hron;Morava`) },
   { id: 'p3-skola', g: 3, type: 'vocab', name: 'Angličtina: v škole', icon: '🎒', items: lines(`
     pen|pero|🖊️
     pencil|ceruzka|✏️
@@ -281,7 +298,14 @@ const PRV = [
     Ktorý živočích stavia na rieke hrádze?|bobor|krt;jež;veverička
     Kde žije pstruh?|v čistých horských potokoch|v púšti;v mori;v lese
     Kto rozkladá opadané lístie na pôdu?|dážďovky a huby|vtáky;ryby;srny
-    Prečo sú včely dôležité?|opeľujú rastliny|dávajú mlieko;chránia les pred ohňom;čistia vodu`) },
+    Prečo sú včely dôležité?|opeľujú rastliny|dávajú mlieko;chránia les pred ohňom;čistia vodu
+    Kto je všežravec?|medveď|krava;zajac;srna
+    Doplň reťazec: tráva → zajac → ?|líška|kapusta;slimák;veverička
+    Doplň reťazec: list → húsenica → ?|sýkorka|vlk;srna;ryba
+    Prečo sú dôležité huby a dážďovky?|rozkladajú odumreté zvyšky|robia hluk;jedia vlkov;svietia v noci
+    Čo by sa stalo, keby zmizli všetky rastliny?|živočíchy by nemali potravu|nič by sa nestalo;vlky by narástli;bolo by viac jedla
+    Ako voláme živočícha, ktorý loví iné živočíchy?|dravec (predátor)|bylinožravec;rozkladač;výrobca
+    Ktorý živočích zjedá rastliny v rybníku?|slimák|štuka;volavka;vydra`) },
   { id: 'p4-slovensko', g: 4, type: 'qa', name: 'Príroda Slovenska', icon: '🏔️', items: lines(`
     Ktorý je najvyšší vrch Slovenska?|Gerlachovský štít|Kriváň;Lomnický štít;Rysy
     Aký vysoký je Gerlachovský štít?|asi 2 655 m|asi 1 000 m;asi 5 000 m;asi 850 m

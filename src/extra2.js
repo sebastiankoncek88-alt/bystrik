@@ -71,7 +71,15 @@ const SJL3 = [
     Ktoré slovo je príbuzné so slovom „mydlo“?|mydlový|myš;mýliť;myslieť
     Ktoré slovo je príbuzné so slovom „jazyk“?|jazykový|jazero;jahoda;jaskyňa
     Ktoré slovo je príbuzné so slovom „vysoký“?|výška|vydra;výr;vyť
-    Ktoré slovo je príbuzné so slovom „kobyla“?|kobylka|kopyto;kolobežka;koberec`), ex: 'Príbuzné slová majú spoločný základ, preto sa píšu s rovnakým y.' },
+    Ktoré slovo je príbuzné so slovom „kobyla“?|kobylka|kopyto;kolobežka;koberec
+    Ktoré slovo je príbuzné so slovom „mlyn“?|mlynár|milý;mlieko;mýliť
+    Ktoré slovo je príbuzné so slovom „dym“?|dymiť|dynamit;dyňa;dýchať
+    Ktoré slovo je príbuzné so slovom „sýty“?|nasýtiť|sito;syr;sila
+    Ktoré slovo je príbuzné so slovom „kniha“?|knižnica|kino;kŕdeľ;kuchyňa
+    Ktoré slovo je príbuzné so slovom „les“?|lesník|lesk;lev;letieť
+    Ktoré slovo je príbuzné so slovom „škola“?|školák|škatuľa;šál;šaty
+    Ktoré slovo je príbuzné so slovom „zima“?|zimný|zinok;zips;zelený
+    Ktoré slovo je príbuzné so slovom „voda“?|vodník|vodič;vôňa;volať`), ex: 'Príbuzné slová majú spoločný základ, preto sa píšu s rovnakým y.' },
   { id: 's3-spravne', g: 3, name: 'Ktoré slovo je správne?', icon: '🔍', gen() { const [, , w] = pick(vyb(['b', 'm', 'p', 'r', 's', 'v', 'z'])); const v = spellVariants(w); return { q: 'Ktoré slovo je napísané správne?', a: w, w: v.filter(x => x !== w), ex: `Správne je ${w}. Po obojakej spoluhláske píšeme y len vo vybraných a príbuzných slovách.` }; } },
   { id: 's4-osoba', g: 4, type: 'cat', name: 'Osoba slovies', icon: '🙋', prompt: 'Sloveso „{x}“ je v…', choices: ['1. osobe', '2. osobe', '3. osobe'], items: 'píšem|1. osobe,čítame|1. osobe,spievam|1. osobe,skáčeme|1. osobe,beháš|2. osobe,píšeš|2. osobe,čítate|2. osobe,kreslíte|2. osobe,píše|3. osobe,behá|3. osobe,čítajú|3. osobe,skáču|3. osobe,spí|3. osobe', ex: '1. osoba: ja, my. 2. osoba: ty, vy. 3. osoba: on, ona, ono, oni.' },
   { id: 's4-vlastne', g: 4, type: 'cat', name: 'Vlastné a všeobecné mená', icon: '🏙️', prompt: '„{x}“ je…', choices: ['vlastné podstatné meno', 'všeobecné podstatné meno'], items: 'Bratislava|vlastné podstatné meno,Dunaj|vlastné podstatné meno,Peter|vlastné podstatné meno,Tatry|vlastné podstatné meno,Slovensko|vlastné podstatné meno,Bodka (meno psa)|vlastné podstatné meno,Košice|vlastné podstatné meno,mesto|všeobecné podstatné meno,rieka|všeobecné podstatné meno,chlapec|všeobecné podstatné meno,hory|všeobecné podstatné meno,krajina|všeobecné podstatné meno,pes|všeobecné podstatné meno,škola|všeobecné podstatné meno', ex: 'Vlastné mená (mená ľudí, zvierat, miest, riek, hôr) píšeme s veľkým začiatočným písmenom.' }

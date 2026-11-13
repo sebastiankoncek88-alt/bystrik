@@ -1238,6 +1238,20 @@ body{background-attachment:fixed!important}
 .mbar{height:6px;border-radius:9px;background:var(--line);overflow:hidden;display:block}.mbar i{display:block;height:100%;border-radius:9px}
 .mpct{flex:none;font-style:normal;font-family:var(--f-display);font-weight:900;font-size:1rem}.mpct.ok{color:var(--good)}.mpct.bad{color:var(--bad)}.mpct.mid{color:#C98A00}
 @media (min-width:900px){.mestats{grid-template-columns:repeat(4,1fr)}}
+.wstabs{display:flex;margin:0 0 4px}.wstabs button{flex:1;font-size:1rem}
+.mequick{display:grid;grid-template-columns:1fr 1fr;gap:8px}.mefr{display:flex;flex-direction:column;align-items:center;gap:2px;padding:10px;font-family:inherit;color:var(--ink);cursor:pointer}.mefr .mqi{font-size:1.7rem;line-height:1}.mefr b{font-family:var(--f-display);font-size:1.05rem}.mefr small{font-weight:700;font-size:.74rem;color:var(--muted)}.mefr em{font-style:normal;color:#fff;background:var(--bad);border-radius:9px;padding:1px 7px}
+.gocard{display:flex;align-items:center;gap:14px;padding:16px;width:100%;box-sizing:border-box;text-align:left;font-family:inherit;color:#fff;cursor:pointer;background:linear-gradient(135deg,#2FB36B,#1E9A57);border-color:#167A44;box-shadow:0 6px 0 #167A44}
+.gocard .goplay{flex:none;width:58px;height:58px;border-radius:50%;display:grid;place-items:center;background:#fff;color:#1E9A57;font-size:1.7rem;padding-left:5px;box-sizing:border-box;box-shadow:0 3px 0 rgba(0,0,0,.18);animation:gopulse 2.2s ease-in-out infinite}
+.gocard .grow{flex:1;min-width:0;display:flex;flex-direction:column}.gocard .eyebrow{color:rgba(255,255,255,.85)!important}.gocard b{font-family:var(--f-display);font-size:1.7rem;line-height:1.05}.gocard small{font-weight:700;font-size:.8rem;opacity:.92;line-height:1.3}.gocard .goe{flex:none;font-size:2rem}
+@keyframes gopulse{0%,100%{transform:scale(1)}50%{transform:scale(1.08)}}@media (prefers-reduced-motion:reduce){.gocard .goplay{animation:none}}
+.fclock{display:flex;gap:10px;align-items:center;padding:10px 12px;border-radius:14px;background:var(--paper2);border:2px dashed var(--edge)}.fclock span{font-size:1.6rem}.fclock b{display:block;font-family:var(--f-display)}.fclock small{font-weight:700;font-size:.78rem;color:var(--muted)}
+.pmhist{display:flex;flex-direction:column;gap:6px;margin-top:10px;padding:10px;border-radius:14px;background:var(--paper2);max-height:420px;overflow:auto}.pmhist time{display:block;font-size:.66rem;font-weight:700;opacity:.65;margin-top:2px}.psrow.on{background:var(--c-mat-soft)}
+.consent{display:flex;gap:8px;align-items:flex-start;margin:10px 0 0;font-weight:700;font-size:.84rem;line-height:1.35}.consent input{width:20px;height:20px;flex:none;margin-top:1px;accent-color:var(--good)}.consent .linkbtn{display:inline;padding:0;font-size:inherit}
+.privtext h2{font-family:var(--f-display);margin:0 0 6px}.privtext h3{font-family:var(--f-display);font-size:1.05rem;margin:14px 0 4px}.privtext p,.privtext li{font-weight:600;font-size:.9rem;line-height:1.45}.privtext ul{margin:0;padding-left:20px}
+.delcard .btn.bad{background:var(--bad);color:#fff;border-color:#9b2c2c}
+.tcrow{display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:2px solid var(--line)}.tcrow:last-child{border-bottom:0}.tcrow .grow{flex:1;min-width:0;display:flex;flex-direction:column}.tcrow b{font-family:var(--f-display)}.tcrow small{font-weight:700;font-size:.72rem;color:var(--muted)}.tcrow .tcweak{color:var(--bad)}
+.tcnum{flex:none;display:flex;flex-direction:column;align-items:flex-end}.tcnum b{font-size:1.1rem}.iconbtn.sm{width:30px;height:30px;font-size:.8rem;box-shadow:none}
+.myclass{display:flex;flex-direction:column;gap:8px;padding:12px 14px}.tchead{display:flex;flex-direction:column;align-items:center;text-align:center;gap:6px}
 /* ===== Vlastný vzhľad „mapa dobrodružstva“ ===== */
 .card{border-width:2px;box-shadow:0 6px 0 var(--drop),0 14px 24px -14px var(--drop)}
 .btn{border-width:2px;border-radius:999px;letter-spacing:.01em}
@@ -1286,7 +1300,7 @@ h1,h2,.logintitle{letter-spacing:-.01em}
 <canvas id="fx"></canvas>
 <script>
 /* Emoji obrázky: Microsoft Fluent Emoji 3D (MIT) – len na webe, kde je priečinok emoji/ */
-const EMO_MAP = {"🧸":"1f9f8","🪙":"1fa99","🚫":"1f6ab","✔️":"2714-fe0f","❓":"2753","💎":"1f48e","🔥":"1f525","⭐":"2b50","🔢":"1f522","📝":"1f4dd","🌍":"1f30d","📖":"1f4d6","🃏":"1f0cf","🔗":"1f517","🎮":"1f3ae","⚡":"26a1","✅":"2705","🎯":"1f3af","👑":"1f451","👗":"1f457","🛍️":"1f6cd-fe0f","🥉":"1f949","🥈":"1f948","🥇":"1f947","🎉":"1f389","⏱️":"23f1-fe0f","🎁":"1f381","⚙️":"2699-fe0f","🏠":"1f3e0","📚":"1f4da","🤝":"1f91d","👕":"1f455","🧩":"1f9e9","➖":"2796","➕":"2795","🗑️":"1f5d1-fe0f","🎨":"1f3a8","🔲":"1f532","➗":"2797","✏️":"270f-fe0f","🌱":"1f331","🇬🇧":"1f1ec-1f1e7","💛":"1f49b","⛪":"26ea","🔬":"1f52c","🗺️":"1f5fa-fe0f","💻":"1f4bb","🔭":"1f52d","✍️":"270d-fe0f","📸":"1f4f8","👖":"1f456","👟":"1f45f","🎩":"1f3a9","🔒":"1f512","⏳":"23f3","🌟":"1f31f","🙂":"1f642","🔁":"1f501","💾":"1f4be","⏹️":"23f9-fe0f","🎤":"1f3a4","🎙️":"1f399-fe0f","📂":"1f4c2","🔊":"1f50a","👀":"1f440","🚀":"1f680","👋":"1f44b","🏆":"1f3c6","🤧":"1f927","💤":"1f4a4","🍯":"1f36f","💪":"1f4aa","☀️":"2600-fe0f","🌙":"1f319","👨‍👩‍👧":"1f468-200d-1f469-200d-1f467","📲":"1f4f2","👍":"1f44d","🔴":"1f534","🐣":"1f423","🐥":"1f425","🦊":"1f98a","🦁":"1f981","🅰️":"1f170-fe0f","🎈":"1f388","👥":"1f465","📜":"1f4dc","📋":"1f4cb","🖼️":"1f5bc-fe0f","😕":"1f615","📒":"1f4d2","✨":"2728","🧠":"1f9e0","🧮":"1f9ee","💡":"1f4a1","🐢":"1f422","❌":"274c","🧽":"1f9fd","📘":"1f4d8","👆":"1f446","🧺":"1f9fa","🪣":"1faa3","📦":"1f4e6","🎒":"1f392","🗃️":"1f5c3-fe0f","👜":"1f45c","🌧️":"1f327-fe0f","🐹":"1f439","🔤":"1f524","🐸":"1f438","🏎️":"1f3ce-fe0f","💀":"1f480","⏰":"23f0","🐱":"1f431","🐶":"1f436","🌞":"1f31e","🍎":"1f34e","🚗":"1f697","🐟":"1f41f","🌳":"1f333","🐻":"1f43b","🚂":"1f682","🧀":"1f9c0","🥛":"1f95b","🦋":"1f98b","🍓":"1f353","🐝":"1f41d","🏫":"1f3eb","🌈":"1f308","🐘":"1f418","🍞":"1f35e","🥕":"1f955","🐭":"1f42d","❄️":"2744-fe0f","🐴":"1f434","🌹":"1f339","🔑":"1f511","🍰":"1f370","🚲":"1f6b2","🦉":"1f989","🍐":"1f350","🥚":"1f95a","🔓":"1f513","👉":"1f449","🏡":"1f3e1","🎟️":"1f39f-fe0f","⚔️":"2694-fe0f","❤️":"2764-fe0f","🤍":"1f90d","🏁":"1f3c1","🚙":"1f699","🏅":"1f3c5","👇":"1f447","✖️":"2716-fe0f","📏":"1f4cf","🗣️":"1f5e3-fe0f","🐂":"1f402","🏷️":"1f3f7-fe0f","💬":"1f4ac","⚖️":"2696-fe0f","💶":"1f4b6","🟦":"1f7e6","👤":"1f464","⚠️":"26a0-fe0f","🌗":"1f317","🔄":"1f504","▶️":"25b6-fe0f","🌐":"1f310","🔎":"1f50e","☁️":"2601-fe0f","📥":"1f4e5","😊":"1f60a","📊":"1f4ca","👩":"1f469","👨":"1f468","🧓":"1f9d3","🔐":"1f510","🕑":"1f551","👧":"1f467","🎛️":"1f39b-fe0f","👫":"1f46b","📧":"1f4e7","❗":"2757","✉️":"2709-fe0f","🎧":"1f3a7","💖":"1f496","💜":"1f49c","➡️":"27a1-fe0f","📅":"1f4c5","📈":"1f4c8","🪐":"1fa90","🛡️":"1f6e1-fe0f","↗":"2197-fe0f","🚪":"1f6aa","📨":"1f4e8","😄":"1f604","😀":"1f600","😂":"1f602","🥳":"1f973","😎":"1f60e","🤔":"1f914","😴":"1f634","👏":"1f44f","🐰":"1f430","🐼":"1f43c","🐨":"1f428","🐵":"1f435","🐯":"1f42f","🦖":"1f996","🐧":"1f427","🐲":"1f432","🦄":"1f984","🦔":"1f994","🦜":"1f99c","🐙":"1f419","🐬":"1f42c","🦒":"1f992","🦩":"1f9a9","🦕":"1f995","🦚":"1f99a","🐳":"1f433","🦈":"1f988","♥":"2665-fe0f","❄":"2744-fe0f","⚽":"26bd","🍕":"1f355","🍦":"1f366","🤖":"1f916","🎸":"1f3b8","🌸":"1f338","🏀":"1f3c0","😍":"1f60d","🐠":"1f420","🐞":"1f41e","🌲":"1f332","🌻":"1f33b","🌼":"1f33c","🌷":"1f337","🍄":"1f344","🎀":"1f380","🍭":"1f36d","🧁":"1f9c1","🍉":"1f349","🎵":"1f3b5","🏰":"1f3f0","🍀":"1f340","🌵":"1f335","🍩":"1f369","🎃":"1f383","⛄":"26c4","🎂":"1f382","🏝️":"1f3dd-fe0f","🌊":"1f30a","🐉":"1f409","🎆":"1f386","🪁":"1fa81","🐦":"1f426","🧊":"1f9ca","♻️":"267b-fe0f","🥞":"1f95e","☔":"2614","🥖":"1f956","🏔️":"1f3d4-fe0f","🍌":"1f34c","🐛":"1f41b","🔺":"1f53a","💯":"1f4af","🕒":"1f552","🏗️":"1f3d7-fe0f","🌌":"1f30c","🦆":"1f986","🐌":"1f40c","🍋":"1f34b","🐓":"1f413","🐑":"1f411","🐍":"1f40d","🍇":"1f347","🐄":"1f404","☂️":"2602-fe0f","🦀":"1f980","🐐":"1f410","🧦":"1f9e6","🐿️":"1f43f-fe0f","🔠":"1f520","🧱":"1f9f1","👪":"1f46a","🥄":"1f944","🔍":"1f50d","🥁":"1f941","📐":"1f4d0","🏛️":"1f3db-fe0f","🟩":"1f7e9","🙈":"1f648","🔈":"1f508","👂":"1f442","🗂️":"1f5c2-fe0f","🌿":"1f33f","🔷":"1f537","🔟":"1f51f","🧾":"1f9fe","✂️":"2702-fe0f","🙋":"1f64b","🏙️":"1f3d9-fe0f","🍂":"1f342","🖐️":"1f590-fe0f","🍒":"1f352","🍊":"1f34a","🍑":"1f351","🥔":"1f954","🥒":"1f952","🥬":"1f96c","🧅":"1f9c5","🫑":"1fad1","🧄":"1f9c4","🌽":"1f33d","🚦":"1f6a6","🔵":"1f535","🟢":"1f7e2","🟡":"1f7e1","🟠":"1f7e0","🟣":"1f7e3","⚫":"26ab","⚪":"26aa","🟤":"1f7e4","🐔":"1f414","🐷":"1f437","🪿":"1fabf","🐺":"1f43a","🦌":"1f98c","🐗":"1f417","👩‍🚒":"1f469-200d-1f692","🌦️":"1f326-fe0f","💧":"1f4a7","🍲":"1f372","🧃":"1f9c3","👦":"1f466","👵":"1f475","👴":"1f474","👶":"1f476","🦎":"1f98e","🦇":"1f987","🐋":"1f40b","🐊":"1f40a","🐜":"1f41c","🧭":"1f9ed","🏘️":"1f3d8-fe0f","🖊️":"1f58a-fe0f","📕":"1f4d5","🪑":"1fa91","🧑‍🏫":"1f9d1-200d-1f3eb","🖍️":"1f58d-fe0f","👁️":"1f441-fe0f","👃":"1f443","👄":"1f444","✋":"270b","🦵":"1f9b5","🦶":"1f9b6","🦷":"1f9b7","💇":"1f487","📆":"1f4c6","🌬️":"1f32c-fe0f","🏖️":"1f3d6-fe0f","🏃":"1f3c3","🤸":"1f938","🏊":"1f3ca","💃":"1f483","🍽️":"1f37d-fe0f","🥤":"1f964","🌅":"1f305","🙏":"1f64f","↔️":"2194-fe0f","🕐":"1f550","〰️":"3030-fe0f","🧐":"1f9d0","🤲":"1f932","😔":"1f614","🪆":"1fa86","✌️":"270c-fe0f","🪶":"1fab6","🪨":"1faa8","🔡":"1f521","🚆":"1f686","🥗":"1f957","👒":"1f452","🧥":"1f9e5","🧣":"1f9e3","🧤":"1f9e4","🪟":"1fa9f","🛏️":"1f6cf-fe0f","🍳":"1f373","🛁":"1f6c1","🖥️":"1f5a5-fe0f","🎄":"1f384","🪄":"1fa84","🤞":"1f91e","🕊️":"1f54a-fe0f","🎅":"1f385"};
+const EMO_MAP = {"🧸":"1f9f8","🪙":"1fa99","🚫":"1f6ab","✔️":"2714-fe0f","❓":"2753","💎":"1f48e","🔥":"1f525","⭐":"2b50","🔢":"1f522","📝":"1f4dd","🌍":"1f30d","📖":"1f4d6","🃏":"1f0cf","🔗":"1f517","🎮":"1f3ae","⚡":"26a1","✅":"2705","🎯":"1f3af","👑":"1f451","👗":"1f457","🛍️":"1f6cd-fe0f","🥉":"1f949","🥈":"1f948","🥇":"1f947","🎉":"1f389","⏱️":"23f1-fe0f","🎁":"1f381","⚙️":"2699-fe0f","🏠":"1f3e0","📚":"1f4da","👕":"1f455","🙋":"1f64b","🧩":"1f9e9","➖":"2796","➕":"2795","🗑️":"1f5d1-fe0f","🎨":"1f3a8","🔲":"1f532","➗":"2797","✏️":"270f-fe0f","🌱":"1f331","🇬🇧":"1f1ec-1f1e7","💛":"1f49b","⛪":"26ea","🔬":"1f52c","🗺️":"1f5fa-fe0f","💻":"1f4bb","🔭":"1f52d","✍️":"270d-fe0f","📸":"1f4f8","👖":"1f456","👟":"1f45f","🎩":"1f3a9","🔒":"1f512","⏳":"23f3","🌟":"1f31f","🙂":"1f642","🔁":"1f501","💾":"1f4be","⏹️":"23f9-fe0f","🎤":"1f3a4","🎙️":"1f399-fe0f","📂":"1f4c2","🔊":"1f50a","👀":"1f440","🚀":"1f680","👋":"1f44b","🏆":"1f3c6","🤧":"1f927","💤":"1f4a4","🍯":"1f36f","💪":"1f4aa","☀️":"2600-fe0f","🌙":"1f319","👨‍👩‍👧":"1f468-200d-1f469-200d-1f467","📲":"1f4f2","👍":"1f44d","🔴":"1f534","🐣":"1f423","🐥":"1f425","🦊":"1f98a","🦁":"1f981","🅰️":"1f170-fe0f","🎈":"1f388","👥":"1f465","📜":"1f4dc","📋":"1f4cb","🖼️":"1f5bc-fe0f","😕":"1f615","📒":"1f4d2","✨":"2728","🧠":"1f9e0","📌":"1f4cc","▶":"25b6-fe0f","🧮":"1f9ee","💡":"1f4a1","🐢":"1f422","❌":"274c","🧽":"1f9fd","📘":"1f4d8","👆":"1f446","🧺":"1f9fa","🪣":"1faa3","📦":"1f4e6","🎒":"1f392","🗃️":"1f5c3-fe0f","👜":"1f45c","🌧️":"1f327-fe0f","🐹":"1f439","🔤":"1f524","🐸":"1f438","🏎️":"1f3ce-fe0f","💀":"1f480","⏰":"23f0","🐱":"1f431","🐶":"1f436","🌞":"1f31e","🍎":"1f34e","🚗":"1f697","🐟":"1f41f","🌳":"1f333","🐻":"1f43b","🚂":"1f682","🧀":"1f9c0","🥛":"1f95b","🦋":"1f98b","🍓":"1f353","🐝":"1f41d","🏫":"1f3eb","🌈":"1f308","🐘":"1f418","🍞":"1f35e","🥕":"1f955","🐭":"1f42d","❄️":"2744-fe0f","🐴":"1f434","🌹":"1f339","🔑":"1f511","🍰":"1f370","🚲":"1f6b2","🦉":"1f989","🍐":"1f350","🥚":"1f95a","🔓":"1f513","👉":"1f449","🏡":"1f3e1","🎟️":"1f39f-fe0f","⚔️":"2694-fe0f","❤️":"2764-fe0f","🤍":"1f90d","🏁":"1f3c1","🚙":"1f699","🏅":"1f3c5","👇":"1f447","✖️":"2716-fe0f","📏":"1f4cf","🗣️":"1f5e3-fe0f","🐂":"1f402","🏷️":"1f3f7-fe0f","💬":"1f4ac","⚖️":"2696-fe0f","💶":"1f4b6","🟦":"1f7e6","👤":"1f464","⚠️":"26a0-fe0f","🌗":"1f317","🔄":"1f504","▶️":"25b6-fe0f","🌐":"1f310","🔎":"1f50e","☁️":"2601-fe0f","📥":"1f4e5","👧":"1f467","📄":"1f4c4","↔":"2194-fe0f","😊":"1f60a","🤝":"1f91d","📊":"1f4ca","👩":"1f469","👨":"1f468","🧓":"1f9d3","🔐":"1f510","🕑":"1f551","🎛️":"1f39b-fe0f","👫":"1f46b","📧":"1f4e7","❗":"2757","✉️":"2709-fe0f","🎧":"1f3a7","💖":"1f496","💜":"1f49c","➡️":"27a1-fe0f","📅":"1f4c5","📤":"1f4e4","📈":"1f4c8","🪐":"1fa90","🛡️":"1f6e1-fe0f","↗":"2197-fe0f","🚪":"1f6aa","📨":"1f4e8","😄":"1f604","😀":"1f600","😂":"1f602","🥳":"1f973","😎":"1f60e","🤔":"1f914","😴":"1f634","👏":"1f44f","🐰":"1f430","🐼":"1f43c","🐨":"1f428","🐵":"1f435","🐯":"1f42f","🦖":"1f996","🐧":"1f427","🐲":"1f432","🦄":"1f984","🦔":"1f994","🦜":"1f99c","🐙":"1f419","🐬":"1f42c","🦒":"1f992","🦩":"1f9a9","🦕":"1f995","🦚":"1f99a","🐳":"1f433","🦈":"1f988","♥":"2665-fe0f","❄":"2744-fe0f","⚽":"26bd","🍕":"1f355","🍦":"1f366","🤖":"1f916","🎸":"1f3b8","🌸":"1f338","🏀":"1f3c0","😍":"1f60d","🐠":"1f420","🐞":"1f41e","🌲":"1f332","🌻":"1f33b","🌼":"1f33c","🌷":"1f337","🍄":"1f344","🎀":"1f380","🍭":"1f36d","🧁":"1f9c1","🍉":"1f349","🎵":"1f3b5","🏰":"1f3f0","🍀":"1f340","🌵":"1f335","🍩":"1f369","🎃":"1f383","⛄":"26c4","🎂":"1f382","🏝️":"1f3dd-fe0f","🌊":"1f30a","🐉":"1f409","🎆":"1f386","🪁":"1fa81","🐦":"1f426","🧊":"1f9ca","♻️":"267b-fe0f","🥞":"1f95e","☔":"2614","🥖":"1f956","🏔️":"1f3d4-fe0f","🍌":"1f34c","🐛":"1f41b","🔺":"1f53a","💯":"1f4af","🕒":"1f552","🏗️":"1f3d7-fe0f","🌌":"1f30c","🦆":"1f986","🐌":"1f40c","🍋":"1f34b","🐓":"1f413","🐑":"1f411","🐍":"1f40d","🍇":"1f347","🐄":"1f404","☂️":"2602-fe0f","🦀":"1f980","🐐":"1f410","🧦":"1f9e6","🐿️":"1f43f-fe0f","🔠":"1f520","🧱":"1f9f1","👪":"1f46a","🥄":"1f944","🔍":"1f50d","🥁":"1f941","📐":"1f4d0","🏛️":"1f3db-fe0f","🟩":"1f7e9","🙈":"1f648","🔈":"1f508","👂":"1f442","🗂️":"1f5c2-fe0f","🌿":"1f33f","🔷":"1f537","🔟":"1f51f","🧾":"1f9fe","✂️":"2702-fe0f","🏙️":"1f3d9-fe0f","🍂":"1f342","🖐️":"1f590-fe0f","🍒":"1f352","🍊":"1f34a","🍑":"1f351","🥔":"1f954","🥒":"1f952","🥬":"1f96c","🧅":"1f9c5","🫑":"1fad1","🧄":"1f9c4","🌽":"1f33d","🚦":"1f6a6","🔵":"1f535","🟢":"1f7e2","🟡":"1f7e1","🟠":"1f7e0","🟣":"1f7e3","⚫":"26ab","⚪":"26aa","🟤":"1f7e4","🐔":"1f414","🐷":"1f437","🪿":"1fabf","🐺":"1f43a","🦌":"1f98c","🐗":"1f417","👩‍🚒":"1f469-200d-1f692","🌦️":"1f326-fe0f","💧":"1f4a7","🍲":"1f372","🧃":"1f9c3","👦":"1f466","👵":"1f475","👴":"1f474","👶":"1f476","🦎":"1f98e","🦇":"1f987","🐋":"1f40b","🐊":"1f40a","🐜":"1f41c","🧭":"1f9ed","🏘️":"1f3d8-fe0f","🖊️":"1f58a-fe0f","📕":"1f4d5","🪑":"1fa91","🧑‍🏫":"1f9d1-200d-1f3eb","🖍️":"1f58d-fe0f","👁️":"1f441-fe0f","👃":"1f443","👄":"1f444","✋":"270b","🦵":"1f9b5","🦶":"1f9b6","🦷":"1f9b7","💇":"1f487","📆":"1f4c6","🌬️":"1f32c-fe0f","🏖️":"1f3d6-fe0f","🏃":"1f3c3","🤸":"1f938","🏊":"1f3ca","💃":"1f483","🍽️":"1f37d-fe0f","🥤":"1f964","🌅":"1f305","🙏":"1f64f","↔️":"2194-fe0f","🕐":"1f550","〰️":"3030-fe0f","🧐":"1f9d0","🤲":"1f932","😔":"1f614","🪆":"1fa86","✌️":"270c-fe0f","🪶":"1fab6","🪨":"1faa8","🔡":"1f521","🚆":"1f686","🥗":"1f957","👒":"1f452","🧥":"1f9e5","🧣":"1f9e3","🧤":"1f9e4","🪟":"1fa9f","🛏️":"1f6cf-fe0f","🍳":"1f373","🛁":"1f6c1","🖥️":"1f5a5-fe0f","🎄":"1f384","🪄":"1fa84","🤞":"1f91e","🕊️":"1f54a-fe0f","🎅":"1f385"};
 const EMO_RE = /(?:[#*0-9]️?⃣)|(?:\p{Extended_Pictographic}(?:️|[\u{1F3FB}-\u{1F3FF}])?(?:‍\p{Extended_Pictographic}(?:️|[\u{1F3FB}-\u{1F3FF}])?)*)/gu;
 let EMO_BAD = false;
 function emoNode(t) {
@@ -1738,7 +1752,13 @@ const PRV = [
     Ktorý vták odlieta na zimu do teplých krajín?|lastovička|vrabec;sýkorka;straka
     Ako sa volá les, v ktorom rastú listnaté aj ihličnaté stromy?|zmiešaný les|ihličnatý les;prales;park
     Kto sa stará o les?|lesník|rybár;baník;pilot
-    Čo v lese nesmieme robiť?|zakladať oheň a odhadzovať odpadky|pozorovať zvieratá;chodiť po chodníku;počúvať vtáky`) },
+    Čo v lese nesmieme robiť?|zakladať oheň a odhadzovať odpadky|pozorovať zvieratá;chodiť po chodníku;počúvať vtáky
+    Ktorý strom je listnatý?|buk|smrek;borovica;jedľa
+    Ktoré zviera v lese spí celú zimu?|jazvec|srna;líška;diviak
+    Ako voláme mladú srnu?|srnča|teľa;žriebä;šteňa
+    Ktorý vták búcha zobákom do stromov?|ďateľ|sova;vrabec;bocian
+    Prečo je les dôležitý?|vyrába kyslík a je domovom zvierat|robí hluk;je len na drevo;nie je dôležitý
+    Ako voláme les, kde rastú ihličnaté aj listnaté stromy?|zmiešaný les|ihličnatý les;dažďový prales;park`) },
   { id: 'p3-voda', g: 3, type: 'qa', name: 'Voda a jej skupenstvá', icon: '💧', items: lines(`
     V akom skupenstve je ľad?|v pevnom|v kvapalnom;v plynnom;v žiadnom
     V akom skupenstve je voda v pohári?|v kvapalnom|v pevnom;v plynnom;v kamennom
@@ -1748,7 +1768,11 @@ const PRV = [
     Ako sa volá zmena vody na paru?|vyparovanie|topenie;tuhnutie;mrznutie
     Ako sa volá zmena ľadu na vodu?|topenie|vyparovanie;varenie;tuhnutie
     Kde je na Zemi najviac vody?|v moriach a oceánoch|v riekach;v jazerách;v oblakoch
-    Akú vodu môžeme piť?|pitnú vodu z vodovodu|morskú vodu;vodu z mláky;vodu z rieky`) },
+    Akú vodu môžeme piť?|pitnú vodu z vodovodu|morskú vodu;vodu z mláky;vodu z rieky
+    Ako sa volá zmena vody na ľad?|tuhnutie (mrznutie)|topenie;vyparovanie;var
+    Čo vzniká, keď sa vodná para ochladí na studenom skle?|kvapky vody|ľad hneď;piesok;dym
+    Prečo sa mláky po daždi stratia?|voda sa vyparí|voda zmrzne;voda zhorí;vypijú ju vtáky
+    Ako voláme kolobeh vody v prírode?|obeh vody|reťazec vody;kruh ohňa;ročné obdobie`) },
   { id: 'p3-materialy', g: 3, type: 'qa', name: 'Materiály a triedenie odpadu', icon: '♻️', items: lines(`
     Čo priťahuje magnet?|železný klinec|drevená ceruzka;plastová lyžica;sklený pohár
     Z čoho sa vyrába papier?|z dreva|zo skla;z kameňa;z plastu
@@ -1781,7 +1805,14 @@ const PRV = [
     Aké je hlavné mesto Slovenska?|Bratislava|Košice;Žilina;Nitra
     Ktoré je druhé najväčšie mesto Slovenska?|Košice|Prešov;Trnava;Martin
     Aké farby má slovenská vlajka?|biela, modrá, červená|červená, zelená, biela;žltá, modrá;čierna, žltá, červená
-    Ako sa volá slovenská hymna?|Nad Tatrou sa blýska|Tancuj, tancuj;Kto za pravdu horí;Hej, Slováci`) },
+    Ako sa volá slovenská hymna?|Nad Tatrou sa blýska|Tancuj, tancuj;Kto za pravdu horí;Hej, Slováci
+    Ako sa volá hlavné mesto Slovenska?|Bratislava|Košice;Žilina;Nitra
+    Kde nám pomôžu, keď sme chorí?|u lekára|v knižnici;na pošte;v kine
+    Kam pošleme list alebo balík?|na poštu|do lekárne;do školy;do obchodu s obuvou
+    Ktoré číslo voláme v núdzi (jednotné európske)?|112|111;123;999
+    Kto hasí požiare?|hasiči|policajti;lekári;poštári
+    Ako sa volá najväčší vrch Slovenska?|Gerlachovský štít|Kriváň;Lomnický štít;Chopok
+    Ktorá rieka preteká Bratislavou?|Dunaj|Váh;Hron;Morava`) },
   { id: 'p3-skola', g: 3, type: 'vocab', name: 'Angličtina: v škole', icon: '🎒', items: lines(`
     pen|pero|🖊️
     pencil|ceruzka|✏️
@@ -1848,7 +1879,14 @@ const PRV = [
     Ktorý živočích stavia na rieke hrádze?|bobor|krt;jež;veverička
     Kde žije pstruh?|v čistých horských potokoch|v púšti;v mori;v lese
     Kto rozkladá opadané lístie na pôdu?|dážďovky a huby|vtáky;ryby;srny
-    Prečo sú včely dôležité?|opeľujú rastliny|dávajú mlieko;chránia les pred ohňom;čistia vodu`) },
+    Prečo sú včely dôležité?|opeľujú rastliny|dávajú mlieko;chránia les pred ohňom;čistia vodu
+    Kto je všežravec?|medveď|krava;zajac;srna
+    Doplň reťazec: tráva → zajac → ?|líška|kapusta;slimák;veverička
+    Doplň reťazec: list → húsenica → ?|sýkorka|vlk;srna;ryba
+    Prečo sú dôležité huby a dážďovky?|rozkladajú odumreté zvyšky|robia hluk;jedia vlkov;svietia v noci
+    Čo by sa stalo, keby zmizli všetky rastliny?|živočíchy by nemali potravu|nič by sa nestalo;vlky by narástli;bolo by viac jedla
+    Ako voláme živočícha, ktorý loví iné živočíchy?|dravec (predátor)|bylinožravec;rozkladač;výrobca
+    Ktorý živočích zjedá rastliny v rybníku?|slimák|štuka;volavka;vydra`) },
   { id: 'p4-slovensko', g: 4, type: 'qa', name: 'Príroda Slovenska', icon: '🏔️', items: lines(`
     Ktorý je najvyšší vrch Slovenska?|Gerlachovský štít|Kriváň;Lomnický štít;Rysy
     Aký vysoký je Gerlachovský štít?|asi 2 655 m|asi 1 000 m;asi 5 000 m;asi 850 m
@@ -2003,7 +2041,11 @@ const MORE_SJL = [
     Vyslovujeme [mrás]. Ako to správne napíšeme?|mráz|mrás;mraz|Pomôže iný tvar: mrazy. Počujeme s, ale píšeme z.
     Vyslovujeme [hrat]. Ako to správne napíšeme?|hrad|hrat;hrád|Pomôže iný tvar: hrady. Počujeme t, ale píšeme d.
     Vyslovujeme [loť]. Ako to správne napíšeme?|loď|loť;lod|Pomôže iný tvar: lode. Počujeme ť, ale píšeme ď.
-    Vyslovujeme [nôš]. Ako to správne napíšeme?|nôž|nôš;noš|Pomôže iný tvar: nože. Počujeme š, ale píšeme ž.`) },
+    Vyslovujeme [nôš]. Ako to správne napíšeme?|nôž|nôš;noš|Pomôže iný tvar: nože. Počujeme š, ale píšeme ž.
+    Vyslovujeme [lef]. Ako to správne napíšeme?|lev|lef;léf|Pomôže iný tvar: levy. Počujeme f, ale píšeme v.
+    Vyslovujeme [nóš]. Ako to správne napíšeme?|nôž|nóš;noš|Pomôže iný tvar: nože. Počujeme š, ale píšeme ž.
+    Vyslovujeme [hat] (plaz). Ako to napíšeme v slove hadík?|hadík|hatík;hádik|Pomôže tvar had – hady. Píšeme d.
+    Vyslovujeme [obet]. Ako to správne napíšeme?|obed|obet;óbed|Pomôže iný tvar: obedy. Počujeme t, ale píšeme d.`) },
   { id: 's3-nadradene', g: 3, type: 'qa', name: 'Nadradené slová', icon: '🗂️', items: lines(`
     Ktoré slovo je nadradené slovám jablko, hruška, slivka?|ovocie|zelenina;strom;záhrada
     Ktoré slovo je nadradené slovám mrkva, cibuľa, kapusta?|zelenina|ovocie;kvety;jedlo z mäsa
@@ -2012,7 +2054,15 @@ const MORE_SJL = [
     Ktoré slovo je nadradené slovám stôl, stolička, skriňa?|nábytok|riad;náradie;hračky
     Ktoré slovo je nadradené slovám auto, vlak, autobus?|dopravné prostriedky|hračky;budovy;stroje v kuchyni
     Ktoré slovo je nadradené slovám tričko, sukňa, nohavice?|oblečenie|obuv;šperky;nábytok
-    Ktoré slovo je nadradené slovám hrnček, tanier, miska?|riad|nábytok;náradie;oblečenie`) },
+    Ktoré slovo je nadradené slovám hrnček, tanier, miska?|riad|nábytok;náradie;oblečenie
+    Ktoré slovo je nadradené slovám ruža, tulipán, sedmokráska?|kvety|stromy;huby;zelenina
+    Ktoré slovo je nadradené slovám vrabec, sýkorka, ďateľ?|vtáky|ryby;hmyz;cicavce
+    Ktoré slovo je nadradené slovám stolička, stôl, skriňa?|nábytok|riad;náradie;hračky
+    Ktoré slovo je nadradené slovám tričko, sveter, nohavice?|oblečenie|obuv;nábytok;riad
+    Ktoré slovo je nadradené slovám auto, autobus, vlak?|dopravné prostriedky|budovy;nástroje;zvieratá
+    Ktoré slovo je nadradené slovám hrnček, tanier, misa?|riad|nábytok;oblečenie;hračky
+    Ktoré slovo je podradené slovu „hudobné nástroje“?|husle|lopta;kladivo;tanier
+    Ktoré slovo je podradené slovu „ovocie“?|čerešňa|mrkva;zemiak;cibuľa`) },
   { id: 's4-cas', g: 4, type: 'cat', name: 'Slovesný čas', icon: '⏳', prompt: 'Sloveso „{x}“ je v…', choices: ['minulom čase', 'prítomnom čase', 'budúcom čase'], items: 'skákal|minulom čase,čítala|minulom čase,bežali|minulom čase,napísal|minulom čase,spievali|minulom čase,píše|prítomnom čase,beží|prítomnom čase,kreslíme|prítomnom čase,spí|prítomnom čase,varí|prítomnom čase,budem čítať|budúcom čase,pôjdeme|budúcom čase,budú hrať|budúcom čase,prídem|budúcom čase,budeš spať|budúcom čase', ex: 'Minulý čas: čo robil? Prítomný: čo robí? Budúci: čo bude robiť?' },
   { id: 's4-a', g: 4, type: 'qa', name: 'Kedy píšeme ä', icon: '🅰️', items: lines(`
     Ktoré slovo je napísané správne?|mäso|maso;méso|Ä píšeme len po perných spoluhláskach b, m, p, v.
@@ -2105,7 +2155,15 @@ const SJL3 = [
     Ktoré slovo je príbuzné so slovom „mydlo“?|mydlový|myš;mýliť;myslieť
     Ktoré slovo je príbuzné so slovom „jazyk“?|jazykový|jazero;jahoda;jaskyňa
     Ktoré slovo je príbuzné so slovom „vysoký“?|výška|vydra;výr;vyť
-    Ktoré slovo je príbuzné so slovom „kobyla“?|kobylka|kopyto;kolobežka;koberec`), ex: 'Príbuzné slová majú spoločný základ, preto sa píšu s rovnakým y.' },
+    Ktoré slovo je príbuzné so slovom „kobyla“?|kobylka|kopyto;kolobežka;koberec
+    Ktoré slovo je príbuzné so slovom „mlyn“?|mlynár|milý;mlieko;mýliť
+    Ktoré slovo je príbuzné so slovom „dym“?|dymiť|dynamit;dyňa;dýchať
+    Ktoré slovo je príbuzné so slovom „sýty“?|nasýtiť|sito;syr;sila
+    Ktoré slovo je príbuzné so slovom „kniha“?|knižnica|kino;kŕdeľ;kuchyňa
+    Ktoré slovo je príbuzné so slovom „les“?|lesník|lesk;lev;letieť
+    Ktoré slovo je príbuzné so slovom „škola“?|školák|škatuľa;šál;šaty
+    Ktoré slovo je príbuzné so slovom „zima“?|zimný|zinok;zips;zelený
+    Ktoré slovo je príbuzné so slovom „voda“?|vodník|vodič;vôňa;volať`), ex: 'Príbuzné slová majú spoločný základ, preto sa píšu s rovnakým y.' },
   { id: 's3-spravne', g: 3, name: 'Ktoré slovo je správne?', icon: '🔍', gen() { const [, , w] = pick(vyb(['b', 'm', 'p', 'r', 's', 'v', 'z'])); const v = spellVariants(w); return { q: 'Ktoré slovo je napísané správne?', a: w, w: v.filter(x => x !== w), ex: `Správne je ${w}. Po obojakej spoluhláske píšeme y len vo vybraných a príbuzných slovách.` }; } },
   { id: 's4-osoba', g: 4, type: 'cat', name: 'Osoba slovies', icon: '🙋', prompt: 'Sloveso „{x}“ je v…', choices: ['1. osobe', '2. osobe', '3. osobe'], items: 'píšem|1. osobe,čítame|1. osobe,spievam|1. osobe,skáčeme|1. osobe,beháš|2. osobe,píšeš|2. osobe,čítate|2. osobe,kreslíte|2. osobe,píše|3. osobe,behá|3. osobe,čítajú|3. osobe,skáču|3. osobe,spí|3. osobe', ex: '1. osoba: ja, my. 2. osoba: ty, vy. 3. osoba: on, ona, ono, oni.' },
   { id: 's4-vlastne', g: 4, type: 'cat', name: 'Vlastné a všeobecné mená', icon: '🏙️', prompt: '„{x}“ je…', choices: ['vlastné podstatné meno', 'všeobecné podstatné meno'], items: 'Bratislava|vlastné podstatné meno,Dunaj|vlastné podstatné meno,Peter|vlastné podstatné meno,Tatry|vlastné podstatné meno,Slovensko|vlastné podstatné meno,Bodka (meno psa)|vlastné podstatné meno,Košice|vlastné podstatné meno,mesto|všeobecné podstatné meno,rieka|všeobecné podstatné meno,chlapec|všeobecné podstatné meno,hory|všeobecné podstatné meno,krajina|všeobecné podstatné meno,pes|všeobecné podstatné meno,škola|všeobecné podstatné meno', ex: 'Vlastné mená (mená ľudí, zvierat, miest, riek, hôr) píšeme s veľkým začiatočným písmenom.' }
@@ -2439,7 +2497,12 @@ const U3_PRV = [
     Cez čo počujeme zvuk z počítača?|cez reproduktory|cez klávesnicu;cez monitor;cez myš
     Do čoho hovoríme, keď nás má počítač počuť?|do mikrofónu|do tlačiarne;do myši;do monitora
     Ako sa volá malý počítač, ktorý nosíme vo vrecku?|mobil|tlačiareň;skener;router
-    Čo urobíme na konci práce s počítačom?|správne ho vypneme|vytrhneme kábel;polejeme ho vodou;necháme ho celú noc zapnutý`) },
+    Čo urobíme na konci práce s počítačom?|správne ho vypneme|vytrhneme kábel;polejeme ho vodou;necháme ho celú noc zapnutý
+    Ktorá časť počítača ukazuje obraz?|monitor|klávesnica;myš;tlačiareň
+    Čo urobí tlačiareň?|vytlačí dokument na papier|zahrá hudbu;odfotí nás;nabije mobil
+    Na čo slúži myš?|na ukazovanie a klikanie|na tlač;na počúvanie hudby;na kreslenie fixkou
+    Ako správne vypneme počítač?|cez ponuku Vypnúť|vytiahneme kábel;zatvoríme monitor rukou;udrieme do neho
+    Čo je súbor?|uložená práca v počítači, napr. obrázok alebo text|kus nábytku;káblik;druh myši`) },
   { id: 'i3-postup', g: 3, type: 'qa', area: 'info', name: 'Postupy krok za krokom', icon: '🧩', ex: 'Algoritmus je presný postup krokov v správnom poradí.', items: lines(`
     Čo urobíme ako prvé, keď si chceme umyť ruky?|pustíme vodu|utrieme si ruky;zatvoríme vodu;odídeme
     Čo urobíme ako posledné pri čistení zubov?|vypláchneme si ústa|nanesieme pastu;vezmeme kefku;otvoríme pastu
@@ -2448,7 +2511,13 @@ const U3_PRV = [
     Čo urobíme, keď v postupe nájdeme chybu?|opravíme ju|nič;začneme plakať;vymažeme všetko
     Robot otočený na sever sa otočí doprava. Kam sa pozerá?|na východ|na juh;na západ;stále na sever
     Opakuj 3-krát: tlesknúť. Koľkokrát tlesneš?|3|1;2;6
-    Čo musí byť v recepte na palacinky skôr?|zmiešať cesto|zjesť palacinku;posypať cukrom;umyť riad`) },
+    Čo musí byť v recepte na palacinky skôr?|zmiešať cesto|zjesť palacinku;posypať cukrom;umyť riad
+    Robot ide 3 kroky dopredu a 1 dozadu. O koľko krokov je ďalej?|o 2|o 4;o 3;o 1
+    Čo je algoritmus?|presný postup krokov|druh počítača;hra na schovávačku;pieseň
+    Pri varení čaju: čo urobíme pred zaliatím vrecúška?|zovrieme vodu|vypijeme čaj;umyjeme hrnček po pití;pridáme cukor po vypití
+    Čo sa stane, ak v postupe vymeníme poradie krokov?|výsledok môže byť zlý|nič sa nestane nikdy;vždy to bude lepšie;postup zmizne
+    Robot otočí doprava 4-krát. Kam sa pozerá?|tam, kam na začiatku|doľava;dozadu;doprava
+    Čo je opakovanie (cyklus) v programe?|keď sa niektoré kroky robia viackrát|keď program skončí;keď sa vypne počítač;chyba v programe`) },
   { id: 'i4-bezpecne', g: 4, type: 'qa', area: 'info', name: 'Bezpečne na internete', icon: '🛡️', ex: 'Heslo, adresu a fotky nikomu cudziemu neposielame. Keď niečo nepríjemné, povieme to dospelému.', items: lines(`
     Komu môžeš povedať svoje heslo?|rodičom|kamarátovi zo hry;cudziemu človeku;všetkým v triede
     Neznámy človek v hre chce tvoju adresu. Čo urobíš?|nepoviem ju a poviem to rodičom|poviem mu ju;pošlem fotku domu;stretnem sa s ním
@@ -2457,7 +2526,13 @@ const U3_PRV = [
     Môže byť všetko na internete pravda?|nie, treba to overiť|áno, vždy;áno, ak je to video;áno, ak je tam obrázok
     Čo je lepšie poslať do skupiny so spolužiakmi?|milú správu|fotku cudzieho človeka bez dovolenia;posmešný obrázok;heslo
     Prečo sa nemáme stretávať s ľuďmi z internetu bez rodičov?|nevieme, kto naozaj sú|lebo je to nuda;lebo prší;lebo to nejde
-    Čo urobíš, keď vyskočí okno „Vyhral si mobil!“?|nekliknem a zavriem ho|kliknem;napíšem tam adresu;zavolám kamarátom`) },
+    Čo urobíš, keď vyskočí okno „Vyhral si mobil!“?|nekliknem a zavriem ho|kliknem;napíšem tam adresu;zavolám kamarátom
+    Čo urobíš, keď ti niekto online píše škaredé veci?|poviem to rodičom a zablokujem ho|odpíšem mu ešte horšie;nikomu nepoviem;pošlem mu fotku
+    Môžeš veriť všetkému, čo je na internete?|nie, treba to overiť|áno, všetko je pravda;áno, ak je to farebné;áno, ak to má veľa lajkov
+    Čo nikdy nedávame na internet?|adresu a telefónne číslo|obľúbenú farbu;kresbu zvieratka;názov obľúbenej rozprávky
+    Prišla ti správa „Vyhral si mobil, klikni sem“. Čo urobíš?|nekliknem a ukážem ju rodičom|hneď kliknem;pošlem heslo;napíšem adresu
+    Ako dlho je dobré byť denne pri obrazovke?|primerane, s prestávkami|celý deň bez prestávky;celú noc;čím dlhšie, tým lepšie
+    Čo je kyberšikana?|ubližovanie cez internet alebo mobil|hra s kockami;počítačová myš;oprava počítača`) },
   { id: 'i4-kod', g: 4, name: 'Tajné kódy', icon: '🔐', area: 'info', gen() { const W = ['MAMA', 'LES', 'PES', 'DOM', 'SLON', 'ROBOT', 'KOD', 'MAPA']; const w = pick(W); const A = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'; const sh = c => A[(A.indexOf(c) + 1) % 26]; const enc = [...w].map(sh).join(''); const wr = shuffle(W.filter(x => x !== w && x.length === w.length)).slice(0, 2); const w2 = [...w].reverse().join(''); return { q: `Každé písmeno je posunuté o jedno ďalej v abecede (A→B). Čo znamená „${enc}“?`, a: w, w: [...new Set([...wr, w2 !== w ? w2 : 'NIC', [...w].map(c => A[(A.indexOf(c) + 2) % 26]).join('')])].filter(x => x !== w).slice(0, 3), ex: `Každé písmeno vrátime o jedno späť: ${enc} → ${w}.` }; } },
   { id: 'p4-planety', g: 4, type: 'qa', area: 'bio', name: 'Slnečná sústava', icon: '🪐', ex: 'Okolo Slnka obieha 8 planét: Merkúr, Venuša, Zem, Mars, Jupiter, Saturn, Urán, Neptún.', items: lines(`
     Koľko planét obieha okolo Slnka?|8|5;10;12
@@ -2469,7 +2544,10 @@ const U3_PRV = [
     Čo obieha okolo Zeme?|Mesiac|Slnko;Mars;Jupiter
     Za aký čas obehne Zem okolo Slnka?|za 1 rok|za 1 deň;za 1 týždeň;za 1 hodinu
     Prečo sa strieda deň a noc?|Zem sa otáča okolo svojej osi|Slnko zhasína;Mesiac zakryje Slnko;mraky zakryjú Slnko
-    Čo je Slnko?|hviezda|planéta;mesiac;kométa`) },
+    Čo je Slnko?|hviezda|planéta;mesiac;kométa
+    Ktorá planéta sa volá aj červená?|Mars|Venuša;Jupiter;Urán
+    Koľko planét má naša slnečná sústava?|8|9;7;12
+    Čo je Mesiac?|prirodzená družica Zeme|planéta;hviezda;kométa`) },
   { id: 'e1-kamarat', g: 1, type: 'qa', area: 'etika', name: 'Dobrý kamarát', icon: '🤝', items: lines(`
     Kamarát spadol a plače. Čo urobíš?|pomôžem mu a utíšim ho|zasmejem sa;odídem;nič
     Čo povieme, keď nám niekto pomôže?|ďakujem|nič;choď preč;nechcem
@@ -2503,7 +2581,12 @@ const U3_PRV = [
     Čo je ohováranie?|hovoriť o niekom zlé veci za jeho chrbtom|pochváliť niekoho;pomôcť niekomu;požičať pero
     Ako môžeme pomôcť starším ľuďom?|pustiť ich sednúť v autobuse|predbehnúť ich;kričať na nich;nevšímať si ich
     Čo urobíš, keď vidíš, že niekomu ubližujú?|poviem to dospelému a pomôžem|pridám sa;nahrávam to;utečiem a nikomu nič
-    Prečo triedime odpad?|aby sme chránili prírodu|aby bolo viac košov;lebo je to zábavné;nemusíme ho triediť`) }
+    Prečo triedime odpad?|aby sme chránili prírodu|aby bolo viac košov;lebo je to zábavné;nemusíme ho triediť
+    Čo znamená tolerancia?|rešpektujeme, že ľudia sú rôzni|všetci musia byť rovnakí;smejeme sa inakosti;nevšímame si nikoho
+    Spolužiak hovorí iným jazykom. Ako sa zachováš?|pomôžem mu a skúsim sa dohovoriť|budem sa mu smiať;budem ho ignorovať;poviem mu, nech odíde
+    Čo je šikanovanie?|keď niekto opakovane ubližuje slabšiemu|keď sa spolu hráme;keď si požičiame pero;keď sa učíme
+    Kto má v rodine povinnosti?|všetci podľa svojich síl|len mama;len otec;nikto
+    Čo je dobrovoľníctvo?|pomoc druhým bez nároku na peniaze|práca za veľký plat;nakupovanie;sledovanie televízie`) }
 ];
 for (const t of U3_PRV) { PRV.push(t); const x = { ...t, s: 'prv' }; ALL_TOPICS.push(x); TOPIC[t.id] = x; }
 /* ===== Etika a náboženstvo zvlášť, viac tém ===== */
@@ -2532,14 +2615,26 @@ const U4_PRV = [
     Kamarát ti povedal tajomstvo. Čo urobíš?|nechám si ho pre seba|poviem ho všetkým;napíšem ho na tabuľu;vysmejem ho
     Kedy tajomstvo povedať dospelému?|keď niekomu hrozí nebezpečenstvo|nikdy;vždy hneď;keď sa nudím
     Našiel si na chodbe peňaženku. Čo urobíš?|odnesiem ju učiteľke|nechám si ju;vyhodím ju;minie sa na sladkosti
-    Čo znamená sľúbiť niečo?|že to naozaj urobíme|že to možno urobíme;že to nikdy neurobíme;nič`) },
+    Čo znamená sľúbiť niečo?|že to naozaj urobíme|že to možno urobíme;že to nikdy neurobíme;nič
+    Našiel si na chodbe cudziu peňaženku. Čo urobíš?|odovzdám ju učiteľke alebo vrátnikovi|nechám si ju;vyhodím ju;miniem peniaze
+    Čo je klamstvo?|keď vedome nehovoríme pravdu|keď sa pomýlime pri počítaní;keď spievame;keď mlčíme pri čítaní
+    Ako získaš späť dôveru, keď si klamal?|priznám sa a budem hovoriť pravdu|budem klamať ďalej;ospravedlním sa a hneď zas zaklamem;nebudem s nikým hovoriť
+    Mama sa pýta, či máš urobené úlohy, a nemáš. Čo povieš?|pravdu a hneď ich urobím|že áno;že žiadne neboli;nič
+    Je v poriadku sľúbiť niečo a potom to nesplniť?|nie, sľuby máme dodržiavať|áno, vždy;áno, ak sa nám nechce;áno, ak to nikto nevie
+    Kamarát odpisuje na teste a chce, aby si mlčal. Čo je správne?|neklamať a nepomáhať podvádzať|dať mu všetky odpovede;klamať učiteľke;odpísať tiež`) },
   { id: 'e4-priroda', g: 4, type: 'qa', area: 'etika', name: 'Chránime prírodu', icon: '🌳', items: lines(`
     Kam patrí plastová fľaša?|do žltého kontajnera na plasty|do lesa;do potoka;do papiera
     Kam patrí papier a noviny?|do modrého kontajnera|do skla;do lesa;do bio odpadu
     Čo ušetrí vodu?|zastaviť vodu pri čistení zubov|nechať vodu tiecť;kúpať sa trikrát denne;umývať auto každý deň
     Čo urobíme s odpadkami na výlete?|odnesieme ich so sebou|necháme ich v lese;hodíme do potoka;zakopeme ich
     Prečo zhasíname svetlo, keď odchádzame?|šetríme energiu|aby bola tma;lebo je to zábava;nie je to potrebné
-    Ako pomôžeme vtáčikom v zime?|dáme im do kŕmidla semienka|chytíme ich;dáme im čokoládu;nič`) },
+    Ako pomôžeme vtáčikom v zime?|dáme im do kŕmidla semienka|chytíme ich;dáme im čokoládu;nič
+    Kam patria šupky z ovocia?|do bio odpadu (hnedý kontajner)|do skla;do plastov;do papiera
+    Kam patrí sklenená fľaša?|do zeleného kontajnera na sklo|do papiera;do lesa;do bio odpadu
+    Čo ušetrí elektrinu?|zhasnúť svetlo, keď odchádzam|nechať svietiť všade;nechať zapnutý televízor;otvoriť chladničku dokorán
+    Prečo nezbierame chránené kvety?|aby nevyhynuli|lebo smrdia;lebo sú pichľavé;lebo sú drahé
+    Ako sa správame v lese?|nekričíme a nehádžeme odpadky|lámeme stromy;zakladáme oheň kdekoľvek;plašíme zvieratá
+    Čo znamená recyklácia?|zo starého odpadu sa vyrobí nová vec|odpad sa zakope;odpad sa hodí do rieky;odpad sa spáli doma`) },
   { id: 'n1-stvorenie', g: 1, type: 'qa', area: 'nab', name: 'Svet okolo nás je dar', icon: '🌈', ex: 'Podľa Biblie Boh stvoril svet: svetlo, vodu, zem, rastliny, zvieratá a človeka.', items: lines(`
     Kto podľa Biblie stvoril svet?|Boh|kráľ;čarodejník;človek
     Ako sa volali prví ľudia podľa Biblie?|Adam a Eva|Peter a Pavol;Jana a Ján;Mária a Jozef
@@ -2560,14 +2655,25 @@ const U4_PRV = [
     Čo viedlo mudrcov k Ježišovi?|hviezda|mapa;vták;rieka
     Kde podľa príbehu ležal malý Ježiš?|v jasliach|v posteli;na tróne;v lodi
     Ako sa volali Ježišovi najbližší priatelia?|apoštoli|rytieri;vojaci;kráľovia
-    Ktorý sviatok pripomína narodenie Ježiša?|Vianoce|Veľká noc;Silvester;Deň detí`) },
+    Ktorý sviatok pripomína narodenie Ježiša?|Vianoce|Veľká noc;Silvester;Deň detí
+    V ktorom meste sa narodil Ježiš?|v Betleheme|v Ríme;v Bratislave;v Nazarete
+    Kto sa prišiel pokloniť malému Ježišovi s darmi?|traja králi (mudrci)|rytieri;rybári;vojaci
+    V akom meste Ježiš vyrastal?|v Nazarete|v Betleheme;v Egypte;v Ríme
+    Ako voláme dvanástich Ježišových priateľov?|apoštoli|anjeli;proroci;králi
+    Ktorý sviatok slávime na pamiatku Ježišovho zmŕtvychvstania?|Veľkú noc|Vianoce;Turíce;Dušičky`) },
   { id: 'n4-svati', g: 4, type: 'qa', area: 'nab', name: 'Svätci a Slovensko', icon: '📜', ex: 'Cyril a Metod prišli na Veľkú Moravu v roku 863 a priniesli písmo hlaholiku.', items: lines(`
     Kto priniesol našim predkom písmo?|Cyril a Metod|Mikuláš a Martin;Peter a Pavol;Juraj a Jakub
     Ako sa volalo písmo, ktoré vytvoril Konštantín (Cyril)?|hlaholika|latinka;azbuka;runy
     Kedy prišli Cyril a Metod na Veľkú Moravu?|v roku 863|v roku 1993;v roku 1200;v roku 100
     Kto nosí deťom darčeky 6. decembra?|svätý Mikuláš|svätý Martin;Ježiško;Dedo Mráz
     Kto podľa legendy rozdelil plášť s chudobným?|svätý Martin|svätý Mikuláš;svätý Juraj;svätý Peter
-    Kedy oslavujeme sviatok Cyrila a Metoda?|5. júla|1. januára;24. decembra;1. mája`) }
+    Kedy oslavujeme sviatok Cyrila a Metoda?|5. júla|1. januára;24. decembra;1. mája
+    Ktorý svätec je patrónom Slovenska spolu s Cyrilom a Metodom?|Sedembolestná Panna Mária|svätý Mikuláš;svätý Martin;svätý Valentín
+    Kedy si pripomíname sviatok Cyrila a Metoda?|5. júla|24. decembra;1. mája;6. januára
+    Kto bol knieža Pribina?|vládca, za ktorého bol v Nitre posvätený kostol|kráľ z rozprávky;pápež;astronaut
+    Ktorý svätý delil svoj plášť so žobrákom?|svätý Martin|svätý Juraj;svätý Peter;svätý Pavol
+    Kto je patrónom detí a rozdáva darčeky 6. decembra?|svätý Mikuláš|svätý Martin;svätý Štefan;svätý Ján
+    Ako sa volal žiak Cyrila a Metoda, ktorý pokračoval v ich diele?|Gorazd|Pribina;Svätopluk;Rastislav`) }
 ];
 for (const t of U4_PRV) { PRV.push(t); const x = { ...t, s: 'prv' }; ALL_TOPICS.push(x); TOPIC[t.id] = x; }
 const U5_PRV = [
@@ -2576,7 +2682,13 @@ const U5_PRV = [
     Spolužiak niečomu nerozumie. Čo urobíš?|vysvetlím mu to|posmievam sa mu;nevšímam si ho;poviem, že je hlúpy
     Ako sa rozhodneme, keď sa nevieme dohodnúť?|vypočujeme každého a hlasujeme|vyhrá najsilnejší;nerobíme nič;hádame sa
     Čo je dobré pravidlo v triede?|nikomu neubližujeme|kto kričí, má pravdu;berieme si cudzie veci;nepočúvame
-    Ako ukážeš, že si niekoho vážiš?|pozorne ho počúvam|otočím sa chrbtom;smejem sa mu;skáčem mu do reči`) },
+    Ako ukážeš, že si niekoho vážiš?|pozorne ho počúvam|otočím sa chrbtom;smejem sa mu;skáčem mu do reči
+    Spolužiak je v triede nový. Čo urobíš?|privítam ho a ukážem mu školu|budem sa mu vyhýbať;posmievam sa mu;nevšímam si ho
+    Ako sa správame, keď niekto prehrá v hre?|povzbudíme ho|vysmejeme ho;chválime sa;odídeme
+    Čo je spolupráca?|keď spolu robíme na jednej úlohe|keď všetko robí jeden;keď sa hádame;keď súťažíme proti sebe
+    Ako riešime hádku so spolužiakom?|pokojne sa porozprávame|bijeme sa;kričíme;urazíme sa navždy
+    Komu povieš, keď niekto v triede ubližuje inému?|pani učiteľke|nikomu;len tomu, kto ubližuje;smejem sa
+    Čo znamená ospravedlniť sa?|priznať chybu a povedať prepáč|robiť sa, že nič;obviniť iného;utiecť`) },
   { id: 'n1-mikulas', g: 1, type: 'qa', area: 'nab', name: 'Mikuláš a Vianoce', icon: '🎅', items: lines(`
     Kedy prichádza svätý Mikuláš?|6. decembra|24. decembra;1. januára;1. júna
     Kam nám Mikuláš dáva sladkosti?|do čižmičky|do kufra;do školskej tašky;do chladničky
@@ -2597,7 +2709,13 @@ for (const t of U5_PRV) { PRV.push(t); const x = { ...t, s: 'prv' }; ALL_TOPICS.
     Čo nás učí príbeh o milosrdnom Samaritánovi?|pomáhať každému, kto to potrebuje|pomáhať len kamarátom;nikomu nepomáhať;utekať
     Ako sa otec zachoval k márnotratnému synovi, keď sa vrátil?|odpustil mu a tešil sa|vyhnal ho;nevšímal si ho;hneval sa navždy
     Čo nás učí príbeh o márnotratnom synovi?|odpúšťať|nikdy neodpustiť;utiecť z domu;hádať sa
-    Čo hľadal pastier, ktorý nechal 99 oviec?|jednu stratenú ovcu|zlato;nový dom;stratenú kozu`) };
+    Čo hľadal pastier, ktorý nechal 99 oviec?|jednu stratenú ovcu|zlato;nový dom;stratenú kozu
+    Čo nás učí podobenstvo o stratenej ovečke?|každý je dôležitý|ovce sú hlúpe;netreba hľadať;stačí mať veľa
+    Čo urobil otec, keď sa vrátil márnotratný syn?|s radosťou ho prijal|vyhnal ho;nevšímal si ho;potrestal ho
+    Čo nás učí podobenstvo o márnotratnom synovi?|odpúšťať|nikdy sa nevracať;byť lakomý;hnevať sa
+    Kde zasiate zrno najlepšie vyrástlo?|v dobrej zemi|na ceste;medzi tŕním;na skale
+    Čo urobil múdry staviteľ?|postavil dom na skale|postavil dom na piesku;nepostavil nič;postavil dom vo vode
+    Čo nás učí podobenstvo o horčičnom zrnku?|aj z malého môže vyrásť niečo veľké|malé veci sú zbytočné;zrná sa nedajú jesť;treba kupovať veľké semená`) };
   PRV.push(t); const x = { ...t, s: 'prv' }; ALL_TOPICS.push(x); TOPIC[t.id] = x; }
 /* ===== Čítanka: krátke texty s otázkami ===== */
 const READS = [
@@ -2799,7 +2917,7 @@ function avatarSvg(av, opts = {}) {
   const pet = itemOf('pet', av.pet);
   if (false && pet.e && !opts.crop && !opts.noPet) s += `<g class="pet"><ellipse cx="166" cy="296" rx="20" ry="5" fill="#000" opacity=".12"/><text x="166" y="291" font-size="38" text-anchor="middle">${pet.e}</text></g>`;
 
-  const vb = { head: ['kral', 'astronaut'].includes(av.top) || ['sampion', 'vavrin', 'bronz', 'korunka', 'diamant', 'carodej', 'cylinder', 'pirklobuk', 'kuchciapka', 'vrtulka', 'svatoziara', 'usi', 'kovboj', 'siltovka', 'cepicka'].includes(av.acc) ? '38 0 124 124' : '43 15 114 114', acc: '28 -16 144 144', top: '30 110 140 140', bottom: '40 175 120 120', shoes: '62 264 76 42' }[opts.crop] || '0 0 200 310';
+  const vb = { head: ['kral', 'astronaut'].includes(av.top) || ['sampion', 'vavrin', 'bronz', 'korunka', 'diamant', 'carodej', 'cylinder', 'pirklobuk', 'kuchciapka', 'vrtulka', 'svatoziara', 'usi', 'kovboj', 'siltovka', 'cepicka'].includes(av.acc) ? '33 -8 134 134' : '43 15 114 114', acc: '28 -16 144 144', top: '30 110 140 140', bottom: '40 175 120 120', shoes: '62 264 76 42' }[opts.crop] || '0 0 200 310';
   return `<svg class="avatar ${opts.cls || ''}" viewBox="${vb}" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="avatar">${s}</svg>`;
 }
 
@@ -3048,7 +3166,7 @@ const $ = (s, r = document) => r.querySelector(s);
 const $$ = (s, r = document) => [...r.querySelectorAll(s)];
 const esc = s => String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 function normalize() {
-  DATA.settings = Object.assign({ sound: true, voice: true, calc: true, chat: true, gameLimit: 0, theme: 'auto', lb: true, friends: true, freeChat: false }, DATA.settings || {});
+  DATA.settings = Object.assign({ sound: true, voice: true, calc: true, chat: true, gameLimit: 0, theme: 'auto', lb: true, friends: true, freeChat: false, msgOk: false }, DATA.settings || {});
   if (!DATA.settings.glimFree) { if (DATA.settings.gameLimit === 2) DATA.settings.gameLimit = 0; DATA.settings.glimFree = 1; }
   DATA.parent = DATA.parent || { pin: null };
   DATA.profiles.forEach(migrate);
@@ -3380,7 +3498,7 @@ let UI = { view: 'home', params: {} };
 let TIMERS = [];
 function clearTimers() { TIMERS.forEach(t => { clearInterval(t); clearTimeout(t); }); TIMERS = []; }
 function go(view, params = {}, dir = 'f') {
-  if (typeof PARENT_OK !== 'undefined' && PARENT_OK && !['parent', 'psetup', 'pin', 'remote', 'onboard'].includes(view)) PARENT_OK = false;
+  if (typeof PARENT_OK !== 'undefined' && PARENT_OK && !['parent', 'psetup', 'pin', 'remote', 'onboard', 'teacher', 'privacy'].includes(view)) PARENT_OK = false;
   try { if (typeof REC !== 'undefined' && REC && REC.mr && REC.mr.state !== 'inactive' && view !== 'read') { REC.mr.onstop = null; REC.mr.stop(); REC.stream && REC.stream.getTracks().forEach(t => t.stop()); if (typeof RD !== 'undefined' && RD) RD.recording = false; } } catch (e) { }
   if (view !== 'fchat' && typeof fcClose === 'function') fcClose();
   if (GUIDE && !GUIDE.nav) GUIDE = null;
@@ -3414,8 +3532,9 @@ function topbar(back) {
 function nav(on) {
   const p = P(); const d = ensureDay(p); const claimable = d.tasks.some(id => { const T = TASKS.find(x => x.id === id); return !d.claimed.includes(id) && (d.cnt[T.k] || 0) >= T.t; }) || drReady(p);
   const fresh = (p.seenRewards || 1) < levelInfo(p.xp).L;
+  if (on === 'shop') on = 'wardrobe'; if (on === 'friends' || on === 'board') on = 'me';
   const b = (v, i, n, dot) => `<button class="${on === v ? 'on' : ''}" data-a="nav" data-v="${v}"><span class="ni">${i}</span>${n}${dot ? '<span class="dot"></span>' : ''}</button>`;
-  return `<nav class="nav"><div class="in">${b('home', '🏠', 'Domov', claimable && on !== 'home')}${b('learn', '📚', 'Učenie')}${b('games', '🎮', 'Hry')}${b('friends', '🤝', 'Priatelia', !!(FR && FR.total > 0) && on !== 'friends')}${b('shop', '🛍️', 'Obchod')}${b('wardrobe', '👕', 'Šatník', fresh)}</div></nav>`;
+  return `<nav class="nav"><div class="in">${b('home', '🏠', 'Domov', claimable && on !== 'home')}${b('learn', '📚', 'Učenie')}${b('games', '🎮', 'Hry')}${b('wardrobe', '👕', 'Šatník', fresh)}${b('me', '🙋', 'Ja', !!(FR && FR.total > 0) && on !== 'me')}</div></nav>`;
 }
 const bearSvg = (cls = 'owl') => `<svg class="bear ${cls}" viewBox="0 0 120 120" aria-hidden="true"><ellipse class="b-shadow" cx="60" cy="116" rx="27" ry="3.6" fill="#000" opacity=".12"/><g class="b-all"><g class="b-feet"><ellipse cx="47" cy="111.5" rx="10" ry="6" fill="url(#bfur2)"/><ellipse cx="73" cy="111.5" rx="10" ry="6" fill="url(#bfur2)"/><ellipse cx="47" cy="112.6" rx="5" ry="2.8" fill="#FFF3DC"/><ellipse cx="73" cy="112.6" rx="5" ry="2.8" fill="#FFF3DC"/></g><g class="b-body"><path d="M38 96 Q38 80 60 80 Q82 80 82 96 Q82 113 60 113 Q38 113 38 96Z" fill="url(#bfur)"/><ellipse cx="60" cy="100" rx="13" ry="10.5" fill="url(#bbelly)"/></g><g class="b-arm-l"><ellipse cx="38.5" cy="94" rx="6.6" ry="10.5" fill="url(#bfur2)" transform="rotate(20 38.5 94)"/></g><g class="b-arm-r"><ellipse cx="81.5" cy="94" rx="6.6" ry="10.5" fill="url(#bfur2)" transform="rotate(-20 81.5 94)"/></g><g class="b-bow"><path d="M37 78.5 Q60 89 83 78.5 L83.5 86 Q60 97 36.5 86Z" fill="url(#bbow)"/><path d="M66 87 L78 85 L80 103 L74 99 L69 104Z" fill="url(#bbow)"/><path d="M70 91 l8 -1.3 M70.6 96 l8.2 -1.4" stroke="#fff" stroke-width="1.6" opacity=".55" stroke-linecap="round"/><path d="M44 83.6 q4 2 7 2.6 M56 86.6 q4 .4 8 0" stroke="#fff" stroke-width="1.6" opacity=".5" stroke-linecap="round" fill="none"/></g><g class="b-head"><g class="b-ear-l"><circle cx="24" cy="19" r="13" fill="url(#bfur2)"/><circle cx="24.6" cy="20" r="7" fill="url(#bear)"/></g><g class="b-ear-r"><circle cx="96" cy="19" r="13" fill="url(#bfur2)"/><circle cx="95.4" cy="20" r="7" fill="url(#bear)"/></g><path d="M16 48 C16 22 36 9 60 9 C84 9 104 22 104 48 C104 70 86 85 60 85 C34 85 16 70 16 48Z" fill="url(#bfur)"/><ellipse cx="42" cy="24" rx="16" ry="7" fill="#fff" opacity=".2" transform="rotate(-20 42 24)"/><path d="M60 44 C74 44 86 52 86 64 C86 75 75 81 60 81 C45 81 34 75 34 64 C34 52 46 44 60 44Z" fill="url(#bbelly)"/><g class="b-eyes"><ellipse cx="42.5" cy="45" rx="6.2" ry="7.6" fill="#2E2030"/><ellipse cx="77.5" cy="45" rx="6.2" ry="7.6" fill="#2E2030"/><circle cx="44.8" cy="42" r="2.6" fill="#fff"/><circle cx="79.8" cy="42" r="2.6" fill="#fff"/><circle cx="40.6" cy="48.4" r="1.2" fill="#fff" opacity=".85"/><circle cx="75.6" cy="48.4" r="1.2" fill="#fff" opacity=".85"/></g><g class="b-happyeyes"><path d="M36 47 Q42.5 38.5 49 47 M71 47 Q77.5 38.5 84 47" stroke="#2E2030" stroke-width="3.4" fill="none" stroke-linecap="round"/></g><g fill="rgba(255,255,255,.2)" stroke="#3E6FD8" stroke-width="2.8"><circle cx="42.5" cy="45" r="12.5"/><circle cx="77.5" cy="45" r="12.5"/></g><path d="M55 44 Q60 40.5 65 44" stroke="#3E6FD8" stroke-width="2.8" fill="none" stroke-linecap="round"/><path d="M33.5 37 q3 -3.4 7 -4" stroke="#fff" stroke-width="2" opacity=".7" fill="none" stroke-linecap="round"/><path d="M68.5 37 q3 -3.4 7 -4" stroke="#fff" stroke-width="2" opacity=".7" fill="none" stroke-linecap="round"/><ellipse class="b-cheek" cx="28" cy="60" rx="6.5" ry="4.2" fill="url(#bcheek)"/><ellipse class="b-cheek" cx="92" cy="60" rx="6.5" ry="4.2" fill="url(#bcheek)"/><ellipse class="b-nose" cx="60" cy="58.5" rx="5.6" ry="4" fill="#2E2030"/><ellipse cx="58.4" cy="57.3" rx="1.9" ry="1.1" fill="#fff" opacity=".6"/><path class="b-smile" d="M60 62.5 V65.5 M52 66.5 Q60 74 68 66.5" stroke="#2E2030" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/><g class="b-mouth"><path d="M53 66 Q60 64 67 66 Q66.5 76 60 76 Q53.5 76 53 66Z" fill="#7A2335"/><ellipse cx="60" cy="73" rx="3.6" ry="2.2" fill="#FF8FA6"/></g></g></g><g class="b-sparks"><path d="M10 40 l2 5 5 2-5 2-2 5-2-5-5-2 5-2z" fill="#FFC94D"/><path d="M108 28 l1.6 4 4 1.6-4 1.6-1.6 4-1.6-4-4-1.6 4-1.6z" fill="#FF8FA3"/><path d="M110 78 l1.4 3.4 3.4 1.4-3.4 1.4-1.4 3.4-1.4-3.4-3.4-1.4 3.4-1.4z" fill="#86E3C9"/></g></svg>`;
 const owlSvg = bearSvg;
@@ -3507,6 +3626,7 @@ function shopOffer(p) {
   for (const x of all) { if (out.length >= 12) break; if (!out.includes(x)) out.push(x); }
   return out.sort((a, b) => a[1].price - b[1].price);
 }
+const wsTabs = on => `<div class="seg wstabs"><button class="${on === 'w' ? 'on' : ''}" data-a="nav" data-v="wardrobe">👕 Šatník</button><button class="${on === 's' ? 'on' : ''}" data-a="nav" data-v="shop">🛍️ Obchod</button></div>`;
 VIEWS.shop = () => {
   const p = P(); const list = shopOffer(p); const prem = shopPremium(p); const all = [...prem, ...list];
   const sel = all.find(([, it]) => it.sid === SHOPSEL);
@@ -3515,7 +3635,7 @@ VIEWS.shop = () => {
   const prevAv = sel ? { ...p.av, [sel[0]]: sel[1].id, ...(sel[0] === 'top' && ['saty', 'princezna'].includes(sel[1].id) ? {} : {}) } : null;
   const prev = sel ? (() => { const [c, it] = sel; const st = state(it); return `<section class="card shopprev" id="shopprev"><div class="spfig">${avatarSvg(prevAv, { cls: 'idle' })}</div><div class="spinfo"><span class="eyebrow">Skúšobná kabínka</span><b>${it.n}</b><span class="muted b" style="font-size:.84rem">${st === 'own' ? 'Túto vec už máš.' : st === 'can' ? 'Takto by si vyzeral(a). Páči sa ti?' : `Chýba ti ešte ${COIN} ${it.price - (p.coins || 0)}. Uč sa a zbieraj!`}</span><div class="bkbtns" style="margin-top:6px">${st === 'own' ? `<button class="btn small good" data-a="shop-wear" data-c="${c}" data-i="${it.id}">Obliecť</button>` : st === 'can' ? `<button class="btn small primary" data-a="buy" data-c="${c}" data-i="${it.id}">Kúpiť za ${COIN} ${it.price}</button>` : ''}<button class="btn small" data-a="shop-prev-x">Zavrieť</button></div></div></section>`; })() : '';
   const fil = arr => SHOPCAT === 'all' ? arr : arr.filter(([c]) => c === SHOPCAT);
-  return `${topbar()}<main class="view"><section class="card shophead"><span class="coinbig">${COIN}</span><div><span class="eyebrow">Tvoje slniečka</span><b>${p.coins || 0}</b><span class="muted b" style="font-size:.85rem;display:block">Slniečka získaš za každú správnu odpoveď, hry, úlohy a čítanie.</span></div></section>
+  return `${topbar()}<main class="view">${wsTabs('s')}<section class="card shophead"><span class="coinbig">${COIN}</span><div><span class="eyebrow">Tvoje slniečka</span><b>${p.coins || 0}</b><span class="muted b" style="font-size:.85rem;display:block">Slniečka získaš za každú správnu odpoveď, hry, úlohy a čítanie.</span></div></section>
   <section class="card shoptimer"><div class="sthead"><span class="hourglass">⏳</span><div><b>Nová ponuka o:</b><span class="muted b" style="display:block;font-size:.8rem">Ponuka sa mení raz za 24 hodín, vždy o polnoci. Dovtedy ostáva rovnaká.</span></div></div><div class="cd" id="shopcd">${cdHTML()}</div></section>
   <div class="shoplegend"><span><i class="lg can"></i>Môžeš kúpiť</span><span><i class="lg lock"></i>Zatiaľ zamknuté</span><span><i class="lg own"></i>Kúpené</span></div>
   <div class="chips">${SHOPCATS.map(([k, n]) => `<button class="chip ${SHOPCAT === k ? 'on' : ''}" data-a="shopcat" data-c="${k}">${n}</button>`).join('')}</div>
@@ -3561,9 +3681,9 @@ const TOUR = [
   { h: 'Predmety', t: 'Tu sa učíš matematiku, slovenčinu a prehľad.', v: 'home', f: '.subjects' },
   { h: 'Ďalšie učenie', t: 'Čítanka, písanie prstom, denná výzva a tvoje poznámky.', v: 'learn', f: '.ltiles' },
   { h: 'Hry a súboj', t: 'Minihry na oddych a súboj s kamarátom.', v: 'games', f: '.gamelist' },
-  { h: 'Priatelia', t: 'Pridaj si kamaráta jeho kódom a píšte si.', v: 'home', f: '.nav [data-v="friends"]' },
+  { h: 'Ja', t: 'Tu je tvoj pokrok, čo už vieš, čo zopakovať a tvoji priatelia.', v: 'home', f: '.nav [data-v="me"]' },
   { h: 'Slniečka a obchod', t: 'Za slniečka si kúpiš nové oblečenie.', v: 'home', f: '.coinchip' },
-  { h: 'Šatník', t: 'Tu sa oblečieš a zmeníš si účes.', v: 'home', f: '.nav [data-v="wardrobe"]' },
+  { h: 'Šatník a obchod', t: 'Tu sa oblečieš a hore prepneš na obchod.', v: 'home', f: '.nav [data-v="wardrobe"]' },
   { h: 'Pre rodičov', t: 'V nastaveniach hore je Rodičovský účet. Rodičia tam vidia, ako sa ti darí.', v: 'settings', f: '.parentcard' },
   { h: 'Hotovo! 🚀', t: 'Poďme sa spolu učiť. Návod nájdeš kedykoľvek v nastaveniach.', v: 'home' }
 ];
@@ -3732,16 +3852,13 @@ VIEWS.home = () => {
   const subj = k => { const ts = SUBJECTS[k].topics.filter(t => t.g === p.grade); const st = ts.reduce((s, t) => s + (p.topics[t.id]?.stars || 0), 0); const max = ts.length * 3; return `<button class="card subj ${k} press" data-a="subject" data-s="${k}"><span class="big">${k === 'mat' ? '1+2' : k === 'sjl' ? 'Aa' : '🌍'}</span><h3>${SUBJECTS[k].name}</h3><span class="muted b" style="font-size:.85rem">⭐ ${st} / ${max} hviezd</span><span class="pbar"><i style="width:${max ? st / max * 100 : 0}%"></i></span><span class="deco">${k === 'mat' ? '➗' : k === 'sjl' ? '✏️' : '🔭'}</span></button>`; };
   const dd = p.dailyDone === today();
   const quick = `<div class="quickrow"><button class="card qk press" data-a="rtab-go" data-t="streak"><span class="qi">🔥</span><b>${p.streak.count} ${plural(p.streak.count, 'deň', 'dni', 'dní')}</b><small>${p.streak.last === today() ? 'séria drží' : 'uč sa dnes'}</small></button><button class="card qk press" data-a="nav" data-v="rewards"><span class="qi">🏆</span><b>Odmeny</b><small>Level ${li.L}</small></button><button class="card qk press" data-a="nav" data-v="board"><span class="qi">🥇</span><b>Rebríček</b><small>top 20</small></button><button class="card qk press" data-a="${DATA.parent && DATA.parent.pin ? 'parent-open' : 'pguide'}"><span class="qi">👨‍👩‍👧</span><b>Rodičia</b><small>${DATA.parent && DATA.parent.pin ? 'účet s PIN' : 'vytvoriť účet'}</small></button></div><div class="card tipcard">${owlSvg('')}<p>${pick(TIPS)}</p></div>`;
-  return `${topbar()}<main class="view pop-in">${stage}${quick}${parentNeedCard()}${a2hsCard()}${todayPath(p, d)}
+  return `${topbar()}<main class="view pop-in">${stage}${goCard(p)}${quick}${parentNeedCard()}${a2hsCard()}${todayPath(p, d)}
   <div class="sec"><h2>Dnes</h2><span class="eyebrow">${p.grade}. ročník</span></div>
   ${drCard(p)}
   ${reviewCard(p)}
   <button class="card daily press ${dd ? 'done' : ''}" data-a="daily"><span class="ic">${dd ? '✅' : '🎯'}</span><span><b>${dd ? 'Denná výzva splnená!' : 'Denná výzva'}</b><span class="b" style="font-size:.9rem">${dd ? 'Môžeš si ju zahrať znova, len tak pre radosť.' : 'Opakovanie toho, čo si nedávno precvičoval(a), a ľahké otázky o svete · +50 bodov'}</span></span></button>
   ${ptaskCard(p)}${taskCard}
   <div style="display:flex;flex-direction:column;gap:8px"><div class="sec"><h2>Učenie</h2><span class="eyebrow">${p.grade}. ročník</span></div><div class="subjects">${subj('mat')}${subj('sjl')}${subj('prv')}</div><p class="muted b" style="font-size:.85rem">Prehľad: ${p.grade <= 2 ? 'prvouka, angličtina, etika a náboženstvo' : 'prírodoveda, vlastiveda, angličtina, informatika, etika a náboženstvo'}.</p></div>
-  ${progressCard(p)}
-  ${homeBoard(p)}
-  ${streak}
   ${bearCorner(p)}
   ${nextL ? `<button class="card next press" data-a="nav" data-v="rewards"><span class="thumb">${itemThumb(nr[0][0], nr[0][1], p.av)}</span><span style="min-width:0"><span class="eyebrow">Ďalšia odmena · level ${nextL}</span><b style="display:block;font-family:var(--f-display);font-size:1.1rem;line-height:1.15">${nr.map(x => rewardName(...x)).join(', ')}</b><span class="muted b" style="font-size:.88rem">Chýba ti ešte ${toNext} bodov</span></span></button>` : ''}
   </main>${nav('home')}`;
@@ -3848,6 +3965,26 @@ function reviewNote(p, q, ok) {
   if (p.review.length > 80) p.review.shift();
 }
 function startReview() { const p = P(); const due = shuffle(reviewDue(p)).slice(0, 10); if (!due.length) { toast('Dnes nemáš nič na opakovanie. 🎉'); return; } startQuiz(['review'], 'review', { v: 'home', p: {} }, { total: due.length, fixed: due }); }
+function goPlan(p) {
+  const due = reviewDue(p).length; const today0 = today();
+  if (due >= 3 && p.goRev !== today0) return { kind: 'rev', n: due, t: 'Najprv zopakujeme chyby', d: `${Math.min(10, due)} ${plural(Math.min(10, due), 'otázka', 'otázky', 'otázok')}, ktoré sa ti minule nepodarili`, e: '🧠' };
+  const g = ALL_TOPICS.filter(t => t.g === p.grade); const st = id => p.topics[id] || {};
+  const school = p.school && TOPIC[p.school] ? p.school : null;
+  const pt = (p.ptasks || []).find(x => !x.done && TOPIC[x.topic]); const ptT = pt ? pt.topic : null;
+  const weak = g.filter(t => st(t.id).total >= 3 && st(t.id).correct / st(t.id).total < .7).map(t => t.id);
+  const recent = []; for (const l of p.log) { if (l.id && TOPIC[l.id] && TOPIC[l.id].g === p.grade && !recent.includes(l.id)) recent.push(l.id); if (recent.length >= 2) break; }
+  const fresh = g.filter(t => !st(t.id).total).map(t => t.id); const newT = fresh.length ? fresh[0] : null;
+  const seq = []; const add = (id, n) => { if (id) for (let i = 0; i < n; i++) seq.push(id); };
+  add(school, 3); add(ptT, 2); weak.slice(0, 2).forEach(id => add(id, 2)); recent.forEach(id => add(id, 1)); add(newT, 2);
+  const pool = g.map(t => t.id); while (seq.length < 10) seq.push(pick(pool)); seq.length = 10;
+  const main = TOPIC[school || ptT || weak[0] || newT || seq[0]];
+  const parts = [school && '📌 téma zo školy', ptT && '📋 úloha od rodiča', weak.length && '🔁 slabšie témy', newT && '✨ niečo nové'].filter(Boolean);
+  return { kind: 'mix', seq: shuffle(seq), t: school ? 'Precvič, čo preberáte v škole' : 'Tvoje dnešné učenie', d: parts.length ? parts.slice(0, 3).join(' · ') : `${main.icon} ${main.name} a ďalšie`, e: main.icon };
+}
+function goCard(p) {
+  const g = goPlan(p); const done = p.goDone === today();
+  return `<button class="card gocard press" data-a="go-start"><span class="goplay">▶</span><span class="grow"><span class="eyebrow">${done ? 'Ešte jedno kolo?' : 'Asi 5 minút'}</span><b>Pokračuj</b><small>${g.t}<br>${g.d}</small></span><span class="goe">${g.e}</span></button>`;
+}
 function reviewCard(p) {
   const n = reviewDue(p).length; const all = (p.review || []).length; if (!n && !all) return '';
   if (!n) { const next = Math.min(...p.review.map(x => x.due)); const d = Math.max(1, Math.round((next - dayStart(0)) / DAYMS)); return `<div class="card revcard off"><span class="ic">🧠</span><span><b>Opakovanie</b><span class="b" style="font-size:.9rem">Dnes nič. Ďalšie otázky sa vrátia ${d === 1 ? 'zajtra' : 'o ' + d + ' ' + plural(d, 'deň', 'dni', 'dní')}.</span></span></div>`; }
@@ -3919,13 +4056,14 @@ function finishQuiz() {
   const fb = $('#fb'); if (fb) fb.remove(); clearTimers();
   const p = P(); const before = p.xp; let bonus = 0, stars = 0;
   if (Q.mode === 'review') { const f = Q.correct / Q.total; stars = f >= 1 ? 3 : f >= .8 ? 2 : f >= .5 ? 1 : 0; bump('quizzes'); logAct('review', null, Q.correct, Q.total); }
-  else if (Q.mode === 'quiz' || Q.mode === 'daily' || Q.mode === 'test') {
+  else if (Q.mode === 'quiz' || Q.mode === 'daily' || Q.mode === 'test' || Q.mode === 'go') {
     stars = Q.correct >= 10 ? 3 : Q.correct >= 8 ? 2 : Q.correct >= 5 ? 1 : 0; p.stats.quizzes++; bump('quizzes'); if (stars === 3) bump('stars3');
     if (Q.correct === 10) { p.stats.perfect++; bonus += 30; }
     if (Q.mode === 'quiz' || Q.mode === 'test') { const ts = topicStat(p, Q.topicIds[0]); ts.played++; ts.best = Math.max(ts.best, Q.correct); ts.stars = Math.max(ts.stars, stars); logAct('quiz', Q.topicIds[0], Q.correct, Q.total); checkPTasks(p, Q.topicIds[0], stars); }
+    else if (Q.mode === 'go') { if (p.goDone !== today()) { p.goDone = today(); bonus += 30; } logAct('go', null, Q.correct, Q.total); }
     else { if (p.dailyDone !== today()) { p.dailyDone = today(); p.stats.daily++; bonus += 50; } bump('daily'); logAct('daily', null, Q.correct, Q.total); }
   } else { p.stats.bestTime = Math.max(p.stats.bestTime, Q.correct); const ts = topicStat(p, Q.topicIds[0]); ts.time = Math.max(ts.time || 0, Q.correct); bump('time'); logAct('time', Q.topicIds[0], Q.correct, Q.i + 1); }
-  gain(p, Q.xp + bonus); touchStreak(p); checkBadges(p); save();
+  gain(p, Q.xp + bonus); touchStreak(p); checkBadges(p); save(); clsPush();
   go('result', { tlog: Q.tlog, kind: Q.mode, correct: Q.correct, total: Q.mode === 'time' ? Q.i + (Q.answered ? 1 : 0) : Q.total, stars, xp: Q.xp + bonus, bonus, before, after: p.xp, retry: Q.topicIds, back: Q.back }, 'u');
 }
 async function explainQ() {
@@ -4005,7 +4143,7 @@ AFTER.write = () => {
 function writeFinish() { const p = P(); const before = p.xp; const xp = W.ok * 5 + 5; gain(p, xp); logAct('write', null, W.ok, W.list.length); touchStreak(p); checkBadges(p); save(); const r = { kind: 'write', correct: W.ok, total: W.list.length, xp, bonus: 0, before, after: p.xp, back: { v: 'learn', p: {} } }; W.i = W.list.length; go('result', r, 'u'); }
 /* --- vyhodnotenie kvízu --- */
 function evalHTML(r) {
-  if (!r.tlog || !r.tlog.length || !['quiz', 'daily', 'test', 'review'].includes(r.kind)) return '';
+  if (!r.tlog || !r.tlog.length || !['quiz', 'daily', 'go', 'test', 'review'].includes(r.kind)) return '';
   const good = r.tlog.filter(x => x.ok), bad = r.tlog.filter(x => !x.ok);
   const byT = {}; bad.forEach(x => { if (x.id && TOPIC[x.id]) byT[x.id] = (byT[x.id] || 0) + 1; }); const rep = Object.entries(byT).sort((a, b) => b[1] - a[1]);
   const line = x => `<div class="tl ${x.ok ? 'ok' : 'no'}"><b>${x.ok ? '✅' : '❌'} ${esc(x.t)}</b>${x.ok ? `<span>Tvoja odpoveď: ${esc(x.g)}</span>` : `<span>Tvoja odpoveď: <s>${esc(x.g)}</s></span><span>Správne: <b>${esc(x.a)}</b></span>${x.ex ? `<span class="muted">💡 ${esc(x.ex)}</span>` : ''}`}</div>`;
@@ -4027,12 +4165,12 @@ VIEWS.result = r => {
           : r.kind === 'read' ? big('📖', 'Výborne si čítal(a)!', `<div class="score">Otázky: ${r.correct} z ${r.total} správne</div>`)
           : r.kind === 'game' ? big(GAMES[r.game].i, `${r.score} ${plural(r.score, 'bod', 'body', 'bodov')}!`, `<div class="score muted">Najlepšie: ${p.best[r.game] || 0}</div>`)
             : `<div class="bigstars">${[0, 1, 2].map(i => `<span class="${i < r.stars ? '' : 'off'}" style="animation-delay:${300 + i * 300}ms">⭐</span>`).join('')}</div><h1>${r.stars === 3 ? 'Dokonalé!' : r.stars === 2 ? 'Výborne!' : r.stars === 1 ? 'Dobrá práca!' : 'Ide to, trénuj ďalej!'}</h1><div class="score">${r.correct} z ${r.total} správne</div>`;
-  const good = r.kind === 'quiz' || r.kind === 'daily' || r.kind === 'test' || r.kind === 'review' ? r.stars >= 2 : true; const bsay = good ? pick(['Si úžasný!', 'Paráda, len tak ďalej!', 'Som na teba hrdý!', 'Výborne si to zvládol!']) : pick(['Nevadí, nabudúce to bude lepšie!', 'Skús to ešte raz, dáš to!', 'Každý sa učí, aj ja!']);
+  const good = r.kind === 'quiz' || r.kind === 'daily' || r.kind === 'go' || r.kind === 'test' || r.kind === 'review' ? r.stars >= 2 : true; const bsay = good ? pick(['Si úžasný!', 'Paráda, len tak ďalej!', 'Som na teba hrdý!', 'Výborne si to zvládol!']) : pick(['Nevadí, nabudúce to bude lepšie!', 'Skús to ešte raz, dáš to!', 'Každý sa učí, aj ja!']);
   return `<main class="view nonav" style="justify-content:center"><div class="resbear ${good ? 'cheer' : 'comfort'}">${bearSvg(good ? 'cheer' : 'comfort')}<span class="rbub">${bsay}</span></div><section class="card result">${head}<div class="xpgain">+<span id="xpc">0</span> bodov · +${Math.max(1, Math.round(r.xp / 5))} ${COIN}${r.bonus ? ` <span class="muted" style="font-size:1rem">(bonus ${r.bonus})</span>` : ''}</div><div style="width:100%"><div style="display:flex;justify-content:space-between;font-weight:800"><span>Level <span id="lvn">${b.L}</span></span><span class="muted" id="lvt">${b.cur} / ${b.need}</span></div><div class="xpbar" style="height:18px"><i id="xpb" style="width:${b.pct}%"></i></div></div><div class="rowbtns"><button class="btn primary" data-a="res-back">✓ Hotovo</button><button class="btn" data-a="res-again">🔁 Skúsiť znova</button></div></section>${evalHTML(r)}</main>`;
 };
 AFTER.result = () => {
   const r = UI.params; const a = levelInfo(r.after), b = levelInfo(r.before);
-  if (r.kind === 'quiz' || r.kind === 'daily' || r.kind === 'test' || r.kind === 'review') { for (let i = 0; i < r.stars; i++) setTimeout(() => sfx('star', i), 300 + i * 300); if (r.stars === 3) setTimeout(() => confetti(140), 1100); } else setTimeout(() => confetti(90), 300);
+  if (r.kind === 'quiz' || r.kind === 'daily' || r.kind === 'go' || r.kind === 'test' || r.kind === 'review') { for (let i = 0; i < r.stars; i++) setTimeout(() => sfx('star', i), 300 + i * 300); if (r.stars === 3) setTimeout(() => confetti(140), 1100); } else setTimeout(() => confetti(90), 300);
   let n = 0; const step = Math.max(1, Math.ceil(r.xp / 30)); const iv = setInterval(() => { n = Math.min(r.xp, n + step); const el = $('#xpc'); if (!el) return clearInterval(iv); el.textContent = n; if (n >= r.xp) clearInterval(iv); }, 30);
   setTimeout(() => {
     const bar = $('#xpb'); if (!bar) return;
@@ -4268,7 +4406,7 @@ const WCATS = ['hair', 'top', 'bottom', 'shoes', 'acc', 'room', 'eyes', 'mouth',
 CAT_LABEL.room = 'Pozadie';
 VIEWS.wardrobe = () => {
   const p = P(); p.seenRewards = levelInfo(p.xp).L; save();
-  return `${topbar()}<main class="view"><section class="card wardstage"><div class="fig" id="wfig" data-a="wave">${roomHTML(p.room)}${avatarSvg(p.av, { cls: 'idle', noBg: true })}</div><div class="info"><span class="eyebrow">Môj šatník</span><h2>${esc(p.name)}</h2><div class="seg" role="radiogroup" aria-label="Postava"><button class="${p.av.gender === 'd' ? 'on' : ''}" data-a="gender" data-g="d">Dievča</button><button class="${p.av.gender === 'c' ? 'on' : ''}" data-a="gender" data-g="c">Chlapec</button></div><span class="muted b" style="font-size:.82rem">Vyber kúsok a pod ním mu nastav farby. Veci so zámkom odomkneš za level alebo sériu.</span></div></section>
+  return `${topbar()}<main class="view">${wsTabs('w')}<section class="card wardstage"><div class="fig" id="wfig" data-a="wave">${roomHTML(p.room)}${avatarSvg(p.av, { cls: 'idle', noBg: true })}</div><div class="info"><span class="eyebrow">Môj šatník</span><h2>${esc(p.name)}</h2><div class="seg" role="radiogroup" aria-label="Postava"><button class="${p.av.gender === 'd' ? 'on' : ''}" data-a="gender" data-g="d">Dievča</button><button class="${p.av.gender === 'c' ? 'on' : ''}" data-a="gender" data-g="c">Chlapec</button></div><span class="muted b" style="font-size:.82rem">Vyber kúsok a pod ním mu nastav farby. Veci so zámkom odomkneš za level alebo sériu.</span></div></section>
   <div class="cats">${WCATS.map(c => `<button class="chip ${c === WCAT ? 'on' : ''}" data-a="wcat" data-c="${c}">${CAT_LABEL[c]}</button>`).join('')}</div><div id="witems">${wardItems()}</div></main>${nav('wardrobe')}`;
 };
 function wardItems() {
@@ -4511,13 +4649,97 @@ function dailySeq(p) {
 function giftsToday(p) { const t = today(); return (p.log || []).filter(l => l.k === 'gift' && dkey(new Date(l.t)) === t).length; }
 let VIEWDATA = null, PSEL_SAVED = null;
 VIEWS.remote = () => { const saved = DATA, ok = PARENT_OK; DATA = VIEWDATA; PARENT_OK = true; if (!DATA.profiles.find(x => x.id === PSEL)) PSEL = DATA.current || (DATA.profiles[0] && DATA.profiles[0].id); let html; try { html = VIEWS.parent(); } finally { DATA = saved; PARENT_OK = ok; } return `<div class="remotebar">👀 Len na pozretie: postup z iného zariadenia (záloha z ${fmtTime(VIEWDATA._at || Date.now())})<button class="btn small" data-a="remote-close">Zavrieť</button></div><div class="readonly">${html}</div>`; };
-const KIND = { 'game-order': 'Minihra Zoraď čísla', 'game-simon': 'Minihra Pamätaj si', 'game-race': 'Minihra Počtové preteky', rread: 'Odmena od rodiča za čítanie', dict: 'Diktát', 'game-word': 'Minihra Poskladaj slovo', 'game-frog': 'Minihra Žabka', review: 'Opakovanie chýb', write: 'Písanie prstom', duel: 'Súboj', test: 'Test', ptask: 'Splnená úloha od rodiča', gift: 'Odmena od rodiča', 'game-mole': 'Minihra Chyť škrečka', read: 'Čítanka – nahrávka', readq: 'Čítanka – otázky', quiz: 'Kvíz', time: 'Na čas', daily: 'Denná výzva', cards: 'Kartičky', pex: 'Pexeso', match: 'Spájačka', sort: 'Triedička', 'game-balloons': 'Minihra Balóny', 'game-rain': 'Minihra Slovný dážď', 'game-tf': 'Minihra Pravda či nie' };
+const KIND = { go: 'Pokračuj (mix učenia)', 'game-order': 'Minihra Zoraď čísla', 'game-simon': 'Minihra Pamätaj si', 'game-race': 'Minihra Počtové preteky', rread: 'Odmena od rodiča za čítanie', dict: 'Diktát', 'game-word': 'Minihra Poskladaj slovo', 'game-frog': 'Minihra Žabka', review: 'Opakovanie chýb', write: 'Písanie prstom', duel: 'Súboj', test: 'Test', ptask: 'Splnená úloha od rodiča', gift: 'Odmena od rodiča', 'game-mole': 'Minihra Chyť škrečka', read: 'Čítanka – nahrávka', readq: 'Čítanka – otázky', quiz: 'Kvíz', time: 'Na čas', daily: 'Denná výzva', cards: 'Kartičky', pex: 'Pexeso', match: 'Spájačka', sort: 'Triedička', 'game-balloons': 'Minihra Balóny', 'game-rain': 'Minihra Slovný dážď', 'game-tf': 'Minihra Pravda či nie' };
 function fmtTime(t) { const d = new Date(t); const k = dkey(d); const hm = `${d.getHours()}:${String(d.getMinutes()).padStart(2, '0')}`; return k === today() ? `dnes ${hm}` : k === daysAgo(1) ? `včera ${hm}` : `${d.getDate()}. ${d.getMonth() + 1}. ${hm}`; }
 let PTAB = 'over'; let PS = null; const PACC = {};
-let PLOCKT = null; const plockArm = () => { clearTimeout(PLOCKT); if (typeof PARENT_OK !== 'undefined' && PARENT_OK) PLOCKT = setTimeout(() => { if (PARENT_OK && ['parent', 'remote'].includes(UI.view)) { PARENT_OK = false; go(P() ? 'home' : 'profiles', {}, 'b'); toast('🔒 Rodičovský účet sa sám zamkol.'); } }, 180000); };
+let PLOCKT = null; const plockArm = () => { clearTimeout(PLOCKT); if (typeof PARENT_OK !== 'undefined' && PARENT_OK) PLOCKT = setTimeout(() => { if (PARENT_OK && ['parent', 'remote', 'teacher'].includes(UI.view)) { PARENT_OK = false; go(P() ? 'home' : 'profiles', {}, 'b'); toast('🔒 Rodičovský účet sa sám zamkol.'); } }, 180000); };
 ['pointerdown', 'keydown'].forEach(ev => document.addEventListener(ev, plockArm, true));
-document.addEventListener('visibilitychange', () => { if (document.hidden && typeof PARENT_OK !== 'undefined' && PARENT_OK && ['parent', 'remote'].includes(UI.view)) { PARENT_OK = false; go(P() ? 'home' : 'profiles', {}, 'b'); } });
+document.addEventListener('visibilitychange', () => { if (document.hidden && typeof PARENT_OK !== 'undefined' && PARENT_OK && ['parent', 'remote', 'teacher'].includes(UI.view)) { PARENT_OK = false; go(P() ? 'home' : 'profiles', {}, 'b'); } });
 let PSET = null, CSET = null;
+/* ===== rodič: história správ ===== */
+let PM = null, DELACC = 0;
+/* ===== Režim učiteľa ===== */
+let TC = null; // { loading, classes:[], sel, members:[], err }
+const clsCode = () => Array.from({ length: 6 }, () => 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789'[Math.floor(Math.random() * 32)]).join('');
+async function tcLoad() {
+  try { const cl = await sb('GET', 'classes?select=code,name,created_at&owner=eq.' + AUTH.uid + '&order=created_at.desc'); TC = { classes: cl, sel: TC && TC.sel, members: [] };
+    if (TC.sel) { const mem = await sb('GET', 'class_members?select=player_code,joined_at&class_code=eq.' + TC.sel); const codes = mem.map(m => m.player_code); TC.members = codes.length ? await sb('GET', 'players?select=code,name,grade,av,stats,updated_at&code=in.(' + codes.join(',') + ')') : []; }
+  } catch (e) { TC = { err: e && e.status === 404 ? 'missing' : 'net', classes: [] }; }
+  if (UI.view === 'teacher') render(null);
+}
+VIEWS.teacher = () => {
+  const back = `<header class="top"><button class="iconbtn press" data-a="tc-back" aria-label="Späť">←</button><div class="who"><b>🏫 Režim učiteľa</b><span class="muted b" style="font-size:.8rem">Trieda a pokrok žiakov</span></div></header>`;
+  const wrap = b => `${back}<main class="view nonav tcv">${b}</main>`;
+  if (!(SUPA_ON() && AUTH)) return wrap('<section class="card pcard"><p class="b">Režim učiteľa funguje po prihlásení e-mailom.</p></section>');
+  if (!TC) { TC = { loading: true }; setTimeout(tcLoad, 0); }
+  if (TC.loading) return wrap('<div class="typing" style="margin:30px auto"><i></i><i></i><i></i></div>');
+  if (TC.err === 'missing') return wrap('<section class="card pcard"><b>Už čoskoro</b><p class="muted b">Triedy ešte nie sú v databáze zapnuté.</p></section>');
+  if (TC.err) return wrap('<section class="card pcard"><p class="muted b">Nepodarilo sa načítať. Skontrolujte internet.</p><button class="btn small" data-a="tc-reload">Skúsiť znova</button></section>');
+  if (TC.sel) {
+    const c = TC.classes.find(x => x.code === TC.sel) || { name: 'Trieda', code: TC.sel }; const ms = (TC.members || []).slice().sort((a, b) => ((b.stats || {}).wq || 0) - ((a.stats || {}).wq || 0));
+    const avg = k => { const v = ms.map(m => (m.stats || {})[k]).filter(x => x != null); return v.length ? Math.round(v.reduce((a, b) => a + b, 0) / v.length) : null; };
+    const act = ms.filter(m => (m.stats || {}).wd > 0).length; const weakAll = {}; ms.forEach(m => ((m.stats || {}).weak || []).forEach(w => weakAll[w] = (weakAll[w] || 0) + 1)); const tw = Object.entries(weakAll).sort((a, b) => b[1] - a[1]).slice(0, 3);
+    return wrap(`<button class="btn small" data-a="tc-sel" data-c="" style="align-self:flex-start">← Moje triedy</button>
+    <section class="card pcard tchead"><span class="eyebrow">Trieda</span><h2 style="margin:0;font-family:var(--f-display)">${esc(c.name)}</h2><p class="muted b" style="margin:4px 0;font-size:.85rem">Žiaci sa pridajú v apke: <b>Ja → Moja trieda</b> a zadajú tento kód:</p><div class="duelcode sm">${c.code.split('').map(x => `<i>${x}</i>`).join('')}</div><button class="btn small" data-a="tc-copy" data-c="${c.code}">📋 Skopírovať kód</button></section>
+    <div class="ptiles"><div class="card ptile"><b>${ms.length}</b><span>žiakov</span></div><div class="card ptile"><b>${act}</b><span>aktívnych tento týždeň</span></div><div class="card ptile"><b>${avg('wacc') == null ? '–' : avg('wacc') + ' %'}</b><span>priemerná úspešnosť (7 dní)</span></div><div class="card ptile"><b>${ms.reduce((a, m) => a + ((m.stats || {}).wq || 0), 0)}</b><span>odpovedí spolu (7 dní)</span></div></div>
+    ${tw.length ? `<section class="card pcard"><span class="eyebrow">🔁 Trieda potrebuje precvičiť</span>${tw.map(([n, k]) => `<div class="statrow"><span>${esc(n)}</span><b>${k} ${plural(k, 'žiak', 'žiaci', 'žiakov')}</b></div>`).join('')}</section>` : ''}
+    <section class="card pcard"><span class="eyebrow">👧 Žiaci (zoradení podľa aktivity)</span>${ms.length ? ms.map(m => { const st = m.stats || {}; const ago = st.last ? Math.floor((Date.now() - st.last) / DAYMS) : null; return `<div class="tcrow"><span class="frav">${frAv(m.av)}</span><span class="grow"><b>${esc(m.name)}</b><small>${m.grade}. roč. · Lv ${st.lvl || 1} · 🔥 ${st.st || 0} · ${ago == null ? 'ešte neaktívny' : ago === 0 ? 'dnes aktívny' : 'naposledy pred ' + ago + ' d'}</small>${(st.weak || []).length ? `<small class="tcweak">🔁 ${st.weak.map(esc).join(', ')}</small>` : ''}</span><span class="tcnum"><b style="color:${st.wacc == null ? 'var(--muted)' : st.wacc >= 75 ? 'var(--good)' : st.wacc >= 55 ? '#C98A00' : 'var(--bad)'}">${st.wacc == null ? '–' : st.wacc + ' %'}</b><small>${st.wq || 0} odp. / ${st.wd || 0} d</small></span><button class="iconbtn sm" data-a="tc-kick" data-p="${m.code}" aria-label="Odstrániť z triedy">✕</button></div>`; }).join('') : '<p class="muted b">Zatiaľ sa nikto nepridal. Dajte žiakom kód triedy.</p>'}</section>
+    <button class="btn small" data-a="tc-reload">🔄 Obnoviť</button><button class="btn small bad" data-a="tc-delcls" data-c="${c.code}">🗑️ Zrušiť triedu</button>`);
+  }
+  return wrap(`<section class="card pcard"><span class="eyebrow">🏫 Pre učiteľov a krúžky</span><p class="b" style="font-size:.9rem;margin:4px 0">Vytvorte triedu, dajte žiakom kód a uvidíte, kto sa učí, s akou úspešnosťou a čo trieda potrebuje precvičiť. Žiaci vidia len názov triedy, nie ostatných spolužiakov.</p>
+  <div class="fraddrow"><input class="field" id="tcname" maxlength="30" placeholder="Napr. 2.B – ZŠ Hlavná"><button class="btn primary small" data-a="tc-new">Vytvoriť</button></div></section>
+  ${TC.classes.length ? `<section class="card pcard"><span class="eyebrow">Moje triedy</span><div class="pslist">${TC.classes.map(c => `<button class="psrow press" data-a="tc-sel" data-c="${c.code}"><span class="psi">🏫</span><span class="grow"><b>${esc(c.name)}</b><small>kód ${c.code}</small></span><span class="pcgo">›</span></button>`).join('')}</div></section>` : '<p class="muted b" style="text-align:center">Zatiaľ nemáte žiadnu triedu.</p>'}`);
+};
+/* žiak: moja trieda */
+let MYCLS = null;
+async function myClsLoad(p) { try { const codes = p.cls || []; MYCLS = { pid: p.id, list: codes.length ? await sb('GET', 'classes?select=code,name&code=in.(' + codes.join(',') + ')') : [] }; } catch (e) { MYCLS = { pid: p.id, list: [], err: 1 }; } if (UI.view === 'me') render(null); }
+function myClsCard(p) {
+  if (!(SUPA_ON() && AUTH)) return '';
+  if (!MYCLS || MYCLS.pid !== p.id) { MYCLS = { pid: p.id, list: null }; setTimeout(() => myClsLoad(p), 0); }
+  const l = MYCLS.list || [];
+  return `<section class="card myclass"><div class="sec"><h2>🏫 Moja trieda</h2></div>${l.length ? l.map(c => `<div class="statrow"><span>✅ ${esc(c.name)}</span><button class="chip" data-a="cls-leave" data-c="${c.code}">Odísť</button></div>`).join('') : `<p class="muted b" style="font-size:.85rem;margin:0">Ak ti pani učiteľka dala kód triedy, zadaj ho sem. Uvidí, ako sa ti darí.</p>`}<div class="fraddrow"><input class="field" id="clscode" maxlength="6" autocapitalize="characters" autocomplete="off" placeholder="Kód triedy"><button class="btn primary small" data-a="cls-join">Pridať sa</button></div></section>`;
+}
+async function deleteAccount() {
+  const online = typeof SUPA_ON === 'function' && SUPA_ON() && AUTH;
+  if (online) {
+    let full = false; try { await sb('POST', 'rpc/delete_me', {}); full = true; } catch (e) { }
+    if (!full) { const codes = DATA.profiles.map(p => p.fc).filter(Boolean); const uid = AUTH.uid; const tryDel = async q => { try { await sb('DELETE', q); } catch (e) { } };
+      if (codes.length) { const c = codes.join(','); await tryDel('messages?from_code=in.(' + c + ')'); await tryDel('friends?my_code=in.(' + c + ')'); }
+      await tryDel('scores?user_id=eq.' + uid); await tryDel('players?user_id=eq.' + uid); await tryDel('saves?user_id=eq.' + uid); }
+    try { fetch(SUPA.url + '/auth/v1/logout', { method: 'POST', headers: { apikey: SUPA.key, Authorization: 'Bearer ' + AUTH.at } }).catch(() => { }); } catch (e) { }
+    setAuth(null); DBREF = null;
+  }
+  try { Object.keys(localStorage).filter(k => k.startsWith('bystrik')).forEach(k => localStorage.removeItem(k)); } catch (e) { }
+  resetData(); PARENT_OK = false; DELACC = 0; toast('Účet a všetky údaje sú zmazané.'); go(online ? 'login' : 'onboard', {}, 'u');
+}
+function delCard() {
+  return `<section class="card pcard delcard"><span class="eyebrow">📄 Ochrana súkromia</span><p class="muted b" style="font-size:.85rem;margin:4px 0">Aké údaje apka ukladá a aké máte práva.</p><button class="btn small" data-a="nav" data-v="privacy">Zobraziť zásady</button>
+  <span class="eyebrow" style="margin-top:12px;display:block">🗑️ Zmazať celý účet</span>${DELACC ? `<p class="b" style="font-size:.88rem;margin:4px 0">Zmaže sa e-mailový účet, všetky deti, pokrok, priatelia, správy aj rebríček. <b>Nedá sa to vrátiť.</b> Pre potvrdenie napíšte <b>ZMAZAŤ</b>.</p><input class="field" id="delconf" autocomplete="off" placeholder="ZMAZAŤ"><div class="rowbtns" style="margin-top:8px"><button class="btn" data-a="del-no">Zrušiť</button><button class="btn bad" data-a="del-yes">Zmazať navždy</button></div>` : `<p class="muted b" style="font-size:.85rem;margin:4px 0">Odstráni účet a všetky údaje zo servera aj z tohto zariadenia.</p><button class="btn small bad" data-a="del-ask">Zmazať účet…</button>`}</section>`;
+}
+function pmsgCard(p) {
+  if (!(typeof SUPA_ON === 'function' && SUPA_ON() && AUTH)) return '<section class="card pcard"><p class="muted b" style="padding:6px 0">Správy uvidíte po prihlásení e-mailom (Účet a AI).</p></section>';
+  if (!p.fc) return '<section class="card pcard"><p class="muted b" style="padding:6px 0">Dieťa zatiaľ nemá žiadnych priateľov.</p></section>';
+  if (!PM || PM.pid !== p.id) { PM = { pid: p.id, loading: true }; setTimeout(() => pmLoad(p), 0); }
+  if (PM.loading) return '<section class="card pcard"><div class="typing" style="margin:10px auto"><i></i><i></i><i></i></div></section>';
+  if (PM.err) return `<section class="card pcard"><p class="muted b">Nepodarilo sa načítať správy.</p><button class="btn small" data-a="pm-reload">Skúsiť znova</button></section>`;
+  const st = `<p class="b" style="margin:0 0 6px;font-size:.88rem">${DATA.settings.msgOk ? '✅ Písanie je povolené' : '🔒 Písanie je vypnuté (zapnete v Pravidlá pre dieťa)'}</p>`;
+  if (!PM.friends.length) return `<section class="card pcard">${st}<p class="muted b">Dieťa zatiaľ nemá žiadnych priateľov.</p></section>`;
+  const rows = PM.friends.map(f => { const n = PM.msgs.filter(m => m.from_code === f.code || m.to_code === f.code).length; return `<button class="psrow press ${PM.sel === f.code ? 'on' : ''}" data-a="pm-open" data-c="${f.code}"><span class="psi">${frAv(f.av)}</span><span class="grow"><b>${esc(f.name)}</b><small>${f.grade ? f.grade + '. ročník · ' : ''}${n} ${plural(n, 'správa', 'správy', 'správ')}</small></span><span class="pcgo">${PM.sel === f.code ? '⌄' : '›'}</span></button>`; }).join('');
+  let hist = '';
+  if (PM.sel) { const f = PM.friends.find(x => x.code === PM.sel) || { name: 'Priateľ' }; const ms = PM.msgs.filter(m => m.from_code === PM.sel || m.to_code === PM.sel).slice().reverse();
+    hist = `<div class="pmhist"><span class="eyebrow">${esc(p.name)} ↔ ${esc(f.name)}</span>${ms.length ? ms.map(m => { const mine = m.from_code === p.fc; return `<div class="fmsg ${mine ? 'me' : ''}"><span>${m.kind === 'duel' ? '⚔️ Výzva na súboj' : esc(m.body || '')}</span><time>${mine ? esc(p.name) : esc(f.name)} · ${fmtTime(new Date(m.created_at).getTime())}</time></div>`; }).join('') : '<p class="muted b">Zatiaľ žiadne správy.</p>'}</div>`; }
+  return `<section class="card pcard">${st}<div class="pslist">${rows}</div>${hist}<button class="btn small" data-a="pm-reload" style="margin-top:8px">🔄 Obnoviť</button></section>`;
+}
+async function pmLoad(p) {
+  try {
+    const [a, b] = await Promise.all([sb('GET', 'friends?select=friend_code&my_code=eq.' + p.fc), sb('GET', 'friends?select=my_code&friend_code=eq.' + p.fc)]);
+    const mine = a.map(x => x.friend_code), theirs = b.map(x => x.my_code); const codes = [...new Set([...mine, ...theirs])].filter(c => c !== p.fc && /^[A-Z0-9]{6}$/.test(c));
+    const pl = codes.length ? await sb('GET', 'players?select=code,name,grade,av&code=in.(' + codes.join(',') + ')') : [];
+    const msgs = codes.length ? await sb('GET', `messages?select=id,from_code,to_code,kind,body,created_at&or=(from_code.eq.${p.fc},to_code.eq.${p.fc})&order=id.desc&limit=1000`) : [];
+    PM = { pid: p.id, friends: codes.map(c => pl.find(x => x.code === c) || { code: c, name: 'Hráč' }), msgs, sel: PM && PM.sel };
+  } catch (e) { PM = { pid: p.id, err: true }; }
+  if (UI.view === 'parent') render(null);
+}
 /* ===== Ja – môj pokrok ===== */
 function meStats(p) {
   const rows = ALL_TOPICS.filter(t => t.g && p.topics[t.id] && p.topics[t.id].total).map(t => { const st = p.topics[t.id]; return { t, n: st.total, pct: Math.round(st.correct / st.total * 100), stars: st.stars || 0 }; });
@@ -4532,15 +4754,16 @@ VIEWS.me = () => {
   const due = typeof reviewDue === 'function' ? reviewDue(p).length : 0; const days = Object.keys(p.days || {}).length;
   const subj = k => { const r = ms.rows.filter(x => x.t.s === k); const n = r.reduce((a, x) => a + x.n, 0); const c = r.reduce((a, x) => a + Math.round(x.pct * x.n / 100), 0); return n ? Math.round(c / n * 100) : null; };
   const line = (r, kind) => `<button class="merow press" data-a="topic" data-id="${r.t.id}"><span class="mti">${r.t.icon}</span><span class="grow"><b>${esc(r.t.name)}</b><small>${SUBJECTS[r.t.s].short || SUBJECTS[r.t.s].name} · ${r.t.g}. ročník · ${r.n} ${plural(r.n, 'odpoveď', 'odpovede', 'odpovedí')}</small><span class="mbar"><i style="width:${r.pct}%;background:${kind === 'ok' ? 'var(--good)' : kind === 'bad' ? 'var(--bad)' : 'var(--sun)'}"></i></span></span><em class="mpct ${kind}">${r.pct} %</em></button>`;
-  return `${topbar('nav-settings')}<main class="view pop-in mev">
+  return `${topbar()}<main class="view pop-in mev">
   <section class="card mehead"><span class="meav">${avatarSvg(p.av, { crop: 'head' })}</span><div class="grow"><span class="eyebrow">Ja</span><b>${esc(p.name)}</b><small>${p.grade}. ročník · Level ${li.L} · ${title(li.L)}</small></div><div class="megrade" style="--gc:${g[2]}"><span>${g[1]}</span><b>${acc} %</b><small>${g[0]}</small></div></section>
+  <div class="mequick"><button class="card mefr press" data-a="nav" data-v="friends"><span class="mqi">🤝</span><b>Priatelia</b><small>${FR && FR.total ? `<em>${FR.total} nové</em>` : 'chaty a súboje'}</small></button><button class="card mefr press" data-a="nav" data-v="board"><span class="mqi">🏆</span><b>Rebríček</b><small>tento týždeň</small></button></div>
   <div class="mestats"><div class="card"><b>${p.stats.correct}</b><small>správnych odpovedí</small></div><div class="card"><b>${p.stats.answered}</b><small>všetkých odpovedí</small></div><div class="card"><b>🔥 ${p.streak.best || 0}</b><small>najdlhšia séria</small></div><div class="card"><b>${days}</b><small>${plural(days, 'deň', 'dni', 'dní')} s učením</small></div></div>
   <section class="card vizcard"><div class="sec"><h2>📊 Úspešnosť v predmetoch</h2></div><div class="vrings">${['mat', 'sjl', 'prv'].map(k => { const v = subj(k); return vizRing(v == null ? 0 : v, `var(--c-${k})`, SUBJECTS[k].short || SUBJECTS[k].name, v == null ? 'ešte nič' : 'správne'); }).join('')}</div></section>
   ${due ? `<button class="card revcard press" data-a="review"><span class="ic">🧠</span><span><b>Na zopakovanie: ${due} ${plural(due, 'otázka', 'otázky', 'otázok')}</b><span class="b" style="font-size:.88rem">Otázky, ktoré sa ti minule nepodarili.</span></span><em>${due}</em></button>` : ''}
   <div class="sec"><h2>🔁 Toto si zopakuj</h2><span class="eyebrow">${ms.bad.length}</span></div>${ms.bad.length ? `<section class="card melist">${ms.bad.map(r => line(r, 'bad')).join('')}</section>` : `<p class="muted b">${ms.rows.length ? 'Nič nutné. Ide ti to výborne! 🌟' : 'Keď sa začneš učiť, uvidíš tu, čo treba zopakovať.'}</p>`}
   <div class="sec"><h2>✅ Toto už vieš</h2><span class="eyebrow">${ms.ok.length}</span></div>${ms.ok.length ? `<section class="card melist">${ms.ok.map(r => line(r, 'ok')).join('')}</section>` : '<p class="muted b">Témy, kde máš 3 hviezdy alebo nad 85 %, sa ukážu tu.</p>'}
   ${ms.mid.length ? `<div class="sec"><h2>📚 Rozpracované</h2><span class="eyebrow">${ms.mid.length}</span></div><section class="card melist">${ms.mid.sort((a, b) => b.pct - a.pct).map(r => line(r, 'mid')).join('')}</section>` : ''}
-  <p class="muted b" style="font-size:.78rem;text-align:center">Hodnotenie je z tvojich odpovedí v kvízoch a testoch. Ťukni na tému a môžeš ju hneď precvičiť.</p></main>${nav('')}`;
+  ${myClsCard(p)}<p class="muted b" style="font-size:.78rem;text-align:center">Hodnotenie je z tvojich odpovedí v kvízoch a testoch. Ťukni na tému a môžeš ju hneď precvičiť.</p></main>${nav('')}`;
 };
 function csetView(html) {
   const pre = html.slice(0, html.indexOf('<h3 class="pgroup">')); let rest = html.slice(pre.length);
@@ -4554,8 +4777,8 @@ function csetView(html) {
 function psetMenu(html, p) {
   const parts = html.split('<h3 class="pgroup">'); const secs = parts.slice(1).map(part => { const e = part.indexOf('</h3>'); const title = part.slice(0, e); let rest = part.slice(e + 5); let sub = ''; const m = rest.match(/^<p class="pgsub">([^<]*)<\/p>/); if (m) { sub = m[1]; rest = rest.slice(m[0].length); } const ic = (title.match(/^(\p{Extended_Pictographic}️?)\s*/u) || [])[1] || '⚙️'; return { title: title.replace(/^(\p{Extended_Pictographic}️?)\s*/u, ''), ic, sub, rest, todo: rest.includes('backup blink') }; });
   if (PSET != null && secs[PSET]) { const x = secs[PSET]; return `<div class="psethead"><button class="btn small" data-a="pset" data-i="-1">← Nastavenia</button><b><span>${x.ic}</span> ${x.title}</b></div><div class="psetbody">${x.rest}</div>`; }
-  const vals = { 'Dieťa a profily': `${p.grade}. ročník · ${DATA.profiles.length} ${plural(DATA.profiles.length, 'dieťa', 'deti', 'detí')}`, 'Pravidlá pre dieťa': `Hry ${DATA.settings.gameLimit ? DATA.settings.gameLimit + '× denne' : 'bez limitu'} · AI ${DATA.settings.chat ? 'zapnutá' : 'vypnutá'}`, 'Užitočné odkazy': `${plinks().length} odkazov`, 'Pripomienka': `${DATA.settings.remind || '17:00'}`, 'Účet a AI': typeof AUTH !== 'undefined' && AUTH && AUTH.email ? AUTH.email : 'prihlásenie a AI', 'Bezpečnosť a údaje': 'PIN, údaje rodiča, návod' };
-  const groups = [['Dieťa', ['Dieťa a profily', 'Pravidlá pre dieťa']], ['Rodič', ['Účet a AI', 'Pripomienka', 'Užitočné odkazy']], ['Ostatné', null]];
+  const vals = { 'Dieťa a profily': `${p.grade}. ročník · ${DATA.profiles.length} ${plural(DATA.profiles.length, 'dieťa', 'deti', 'detí')}`, 'Pravidlá pre dieťa': `Hry ${DATA.settings.gameLimit ? DATA.settings.gameLimit + '× denne' : 'bez limitu'} · AI ${DATA.settings.chat ? 'zapnutá' : 'vypnutá'}`, 'Užitočné odkazy': `${plinks().length} odkazov`, 'Správy dieťaťa': DATA.settings.msgOk ? 'písanie povolené · história' : 'písanie vypnuté · história', 'Pripomienka': `${DATA.settings.remind || '17:00'}`, 'Účet a AI': typeof AUTH !== 'undefined' && AUTH && AUTH.email ? AUTH.email : 'prihlásenie a AI', 'Bezpečnosť a údaje': 'PIN, súkromie, zmazanie účtu', 'Režim učiteľa': 'trieda a prehľad žiakov' };
+  const groups = [['Dieťa', ['Dieťa a profily', 'Pravidlá pre dieťa', 'Správy dieťaťa']], ['Rodič', ['Účet a AI', 'Pripomienka', 'Užitočné odkazy']], ['Ostatné', null]];
   const used = new Set(); const row = (x, i) => { used.add(i); return `<button class="psrow press ${x.todo ? 'todo' : ''}" data-a="pset" data-i="${i}"><span class="psi">${x.ic}</span><span class="grow"><b>${x.title}${x.todo ? ' <span class="blinkdot"></span>' : ''}</b><small>${x.todo ? '👉 Tu treba uložiť zálohu' : esc(vals[x.title] || x.sub)}</small></span><span class="pcgo">›</span></button>`; };
   return groups.map(([g, names]) => { const list = secs.map((x, i) => [x, i]).filter(([x, i]) => names ? names.some(n => x.title.startsWith(n)) : !used.has(i)); return list.length ? `<div class="psgrp"><span class="eyebrow">${g}</span><div class="card pslist">${list.map(([x, i]) => row(x, i)).join('')}</div></div>` : ''; }).join('');
 }
@@ -4594,12 +4817,12 @@ VIEWS.parent = () => {
   <section class="card pcard"><span class="eyebrow">Darí sa</span>${strong.length ? strong.map(topicLine).join('') : '<p class="muted b" style="padding:8px 0">Zobrazí sa, keď bude mať v téme aspoň 5 odpovedí s úspešnosťou nad 80 %.</p>'}</section>
   <section class="card pcard"><span class="eyebrow">Treba precvičiť</span>${weak.length ? weak.map(topicLine).join('') : '<p class="muted b" style="padding:8px 0">Zatiaľ nič. Témy s úspešnosťou pod 70 % sa zobrazia tu.</p>'}</section><h3 class="pgroup">⭐ Pokrok v predmetoch</h3><p class="pgsub">Hviezdy podľa ročníkov</p><section class="card pcard"><span class="eyebrow">Matematika – hviezdy podľa ročníkov</span>${subjProg('mat')}<span class="eyebrow">Slovenčina – hviezdy podľa ročníkov</span>${subjProg('sjl')}<span class="eyebrow">Prehľad (príroda, svet, angličtina) – hviezdy podľa ročníkov</span>${subjProg('prv')}</section>
   <h3 class="pgroup">🕑 História aktivít</h3><p class="pgsub">Posledných 15 záznamov</p><section class="card pcard"><span class="eyebrow">História aktivít</span>${p.log.slice(0, 15).map(l => `<div class="statrow"><span>${KIND[l.k] || l.k}${l.id && TOPIC[l.id] ? ' · ' + TOPIC[l.id].name : ''}</span><b>${l.k === 'rread' ? '+' + l.c + ' bodov' : l.k === 'gift' || l.k === 'ptask' ? '+' + l.c + ' slniečok' : l.k.startsWith('game') ? l.c + ' b.' : l.k === 'pex' ? l.n + ' ťahov' : `${l.c}/${l.n}`}</b><small>${fmtTime(l.t)}</small></div>`).join('') || '<p class="muted b" style="padding:8px 0">Zatiaľ prázdne.</p>'}</section>`;
-  const T_tasks = () => `<section class="card pcard"><span class="eyebrow">📋 Úlohy pre dieťa</span><p class="muted b" style="font-size:.85rem;padding:4px 0">Vyberte tému a koľko hviezd má dieťa v kvíze získať. Keď to splní, apka mu automaticky pridá slniečka.</p>
+  const T_tasks = () => `<section class="card pcard schoolcard"><span class="eyebrow">📌 Práve preberáme v škole</span><p class="muted b" style="font-size:.85rem;padding:4px 0">Vyberte tému, ktorú sa dieťa teraz učí v škole. Tlačidlo Pokračuj ju bude uprednostňovať.</p><div class="ptform"><label>Téma<select id="sc-topic"><option value="">– nič –</option>${['mat', 'sjl', 'prv'].map(k => `<optgroup label="${SUBJECTS[k].name}">${SUBJECTS[k].topics.filter(t => t.g === p.grade).map(t => `<option value="${t.id}" ${p.school === t.id ? 'selected' : ''}>${esc(t.name)}</option>`).join('')}</optgroup>`).join('')}</select></label><button class="btn primary" data-a="sc-save">Uložiť</button></div>${p.school && TOPIC[p.school] ? `<p class="b" style="margin:6px 0 0">Teraz: ${TOPIC[p.school].icon} ${esc(TOPIC[p.school].name)}</p>` : ''}</section><section class="card pcard"><span class="eyebrow">📋 Úlohy pre dieťa</span><p class="muted b" style="font-size:.85rem;padding:4px 0">Vyberte tému a koľko hviezd má dieťa v kvíze získať. Keď to splní, apka mu automaticky pridá slniečka.</p>
   <div class="ptform"><label>Téma<select id="pt-topic">${['mat', 'sjl', 'prv'].map(k => `<optgroup label="${SUBJECTS[k].name}">${SUBJECTS[k].topics.filter(t => t.g === p.grade).map(t => `<option value="${t.id}">${t.name}</option>`).join('')}</optgroup>`).join('')}</select></label><label>Hviezdy<select id="pt-stars"><option value="1">⭐ aspoň 5 z 10</option><option value="2" selected>⭐⭐ aspoň 8 z 10</option><option value="3">⭐⭐⭐ 10 z 10</option></select></label><label>Odmena<select id="pt-coins">${[5, 10, 15, 20].map(n => `<option value="${n}" ${n === 10 ? 'selected' : ''}>${n} slniečok</option>`).join('')}</select></label><button class="btn primary small" data-a="pt-add">➕ Zadať úlohu</button></div>
   ${(p.ptasks || []).slice(0, 8).map(t => TOPIC[t.topic] ? `<div class="statrow"><span>${t.done ? '✅' : '⏳'} ${TOPIC[t.topic].name} · ${'⭐'.repeat(t.stars)}</span><b>${t.done ? 'splnené' : `<button class="chip" data-a="pt-del" data-id="${t.id}">Zrušiť</button>`}</b><small>+${t.coins} slniečok${t.done ? ' · ' + fmtTime(t.done) : ''}</small></div>` : '').join('')}</section>
 `;
   const T_read = () => parentReads(p);
-  const T_set = () => `<h3 class="pgroup">👧 Dieťa a profily</h3><p class="pgsub">Ročník, pridanie ďalšieho dieťaťa</p><section class="card pcard"><span class="eyebrow">Ročník dieťaťa</span><div class="chips" style="padding:6px 0">${[1, 2, 3, 4].map(g => `<button class="chip ${p.grade === g ? 'on' : ''}" data-a="p-grade" data-g="${g}">${g}. ročník</button>`).join('')}</div></section><section class="card" style="padding:6px 14px"><div class="list"><button class="row" data-a="new-prof"><span class="grow">➕ Pridať ďalšie dieťa</span><span>›</span></button></div></section><h3 class="pgroup">🎛️ Pravidlá pre dieťa</h3><p class="pgsub">Hry, pomôcky, priatelia, AI a zvuk</p><section class="card" style="padding:6px 14px"><div class="list"><div class="row" style="flex-direction:column;align-items:flex-start;gap:6px"><span>🎮 Minihry denne</span><small class="muted" style="font-weight:700">Koľkokrát za deň môže dieťa hrať minihry (spolu). Dnes už hralo ${gamesToday(p)}×.</small><div class="chips" style="padding:0">${[1, 2, 3, 5, 0].map(n => `<button class="chip ${DATA.settings.gameLimit === n ? 'on' : ''}" data-a="p-glimit" data-n="${n}">${n ? n + '×' : 'Bez limitu'}</button>`).join('')}</div></div>${tg('calc', '🧸 Pomôcky od Bystríka', 'Kalkulačka a násobilka pri matematike, tabuľky pri slovenčine. Dieťa ich otvorí ťuknutím na medvedíka.')}</div></section><section class="card" style="padding:6px 14px"><span class="eyebrow" style="display:block;margin:8px 0 0">👫 Priatelia a rebríček</span><div class="list">${tg('friends', '👫 Priatelia a správy', 'Dieťa si pridá priateľa kódom a posiela mu hotové vety a smajlíky.')}${tg('freeChat', '✍️ Vlastné správy priateľom', 'Zapnuté: dieťa môže písať vlastný text. Vypnuté: len hotové vety.')}${tg('lb', '🏆 Zobrazovať v rebríčku', 'Meno dieťaťa, ročník a body za týždeň uvidia ostatní prihlásení hráči.')}</div></section><section class="card" style="padding:6px 14px"><span class="eyebrow" style="display:block;margin:8px 0 0">🧸 AI a zvuk</span><div class="list">${tg('chat', '🧸 Chat s Bystríkom', 'AI pomocník vysvetľuje učivo. Na webe ho najprv zapnite nižšie v časti „Účet a AI“.')}${tg('sound', '🔊 Zvuky')}${tg('voice', '🗣️ Čítanie otázok nahlas')}</div></section><h3 class="pgroup">🌐 Užitočné odkazy</h3><p class="pgsub">Malý prehliadač: škola, učivo, bezpečnosť</p>${UI.view === 'remote' ? '' : linksCard()}<h3 class="pgroup">⏰ Pripomienka</h3><p class="pgsub">Denné upozornenie v kalendári</p>${UI.view === 'remote' ? '' : remindCard()}<h3 class="pgroup">📧 Účet a AI</h3><p class="pgsub">${typeof AUTH !== 'undefined' && AUTH && AUTH.email ? 'Prihlásený: ' + esc(AUTH.email) : 'Prihlásenie e-mailom a AI Bystrík'}</p>${accCard()}${aiCard()}${ONLINE() ? '' : `<h3 class="pgroup">☁️ Záloha a iné zariadenie</h3><p class="pgsub">Uloženie a prenos postupu</p>${backupCard()}${UI.view === 'remote' ? '' : `<section class="card pcard"><span class="eyebrow">👀 Pozrieť postup z iného zariadenia</span><p class="muted b" style="font-size:.85rem;padding:4px 0">Na telefóne dieťaťa otvorte Rodičovský účet → „Skopírovať kód zálohy“ a pošlite si ho. Tu ho vložte a uvidíte, čo dieťa robilo. Nič sa tým tu neprepíše.</p><textarea id="rmcode" class="bkcode" placeholder="Sem vložte kód…"></textarea><button class="btn small primary" data-a="remote-open">👀 Zobraziť postup</button></section>`}`}<h3 class="pgroup">🔐 Bezpečnosť a údaje</h3><p class="pgsub">Údaje rodiča, PIN, návod, vymazanie profilu</p><section class="card" style="padding:6px 14px"><div class="list"><button class="row" data-a="ptour"><span class="grow">🧸 Návod pre rodičov</span><span>›</span></button><button class="row" data-a="ps-edit"><span class="grow">✏️ Údaje rodiča<small class="muted" style="display:block;font-weight:700;font-size:.82rem">${DATA.parent.name ? esc(DATA.parent.name) + ' · ' : ''}cieľ ${DATA.parent.goal || 2} ${plural(DATA.parent.goal || 2, 'zadanie', 'zadania', 'zadaní')} denne</small></span><span>›</span></button><button class="row" data-a="pin-change"><span class="grow">🔑 Zmeniť PIN</span><span>›</span></button></div></section><section class="card" style="padding:12px 14px;display:flex;flex-direction:column;gap:10px">${PDEL ? `<b>Naozaj vymazať profil ${esc(p.name)} so všetkým pokrokom?</b><div class="rowbtns"><button class="btn" data-a="pdel-no">Nie</button><button class="btn primary" data-a="pdel-yes">Áno, vymazať</button></div>` : '<button class="btn block" data-a="pdel-ask">🗑️ Vymazať tento profil</button>'}</section>`;
+  const T_set = () => `<h3 class="pgroup">👧 Dieťa a profily</h3><p class="pgsub">Ročník, pridanie ďalšieho dieťaťa</p><section class="card pcard"><span class="eyebrow">Ročník dieťaťa</span><div class="chips" style="padding:6px 0">${[1, 2, 3, 4].map(g => `<button class="chip ${p.grade === g ? 'on' : ''}" data-a="p-grade" data-g="${g}">${g}. ročník</button>`).join('')}</div></section><section class="card" style="padding:6px 14px"><div class="list"><button class="row" data-a="new-prof"><span class="grow">➕ Pridať ďalšie dieťa</span><span>›</span></button></div></section><h3 class="pgroup">🎛️ Pravidlá pre dieťa</h3><p class="pgsub">Hry, pomôcky, priatelia, AI a zvuk</p><section class="card" style="padding:6px 14px"><div class="list"><div class="row" style="flex-direction:column;align-items:flex-start;gap:6px"><span>🎮 Minihry denne</span><small class="muted" style="font-weight:700">Koľkokrát za deň môže dieťa hrať minihry (spolu). Dnes už hralo ${gamesToday(p)}×.</small><div class="chips" style="padding:0">${[1, 2, 3, 5, 0].map(n => `<button class="chip ${DATA.settings.gameLimit === n ? 'on' : ''}" data-a="p-glimit" data-n="${n}">${n ? n + '×' : 'Bez limitu'}</button>`).join('')}</div></div>${tg('calc', '🧸 Pomôcky od Bystríka', 'Kalkulačka a násobilka pri matematike, tabuľky pri slovenčine. Dieťa ich otvorí ťuknutím na medvedíka.')}</div></section><section class="card" style="padding:6px 14px"><span class="eyebrow" style="display:block;margin:8px 0 0">👫 Priatelia a rebríček</span><div class="list">${tg('friends', '👫 Priatelia a správy', 'Dieťa si pridá priateľa kódom a posiela mu hotové vety a smajlíky.')}${tg('msgOk', '💬 Povoliť písanie priateľom', 'Kým to nezapnete, dieťa nemôže priateľom písať (môže ich len vyzvať na súboj). Celú históriu správ vidíte nižšie v časti Správy dieťaťa.')}${DATA.settings.msgOk ? tg('freeChat', '✍️ Aj vlastný text', 'Zapnuté: dieťa môže písať vlastný text. Vypnuté: len hotové vety a smajlíky.') : ''}${tg('lb', '🏆 Zobrazovať v rebríčku', 'Meno dieťaťa, ročník a body za týždeň uvidia ostatní prihlásení hráči.')}</div></section><section class="card" style="padding:6px 14px"><span class="eyebrow" style="display:block;margin:8px 0 0">🧸 AI a zvuk</span><div class="list">${tg('chat', '🧸 Chat s Bystríkom', 'AI pomocník vysvetľuje učivo. Na webe ho najprv zapnite nižšie v časti „Účet a AI“.')}${tg('sound', '🔊 Zvuky')}${tg('voice', '🗣️ Čítanie otázok nahlas')}</div></section><h3 class="pgroup">💬 Správy dieťaťa</h3><p class="pgsub">Celá história písania s každým priateľom</p>${pmsgCard(p)}<h3 class="pgroup">🌐 Užitočné odkazy</h3><p class="pgsub">Malý prehliadač: škola, učivo, bezpečnosť</p>${UI.view === 'remote' ? '' : linksCard()}<h3 class="pgroup">⏰ Pripomienka</h3><p class="pgsub">Denné upozornenie v kalendári</p>${UI.view === 'remote' ? '' : remindCard()}<h3 class="pgroup">📧 Účet a AI</h3><p class="pgsub">${typeof AUTH !== 'undefined' && AUTH && AUTH.email ? 'Prihlásený: ' + esc(AUTH.email) : 'Prihlásenie e-mailom a AI Bystrík'}</p>${accCard()}${aiCard()}${ONLINE() ? '' : `<h3 class="pgroup">☁️ Záloha a iné zariadenie</h3><p class="pgsub">Uloženie a prenos postupu</p>${backupCard()}${UI.view === 'remote' ? '' : `<section class="card pcard"><span class="eyebrow">👀 Pozrieť postup z iného zariadenia</span><p class="muted b" style="font-size:.85rem;padding:4px 0">Na telefóne dieťaťa otvorte Rodičovský účet → „Skopírovať kód zálohy“ a pošlite si ho. Tu ho vložte a uvidíte, čo dieťa robilo. Nič sa tým tu neprepíše.</p><textarea id="rmcode" class="bkcode" placeholder="Sem vložte kód…"></textarea><button class="btn small primary" data-a="remote-open">👀 Zobraziť postup</button></section>`}`}<h3 class="pgroup">🏫 Režim učiteľa</h3><p class="pgsub">Trieda, kód pre žiakov, prehľad triedy</p><section class="card pcard"><p class="b" style="font-size:.9rem;margin:4px 0">Ste učiteľ alebo vediete krúžok? Vytvorte triedu a sledujte pokrok všetkých žiakov naraz.</p><button class="btn primary" data-a="teacher">🏫 Otvoriť režim učiteľa</button></section><h3 class="pgroup">🔐 Bezpečnosť a údaje</h3><p class="pgsub">Údaje rodiča, PIN, súkromie, zmazanie účtu</p>${delCard()}<section class="card" style="padding:6px 14px"><div class="list"><button class="row" data-a="ptour"><span class="grow">🧸 Návod pre rodičov</span><span>›</span></button><button class="row" data-a="ps-edit"><span class="grow">✏️ Údaje rodiča<small class="muted" style="display:block;font-weight:700;font-size:.82rem">${DATA.parent.name ? esc(DATA.parent.name) + ' · ' : ''}cieľ ${DATA.parent.goal || 2} ${plural(DATA.parent.goal || 2, 'zadanie', 'zadania', 'zadaní')} denne</small></span><span>›</span></button><button class="row" data-a="pin-change"><span class="grow">🔑 Zmeniť PIN</span><span>›</span></button></div></section><section class="card" style="padding:12px 14px;display:flex;flex-direction:column;gap:10px">${PDEL ? `<b>Naozaj vymazať profil ${esc(p.name)} so všetkým pokrokom?</b><div class="rowbtns"><button class="btn" data-a="pdel-no">Nie</button><button class="btn primary" data-a="pdel-yes">Áno, vymazať</button></div>` : '<button class="btn block" data-a="pdel-ask">🗑️ Vymazať tento profil</button>'}</section>`;
   return `<header class="top"><button class="iconbtn press" data-a="parent-lock" aria-label="Späť k dieťaťu">←</button><div class="who"><b>Rodičovský účet</b><span class="muted b" style="font-size:.82rem">${DATA.parent.name ? `Vitajte, ${esc(DATA.parent.name)}` : 'Prehľad pokroku detí'}</span></div></header><main class="view pview">
   ${DATA.profiles.length > 1 ? `<div class="chips">${DATA.profiles.map(x => `<button class="chip ${x.id === p.id ? 'on' : ''}" data-a="psel" data-id="${x.id}">${esc(x.name)}</button>`).join('')}</div>` : ''}
   <section class="card" style="display:flex;align-items:center;gap:12px;padding:12px"><span class="headbub" style="width:64px;height:64px">${avatarSvg(p.av, { crop: 'head' })}</span><div style="flex:1;min-width:0"><b style="font-family:var(--f-display);font-size:1.4rem">${esc(p.name)}</b><div class="muted b">${p.grade}. ročník · Level ${li.L} (${title(li.L)})</div></div></section>
@@ -4633,6 +4856,7 @@ const ACT = {
   'grade-chip': d => { sfx('tap'); UI.params.g = +d.g; render(null); },
   topic: d => { sfx('tap'); startMode(d.id); },
   'close-sheet': () => closeSheet(),
+  'go-start': () => { const p = P(); sfx('tap'); const g = goPlan(p); if (g.kind === 'rev') { p.goRev = today(); save(); return startReview(); } startQuiz([...new Set(g.seq)], 'go', { v: 'home', p: {} }, { seq: g.seq }); },
   daily: () => { const p = P(); sfx('tap'); const seq = dailySeq(p); startQuiz([...new Set(seq)], 'daily', { v: 'home', p: {} }, { seq }); },
   ans: (d, el) => answer(Q.cur.options[+d.i], el),
   key: (d, el) => { if (Q.answered) return; const k = d.k; sfx('tap'); if (k === 'del') Q.input = Q.input.slice(0, -1); else if (k === 'ok') { if (Q.input) answer(Q.input, el); return; } else if (Q.input.length < 7) Q.input += k; $('#padshow').innerHTML = Q.input ? fmt(Q.input) : '&nbsp;'; },
@@ -4674,7 +4898,7 @@ const ACT = {
   tf: (d, el) => { if (GM.ended || GM.lock) return; tfResolve((d.v === '1') === GM.st.truth, el); },
   'gdiff': d => { $$('.over').forEach(e => e.remove()); sfx('tap'); startGame(d.g, d.d); },
   'res-back': () => { const r = UI.params; go(r.back.v, r.back.p, 'b'); },
-  'res-again': () => { const r = UI.params; if (r.kind === 'read') return go('reads', {}, 'b'); if (r.kind === 'review') { if (reviewDue(P()).length) return startReview(); return go('home', {}, 'b'); } if (r.kind === 'write') return go('write', {}, 'b'); if (r.kind === 'dict') return go('dict', {}, 'b'); if (r.kind === 'game') return startGame(r.game, (P().gdiff || {})[r.game]); if (r.kind === 'test' || r.kind === 'quiz' || r.kind === 'time' || r.kind === 'daily') return startQuiz(r.retry, r.kind, r.back); startMode(r.retry[0]); },
+  'res-again': () => { const r = UI.params; if (r.kind === 'read') return go('reads', {}, 'b'); if (r.kind === 'review') { if (reviewDue(P()).length) return startReview(); return go('home', {}, 'b'); } if (r.kind === 'write') return go('write', {}, 'b'); if (r.kind === 'dict') return go('dict', {}, 'b'); if (r.kind === 'game') return startGame(r.game, (P().gdiff || {})[r.game]); if (r.kind === 'go') return ACT['go-start'](); if (r.kind === 'test' || r.kind === 'quiz' || r.kind === 'time' || r.kind === 'daily') return startQuiz(r.retry, r.kind, r.back); startMode(r.retry[0]); },
   gift: (d, el) => { el.classList.add('open'); sfx('gift'); confetti(80, .4); setTimeout(() => { el.remove(); $('.over .rewards').hidden = false; $('[data-a="ov-wear"]').hidden = false; }, 450); },
   'ov-close': () => { $('.over')?.remove(); setTimeout(flushPending, 200); },
   'ov-wear': () => { $('.over')?.remove(); PENDING = []; go('wardrobe', {}, 'f'); },
@@ -4725,6 +4949,7 @@ const ACT = {
     const fail = m => { LOGIN.busy = false; LOGIN.ok = false; LOGIN.msg = m; sfx('no'); render(null); };
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)) return fail('Zadajte platný e-mail.');
     if (pass.length < 6) return fail('Heslo musí mať aspoň 6 znakov.');
+    if (LOGIN.mode === 'up') { const cb = $('#aconsent'); LOGIN.consent = !!(cb && cb.checked); if (!LOGIN.consent) return fail('Potvrďte, prosím, súhlas rodiča so zásadami.'); DATA.consent = { t: Date.now(), v: 1 }; }
     LOGIN.busy = true; LOGIN.msg = ''; render(null);
     try {
       const j = LOGIN.mode === 'in' ? await supaAuth('token?grant_type=password', { email, password: pass }) : await supaAuth('signup', { email, password: pass });
@@ -4793,6 +5018,7 @@ const ACT = {
     setAuth(null); DBREF = null; try { localStorage.removeItem('bystrik.owner'); } catch (e) { } resetData(); PARENT_OK = false; go('login', {}, 'u');
   },
   'nav-settings': () => go('settings', {}, 'b'),
+  'nav-me': () => go('me', {}, 'b'),
   'cset': d => { CSET = +d.i < 0 ? null : +d.i; sfx('tap'); render(null); scrollTo({ top: 0 }); },
   'pset': d => { PSET = +d.i < 0 ? null : +d.i; sfx('tap'); render(null); scrollTo({ top: 0 }); },
   'ptab': d => { PSET = null; PTAB = d.t; sfx('tap'); render(null); scrollTo({ top: 0 }); const td = $('.pacc.todo'); if (td) setTimeout(() => td.scrollIntoView({ behavior: 'smooth', block: 'start' }), 150); },
@@ -4864,6 +5090,25 @@ const ACT = {
   'ai-limit': d => { DATA.settings.aiLimit = +d.n; save(); sfx('tap'); toast('Denný limit AI: ' + fmt(+d.n) + ' tokenov'); render(null); },
   'ai-del': () => { setApiKey(''); toast('AI kľúč odstránený.'); render(null); },
   'ai-test': async (d, el) => { el.disabled = true; el.textContent = '⏳ Testujem…'; try { const s2 = await getSample(); const r = await s2('Odpovedz po slovensky jednou krátkou vetou: pozdrav dieťa.', { cache: false }); toast('✅ Funguje! Bystrík hovorí: ' + r.text.slice(0, 80)); } catch (e) { toast(e && e.code === 'ai_limit' ? '⏳ Denný limit AI je vyčerpaný. Zvýšte ho nižšie alebo počkajte do zajtra.' : e && e.code === 'not_granted' ? '❌ Kľúč nie je platný. Skontrolujte ho.' : e && e.code === 'no_credit' ? '❌ Na účte chýba kredit (Billing).' : e && e.code === 'rate_limited' ? '⏳ Dnešný limit je minutý alebo príliš veľa požiadaviek. Skúste neskôr.' : '❌ Nepodarilo sa: ' + ((e && e.message) || 'chyba')); } render(null); },
+  'priv-back': () => go(PARENT_OK ? 'parent' : 'settings', {}, 'b'), 'priv-back-login': () => go('login', {}, 'b'),
+  'del-ask': () => { DELACC = 1; sfx('tap'); render(null); }, 'del-no': () => { DELACC = 0; render(null); },
+  'del-yes': async (d, el) => { const v = (($('#delconf') || {}).value || '').trim().toUpperCase(); if (v !== 'ZMAZAŤ' && v !== 'ZMAZAT') { toast('Napíšte slovo ZMAZAŤ.'); sfx('no'); return; } el.disabled = true; el.textContent = '⏳ Mažem…'; await deleteAccount(); },
+  'teacher': () => { TC = null; sfx('tap'); go('teacher', {}, 'f'); },
+  'tc-back': () => go('parent', {}, 'b'),
+  'tc-reload': () => { TC = TC ? { ...TC, loading: false } : null; tcLoad(); },
+  'tc-sel': d => { TC.sel = d.c || null; TC.loading = true; sfx('tap'); render(null); tcLoad(); },
+  'tc-copy': async d => { try { await navigator.clipboard.writeText(d.c); toast('Kód triedy skopírovaný: ' + d.c); } catch (e) { toast('Kód triedy: ' + d.c); } },
+  'tc-new': async (d, el) => { const n = ($('#tcname').value || '').trim().slice(0, 30); if (!n) { toast('Napíšte názov triedy.'); return; } el.disabled = true; let ok = false; for (let i = 0; i < 4 && !ok; i++) { try { const code = clsCode(); await sb('POST', 'classes', { code, name: n, owner: AUTH.uid }, 'return=minimal'); ok = true; TC.sel = code; } catch (e) { if (e.code !== '23505') { toast('Triedu sa nepodarilo vytvoriť.'); break; } } } el.disabled = false; if (ok) { sfx('pop'); tcLoad(); } },
+  'tc-kick': async d => { if (!confirm('Odstrániť žiaka z triedy?')) return; try { await sb('DELETE', 'class_members?class_code=eq.' + TC.sel + '&player_code=eq.' + d.p); tcLoad(); } catch (e) { toast('Nepodarilo sa.'); } },
+  'tc-delcls': async d => { if (!confirm('Naozaj zrušiť triedu? Žiaci z nej vypadnú.')) return; try { await sb('DELETE', 'class_members?class_code=eq.' + d.c); } catch (e) { } try { await sb('DELETE', 'classes?code=eq.' + d.c); TC.sel = null; tcLoad(); } catch (e) { toast('Nepodarilo sa.'); } },
+  'cls-join': async (d, el) => { const p = P(); const c = ($('#clscode').value || '').trim().toUpperCase(); if (!/^[A-Z0-9]{6}$/.test(c)) { toast('Kód triedy má 6 znakov.'); sfx('no'); return; } el.disabled = true;
+    try { const f = await sb('GET', 'classes?select=code,name&code=eq.' + c); if (!f.length) { toast('Taká trieda neexistuje. Skontroluj kód.'); sfx('no'); el.disabled = false; return; } if (!p.fc) fcode(p); await playersPush(); await sb('POST', 'class_members', { class_code: c, player_code: p.fc }, 'resolution=ignore-duplicates,return=minimal'); p.cls = [...new Set([...(p.cls || []), c])]; save(); sfx('win'); toast('Si v triede ' + f[0].name + '! 🎉'); MYCLS = null; render(null); }
+    catch (e) { toast(e && e.status === 404 ? 'Triedy ešte nie sú zapnuté.' : 'Nepodarilo sa pridať.'); el.disabled = false; } },
+  'cls-leave': async d => { const p = P(); try { await sb('DELETE', 'class_members?class_code=eq.' + d.c + '&player_code=eq.' + p.fc); } catch (e) { } p.cls = (p.cls || []).filter(x => x !== d.c); save(); MYCLS = null; render(null); },
+  'wk-share': async () => { const p = DATA.profiles.find(x => x.id === PSEL) || P(); const t = wkText(p); try { if (navigator.share) { await navigator.share({ title: 'Bystrík – týždeň: ' + p.name, text: t }); return; } } catch (e) { if (e && e.name === 'AbortError') return; } try { await navigator.clipboard.writeText(t); toast('Report skopírovaný – môžete ho vložiť do správy.'); } catch (e) { location.href = 'mailto:?subject=' + encodeURIComponent('Bystrík – týždeň: ' + p.name) + '&body=' + encodeURIComponent(t); } },
+  'pm-open': d => { if (!PM) return; PM.sel = PM.sel === d.c ? null : d.c; sfx('tap'); render(null); },
+  'pm-reload': () => { PM = null; render(null); },
+  'sc-save': () => { const p = DATA.profiles.find(x => x.id === PSEL); p.school = $('#sc-topic').value || null; save(); sfx('pop'); toast(p.school ? 'Uložené. Pokračuj ju bude uprednostňovať.' : 'Téma zo školy zrušená.'); render(null); },
   'pt-add': () => { const p = DATA.profiles.find(x => x.id === PSEL); p.ptasks = p.ptasks || []; if (p.ptasks.filter(t => !t.done).length >= 3) { toast('Naraz môžu byť najviac 3 aktívne úlohy.'); return; } p.ptasks.unshift({ id: 'pt' + Date.now().toString(36), topic: $('#pt-topic').value, stars: +$('#pt-stars').value, coins: +$('#pt-coins').value, t: Date.now(), done: 0 }); if (p.ptasks.length > 20) p.ptasks.length = 20; save(); sfx('pop'); toast('Úloha zadaná ✓ Dieťa ju uvidí na domovskej obrazovke.'); render(null); },
   'pt-del': d => { const p = DATA.profiles.find(x => x.id === PSEL); p.ptasks = (p.ptasks || []).filter(t => t.id !== d.id); save(); render(null); },
   'pt-go': d => { sfx('tap'); const t = TOPIC[d.id]; startQuiz([d.id], 'quiz', { v: 'home', p: {} }); },
@@ -4979,15 +5224,30 @@ function authErr(e) {
   if (/rate|429/i.test(m)) return 'Príliš veľa pokusov. Skúste to o chvíľu.';
   return 'Nepodarilo sa: ' + ((e && e.message) || 'chyba');
 }
+const PRIV_V = '13. 11. 2026';
+VIEWS.privacy = () => { const back = !(typeof AUTH !== 'undefined' && AUTH) && SUPA_ON() ? 'priv-back-login' : 'priv-back'; return `<header class="top"><button class="iconbtn press" data-a="${back}" aria-label="Späť">←</button><div class="who"><b>Ochrana súkromia</b><span class="muted b" style="font-size:.8rem">platné od ${PRIV_V}</span></div></header><main class="view nonav privv"><section class="card pcard privtext">
+<h2>🔐 Zásady ochrany súkromia</h2><p>Bystrík je vzdelávacia apka pre deti 1.–4. ročníka. Účet zakladá a spravuje <b>rodič alebo zákonný zástupca</b>. Pri deťoch mladších ako 16 rokov spracúvame údaje len so súhlasom rodiča (GDPR čl. 8, zákon č. 18/2018 Z. z.).</p>
+<h3>Aké údaje ukladáme</h3><ul><li><b>E-mail rodiča a heslo</b> – na prihlásenie (heslo je uložené zašifrované).</li><li><b>Profil dieťaťa</b> – prezývka, ročník, postavička, pokrok v učení, slniečka a odmeny.</li><li><b>Priatelia a správy</b> – ak ich rodič zapne: kód priateľa a správy medzi deťmi. Rodič vidí celú históriu.</li><li><b>Rebríček</b> – prezývka, ročník a body za týždeň, ak ho rodič nechá zapnutý.</li></ul>
+<h3>Čo neukladáme</h3><ul><li>Nahrávky hlasu ani fotky poznámok neodchádzajú na náš server. Spracujú sa len v zariadení (fotku poznámok spracuje AI, ak ju rodič zapne).</li><li>Nepoužívame reklamy ani sledovacie nástroje tretích strán a údaje nepredávame.</li><li>Kľúč pre AI ostáva len v tomto zariadení.</li></ul>
+<h3>Kde sú údaje</h3><p>Údaje sú uložené v databázovej službe Supabase a v tomto zariadení. Prenos je šifrovaný (HTTPS). AI odpovede zabezpečuje Google Gemini alebo Anthropic Claude – dostanú len text otázky, nie meno dieťaťa ani e-mail.</p>
+<h3>Vaše práva</h3><ul><li>Kedykoľvek si môžete údaje pozrieť, opraviť alebo stiahnuť (Rodičovský účet → Záloha).</li><li>Účet môžete <b>úplne zmazať</b> v Rodičovský účet → Nastavenia → Bezpečnosť a údaje.</li><li>Máte právo podať sťažnosť na Úrad na ochranu osobných údajov SR (dataprotection.gov.sk).</li></ul>
+<h3>Bezpečnosť detí</h3><p>Písanie priateľom je predvolene vypnuté. Zapnúť ho môže len rodič za PIN kódom a vidí všetky správy. Priateľa si dieťa pridá len kódom, ktorý mu niekto osobne povie.</p>
+</section></main>`; };
 VIEWS.login = () => `<main class="view nonav loginv"><div class="loginbear">${bearSvg('')}</div><h1 class="logintitle">${LOGIN.mode === 'in' ? 'Vitaj späť!' : 'Vytvor si účet'}</h1><p class="muted b" style="text-align:center">${LOGIN.mode === 'in' ? 'Prihláste sa e-mailom rodiča. Postup sa uloží a nájdete ho na každom zariadení.' : 'Stačí e-mail rodiča a heslo. Je to zadarmo.'}</p>
 <section class="card loginbox"><div class="seg" role="tablist"><button class="${LOGIN.mode === 'in' ? 'on' : ''}" data-a="auth-mode" data-m="in">Prihlásiť sa</button><button class="${LOGIN.mode === 'up' ? 'on' : ''}" data-a="auth-mode" data-m="up">Nový účet</button></div>
 <label class="lbl" for="aemail">E-mail</label><input class="field" id="aemail" type="email" inputmode="email" autocomplete="email" autocapitalize="off" placeholder="rodic@email.sk" value="${esc(LOGIN.email || '')}">
 <label class="lbl" for="apass">Heslo${LOGIN.mode === 'up' ? ' (aspoň 6 znakov)' : ''}</label><input class="field" id="apass" type="password" autocomplete="${LOGIN.mode === 'in' ? 'current-password' : 'new-password'}" placeholder="••••••">
-<p class="loginmsg ${LOGIN.ok ? 'ok' : ''}" id="amsg">${esc(LOGIN.msg)}</p>
+${LOGIN.mode === 'up' ? `<label class="consent"><input type="checkbox" id="aconsent" ${LOGIN.consent ? 'checked' : ''}><span>Som rodič (zákonný zástupca) a súhlasím so <button type="button" class="linkbtn" data-a="nav" data-v="privacy">zásadami ochrany súkromia</button>.</span></label>` : ''}<p class="loginmsg ${LOGIN.ok ? 'ok' : ''}" id="amsg">${esc(LOGIN.msg)}</p>
 <button class="btn primary block" data-a="auth-go" ${LOGIN.busy ? 'disabled' : ''}>${LOGIN.busy ? '⏳ Chvíľku…' : LOGIN.mode === 'in' ? '➡️ Prihlásiť sa' : '✨ Vytvoriť účet'}</button>${LOGIN.mode === 'in' ? '<button class="linkbtn" data-a="auth-forgot">Zabudli ste heslo?</button>' : ''}<div class="duelor" style="text-align:center">alebo</div><button class="btn block" data-a="auth-link" ${LOGIN.busy ? 'disabled' : ''}>✉️ Prihlásiť sa odkazom z e-mailu</button><p class="muted b" style="font-size:.78rem;text-align:center;margin:0">Bez hesla: pošleme vám e-mail a stačí kliknúť na odkaz.</p></section>
 <p class="muted b" style="text-align:center;font-size:.8rem">E-mail slúži len na prihlásenie. Nikomu ho nedávame a neposielame reklamu.</p></main>`;
 VIEWS.newpass = () => `<main class="view nonav loginv"><div class="loginbear">${bearSvg('')}</div><h1 class="logintitle">Nové heslo</h1><p class="muted b" style="text-align:center">Zadajte nové heslo k svojmu účtu.</p>
 <section class="card loginbox"><label class="lbl" for="npass">Nové heslo (aspoň 6 znakov)</label><input class="field" id="npass" type="password" autocomplete="new-password" placeholder="••••••"><p class="loginmsg" id="amsg">${esc(LOGIN.msg)}</p><button class="btn primary block" data-a="auth-newpass" ${LOGIN.busy ? 'disabled' : ''}>${LOGIN.busy ? '⏳ Chvíľku…' : '💾 Uložiť heslo'}</button><button class="linkbtn" data-a="auth-newpass-cancel">Zrušiť</button></section></main>`;
+function wkText(p) {
+  let q = 0, c = 0, d = 0; for (let i = 0; i < 7; i++) { const x = p.days[daysAgo(i)]; if (x) { d++; q += x.q || 0; c += x.c || 0; } }
+  const since = Date.now() - 7 * DAYMS; const ids = [...new Set(p.log.filter(l => l.t >= since && l.id && TOPIC[l.id]).map(l => l.id))].slice(0, 5);
+  const weak = ALL_TOPICS.filter(t => p.topics[t.id]?.total >= 5 && p.topics[t.id].correct / p.topics[t.id].total < .7).slice(0, 3);
+  return `🧸 Bystrík – týždenný prehľad (${p.name}, ${p.grade}. ročník)\n\n📅 Dni s učením: ${d}/7\n✍️ Odpovede: ${q}\n🎯 Úspešnosť: ${q ? Math.round(c / q * 100) + ' %' : '–'}\n🔥 Séria: ${p.streak.count} ${plural(p.streak.count, 'deň', 'dni', 'dní')}\n⭐ Level: ${levelInfo(p.xp).L}\n${ids.length ? `\n📚 Učil(a) sa: ${ids.map(id => TOPIC[id].name).join(', ')}` : ''}${weak.length ? `\n🔁 Treba precvičiť: ${weak.map(t => t.name).join(', ')}` : ''}\n\nhttps://sebastiankoncek88-alt.github.io/bystrik/`;
+}
 function weekCard(p) {
   const span = (a, b) => { let q = 0, c = 0, days = 0; for (let i = a; i < b; i++) { const d = p.days[daysAgo(i)]; if (d) { days++; q += d.q || 0; c += d.c || 0; } } return { q, c, days, acc: q ? Math.round(c / q * 100) : null }; };
   const w = span(0, 7), o = span(7, 14); const since = Date.now() - 7 * DAYMS;
@@ -4997,7 +5257,7 @@ function weekCard(p) {
   const due = reviewDue(p).length; const diff = w.acc != null && o.acc != null ? w.acc - o.acc : null;
   const tip = !w.days ? 'Tento týždeň sa dieťa ešte neučilo. Skúste si spolu sadnúť na 10 minút, najlepšie každý deň v rovnakom čase.' : w.days < 3 ? 'Pomôže krátko, ale častejšie: 10 minút denne dá viac ako hodina raz za týždeň. Skúste pripomienku v Nastaveniach.' : weak.length ? `Skúste spolu tému „${weak[0].t.name}“. Nech vám dieťa nahlas vysvetlí, ako na odpoveď prišlo.` : due ? `Čaká ${due} ${plural(due, 'otázka', 'otázky', 'otázok')} na zopakovanie. Stačí päť minút na domovskej obrazovke.` : 'Ide to výborne. Pochváľte dieťa a skúste pridať ťažší režim: Test alebo Na čas.';
   return `<section class="card pcard weekcard"><span class="eyebrow">📅 Tento týždeň (posledných 7 dní)</span><div class="wkgrid"><div><b>${w.days}/7</b><span>dní s učením</span></div><div><b>${w.q}</b><span>odpovedí${o.q ? ` (minule ${o.q})` : ''}</span></div><div><b>${(() => { const g = DATA.parent.goal || 2; let n = 0; for (let i = 0; i < 7; i++) { const d = p.days[daysAgo(i)]; if (d && (d.n || 0) >= g) n++; } return n; })()}/7</b><span>dní so splneným cieľom</span></div><div><b>${w.acc == null ? '–' : w.acc + ' %'}</b><span>úspešnosť${diff != null && diff !== 0 ? ` <i class="${diff > 0 ? 'up' : 'dn'}">${diff > 0 ? '▲' : '▼'} ${Math.abs(diff)}</i>` : ''}</span></div></div>
-  ${strong.length ? `<p class="wkline"><b>💪 Darí sa:</b> ${strong.map(x => esc(x.t.name)).join(', ')}</p>` : ''}${weak.length ? `<p class="wkline"><b>🔁 Precvičiť:</b> ${weak.map(x => `${esc(x.t.name)} (${x.pct} %)`).join(', ')}</p>` : ''}<p class="wkline"><b>🧠 Opakovanie chýb:</b> ${(p.review || []).length ? `${(p.review || []).length} ${plural((p.review || []).length, 'otázka', 'otázky', 'otázok')} v zásobníku, dnes čaká ${due}` : 'žiadne chyby na opakovanie'}</p><div class="wktip"><b>💡 Tip na tento týždeň</b><p>${tip}</p></div></section>`;
+  ${strong.length ? `<p class="wkline"><b>💪 Darí sa:</b> ${strong.map(x => esc(x.t.name)).join(', ')}</p>` : ''}${weak.length ? `<p class="wkline"><b>🔁 Precvičiť:</b> ${weak.map(x => `${esc(x.t.name)} (${x.pct} %)`).join(', ')}</p>` : ''}<p class="wkline"><b>🧠 Opakovanie chýb:</b> ${(p.review || []).length ? `${(p.review || []).length} ${plural((p.review || []).length, 'otázka', 'otázky', 'otázok')} v zásobníku, dnes čaká ${due}` : 'žiadne chyby na opakovanie'}</p><div class="wktip"><b>💡 Tip na tento týždeň</b><p>${tip}</p></div><button class="btn small" data-a="wk-share" style="margin-top:8px">📤 Poslať týždenný report (druhému rodičovi, babke…)</button></section>`;
 }
 /* Pripomienka na učenie – opakovaná udalosť do kalendára telefónu */
 function remindCard() {
@@ -5157,8 +5417,14 @@ async function sb(method, path, body, prefer) {
   if (!r.ok) { let j = {}; try { j = await r.json(); } catch (e) { } throw { status: r.status, code: j.code, message: j.message }; }
   const tx = await r.text(); return tx ? JSON.parse(tx) : null;
 }
+function tStats(p) {
+  let q = 0, c = 0, d = 0; for (let i = 0; i < 7; i++) { const x = p.days[daysAgo(i)]; if (x) { d++; q += x.q || 0; c += x.c || 0; } }
+  const weak = ALL_TOPICS.filter(t => p.topics[t.id]?.total >= 5 && p.topics[t.id].correct / p.topics[t.id].total < .7).sort((a, b) => p.topics[a.id].correct / p.topics[a.id].total - p.topics[b.id].correct / p.topics[b.id].total).slice(0, 2).map(t => t.name);
+  return { acc: p.stats.answered ? Math.round(p.stats.correct / p.stats.answered * 100) : null, wq: q, wacc: q ? Math.round(c / q * 100) : null, wd: d, weak, last: (p.log[0] || {}).t || 0 };
+}
+let CLST = null; function clsPush() { if (!(SUPA_ON() && AUTH) || !DATA.profiles.some(p => (p.cls || []).length)) return; clearTimeout(CLST); CLST = setTimeout(() => playersPush().catch(() => { }), 4000); }
 async function playersPush() {
-  const w = weekId(); const rows = DATA.profiles.map(p => ({ user_id: AUTH.uid, pid: String(p.id), code: fcode(p), name: String(p.name).slice(0, 14), grade: p.grade, av: p.av, stats: { lvl: levelInfo(p.xp).L, n: p.wk && p.wk.w === w ? p.wk.n || 0 : 0, st: (p.streak && p.streak.count) || 0 }, updated_at: new Date().toISOString() }));
+  const w = weekId(); const rows = DATA.profiles.map(p => ({ user_id: AUTH.uid, pid: String(p.id), code: fcode(p), name: String(p.name).slice(0, 14), grade: p.grade, av: p.av, stats: Object.assign({ lvl: levelInfo(p.xp).L, n: p.wk && p.wk.w === w ? p.wk.n || 0 : 0, st: (p.streak && p.streak.count) || 0 }, tStats(p)), updated_at: new Date().toISOString() }));
   try { await sb('POST', 'players?on_conflict=user_id,pid', rows, 'resolution=merge-duplicates,return=minimal'); }
   catch (e) { if (e.code === '23505') { DATA.profiles.forEach(p => { p.fc = ''; fcode(p); }); await sb('POST', 'players?on_conflict=user_id,pid', DATA.profiles.map((p, i) => ({ ...rows[i], code: p.fc })), 'resolution=merge-duplicates,return=minimal'); } else throw e; }
 }
@@ -5175,7 +5441,7 @@ async function frLoad() {
     out = { list: mutual.map(by).sort((x, y) => String(x.name).localeCompare(String(y.name), 'sk')), inc: incC.map(by), out: outC.map(by), unread, last, total: total + incC.length };
   } catch (e) { out = { err: e && e.off ? 'off' : e && e.disabled ? 'disabled' : e && e.status === 404 ? 'missing' : 'net', list: [], inc: [], out: [], unread: {}, total: 0 }; }
   out.at = Date.now(); if (prev && prev.msg) { out.msg = prev.msg; out.ok = prev.ok; } FR = out; inboxStart();
-  if (UI.view === 'friends' || (UI.view === 'duel' && D && D.st === 'lobby')) render(null); else { const nb = $('.nav [data-v="friends"]'); if (nb && FR.total > 0 && !nb.querySelector('.dot')) nb.insertAdjacentHTML('beforeend', '<span class="dot"></span>'); }
+  if (UI.view === 'friends' || (UI.view === 'duel' && D && D.st === 'lobby')) render(null); else { const nb = $('.nav [data-v="me"]'); if (nb && FR.total > 0 && !nb.querySelector('.dot')) nb.insertAdjacentHTML('beforeend', '<span class="dot"></span>'); }
 }
 function frFresh(ms = 30000) { if (!FR || (!FR.loading && Date.now() - (FR.at || 0) > ms)) frLoad(); }
 const frAv = av => { try { return avatarSvg(av, { crop: 'head' }); } catch (e) { return ''; } };
@@ -5194,7 +5460,7 @@ function inboxMsg(ev, pl) {
 let FTAB = 'chats';
 VIEWS.friends = () => {
   const p = P(); const st = FR || { loading: true, list: [] };
-  const wrap = (body, tabs = '') => `${topbar()}<main class="view pop-in"><div><h1 style="font-size:2rem">🤝 Priatelia</h1></div>${tabs}${body}</main>${nav('friends')}`;
+  const wrap = (body, tabs = '') => `${topbar('nav-me')}<main class="view pop-in"><div><h1 style="font-size:2rem">🤝 Priatelia</h1></div>${tabs}${body}</main>${nav('friends')}`;
   if (st.err === 'off') return wrap(`<section class="card duelbox">${bearSvg('')}<h2>Najprv sa prihlás</h2><p class="muted b">Priatelia fungujú len na webe po prihlásení e-mailom rodiča.</p></section>`);
   if (st.err === 'disabled') return wrap(`<section class="card duelbox">${bearSvg('comfort')}<h2>Priatelia sú vypnutí</h2><p class="muted b">Zapnúť ich môže rodič v rodičovskom účte.</p></section>`);
   if (st.err === 'missing') return wrap(`<section class="card duelbox">${bearSvg('')}<h2>Už čoskoro</h2><p class="muted b">Priatelia ešte nie sú v apke zapnutí.</p></section>`);
@@ -5212,6 +5478,7 @@ VIEWS.friends = () => {
   return wrap(neterr + body, tabs);
 };
 AFTER.friends = () => frFresh(8000);
+AFTER.me = () => { if (typeof SUPA_ON === 'function' && SUPA_ON() && AUTH) frFresh(30000); };
 const FC_PRESETS = ['Ahoj! 👋', 'Ako sa máš?', 'Dobre 🙂', 'Poď sa učiť! 📚', 'Dáme súboj? ⚔️', 'Gratulujem! 🎉', 'Si super! ⭐', 'Ďakujem 💛', 'Koľko máš zadaní?', 'Haha 😄', 'Áno', 'Nie', 'Musím ísť, čau!', 'Dobrú noc 🌙'];
 const FC_EMOJI = ['😀', '😂', '🥳', '😎', '🤔', '😴', '👍', '👏', '💪', '❤️', '⭐', '🔥', '🧸', '🎉'];
 function fcBubbles() {
@@ -5225,7 +5492,7 @@ async function fcLoad() {
   if (FC) FC.busy = false;
 }
 async function fcSend(kind, body) {
-  if (!FC || FC.sending) return; body = String(body || '').trim().slice(0, 200); if (!body) return; FC.sending = true; const me = P();
+  if (!FC || FC.sending) return; if (kind === 'text' && !DATA.settings.msgOk) { toast('Písanie musí povoliť rodič.'); return; } body = String(body || '').trim().slice(0, 200); if (!body) return; FC.sending = true; const me = P();
   try { await sb('POST', 'messages', { from_code: me.fc, to_code: FC.code, kind, body }, 'return=minimal'); sfx('pop'); if (FC.ws) FC.ws.say('new', {}); if (kind === 'text') inboxSend(FC.code, 'msg', { from: me.fc }); FC.sending = false; await fcLoad(); }
   catch (e) { FC.sending = false; toast('Správu sa nepodarilo odoslať.'); }
 }
@@ -5234,7 +5501,7 @@ VIEWS.fchat = pr => {
   const f = (FR && FR.list || []).find(x => x.code === pr.code) || { code: pr.code, name: 'Priateľ', grade: '' };
   return `<header class="top"><button class="iconbtn press" data-a="nav" data-v="friends" aria-label="Späť">←</button><span class="headbub" style="width:44px;height:44px">${frAv(f.av)}</span><div class="who"><b>${esc(f.name)}</b><span class="muted b" style="font-size:.8rem">${f.grade ? f.grade + '. ročník' : ''}</span></div><button class="iconbtn press" data-a="fc-duel" aria-label="Vyzvať na súboj">⚔️</button><button class="iconbtn press" data-a="fc-menu" aria-label="Viac">⋯</button></header>
   <main class="view nonav fchat"><div class="fmsgs" id="fmsgs">${FC && FC.code === pr.code ? fcBubbles() : '<div class="typing" style="margin:14px auto"><i></i><i></i><i></i></div>'}</div>
-  <div class="fcbar"><div class="fcrow">${FC_PRESETS.map((t, i) => `<button class="chip" data-a="fc-say" data-i="${i}">${t}</button>`).join('')}</div><div class="fcrow">${FC_EMOJI.map((t, i) => `<button class="chip emo1" data-a="fc-emo" data-i="${i}">${t}</button>`).join('')}</div>${DATA.settings.freeChat ? `<div class="fraddrow"><input class="field" id="fctext" maxlength="200" placeholder="Napíš správu…" autocomplete="off"><button class="btn primary small" data-a="fc-text">Poslať</button></div>` : '<p class="muted b" style="font-size:.76rem;text-align:center;margin:0">Vlastné správy môže zapnúť rodič v rodičovskom účte.</p>'}</div></main>`;
+  <div class="fcbar">${!DATA.settings.msgOk ? `<div class="fclock"><span>🔒</span><div><b>Písanie ešte nie je povolené</b><small>Požiadaj rodiča, nech ti ho zapne v rodičovskom účte. Súboj môžeš poslať aj tak ⚔️</small></div></div>` : `<div class="fcrow">${FC_PRESETS.map((t, i) => `<button class="chip" data-a="fc-say" data-i="${i}">${t}</button>`).join('')}</div><div class="fcrow">${FC_EMOJI.map((t, i) => `<button class="chip emo1" data-a="fc-emo" data-i="${i}">${t}</button>`).join('')}</div>${DATA.settings.freeChat ? `<div class="fraddrow"><input class="field" id="fctext" maxlength="200" placeholder="Napíš správu…" autocomplete="off"><button class="btn primary small" data-a="fc-text">Poslať</button></div>` : '<p class="muted b" style="font-size:.76rem;text-align:center;margin:0">Vlastné správy môže zapnúť rodič v rodičovskom účte.</p>'}`}</div></main>`;
 };
 AFTER.fchat = () => { const code = UI.params.code; if (!FC || FC.code !== code) { fcClose(); const me = P(); FC = { code, msgs: null, last: 0 }; FC.ws = duelWs('chat-' + [me.fc, code].sort().join('-'), ev => { if (ev === 'new') fcLoad(); }); FC.poll = setInterval(fcLoad, 6000); fcLoad(); } else { const el = $('#fmsgs'); if (el) el.scrollTop = el.scrollHeight; } const tx = $('#fctext'); if (tx) tx.addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); const v = tx.value; tx.value = ''; fcSend('text', v); } }); };
 const WEBOK = () => { try { return localStorage.getItem('bystrik.web') === '1'; } catch (e) { return true; } };

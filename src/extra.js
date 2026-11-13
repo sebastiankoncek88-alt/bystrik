@@ -63,7 +63,11 @@ const MORE_SJL = [
     Vyslovujeme [mrás]. Ako to správne napíšeme?|mráz|mrás;mraz|Pomôže iný tvar: mrazy. Počujeme s, ale píšeme z.
     Vyslovujeme [hrat]. Ako to správne napíšeme?|hrad|hrat;hrád|Pomôže iný tvar: hrady. Počujeme t, ale píšeme d.
     Vyslovujeme [loť]. Ako to správne napíšeme?|loď|loť;lod|Pomôže iný tvar: lode. Počujeme ť, ale píšeme ď.
-    Vyslovujeme [nôš]. Ako to správne napíšeme?|nôž|nôš;noš|Pomôže iný tvar: nože. Počujeme š, ale píšeme ž.`) },
+    Vyslovujeme [nôš]. Ako to správne napíšeme?|nôž|nôš;noš|Pomôže iný tvar: nože. Počujeme š, ale píšeme ž.
+    Vyslovujeme [lef]. Ako to správne napíšeme?|lev|lef;léf|Pomôže iný tvar: levy. Počujeme f, ale píšeme v.
+    Vyslovujeme [nóš]. Ako to správne napíšeme?|nôž|nóš;noš|Pomôže iný tvar: nože. Počujeme š, ale píšeme ž.
+    Vyslovujeme [hat] (plaz). Ako to napíšeme v slove hadík?|hadík|hatík;hádik|Pomôže tvar had – hady. Píšeme d.
+    Vyslovujeme [obet]. Ako to správne napíšeme?|obed|obet;óbed|Pomôže iný tvar: obedy. Počujeme t, ale píšeme d.`) },
   { id: 's3-nadradene', g: 3, type: 'qa', name: 'Nadradené slová', icon: '🗂️', items: lines(`
     Ktoré slovo je nadradené slovám jablko, hruška, slivka?|ovocie|zelenina;strom;záhrada
     Ktoré slovo je nadradené slovám mrkva, cibuľa, kapusta?|zelenina|ovocie;kvety;jedlo z mäsa
@@ -72,7 +76,15 @@ const MORE_SJL = [
     Ktoré slovo je nadradené slovám stôl, stolička, skriňa?|nábytok|riad;náradie;hračky
     Ktoré slovo je nadradené slovám auto, vlak, autobus?|dopravné prostriedky|hračky;budovy;stroje v kuchyni
     Ktoré slovo je nadradené slovám tričko, sukňa, nohavice?|oblečenie|obuv;šperky;nábytok
-    Ktoré slovo je nadradené slovám hrnček, tanier, miska?|riad|nábytok;náradie;oblečenie`) },
+    Ktoré slovo je nadradené slovám hrnček, tanier, miska?|riad|nábytok;náradie;oblečenie
+    Ktoré slovo je nadradené slovám ruža, tulipán, sedmokráska?|kvety|stromy;huby;zelenina
+    Ktoré slovo je nadradené slovám vrabec, sýkorka, ďateľ?|vtáky|ryby;hmyz;cicavce
+    Ktoré slovo je nadradené slovám stolička, stôl, skriňa?|nábytok|riad;náradie;hračky
+    Ktoré slovo je nadradené slovám tričko, sveter, nohavice?|oblečenie|obuv;nábytok;riad
+    Ktoré slovo je nadradené slovám auto, autobus, vlak?|dopravné prostriedky|budovy;nástroje;zvieratá
+    Ktoré slovo je nadradené slovám hrnček, tanier, misa?|riad|nábytok;oblečenie;hračky
+    Ktoré slovo je podradené slovu „hudobné nástroje“?|husle|lopta;kladivo;tanier
+    Ktoré slovo je podradené slovu „ovocie“?|čerešňa|mrkva;zemiak;cibuľa`) },
   { id: 's4-cas', g: 4, type: 'cat', name: 'Slovesný čas', icon: '⏳', prompt: 'Sloveso „{x}“ je v…', choices: ['minulom čase', 'prítomnom čase', 'budúcom čase'], items: 'skákal|minulom čase,čítala|minulom čase,bežali|minulom čase,napísal|minulom čase,spievali|minulom čase,píše|prítomnom čase,beží|prítomnom čase,kreslíme|prítomnom čase,spí|prítomnom čase,varí|prítomnom čase,budem čítať|budúcom čase,pôjdeme|budúcom čase,budú hrať|budúcom čase,prídem|budúcom čase,budeš spať|budúcom čase', ex: 'Minulý čas: čo robil? Prítomný: čo robí? Budúci: čo bude robiť?' },
   { id: 's4-a', g: 4, type: 'qa', name: 'Kedy píšeme ä', icon: '🅰️', items: lines(`
     Ktoré slovo je napísané správne?|mäso|maso;méso|Ä píšeme len po perných spoluhláskach b, m, p, v.
