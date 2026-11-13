@@ -142,7 +142,7 @@ function avatarSvg(av, opts = {}) {
   else if (!(opts.back && ['okuliare', 'slnecne', 'maska'].includes(av.acc))) s += accSvg(av.acc, ac, a2, ink);
   s += `</g>`;
 
-  s = s.slice(0, bgEnd) + `<g filter="url(#O${id})">` + s.slice(bgEnd) + '</g>';
+  if (!(typeof document !== 'undefined' && document.documentElement.classList.contains('lite'))) s = s.slice(0, bgEnd) + `<g filter="url(#O${id})">` + s.slice(bgEnd) + '</g>';
   const pet = itemOf('pet', av.pet);
   if (false && pet.e && !opts.crop && !opts.noPet) s += `<g class="pet"><ellipse cx="166" cy="296" rx="20" ry="5" fill="#000" opacity=".12"/><text x="166" y="291" font-size="38" text-anchor="middle">${pet.e}</text></g>`;
 

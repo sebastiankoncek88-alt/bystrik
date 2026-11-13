@@ -1079,6 +1079,8 @@ img.emo{width:1.18em;min-width:1.18em;height:1.18em;flex:none;vertical-align:-.2
 .homelb{display:block;width:100%;box-sizing:border-box;padding:12px 14px;text-align:left;font-family:inherit;color:var(--ink);cursor:pointer}.homelb .sec h2{font-size:1.25rem}.lbgap{text-align:center;font-weight:800;color:var(--muted);line-height:.8}.lbrow.me{background:var(--sun-soft);border-radius:12px;padding-inline:8px;margin-inline:-8px}.lbrow.mine .nm{color:var(--accent)}
 .over .box>svg.bear{width:120px;height:120px;flex:none}
 .lbseg{width:100%;box-sizing:border-box}.lbseg button{flex:1;font-size:.9rem;padding:8px 2px}
+.shoplock{display:flex;gap:10px;align-items:flex-start;padding:12px;background:var(--c-mat-soft)}.shoplock>span{font-size:1.8rem}.shoplock div{display:flex;flex-direction:column;gap:4px;align-items:flex-start}.shoplock b{font-family:var(--f-display)}.shoplock small{font-weight:700;font-size:.8rem;color:var(--muted)}
+.lboff{display:flex;gap:10px;align-items:center;padding:10px 12px;background:var(--sun-soft)}.lboff>span{font-size:1.6rem}.lboff b{display:block;font-family:var(--f-display)}.lboff small{font-weight:700;font-size:.8rem;color:var(--muted)}
 .lbstage{padding:38px 10px 0;overflow:hidden;background:radial-gradient(120% 90% at 50% 0%,#FFF6D6 0%,var(--lilac-soft) 55%,var(--c-mat-soft) 100%);position:relative}
 .lbstage::before{will-change:transform;content:"";position:absolute;inset:0;background:conic-gradient(from 180deg at 50% 20%,transparent 0 20deg,rgba(255,255,255,.55) 25deg 35deg,transparent 40deg 70deg,rgba(255,255,255,.45) 75deg 85deg,transparent 90deg 270deg,rgba(255,255,255,.45) 275deg 285deg,transparent 290deg 320deg,rgba(255,255,255,.55) 325deg 335deg,transparent 340deg);animation:lbrays 14s linear infinite;opacity:.8;pointer-events:none}
 @keyframes lbrays{to{transform:rotate(360deg)}}
@@ -1439,6 +1441,7 @@ html.fxshake #app{animation:fxshake .6s cubic-bezier(.36,.07,.19,.97)}
 .mychest{position:relative;flex:none;width:92px;height:86px;background:none;border:0;padding:0;cursor:pointer;animation:chshake 2.2s ease-in-out infinite}
 .mychest i{position:absolute;display:block;left:6px;right:6px}
 .mychest .cbody{height:46px}.mychest .clid{bottom:42px;height:32px}.mychest .cbody::before{width:16px;height:18px}.mychest .cbody::after{top:18px;height:7px}.mychest .clid::after{bottom:7px;height:7px}
+.mychest.nokey{animation:none;filter:saturate(.6)}.mychest b img{width:26px;height:26px}
 .mychest b{position:absolute;left:50%;top:-6px;transform:translateX(-50%);font-family:var(--f-display);font-size:1.6rem;color:#FFE066;text-shadow:0 2px 0 #33203A;animation:bob 1.6s ease-in-out infinite}
 /* záhadná truhla – otváranie */
 .mybig{position:relative;display:flex;flex-direction:column;align-items:center;gap:12px;width:min(340px,88vw)}
@@ -1525,6 +1528,11 @@ html.fxshake #app{animation:fxshake .6s cubic-bezier(.36,.07,.19,.97)}
 .ffnum b{font-family:var(--f-display);font-weight:900;font-size:6rem;line-height:1;color:#fff;text-shadow:0 5px 0 #E8453C,0 0 30px #FF9A3C,0 0 60px #FF5A2F}
 .ffnum span{font-family:var(--f-display);font-weight:800;font-size:1.4rem;color:#fff;text-shadow:0 3px 0 #C2362E,0 0 16px #FF7A2F;white-space:nowrap}
 @keyframes ffnum{0%{opacity:0;transform:translate(-50%,-10%) scale(.3)}22%{opacity:1;transform:translate(-50%,-50%) scale(1.15)}35%,78%{opacity:1;transform:translate(-50%,-50%) scale(1)}100%{opacity:0;transform:translate(-50%,-70%) scale(.9)}}
+/* úsporný režim */
+html.lite .rlight,html.lite .brstars,html.lite .auras,html.lite .lbstage::before,html.lite .wst.wshop::before,html.lite .wst.wshop .wsi,html.lite .mystery::before,html.lite .mychest,html.lite .brfall s,html.lite .brfly2,html.lite body::after,html.lite .item.rk-leg,html.lite .stage .stk{animation:none!important}
+html.lite .bearroom .bcfig svg{animation:none!important}
+html.lite .tapfx,html.lite .fxtrail,html.lite .fxwave,html.lite .cwbeam,html.lite .cwdust,html.lite .myrain,html.lite .brfly2,html.lite .rdust{display:none!important}
+html.lite .stage .stk,html.lite .wardstage .stk,html.lite .roomprev .stk{filter:none}
 /* menu bublina */
 .nav .in{position:relative}.nav button{z-index:1}
 .navpill{position:absolute;top:0;bottom:0;z-index:0;border-radius:14px;background:var(--accent);box-shadow:0 3px 10px color-mix(in srgb,var(--accent) 45%,transparent);pointer-events:none}
