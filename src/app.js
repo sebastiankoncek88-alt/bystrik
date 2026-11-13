@@ -576,7 +576,7 @@ function bearCorner(p) {
   const b = bearInit(p); const m = bearMood(p); const h = b.honey || 0; const st = bearStats(b); const lo = bearLove(b);
   const bar = (i, n, v, c) => `<div class="brst"><span>${i}</span><div><small>${n}</small><div class="brbar"><i style="width:${v}%;background:${c}"></i></div></div></div>`;
   return `<section class="card bearroom bm-${m}" id="bearcorner"><div class="brhead"><b>🧸 Bystríkov kútik</b><span class="brlove" title="Priateľstvo">💖 Lv ${lo.lv}<i><b style="width:${lo.pr * 10}%"></b></i></span></div>
-  <div class="brscene ${b.asleep ? 'night' : ''}" id="brscene"><i class="brwin"><b class="brsun"></b><b class="brmoon"></b><b class="brwstars"></b></i><i class="brshelf"><span>📚</span><span>🪴</span><span>🏆</span></i><i class="brfloor"></i><i class="brdark"></i><i class="brstars"></i><i class="brplinth"></i><i class="brbed"></i>
+  <div class="brscene ${b.asleep ? 'night' : ''}" id="brscene"><i class="brwin"><b class="brskyd"></b><b class="brskyn"></b><b class="brsun"></b><b class="brmoon"></b><b class="brwstars"></b></i><i class="brshelf"><span>📚</span><span>🪴</span><span>🏆</span></i><i class="brfloor"></i><i class="brdusk"></i><i class="brdark"></i><i class="brstars"></i><i class="brplinth"></i><i class="brbed"></i>
   <button class="bcfig press" data-a="bear-tap" aria-label="Ťukni na Bystríka">${bearSvg(!b.asleep && (m === 'sick' || m === 'tired') ? 'comfort' : '')}</button><span class="bzz" aria-hidden="true">💤</span>${m === 'sick' ? '<span class="bzz sick" aria-hidden="true">🤧</span>' : ''}
   <div class="brbub" id="brbub">${BEAR_TXT[m]}</div><span class="brhoney">🍯 ${h}</span></div>
   <div class="brstats">${bar('🍯', 'Hlad', st.food, 'linear-gradient(90deg,#FFB13C,#FFD45C)')}${bar('⚡', 'Energia', st.energy, 'linear-gradient(90deg,#4C86F7,#7EC8FF)')}${bar('😊', 'Radosť', st.joy, 'linear-gradient(90deg,#F25C8B,#FF9FBF)')}</div>
@@ -1913,8 +1913,17 @@ const ACT = {
     if (!room || !sc || !fig) { render(null); return; }
     room.classList.add('busy'); fig.classList.remove('comfort'); const btn = $('[data-a="bear-sleep"]'); if (btn) btn.innerHTML = going ? '<span>☀️</span>Zobudiť' : '<span>🌙</span>Spať';
     const fin = () => { room.classList.remove('busy'); const e = $('.brst:nth-child(2) .brbar i'); if (e) e.style.width = bearStats(b).energy + '%'; };
-    if (going) { fig.classList.add('byawn'); bearSay('Uaaah… som ospalý 🥱'); setTimeout(() => { fig.classList.remove('byawn'); sc.classList.add('night'); room.className = room.className.replace(/bm-\w+/, 'bm-sleep'); bearSay('Dobrú noc… 🌙'); applyTheme(true); toast('🌙 Bystrík spí, appka prešla do nočného režimu'); }, 1300); setTimeout(() => { bearSay(BEAR_TXT.sleep); fin(); }, 3000); }
-    else { sc.classList.remove('night'); applyTheme(true); room.className = room.className.replace(/bm-\w+/, 'bm-' + bearMood(p)); setTimeout(() => { fig.classList.add('bstretch'); bearSay('Dobré ráno! ☀️ Poďme sa učiť!'); sfx('level'); }, 900); setTimeout(() => { fig.classList.remove('bstretch'); fin(); }, 2600); }
+    if (going) {
+      sc.classList.add('dusk'); bearSay('Slniečko zapadá… 🌅'); setTimeout(() => { fig.classList.add('byawn'); bearSay('Uaaah… som ospalý 🥱'); }, 900);
+      setTimeout(() => { fig.classList.remove('byawn'); sc.classList.add('night'); room.className = room.className.replace(/bm-\w+/, 'bm-sleep'); }, 2300);
+      setTimeout(() => { sc.classList.remove('dusk'); bearSay('Dobrú noc… 🌙'); applyTheme(true); toast('🌙 Bystrík spí, appka prešla do nočného režimu'); }, 3600);
+      setTimeout(() => { bearSay(BEAR_TXT.sleep); fin(); }, 5200);
+    } else {
+      sc.classList.add('dusk'); sc.classList.remove('night'); room.className = room.className.replace(/bm-\w+/, 'bm-' + bearMood(p)); bearSay('Slniečko vychádza… 🌄'); applyTheme(true);
+      setTimeout(() => sc.classList.remove('dusk'), 1800);
+      setTimeout(() => { fig.classList.add('bstretch'); bearSay('Dobré ráno! ☀️ Poďme sa učiť!'); sfx('level'); }, 2000);
+      setTimeout(() => { fig.classList.remove('bstretch'); fin(); }, 3700);
+    }
   },
   'bear-rec': async (d, el) => {
     if (BREC) { try { BREC.mr.stop(); } catch (e) { } return; }
