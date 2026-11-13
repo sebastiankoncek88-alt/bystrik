@@ -1273,7 +1273,7 @@ h1,h2,.logintitle{letter-spacing:-.01em}
 <canvas id="fx"></canvas>
 <script>
 /* Emoji obrázky: Microsoft Fluent Emoji 3D (MIT) – len na webe, kde je priečinok emoji/ */
-const EMO_MAP = {"🧸":"1f9f8","🪙":"1fa99","🚫":"1f6ab","✔️":"2714-fe0f","❓":"2753","💎":"1f48e","🔥":"1f525","⭐":"2b50","🔢":"1f522","📝":"1f4dd","🌍":"1f30d","📖":"1f4d6","🃏":"1f0cf","🔗":"1f517","🎮":"1f3ae","⚡":"26a1","✅":"2705","🎯":"1f3af","👑":"1f451","👗":"1f457","🛍️":"1f6cd-fe0f","🥉":"1f949","🥈":"1f948","🥇":"1f947","🎉":"1f389","⏱️":"23f1-fe0f","🎁":"1f381","⚙️":"2699-fe0f","🏠":"1f3e0","📚":"1f4da","🤝":"1f91d","👕":"1f455","🧩":"1f9e9","➖":"2796","➕":"2795","🗑️":"1f5d1-fe0f","🎨":"1f3a8","🔲":"1f532","➗":"2797","✏️":"270f-fe0f","🌱":"1f331","🇬🇧":"1f1ec-1f1e7","💛":"1f49b","🔬":"1f52c","🗺️":"1f5fa-fe0f","💻":"1f4bb","🔭":"1f52d","✍️":"270d-fe0f","📸":"1f4f8","👖":"1f456","👟":"1f45f","🎩":"1f3a9","🔒":"1f512","⏳":"23f3","🌟":"1f31f","🙂":"1f642","🔁":"1f501","💾":"1f4be","⏹️":"23f9-fe0f","🎤":"1f3a4","🎙️":"1f399-fe0f","📂":"1f4c2","🔊":"1f50a","👀":"1f440","🚀":"1f680","👋":"1f44b","🏆":"1f3c6","🤧":"1f927","💤":"1f4a4","🍯":"1f36f","💪":"1f4aa","☀️":"2600-fe0f","🌙":"1f319","👨‍👩‍👧":"1f468-200d-1f469-200d-1f467","📲":"1f4f2","👍":"1f44d","🔴":"1f534","🐣":"1f423","🐥":"1f425","🦊":"1f98a","🦁":"1f981","🅰️":"1f170-fe0f","🎈":"1f388","👥":"1f465","📜":"1f4dc","📋":"1f4cb","🖼️":"1f5bc-fe0f","😕":"1f615","📒":"1f4d2","✨":"2728","🧠":"1f9e0","🧮":"1f9ee","💡":"1f4a1","🐢":"1f422","❌":"274c","🧽":"1f9fd","📘":"1f4d8","👆":"1f446","🧺":"1f9fa","🪣":"1faa3","📦":"1f4e6","🎒":"1f392","🗃️":"1f5c3-fe0f","👜":"1f45c","🌧️":"1f327-fe0f","🐹":"1f439","🔤":"1f524","🐸":"1f438","🏎️":"1f3ce-fe0f","💀":"1f480","⏰":"23f0","🐱":"1f431","🐶":"1f436","🌞":"1f31e","🍎":"1f34e","🚗":"1f697","🐟":"1f41f","🌳":"1f333","🐻":"1f43b","🚂":"1f682","🧀":"1f9c0","🥛":"1f95b","🦋":"1f98b","🍓":"1f353","🐝":"1f41d","🏫":"1f3eb","🌈":"1f308","🐘":"1f418","🍞":"1f35e","🥕":"1f955","🐭":"1f42d","❄️":"2744-fe0f","🐴":"1f434","🌹":"1f339","🔑":"1f511","🍰":"1f370","🚲":"1f6b2","🦉":"1f989","🍐":"1f350","🥚":"1f95a","🔓":"1f513","👉":"1f449","🏡":"1f3e1","🎟️":"1f39f-fe0f","⚔️":"2694-fe0f","❤️":"2764-fe0f","🤍":"1f90d","🏁":"1f3c1","🚙":"1f699","🏅":"1f3c5","👇":"1f447","✖️":"2716-fe0f","📏":"1f4cf","🗣️":"1f5e3-fe0f","🐂":"1f402","🏷️":"1f3f7-fe0f","💬":"1f4ac","⚖️":"2696-fe0f","💶":"1f4b6","🟦":"1f7e6","👤":"1f464","⚠️":"26a0-fe0f","🌗":"1f317","🔄":"1f504","▶️":"25b6-fe0f","🌐":"1f310","🔎":"1f50e","☁️":"2601-fe0f","📥":"1f4e5","👩":"1f469","👨":"1f468","🧓":"1f9d3","🔐":"1f510","📊":"1f4ca","🕑":"1f551","👧":"1f467","🎛️":"1f39b-fe0f","👫":"1f46b","📧":"1f4e7","❗":"2757","✉️":"2709-fe0f","🎧":"1f3a7","💖":"1f496","💜":"1f49c","➡️":"27a1-fe0f","📅":"1f4c5","📈":"1f4c8","🚪":"1f6aa","📨":"1f4e8","😄":"1f604","😀":"1f600","😂":"1f602","🥳":"1f973","😎":"1f60e","🤔":"1f914","😴":"1f634","👏":"1f44f","🐰":"1f430","🐼":"1f43c","🐨":"1f428","🐵":"1f435","🐯":"1f42f","🦖":"1f996","🐧":"1f427","🐲":"1f432","🦄":"1f984","🦔":"1f994","🦜":"1f99c","🐙":"1f419","🐬":"1f42c","🦒":"1f992","🦩":"1f9a9","🦕":"1f995","🦚":"1f99a","🐳":"1f433","🦈":"1f988","♥":"2665-fe0f","❄":"2744-fe0f","⚽":"26bd","🍕":"1f355","🍦":"1f366","🤖":"1f916","🎸":"1f3b8","🌸":"1f338","🏀":"1f3c0","😍":"1f60d","🐠":"1f420","🐞":"1f41e","🌲":"1f332","🌻":"1f33b","🌼":"1f33c","🌷":"1f337","🍄":"1f344","🎀":"1f380","🍭":"1f36d","🧁":"1f9c1","🍉":"1f349","🎵":"1f3b5","🏰":"1f3f0","🪐":"1fa90","🍀":"1f340","🌵":"1f335","🍩":"1f369","🎃":"1f383","⛄":"26c4","🎂":"1f382","🏝️":"1f3dd-fe0f","🌊":"1f30a","🐉":"1f409","🎆":"1f386","🪁":"1fa81","🐦":"1f426","🧊":"1f9ca","♻️":"267b-fe0f","🥞":"1f95e","☔":"2614","🥖":"1f956","🏔️":"1f3d4-fe0f","🍌":"1f34c","🐛":"1f41b","🔺":"1f53a","💯":"1f4af","🕒":"1f552","🏗️":"1f3d7-fe0f","🌌":"1f30c","🦆":"1f986","🐌":"1f40c","🍋":"1f34b","🐓":"1f413","🐑":"1f411","🐍":"1f40d","🍇":"1f347","🐄":"1f404","☂️":"2602-fe0f","🦀":"1f980","🐐":"1f410","🧦":"1f9e6","🐿️":"1f43f-fe0f","🔠":"1f520","🧱":"1f9f1","👪":"1f46a","🥄":"1f944","🔍":"1f50d","🥁":"1f941","📐":"1f4d0","🏛️":"1f3db-fe0f","🟩":"1f7e9","🙈":"1f648","🔈":"1f508","👂":"1f442","🗂️":"1f5c2-fe0f","🌿":"1f33f","🔷":"1f537","🔟":"1f51f","🧾":"1f9fe","✂️":"2702-fe0f","🙋":"1f64b","🏙️":"1f3d9-fe0f","🍂":"1f342","🖐️":"1f590-fe0f","🍒":"1f352","🍊":"1f34a","🍑":"1f351","🥔":"1f954","🥒":"1f952","🥬":"1f96c","🧅":"1f9c5","🫑":"1fad1","🧄":"1f9c4","🌽":"1f33d","🚦":"1f6a6","🔵":"1f535","🟢":"1f7e2","🟡":"1f7e1","🟠":"1f7e0","🟣":"1f7e3","⚫":"26ab","⚪":"26aa","🟤":"1f7e4","🐔":"1f414","🐷":"1f437","🪿":"1fabf","🐺":"1f43a","🦌":"1f98c","🐗":"1f417","👩‍🚒":"1f469-200d-1f692","🌦️":"1f326-fe0f","💧":"1f4a7","🍲":"1f372","🧃":"1f9c3","👦":"1f466","👵":"1f475","👴":"1f474","👶":"1f476","🦎":"1f98e","🦇":"1f987","🐋":"1f40b","🐊":"1f40a","🐜":"1f41c","🧭":"1f9ed","🏘️":"1f3d8-fe0f","🖊️":"1f58a-fe0f","📕":"1f4d5","🪑":"1fa91","🧑‍🏫":"1f9d1-200d-1f3eb","🖍️":"1f58d-fe0f","👁️":"1f441-fe0f","👃":"1f443","👄":"1f444","✋":"270b","🦵":"1f9b5","🦶":"1f9b6","🦷":"1f9b7","💇":"1f487","📆":"1f4c6","🌬️":"1f32c-fe0f","🏖️":"1f3d6-fe0f","🏃":"1f3c3","🤸":"1f938","🏊":"1f3ca","💃":"1f483","🍽️":"1f37d-fe0f","🥤":"1f964","🌅":"1f305","🙏":"1f64f","↔️":"2194-fe0f","🕐":"1f550","〰️":"3030-fe0f","🧐":"1f9d0","🤲":"1f932","😔":"1f614","🪆":"1fa86","✌️":"270c-fe0f","🪶":"1fab6","🪨":"1faa8","🔡":"1f521","🚆":"1f686","🥗":"1f957","👒":"1f452","🧥":"1f9e5","🧣":"1f9e3","🧤":"1f9e4","🪟":"1fa9f","🛏️":"1f6cf-fe0f","🍳":"1f373","🛁":"1f6c1","🖥️":"1f5a5-fe0f","🛡️":"1f6e1-fe0f","😊":"1f60a","🎄":"1f384"};
+const EMO_MAP = {"🧸":"1f9f8","🪙":"1fa99","🚫":"1f6ab","✔️":"2714-fe0f","❓":"2753","💎":"1f48e","🔥":"1f525","⭐":"2b50","🔢":"1f522","📝":"1f4dd","🌍":"1f30d","📖":"1f4d6","🃏":"1f0cf","🔗":"1f517","🎮":"1f3ae","⚡":"26a1","✅":"2705","🎯":"1f3af","👑":"1f451","👗":"1f457","🛍️":"1f6cd-fe0f","🥉":"1f949","🥈":"1f948","🥇":"1f947","🎉":"1f389","⏱️":"23f1-fe0f","🎁":"1f381","⚙️":"2699-fe0f","🏠":"1f3e0","📚":"1f4da","🤝":"1f91d","👕":"1f455","🧩":"1f9e9","➖":"2796","➕":"2795","🗑️":"1f5d1-fe0f","🎨":"1f3a8","🔲":"1f532","➗":"2797","✏️":"270f-fe0f","🌱":"1f331","🇬🇧":"1f1ec-1f1e7","💛":"1f49b","⛪":"26ea","🔬":"1f52c","🗺️":"1f5fa-fe0f","💻":"1f4bb","🔭":"1f52d","✍️":"270d-fe0f","📸":"1f4f8","👖":"1f456","👟":"1f45f","🎩":"1f3a9","🔒":"1f512","⏳":"23f3","🌟":"1f31f","🙂":"1f642","🔁":"1f501","💾":"1f4be","⏹️":"23f9-fe0f","🎤":"1f3a4","🎙️":"1f399-fe0f","📂":"1f4c2","🔊":"1f50a","👀":"1f440","🚀":"1f680","👋":"1f44b","🏆":"1f3c6","🤧":"1f927","💤":"1f4a4","🍯":"1f36f","💪":"1f4aa","☀️":"2600-fe0f","🌙":"1f319","👨‍👩‍👧":"1f468-200d-1f469-200d-1f467","📲":"1f4f2","👍":"1f44d","🔴":"1f534","🐣":"1f423","🐥":"1f425","🦊":"1f98a","🦁":"1f981","🅰️":"1f170-fe0f","🎈":"1f388","👥":"1f465","📜":"1f4dc","📋":"1f4cb","🖼️":"1f5bc-fe0f","😕":"1f615","📒":"1f4d2","✨":"2728","🧠":"1f9e0","🧮":"1f9ee","💡":"1f4a1","🐢":"1f422","❌":"274c","🧽":"1f9fd","📘":"1f4d8","👆":"1f446","🧺":"1f9fa","🪣":"1faa3","📦":"1f4e6","🎒":"1f392","🗃️":"1f5c3-fe0f","👜":"1f45c","🌧️":"1f327-fe0f","🐹":"1f439","🔤":"1f524","🐸":"1f438","🏎️":"1f3ce-fe0f","💀":"1f480","⏰":"23f0","🐱":"1f431","🐶":"1f436","🌞":"1f31e","🍎":"1f34e","🚗":"1f697","🐟":"1f41f","🌳":"1f333","🐻":"1f43b","🚂":"1f682","🧀":"1f9c0","🥛":"1f95b","🦋":"1f98b","🍓":"1f353","🐝":"1f41d","🏫":"1f3eb","🌈":"1f308","🐘":"1f418","🍞":"1f35e","🥕":"1f955","🐭":"1f42d","❄️":"2744-fe0f","🐴":"1f434","🌹":"1f339","🔑":"1f511","🍰":"1f370","🚲":"1f6b2","🦉":"1f989","🍐":"1f350","🥚":"1f95a","🔓":"1f513","👉":"1f449","🏡":"1f3e1","🎟️":"1f39f-fe0f","⚔️":"2694-fe0f","❤️":"2764-fe0f","🤍":"1f90d","🏁":"1f3c1","🚙":"1f699","🏅":"1f3c5","👇":"1f447","✖️":"2716-fe0f","📏":"1f4cf","🗣️":"1f5e3-fe0f","🐂":"1f402","🏷️":"1f3f7-fe0f","💬":"1f4ac","⚖️":"2696-fe0f","💶":"1f4b6","🟦":"1f7e6","👤":"1f464","⚠️":"26a0-fe0f","🌗":"1f317","🔄":"1f504","▶️":"25b6-fe0f","🌐":"1f310","🔎":"1f50e","☁️":"2601-fe0f","📥":"1f4e5","👩":"1f469","👨":"1f468","🧓":"1f9d3","🔐":"1f510","📊":"1f4ca","🕑":"1f551","👧":"1f467","🎛️":"1f39b-fe0f","👫":"1f46b","📧":"1f4e7","❗":"2757","✉️":"2709-fe0f","🎧":"1f3a7","💖":"1f496","💜":"1f49c","➡️":"27a1-fe0f","📅":"1f4c5","📈":"1f4c8","🪐":"1fa90","🛡️":"1f6e1-fe0f","↗":"2197-fe0f","🚪":"1f6aa","📨":"1f4e8","😄":"1f604","😀":"1f600","😂":"1f602","🥳":"1f973","😎":"1f60e","🤔":"1f914","😴":"1f634","👏":"1f44f","🐰":"1f430","🐼":"1f43c","🐨":"1f428","🐵":"1f435","🐯":"1f42f","🦖":"1f996","🐧":"1f427","🐲":"1f432","🦄":"1f984","🦔":"1f994","🦜":"1f99c","🐙":"1f419","🐬":"1f42c","🦒":"1f992","🦩":"1f9a9","🦕":"1f995","🦚":"1f99a","🐳":"1f433","🦈":"1f988","♥":"2665-fe0f","❄":"2744-fe0f","⚽":"26bd","🍕":"1f355","🍦":"1f366","🤖":"1f916","🎸":"1f3b8","🌸":"1f338","🏀":"1f3c0","😍":"1f60d","🐠":"1f420","🐞":"1f41e","🌲":"1f332","🌻":"1f33b","🌼":"1f33c","🌷":"1f337","🍄":"1f344","🎀":"1f380","🍭":"1f36d","🧁":"1f9c1","🍉":"1f349","🎵":"1f3b5","🏰":"1f3f0","🍀":"1f340","🌵":"1f335","🍩":"1f369","🎃":"1f383","⛄":"26c4","🎂":"1f382","🏝️":"1f3dd-fe0f","🌊":"1f30a","🐉":"1f409","🎆":"1f386","🪁":"1fa81","🐦":"1f426","🧊":"1f9ca","♻️":"267b-fe0f","🥞":"1f95e","☔":"2614","🥖":"1f956","🏔️":"1f3d4-fe0f","🍌":"1f34c","🐛":"1f41b","🔺":"1f53a","💯":"1f4af","🕒":"1f552","🏗️":"1f3d7-fe0f","🌌":"1f30c","🦆":"1f986","🐌":"1f40c","🍋":"1f34b","🐓":"1f413","🐑":"1f411","🐍":"1f40d","🍇":"1f347","🐄":"1f404","☂️":"2602-fe0f","🦀":"1f980","🐐":"1f410","🧦":"1f9e6","🐿️":"1f43f-fe0f","🔠":"1f520","🧱":"1f9f1","👪":"1f46a","🥄":"1f944","🔍":"1f50d","🥁":"1f941","📐":"1f4d0","🏛️":"1f3db-fe0f","🟩":"1f7e9","🙈":"1f648","🔈":"1f508","👂":"1f442","🗂️":"1f5c2-fe0f","🌿":"1f33f","🔷":"1f537","🔟":"1f51f","🧾":"1f9fe","✂️":"2702-fe0f","🙋":"1f64b","🏙️":"1f3d9-fe0f","🍂":"1f342","🖐️":"1f590-fe0f","🍒":"1f352","🍊":"1f34a","🍑":"1f351","🥔":"1f954","🥒":"1f952","🥬":"1f96c","🧅":"1f9c5","🫑":"1fad1","🧄":"1f9c4","🌽":"1f33d","🚦":"1f6a6","🔵":"1f535","🟢":"1f7e2","🟡":"1f7e1","🟠":"1f7e0","🟣":"1f7e3","⚫":"26ab","⚪":"26aa","🟤":"1f7e4","🐔":"1f414","🐷":"1f437","🪿":"1fabf","🐺":"1f43a","🦌":"1f98c","🐗":"1f417","👩‍🚒":"1f469-200d-1f692","🌦️":"1f326-fe0f","💧":"1f4a7","🍲":"1f372","🧃":"1f9c3","👦":"1f466","👵":"1f475","👴":"1f474","👶":"1f476","🦎":"1f98e","🦇":"1f987","🐋":"1f40b","🐊":"1f40a","🐜":"1f41c","🧭":"1f9ed","🏘️":"1f3d8-fe0f","🖊️":"1f58a-fe0f","📕":"1f4d5","🪑":"1fa91","🧑‍🏫":"1f9d1-200d-1f3eb","🖍️":"1f58d-fe0f","👁️":"1f441-fe0f","👃":"1f443","👄":"1f444","✋":"270b","🦵":"1f9b5","🦶":"1f9b6","🦷":"1f9b7","💇":"1f487","📆":"1f4c6","🌬️":"1f32c-fe0f","🏖️":"1f3d6-fe0f","🏃":"1f3c3","🤸":"1f938","🏊":"1f3ca","💃":"1f483","🍽️":"1f37d-fe0f","🥤":"1f964","🌅":"1f305","🙏":"1f64f","↔️":"2194-fe0f","🕐":"1f550","〰️":"3030-fe0f","🧐":"1f9d0","🤲":"1f932","😔":"1f614","🪆":"1fa86","✌️":"270c-fe0f","🪶":"1fab6","🪨":"1faa8","🔡":"1f521","🚆":"1f686","🥗":"1f957","👒":"1f452","🧥":"1f9e5","🧣":"1f9e3","🧤":"1f9e4","🪟":"1fa9f","🛏️":"1f6cf-fe0f","🍳":"1f373","🛁":"1f6c1","🖥️":"1f5a5-fe0f","😊":"1f60a","🎄":"1f384","🪄":"1fa84","🤞":"1f91e","🕊️":"1f54a-fe0f","🎅":"1f385"};
 const EMO_RE = /(?:[#*0-9]️?⃣)|(?:\p{Extended_Pictographic}(?:️|[\u{1F3FB}-\u{1F3FF}])?(?:‍\p{Extended_Pictographic}(?:️|[\u{1F3FB}-\u{1F3FF}])?)*)/gu;
 let EMO_BAD = false;
 function emoNode(t) {
@@ -2414,8 +2414,8 @@ for (const t of U2_MATH) { MATH.push(t); const x = { ...t, s: 'mat' }; ALL_TOPIC
 for (const t of U2_SJL) { SJL.push(t); const x = { ...t, s: 'sjl' }; ALL_TOPICS.push(x); TOPIC[t.id] = x; }
 for (const t of U2_PRV) { PRV.push(t); const x = { ...t, s: 'prv' }; ALL_TOPICS.push(x); TOPIC[t.id] = x; }
 /* ===== Predmety v Prehľade: prvouka, prírodoveda, vlastiveda, angličtina, informatika, etika ===== */
-const AREA_DEF = { prvouka: { i: '🌱', n: 'Prvouka' }, prir: { i: '🔬', n: 'Prírodoveda' }, vlast: { i: '🗺️', n: 'Vlastiveda' }, anj: { i: '🇬🇧', n: 'Angličtina' }, info: { i: '💻', n: 'Informatika' }, etika: { i: '💛', n: 'Etika a náboženstvo' } };
-const areasFor = g => g <= 2 ? ['prvouka', 'anj', 'etika'] : ['prir', 'vlast', 'anj', 'info', 'etika'];
+const AREA_DEF = { prvouka: { i: '🌱', n: 'Prvouka' }, prir: { i: '🔬', n: 'Prírodoveda' }, vlast: { i: '🗺️', n: 'Vlastiveda' }, anj: { i: '🇬🇧', n: 'Angličtina' }, info: { i: '💻', n: 'Informatika' }, etika: { i: '💛', n: 'Etika' } };
+let areasFor = g => g <= 2 ? ['prvouka', 'anj', 'etika'] : ['prir', 'vlast', 'anj', 'info', 'etika'];
 const areaOf = (t, g) => { const a = (TOPIC[t.id] && TOPIC[t.id].area) || t.area || 'bio'; if (a === 'bio' || a === 'geo') return g <= 2 ? 'prvouka' : a === 'bio' ? 'prir' : 'vlast'; return a; };
 const U3_PRV = [
   { id: 'i3-pocitac', g: 3, type: 'qa', area: 'info', name: 'Počítač a jeho časti', icon: '🖥️', ex: 'Klávesnica a myš slúžia na zadávanie, monitor a reproduktory nám niečo ukazujú alebo hrajú.', items: lines(`
@@ -2487,6 +2487,99 @@ const U3_PRV = [
     Prečo triedime odpad?|aby sme chránili prírodu|aby bolo viac košov;lebo je to zábavné;nemusíme ho triediť`) }
 ];
 for (const t of U3_PRV) { PRV.push(t); const x = { ...t, s: 'prv' }; ALL_TOPICS.push(x); TOPIC[t.id] = x; }
+/* ===== Etika a náboženstvo zvlášť, viac tém ===== */
+AREA_DEF.etika = { i: '💛', n: 'Etika' }; AREA_DEF.nab = { i: '⛪', n: 'Náboženstvo' };
+const _areasFor0 = areasFor;
+areasFor = g => [..._areasFor0(g), 'nab'];
+TOPIC['e3-sviatky'].area = 'nab'; { const t = PRV.find(x => x.id === 'e3-sviatky'); if (t) t.area = 'nab'; }
+const U4_PRV = [
+  { id: 'e1-slusnost', g: 1, type: 'qa', area: 'etika', name: 'Čarovné slovíčka', icon: '🪄', ex: 'Prosím, ďakujem, prepáč a pozdrav sú čarovné slovíčka, ktoré robia svet krajším.', items: lines(`
+    Čo povieme, keď niečo chceme?|prosím|daj;hneď;chcem to
+    Čo povieme, keď vojdeme do triedy?|dobrý deň|nič;čau, všetci;haló
+    Čo povieme pri odchode?|dovidenia|nič;hej;choď
+    Kamarát ti požičal pastelku. Čo povieš?|ďakujem|konečne;nič;daj ešte
+    Omylom si do niekoho vrazil. Čo povieš?|prepáč|pozeraj sa;nič;ty si na vine
+    Ako hovoríme s dospelými, ktorých dobre nepoznáme?|vykáme im|kričíme;tykáme im;nehovoríme`) },
+  { id: 'e2-rodina', g: 2, type: 'qa', area: 'etika', name: 'Pomáham doma', icon: '🏡', items: lines(`
+    Ako môžeš pomôcť doma?|upratať si hračky|rozhádzať veci;nič nerobiť;hnevať sa
+    Mama varí obed. Čo môžeš urobiť?|prestrieť stôl|pýtať sladkosti;kričať;pustiť hudbu nahlas
+    Čo urobíš, keď je tvoj súrodenec smutný?|spýtam sa, čo sa stalo|zasmejem sa;vezmem mu hračku;odídem
+    Starý otec zle vidí. Ako mu pomôžeš?|prečítam mu, čo potrebuje|schovám mu okuliare;nič;smejem sa
+    Prečo je dobré pomáhať doma?|lebo sme rodina a máme sa radi|lebo musíme;za peniaze;aby sme sa chválili
+    Čo urobíme po jedle?|odnesieme tanier|necháme ho na stole;hodíme ho;schováme ho pod stôl`) },
+  { id: 'e3-pravda', g: 3, type: 'qa', area: 'etika', name: 'Pravda a dôvera', icon: '🤞', items: lines(`
+    Omylom si rozbil vázu. Čo urobíš?|poviem pravdu|schovám črepy;poviem, že to bol pes;nič
+    Prečo je dôležité hovoriť pravdu?|aby nám ostatní dôverovali|aby sme sa vyhli práci;nie je to dôležité;aby sme vyhrali
+    Kamarát ti povedal tajomstvo. Čo urobíš?|nechám si ho pre seba|poviem ho všetkým;napíšem ho na tabuľu;vysmejem ho
+    Kedy tajomstvo povedať dospelému?|keď niekomu hrozí nebezpečenstvo|nikdy;vždy hneď;keď sa nudím
+    Našiel si na chodbe peňaženku. Čo urobíš?|odnesiem ju učiteľke|nechám si ju;vyhodím ju;minie sa na sladkosti
+    Čo znamená sľúbiť niečo?|že to naozaj urobíme|že to možno urobíme;že to nikdy neurobíme;nič`) },
+  { id: 'e4-priroda', g: 4, type: 'qa', area: 'etika', name: 'Chránime prírodu', icon: '🌳', items: lines(`
+    Kam patrí plastová fľaša?|do žltého kontajnera na plasty|do lesa;do potoka;do papiera
+    Kam patrí papier a noviny?|do modrého kontajnera|do skla;do lesa;do bio odpadu
+    Čo ušetrí vodu?|zastaviť vodu pri čistení zubov|nechať vodu tiecť;kúpať sa trikrát denne;umývať auto každý deň
+    Čo urobíme s odpadkami na výlete?|odnesieme ich so sebou|necháme ich v lese;hodíme do potoka;zakopeme ich
+    Prečo zhasíname svetlo, keď odchádzame?|šetríme energiu|aby bola tma;lebo je to zábava;nie je to potrebné
+    Ako pomôžeme vtáčikom v zime?|dáme im do kŕmidla semienka|chytíme ich;dáme im čokoládu;nič`) },
+  { id: 'n1-stvorenie', g: 1, type: 'qa', area: 'nab', name: 'Svet okolo nás je dar', icon: '🌈', ex: 'Podľa Biblie Boh stvoril svet: svetlo, vodu, zem, rastliny, zvieratá a človeka.', items: lines(`
+    Kto podľa Biblie stvoril svet?|Boh|kráľ;čarodejník;človek
+    Ako sa volali prví ľudia podľa Biblie?|Adam a Eva|Peter a Pavol;Jana a Ján;Mária a Jozef
+    Za čo môžeme ďakovať každý deň?|za rodinu, jedlo a priateľov|za nič;len za darčeky;len za hračky
+    Čo je modlitba?|rozhovor s Bohom|hra;pieseň o zvieratách;domáca úloha
+    Ako sa staráme o svet, ktorý sme dostali?|chránime prírodu a zvieratá|ničíme stromy;hádžeme odpadky;trápime zvieratá
+    Čo nám hovorí prikázanie lásky?|mať rád Boha a ľudí okolo seba|mať rád len seba;nehovoriť s nikým;hnevať sa`) },
+  { id: 'n2-noe', g: 2, type: 'qa', area: 'nab', name: 'Biblické príbehy', icon: '🕊️', items: lines(`
+    Kto postavil veľkú loď, archu?|Noe|Mojžiš;Dávid;Jonáš
+    Čo vzal Noe do archy?|zvieratá po pároch|len psov;len ryby;nič
+    Čo sa objavilo na oblohe po potope?|dúha|mesiac;kométa;sneh
+    Kto porazil obra Goliáša?|Dávid|Noe;Abrahám;Jozef
+    Koho prehltla veľká ryba?|Jonáša|Mojžiša;Dávida;Noeho
+    Kto previedol ľudí cez more?|Mojžiš|Dávid;Jonáš;Noe`) },
+  { id: 'n3-jezis', g: 3, type: 'qa', area: 'nab', name: 'Ježišov život', icon: '⭐', items: lines(`
+    V ktorom meste sa podľa Biblie narodil Ježiš?|v Betleheme|v Ríme;v Bratislave;v Paríži
+    Ako sa volala Ježišova mama?|Mária|Eva;Sára;Anna
+    Čo viedlo mudrcov k Ježišovi?|hviezda|mapa;vták;rieka
+    Kde podľa príbehu ležal malý Ježiš?|v jasliach|v posteli;na tróne;v lodi
+    Ako sa volali Ježišovi najbližší priatelia?|apoštoli|rytieri;vojaci;kráľovia
+    Ktorý sviatok pripomína narodenie Ježiša?|Vianoce|Veľká noc;Silvester;Deň detí`) },
+  { id: 'n4-svati', g: 4, type: 'qa', area: 'nab', name: 'Svätci a Slovensko', icon: '📜', ex: 'Cyril a Metod prišli na Veľkú Moravu v roku 863 a priniesli písmo hlaholiku.', items: lines(`
+    Kto priniesol našim predkom písmo?|Cyril a Metod|Mikuláš a Martin;Peter a Pavol;Juraj a Jakub
+    Ako sa volalo písmo, ktoré vytvoril Konštantín (Cyril)?|hlaholika|latinka;azbuka;runy
+    Kedy prišli Cyril a Metod na Veľkú Moravu?|v roku 863|v roku 1993;v roku 1200;v roku 100
+    Kto nosí deťom darčeky 6. decembra?|svätý Mikuláš|svätý Martin;Ježiško;Dedo Mráz
+    Kto podľa legendy rozdelil plášť s chudobným?|svätý Martin|svätý Mikuláš;svätý Juraj;svätý Peter
+    Kedy oslavujeme sviatok Cyrila a Metoda?|5. júla|1. januára;24. decembra;1. mája`) }
+];
+for (const t of U4_PRV) { PRV.push(t); const x = { ...t, s: 'prv' }; ALL_TOPICS.push(x); TOPIC[t.id] = x; }
+const U5_PRV = [
+  { id: 'e3-trieda', g: 3, type: 'qa', area: 'etika', name: 'Naša trieda', icon: '🏫', items: lines(`
+    Čo robíme, keď chce niekto v triede hovoriť?|počúvame ho|skáčeme mu do reči;smejeme sa;odídeme
+    Spolužiak niečomu nerozumie. Čo urobíš?|vysvetlím mu to|posmievam sa mu;nevšímam si ho;poviem, že je hlúpy
+    Ako sa rozhodneme, keď sa nevieme dohodnúť?|vypočujeme každého a hlasujeme|vyhrá najsilnejší;nerobíme nič;hádame sa
+    Čo je dobré pravidlo v triede?|nikomu neubližujeme|kto kričí, má pravdu;berieme si cudzie veci;nepočúvame
+    Ako ukážeš, že si niekoho vážiš?|pozorne ho počúvam|otočím sa chrbtom;smejem sa mu;skáčem mu do reči`) },
+  { id: 'n1-mikulas', g: 1, type: 'qa', area: 'nab', name: 'Mikuláš a Vianoce', icon: '🎅', items: lines(`
+    Kedy prichádza svätý Mikuláš?|6. decembra|24. decembra;1. januára;1. júna
+    Kam nám Mikuláš dáva sladkosti?|do čižmičky|do kufra;do školskej tašky;do chladničky
+    Čo je advent?|čas čakania na Vianoce|letné prázdniny;športová hra;názov mesta
+    Koľko sviečok má adventný veniec?|4|2;7;10
+    Kedy je Štedrý deň?|24. decembra|6. decembra;31. decembra;1. novembra`) },
+  { id: 'n2-velkanoc', g: 2, type: 'qa', area: 'nab', name: 'Veľká noc', icon: '🐣', items: lines(`
+    V ktorom ročnom období je Veľká noc?|na jar|v lete;na jeseň;v zime
+    Čo pripomína Veľká noc kresťanom?|Ježišovo zmŕtvychvstanie|narodenie Ježiša;príchod Mikuláša;koniec roka
+    Čo maľujeme na Veľkú noc?|vajíčka|tekvice;stromček;lampióny
+    Aký zvyk poznáme na Veľkonočný pondelok?|oblievačku|púšťanie šarkanov;sánkovanie;ohňostroj
+    Ktorý symbol patrí k Veľkej noci?|baránok|sob;snehuliak;tekvica`) }
+];
+for (const t of U5_PRV) { PRV.push(t); const x = { ...t, s: 'prv' }; ALL_TOPICS.push(x); TOPIC[t.id] = x; }
+{ const t = { id: 'n4-podob', g: 4, type: 'qa', area: 'nab', name: 'Podobenstvá', icon: '📖', ex: 'Podobenstvo je krátky príbeh, ktorý nás učí niečo dôležité.', items: lines(`
+    Čo je podobenstvo?|krátky príbeh s ponaučením|pieseň;básnička o zvieratách;modlitba
+    Kto pomohol zranenému mužovi pri ceste?|milosrdný Samaritán|kňaz;vojak;kráľ
+    Čo nás učí príbeh o milosrdnom Samaritánovi?|pomáhať každému, kto to potrebuje|pomáhať len kamarátom;nikomu nepomáhať;utekať
+    Ako sa otec zachoval k márnotratnému synovi, keď sa vrátil?|odpustil mu a tešil sa|vyhnal ho;nevšímal si ho;hneval sa navždy
+    Čo nás učí príbeh o márnotratnom synovi?|odpúšťať|nikdy neodpustiť;utiecť z domu;hádať sa
+    Čo hľadal pastier, ktorý nechal 99 oviec?|jednu stratenú ovcu|zlato;nový dom;stratenú kozu`) };
+  PRV.push(t); const x = { ...t, s: 'prv' }; ALL_TOPICS.push(x); TOPIC[t.id] = x; }
 /* ===== Čítanka: krátke texty s otázkami ===== */
 const READS = [
   { id: 'r1-mica', g: 1, icon: '🐱', title: 'Mačka Mica', text: 'Mama má mačku Micu. Mica je malá a biela. Rada pije mlieko. Ema sa s Micou hrá s loptou.',
@@ -3371,7 +3464,7 @@ function roomView() {
 const VIEWS = {}, AFTER = {};
 VIEWS.learn = () => {
   const p = P(); const dd = p.dailyDone === today();
-  const card = k => { const ts = SUBJECTS[k].topics.filter(t => t.g === p.grade); const st = ts.reduce((a, t) => a + (p.topics[t.id]?.stars || 0), 0); const max = ts.length * 3; const d = { mat: ['1+2', 'Počty, násobilka, geometria, slovné úlohy', '➗'], sjl: ['Aa', 'Písmená, y/i, vybrané slová, slovné druhy', '✏️'], prv: ['🌍', p.grade <= 2 ? '🌱 Prvouka · 🇬🇧 Angličtina · 💛 Etika' : '🔬 Prírodoveda · 🗺️ Vlastiveda · 🇬🇧 Angličtina · 💻 Informatika · 💛 Etika', '🔭'] }[k]; return `<button class="card lsubj ${k} press" data-a="subject" data-s="${k}"><span class="big">${d[0]}</span><span class="lt"><b>${SUBJECTS[k].name}</b><span>${d[1]}</span><span class="pbar"><i style="width:${max ? st / max * 100 : 0}%"></i></span><small>⭐ ${st} / ${max} hviezd · ${ts.length} tém</small></span><span class="deco">${d[2]}</span></button>`; };
+  const card = k => { const ts = SUBJECTS[k].topics.filter(t => t.g === p.grade); const st = ts.reduce((a, t) => a + (p.topics[t.id]?.stars || 0), 0); const max = ts.length * 3; const d = { mat: ['1+2', 'Počty, násobilka, geometria, slovné úlohy', '➗'], sjl: ['Aa', 'Písmená, y/i, vybrané slová, slovné druhy', '✏️'], prv: ['🌍', p.grade <= 2 ? '🌱 Prvouka · 🇬🇧 Angličtina · 💛 Etika · ⛪ Náboženstvo' : '🔬 Prírodoveda · 🗺️ Vlastiveda · 🇬🇧 Angličtina · 💻 Informatika · 💛 Etika · ⛪ Náboženstvo', '🔭'] }[k]; return `<button class="card lsubj ${k} press" data-a="subject" data-s="${k}"><span class="big">${d[0]}</span><span class="lt"><b>${SUBJECTS[k].name}</b><span>${d[1]}</span><span class="pbar"><i style="width:${max ? st / max * 100 : 0}%"></i></span><small>⭐ ${st} / ${max} hviezd · ${ts.length} tém</small></span><span class="deco">${d[2]}</span></button>`; };
   return `${topbar()}<main class="view pop-in"><div><h1 style="font-size:2rem">Učenie</h1><p class="muted b">Vyber si predmet. Učivo je pre ${p.grade}. ročník, iný ročník si vyberieš v predmete.</p></div>${card('mat')}${card('sjl')}${card('prv')}
   ${reviewCard(p)}
   <div class="sec"><h2>Ďalšie učenie</h2></div>
@@ -3626,7 +3719,7 @@ VIEWS.home = () => {
   ${reviewCard(p)}
   <button class="card daily press ${dd ? 'done' : ''}" data-a="daily"><span class="ic">${dd ? '✅' : '🎯'}</span><span><b>${dd ? 'Denná výzva splnená!' : 'Denná výzva'}</b><span class="b" style="font-size:.9rem">${dd ? 'Môžeš si ju zahrať znova, len tak pre radosť.' : 'Opakovanie toho, čo si nedávno precvičoval(a), a ľahké otázky o svete · +50 bodov'}</span></span></button>
   ${ptaskCard(p)}${taskCard}
-  <div style="display:flex;flex-direction:column;gap:8px"><div class="sec"><h2>Učenie</h2><span class="eyebrow">${p.grade}. ročník</span></div><div class="subjects">${subj('mat')}${subj('sjl')}${subj('prv')}</div><p class="muted b" style="font-size:.85rem">Prehľad: ${p.grade <= 2 ? 'prvouka, angličtina a etika' : 'prírodoveda, vlastiveda, angličtina, informatika a etika'}.</p></div>
+  <div style="display:flex;flex-direction:column;gap:8px"><div class="sec"><h2>Učenie</h2><span class="eyebrow">${p.grade}. ročník</span></div><div class="subjects">${subj('mat')}${subj('sjl')}${subj('prv')}</div><p class="muted b" style="font-size:.85rem">Prehľad: ${p.grade <= 2 ? 'prvouka, angličtina, etika a náboženstvo' : 'prírodoveda, vlastiveda, angličtina, informatika, etika a náboženstvo'}.</p></div>
   ${progressCard(p)}
   ${homeBoard(p)}
   ${streak}

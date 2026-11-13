@@ -442,7 +442,7 @@ function roomView() {
 const VIEWS = {}, AFTER = {};
 VIEWS.learn = () => {
   const p = P(); const dd = p.dailyDone === today();
-  const card = k => { const ts = SUBJECTS[k].topics.filter(t => t.g === p.grade); const st = ts.reduce((a, t) => a + (p.topics[t.id]?.stars || 0), 0); const max = ts.length * 3; const d = { mat: ['1+2', 'Počty, násobilka, geometria, slovné úlohy', '➗'], sjl: ['Aa', 'Písmená, y/i, vybrané slová, slovné druhy', '✏️'], prv: ['🌍', p.grade <= 2 ? '🌱 Prvouka · 🇬🇧 Angličtina · 💛 Etika' : '🔬 Prírodoveda · 🗺️ Vlastiveda · 🇬🇧 Angličtina · 💻 Informatika · 💛 Etika', '🔭'] }[k]; return `<button class="card lsubj ${k} press" data-a="subject" data-s="${k}"><span class="big">${d[0]}</span><span class="lt"><b>${SUBJECTS[k].name}</b><span>${d[1]}</span><span class="pbar"><i style="width:${max ? st / max * 100 : 0}%"></i></span><small>⭐ ${st} / ${max} hviezd · ${ts.length} tém</small></span><span class="deco">${d[2]}</span></button>`; };
+  const card = k => { const ts = SUBJECTS[k].topics.filter(t => t.g === p.grade); const st = ts.reduce((a, t) => a + (p.topics[t.id]?.stars || 0), 0); const max = ts.length * 3; const d = { mat: ['1+2', 'Počty, násobilka, geometria, slovné úlohy', '➗'], sjl: ['Aa', 'Písmená, y/i, vybrané slová, slovné druhy', '✏️'], prv: ['🌍', p.grade <= 2 ? '🌱 Prvouka · 🇬🇧 Angličtina · 💛 Etika · ⛪ Náboženstvo' : '🔬 Prírodoveda · 🗺️ Vlastiveda · 🇬🇧 Angličtina · 💻 Informatika · 💛 Etika · ⛪ Náboženstvo', '🔭'] }[k]; return `<button class="card lsubj ${k} press" data-a="subject" data-s="${k}"><span class="big">${d[0]}</span><span class="lt"><b>${SUBJECTS[k].name}</b><span>${d[1]}</span><span class="pbar"><i style="width:${max ? st / max * 100 : 0}%"></i></span><small>⭐ ${st} / ${max} hviezd · ${ts.length} tém</small></span><span class="deco">${d[2]}</span></button>`; };
   return `${topbar()}<main class="view pop-in"><div><h1 style="font-size:2rem">Učenie</h1><p class="muted b">Vyber si predmet. Učivo je pre ${p.grade}. ročník, iný ročník si vyberieš v predmete.</p></div>${card('mat')}${card('sjl')}${card('prv')}
   ${reviewCard(p)}
   <div class="sec"><h2>Ďalšie učenie</h2></div>
@@ -697,7 +697,7 @@ VIEWS.home = () => {
   ${reviewCard(p)}
   <button class="card daily press ${dd ? 'done' : ''}" data-a="daily"><span class="ic">${dd ? '✅' : '🎯'}</span><span><b>${dd ? 'Denná výzva splnená!' : 'Denná výzva'}</b><span class="b" style="font-size:.9rem">${dd ? 'Môžeš si ju zahrať znova, len tak pre radosť.' : 'Opakovanie toho, čo si nedávno precvičoval(a), a ľahké otázky o svete · +50 bodov'}</span></span></button>
   ${ptaskCard(p)}${taskCard}
-  <div style="display:flex;flex-direction:column;gap:8px"><div class="sec"><h2>Učenie</h2><span class="eyebrow">${p.grade}. ročník</span></div><div class="subjects">${subj('mat')}${subj('sjl')}${subj('prv')}</div><p class="muted b" style="font-size:.85rem">Prehľad: ${p.grade <= 2 ? 'prvouka, angličtina a etika' : 'prírodoveda, vlastiveda, angličtina, informatika a etika'}.</p></div>
+  <div style="display:flex;flex-direction:column;gap:8px"><div class="sec"><h2>Učenie</h2><span class="eyebrow">${p.grade}. ročník</span></div><div class="subjects">${subj('mat')}${subj('sjl')}${subj('prv')}</div><p class="muted b" style="font-size:.85rem">Prehľad: ${p.grade <= 2 ? 'prvouka, angličtina, etika a náboženstvo' : 'prírodoveda, vlastiveda, angličtina, informatika, etika a náboženstvo'}.</p></div>
   ${progressCard(p)}
   ${homeBoard(p)}
   ${streak}
