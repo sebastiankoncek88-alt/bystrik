@@ -1228,7 +1228,7 @@ body{background-attachment:fixed!important}
 /* plávajúca spodná lišta */
 .nav{left:10px!important;right:10px!important;bottom:calc(10px + env(safe-area-inset-bottom,0px))!important;border:2px solid var(--edge)!important;border-radius:26px!important;padding:6px 8px!important;box-shadow:0 6px 0 var(--drop),0 14px 30px -10px rgba(0,0,0,.35);max-width:560px;margin:0 auto}
 .nav button{border-radius:18px;padding:6px 0 5px;transition:background .2s,color .2s}
-.nav button.on{background:var(--accent);color:var(--accent-ink)}
+.nav button.on{background:transparent;color:var(--accent-ink)}
 .nav button.on::before{display:none}
 .nav button.on .ni{transform:translateY(-1px) scale(1.12)}
 .view{padding-bottom:calc(var(--nav-h) + 46px + env(safe-area-inset-bottom,0px))}
@@ -1515,6 +1515,40 @@ html.fxshake #app{animation:fxshake .6s cubic-bezier(.36,.07,.19,.97)}
 .cplus{position:relative;z-index:2;font-family:var(--f-display);font-size:1.4rem;color:#FFE066;text-shadow:0 2px 0 #33203A;background:#33203A;border-radius:16px;padding:6px 14px;opacity:0;transform:scale(.5);transition:all .4s .5s cubic-bezier(.3,1.6,.5,1)}
 .chest.open~.cplus{opacity:1;transform:none}
 @media (prefers-reduced-motion: reduce){.lvstars,.brfall,.brfly2{display:none}.chest.shake,.chest.open .crays{animation:none!important}}
+/* séria – plamene */
+.fxfire{position:fixed;inset:0;z-index:92;pointer-events:none;overflow:hidden}
+.ffl{position:absolute;left:-4%;right:-4%;bottom:0;height:45vh}
+.ffl i{position:absolute;bottom:-30px;width:16%;height:var(--h);border-radius:50% 50% 45% 45%/60% 60% 40% 40%;background:radial-gradient(ellipse at 50% 85%,#FFF6B0 0 18%,#FFC23C 35%,#FF7A2F 60%,rgba(232,69,60,0) 75%);filter:blur(1px);transform-origin:50% 100%;animation:ffl 2.2s ease-out forwards}
+@keyframes ffl{0%{transform:translateY(100%) scaleY(.4);opacity:0}20%{transform:translateY(0) scaleY(2.6);opacity:1}35%{transform:scaleY(2.1) scaleX(.85)}50%{transform:scaleY(2.8) scaleX(1.05)}65%{transform:scaleY(2.2)}100%{transform:translateY(40%) scaleY(.6);opacity:0}}
+.ffnum{position:absolute;left:50%;top:40%;transform:translate(-50%,-50%);display:flex;flex-direction:column;align-items:center;animation:ffnum 2.2s cubic-bezier(.2,1.5,.4,1) forwards}
+.ffnum::before{content:"";position:absolute;inset:-60px -80px;z-index:-1;border-radius:50%;background:radial-gradient(closest-side,rgba(90,20,10,.55),rgba(90,20,10,0))}
+.ffnum b{font-family:var(--f-display);font-weight:900;font-size:6rem;line-height:1;color:#fff;text-shadow:0 5px 0 #E8453C,0 0 30px #FF9A3C,0 0 60px #FF5A2F}
+.ffnum span{font-family:var(--f-display);font-weight:800;font-size:1.4rem;color:#fff;text-shadow:0 3px 0 #C2362E,0 0 16px #FF7A2F;white-space:nowrap}
+@keyframes ffnum{0%{opacity:0;transform:translate(-50%,-10%) scale(.3)}22%{opacity:1;transform:translate(-50%,-50%) scale(1.15)}35%,78%{opacity:1;transform:translate(-50%,-50%) scale(1)}100%{opacity:0;transform:translate(-50%,-70%) scale(.9)}}
+/* menu bublina */
+.nav .in{position:relative}.nav button{z-index:1}
+.navpill{position:absolute;top:0;bottom:0;z-index:0;border-radius:14px;background:var(--accent);box-shadow:0 3px 10px color-mix(in srgb,var(--accent) 45%,transparent);pointer-events:none}
+.navpill.go{transition:left .42s cubic-bezier(.34,1.45,.5,1),width .42s cubic-bezier(.34,1.45,.5,1);animation:pillsq .42s ease-out}
+@keyframes pillsq{40%{transform:scaleY(.82)}70%{transform:scaleY(1.06)}}
+.nav button.on .ni{animation:navjump .5s cubic-bezier(.3,1.8,.5,1)}
+@keyframes navjump{0%{transform:translateY(0) scale(1)}40%{transform:translateY(-8px) scale(1.35) rotate(-10deg)}100%{transform:translateY(-3px) scale(1.2) rotate(-6deg)}}
+/* vlnka pri ťuknutí */
+.tapfx{position:fixed;z-index:95;width:12px;height:12px;margin:-6px 0 0 -6px;border-radius:50%;pointer-events:none;border:2.5px solid color-mix(in srgb,var(--accent) 70%,#fff);animation:tapfx .5s ease-out forwards}
+@keyframes tapfx{0%{transform:scale(.4);opacity:.9}100%{transform:scale(5.5);opacity:0;border-width:1px}}
+/* kvíz – vlna pri správnej odpovedi */
+.okwave{position:fixed;z-index:30;pointer-events:none;border-radius:18px;border:4px solid var(--good);animation:okwave .65s ease-out forwards}
+@keyframes okwave{0%{transform:scale(1);opacity:1;box-shadow:0 0 0 0 var(--good)}100%{transform:scale(1.25,1.6);opacity:0;box-shadow:0 0 30px 10px var(--good)}}
+/* výsledky – hviezdy ako pečiatky */
+.bigstars span:not(.off){animation:starstamp .7s backwards cubic-bezier(.2,1.6,.4,1)!important}
+@keyframes starstamp{0%{opacity:0;transform:scale(3.2) rotate(-40deg);filter:drop-shadow(0 0 0 #FFD23F) blur(2px)}55%{opacity:1;transform:scale(.85) rotate(8deg);filter:drop-shadow(0 0 18px #FFD23F)}75%{transform:scale(1.12) rotate(-4deg)}100%{transform:scale(1) rotate(0);filter:drop-shadow(0 3px 0 var(--drop))}}
+/* medveď – triky */
+.bear.bflip .b-all{animation:bflip 1s cubic-bezier(.4,0,.3,1)!important;transform-origin:50% 60%}
+@keyframes bflip{0%{transform:translateY(0) scale(1,1)}15%{transform:translateY(4px) scale(1.12,.86)}35%{transform:translateY(-34px) rotate(-120deg) scale(.95)}55%{transform:translateY(-30px) rotate(-300deg)}72%{transform:translateY(0) rotate(-360deg) scale(1.12,.88)}85%{transform:translateY(-6px) rotate(-360deg)}100%{transform:translateY(0) rotate(-360deg)}}
+.bear.bspin .b-all{animation:bspin 1s cubic-bezier(.4,0,.3,1)!important}
+@keyframes bspin{0%{transform:scaleX(1)}20%{transform:scaleX(-1) translateY(-10px)}40%{transform:scaleX(1) translateY(-16px)}60%{transform:scaleX(-1) translateY(-10px)}80%{transform:scaleX(1) translateY(0) scale(1.08,.92)}100%{transform:none}}
+.bear.bflip .b-eyes,.bear.bspin .b-eyes{opacity:0}.bear.bflip .b-happyeyes,.bear.bspin .b-happyeyes{opacity:1}
+.bear.bflip .b-arm-l,.bear.bspin .b-arm-l{animation:barmup-l 1s ease-in-out}.bear.bflip .b-arm-r,.bear.bspin .b-arm-r{animation:barmup-r 1s ease-in-out}
+@media (prefers-reduced-motion: reduce){.tapfx,.okwave{display:none}.navpill.go{transition:none;animation:none}}
 .bearroom.busy .brb{pointer-events:none;opacity:.7}
 .brb{transition:transform .15s,box-shadow .15s}.brb:active{transform:translateY(3px);box-shadow:0 0 0 var(--drop)}
 .brb span{transition:transform .3s}.brb:hover span{transform:scale(1.15) rotate(-6deg)}

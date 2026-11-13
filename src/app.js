@@ -307,7 +307,7 @@ function touchStreak(p) {
   const t = today(); if (p.streak.last === t) return;
   const before = p.streak.best || 0;
   p.streak.count = p.streak.last === daysAgo(1) ? p.streak.count + 1 : 1; p.streak.last = t; p.streak.best = Math.max(before, p.streak.count);
-  if (p.streak.count > 1) setTimeout(() => { toast(`🔥 Séria ${p.streak.count} dní po sebe!`); sfx('coin'); }, 400);
+  if (p.streak.count > 1) setTimeout(() => { fxFire(p.streak.count); sfx('coin'); }, 400);
   const fresh = streakRewards(p.av.gender).filter(([, it]) => it.streak > before && it.streak <= p.streak.best);
   if (fresh.length) PENDING.push({ title: `Séria ${p.streak.best} dní!`, sub: 'Za to, že sa učíš každý deň, máš darček:', rw: fresh, num: '🔥' });
 }
@@ -364,6 +364,15 @@ function go(view, params = {}, dir = 'f') {
   UI.view = view; UI.params = params; render(dir); window.scrollTo(0, 0);
 }
 const NAV_ORDER = ['home', 'learn', 'games', 'friends', 'shop', 'wardrobe']; let LASTVIEW = null;
+/* svietiaca bublina v spodnom menu – plynulo preskočí na novú záložku */
+let NAVX = null;
+function navPill() {
+  const inn = $('.nav .in'); if (!inn) { NAVX = null; return; } const on = inn.querySelector('button.on'); if (!on) return;
+  const pill = document.createElement('i'); pill.className = 'navpill'; inn.prepend(pill); const to = { l: on.offsetLeft, w: on.offsetWidth, nav: inn.closest('.pnav') ? 'p' : 'c' };
+  const set = x => { pill.style.left = x.l + 'px'; pill.style.width = x.w + 'px'; };
+  if (NAVX && NAVX.nav === to.nav && (NAVX.l !== to.l)) { set(NAVX); void pill.offsetWidth; pill.classList.add('go'); requestAnimationFrame(() => set(to)); } else set(to);
+  NAVX = to;
+}
 function ghostOut(dir) {
   try { const old = document.querySelector('#app .view'); if (!old || matchMedia('(prefers-reduced-motion: reduce)').matches) return; $$('.vghost').forEach(e => e.remove());
     const r = old.getBoundingClientRect(); const vis = [...old.children].map(c => { const q = c.getBoundingClientRect(); return q.bottom > -40 && q.top < innerHeight + 40; }); const g = old.cloneNode(true); [...g.children].forEach((c, i) => { if (!vis[i]) c.style.visibility = 'hidden'; if (!vis[i]) c.replaceChildren(); }); g.querySelectorAll('[filter]').forEach(e => e.removeAttribute('filter')); g.querySelectorAll('[id]').forEach(e => e.removeAttribute('id')); g.querySelectorAll('[data-a]').forEach(e => e.removeAttribute('data-a'));
@@ -377,7 +386,7 @@ function render(dir) {
   app.innerHTML = VIEWS[UI.view](UI.params);
   const v = app.querySelector('.view'); if (v && dir) v.classList.add('enter-' + dir);
   AFTER[UI.view] && AFTER[UI.view]();
-  applyRoom(); if (CHG) setTimeout(chgStep, 260); if (nightOn() !== LASTNIGHT) applyTheme(true);
+  applyRoom(); navPill(); if (CHG) setTimeout(chgStep, 260); if (nightOn() !== LASTNIGHT) applyTheme(true);
   if (!['quiz', 'cards', 'pexeso', 'match', 'sort', 'game', 'result', 'onboard'].includes(UI.view)) setTimeout(flushPending, 350);
 }
 let LASTCOINS = -1;
@@ -622,6 +631,13 @@ function openChest(n) {
   const ch = o.querySelector('.chest'); let done = false;
   const open = () => { if (done) return; done = true; ch.classList.remove('shake'); ch.classList.add('open'); o.querySelector('.chtip').textContent = 'Wow! 🤩'; sfx('gift'); buzz([30, 40, 60]); setTimeout(() => { confetti(160, .35); grant(n, ch); o.querySelector('.chok').hidden = false; }, 450); setTimeout(() => render(null), 600); };
   ch.addEventListener('click', open); setTimeout(open, 2600);
+}
+function okWave(el) { if (!el) return; const r = el.getBoundingClientRect(); const w = document.createElement('i'); w.className = 'okwave'; w.style.cssText = `left:${r.left}px;top:${r.top}px;width:${r.width}px;height:${r.height}px`; document.body.appendChild(w); setTimeout(() => w.remove(), 700); }
+function fxFire(n) {
+  if (matchMedia('(prefers-reduced-motion: reduce)').matches) { toast(`🔥 Séria ${n} dní po sebe!`); return; }
+  const L = document.createElement('div'); L.className = 'fxfire'; L.setAttribute('aria-hidden', 'true');
+  L.innerHTML = `<div class="ffl">${Array.from({ length: 14 }, (_, i) => `<i style="left:${i * 7.4}%;--h:${60 + (i * 37) % 50}px;animation-delay:${(i % 5) * .07}s"></i>`).join('')}</div><div class="ffnum"><b>${n}</b><span>${plural(n, 'deň', 'dni', 'dní')} po sebe! 🔥</span></div>`;
+  document.body.appendChild(L); buzz([30, 30, 60]); setTimeout(() => L.remove(), 2400);
 }
 function fxComet(n) {
   const big = n >= 10, root = document.documentElement; const L = document.createElement('div'); L.className = 'fxlayer' + (big ? ' big' : ''); L.setAttribute('aria-hidden', 'true');
@@ -1010,7 +1026,7 @@ function answer(val, el) {
   const ts = topicStat(p, q.topic); ts.total++; p.stats.answered++; countDay(ok); bump(q.s);
   if (Q.mode !== 'time') reviewNote(p, q, ok);
   if (Q.mode !== 'time') Q.tlog.push({ t: q.text, a: q.full || q.answer, g: q.input ? fmt(String(val)) : String(val), ok, ex: q.ex || '', id: q.topic });
-  if (ok) { ts.correct++; p.stats.correct++; Q.correct++; Q.combo++; bump('correct'); let g = (Q.mode === 'time' ? 8 : 10) + (Q.combo >= 3 ? 2 : 0); if (q.calcUsed) g = Math.max(1, Math.round(g / 2)); Q.xp += g; sfx('ok'); buzz(15); floatXp(el, '+' + g + (q.calcUsed ? ' 🧮' : '')); burst(el); setMood('happy'); const pk = $('.peek'); if (pk) { pk.classList.remove('happy'); void pk.offsetWidth; pk.classList.add('happy'); if (Math.random() < .5) peekSay(pick(PRAISE)); } if (Q.combo >= 3 && Q.combo % 3 === 0) confetti(40, .55); }
+  if (ok) { ts.correct++; p.stats.correct++; Q.correct++; Q.combo++; bump('correct'); let g = (Q.mode === 'time' ? 8 : 10) + (Q.combo >= 3 ? 2 : 0); if (q.calcUsed) g = Math.max(1, Math.round(g / 2)); Q.xp += g; sfx('ok'); buzz(15); floatXp(el, '+' + g + (q.calcUsed ? ' 🧮' : '')); burst(el); okWave(el); setMood('happy'); const pk = $('.peek'); if (pk) { pk.classList.remove('happy'); void pk.offsetWidth; pk.classList.add('happy'); if (Math.random() < .5) peekSay(pick(PRAISE)); } if (Q.combo >= 3 && Q.combo % 3 === 0) confetti(40, .55); }
   else { Q.combo = 0; sfx('no'); buzz([30, 40, 30]); setMood('sad'); }
   if (ok && Q.combo >= 5 && Q.combo % 5 === 0) fxComet(Q.combo); const cb = $('#combo'); if (cb) { cb.textContent = Q.combo >= 2 ? '🔥' + Q.combo : ''; if (ok && Q.combo >= 2) { cb.classList.remove('pop'); void cb.offsetWidth; cb.classList.add('pop'); } }
   if (q.sayAfter || q.speakLang) setTimeout(() => say(q.sayAfter || q.speak, 'en-GB'), 350);
@@ -1971,7 +1987,7 @@ const ACT = {
   'auth-chmail': () => { const w = document.createElement('div'); w.className = 'over'; w.innerHTML = `<div class="card box"><h2>✉️ Nový e-mail</h2><p class="muted b">Teraz: ${esc(AUTH.email || '')}. Zadajte novú adresu. Na potvrdenie vám príde e-mail.</p><input class="field" id="chm" type="email" inputmode="email" autocapitalize="off" autocomplete="email" placeholder="novy@email.sk" style="width:100%;box-sizing:border-box;font-size:1.05rem;padding:12px;text-align:left"><p class="loginmsg" id="chmmsg"></p><button class="btn primary block" data-a="auth-chmail-go">Poslať potvrdenie</button><button class="btn block" data-a="ov-close">Zavrieť</button></div>`; document.body.appendChild(w); },
   'auth-chmail-go': async (d, el) => { const v = ($('#chm').value || '').trim().toLowerCase(); const m = $('#chmmsg'); if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v)) { m.textContent = 'Zadajte platný e-mail.'; sfx('no'); return; } if (v === (AUTH.email || '').toLowerCase()) { m.textContent = 'To je váš terajší e-mail.'; sfx('no'); return; } el.disabled = true; try { const t = await supaToken(); const r = await fetch(SUPA.url + '/auth/v1/user?redirect_to=' + encodeURIComponent(location.origin + location.pathname), { method: 'PUT', headers: { apikey: SUPA.key, Authorization: 'Bearer ' + t, 'content-type': 'application/json' }, body: JSON.stringify({ email: v }) }); const j = await r.json().catch(() => ({})); if (!r.ok) throw { message: j.msg || j.message || '', code: j.error_code || '', status: r.status }; if (j.email && j.email.toLowerCase() === v) { setAuth({ ...AUTH, email: j.email }); m.className = 'loginmsg ok'; m.textContent = 'E-mail je zmenený ✓'; sfx('ok'); render(null); } else { m.className = 'loginmsg ok'; m.textContent = 'Poslali sme potvrdzovací e-mail. Kliknite na odkaz v ňom (pozrite starú aj novú schránku a spam). Dovtedy platí starý e-mail.'; sfx('ok'); } } catch (e) { el.disabled = false; const x = (e.message || '') + (e.code || '') + (e.status || ''); m.className = 'loginmsg'; m.textContent = /exists|registered|taken/i.test(x) ? 'Tento e-mail už používa iný účet.' : /rate|429/i.test(x) ? 'Teraz sa nedá poslať e-mail. Skúste to o hodinu.' : 'Nepodarilo sa. Skúste to znova.'; sfx('no'); } },
   'auth-switch': async (d, el) => { await ACT['auth-out'](d, el); if (UI.view === 'login') { LOGIN.mode = 'up'; LOGIN.msg = ''; render(null); toast('Odhlásené. Prihláste sa iným e-mailom alebo si vytvorte nový účet.'); } },
-  'bear-tap': () => { const p = P(); const b = bearInit(p); const fig = $('.bcfig svg'); if (b.asleep) { bearSay('Psst… Bystrík spí 💤'); return; } try { bearJoy(fig); } catch (e) { } const last = (p.lastEx && Date.now() - p.lastEx.t < 6 * HRS) ? 'Pamätáš? ' + p.lastEx.x : pick(BEAR_PEP); say(last); if ($('#brbub')) bearSay(last); else toast('🧸 ' + last); },
+  'bear-tap': () => { const p = P(); const b = bearInit(p); const fig = $('.bcfig svg'); if (b.asleep) { bearSay('Psst… Bystrík spí 💤'); return; } BTAP = (BTAP || 0) + 1; const trick = BTAP % 4 === 0 ? 'bflip' : BTAP % 4 === 2 ? 'bspin' : ''; if (trick && fig && !fig.classList.contains('bdance')) { fig.classList.remove('bflip', 'bspin'); void fig.getBoundingClientRect(); fig.classList.add(trick); setTimeout(() => fig.classList.remove(trick), 1100); sfx('level'); if (trick === 'bflip') setTimeout(() => { bearSay('Salto! 🤸'); try { burst(fig, 20); } catch (e) { } }, 600); } else { try { bearJoy(fig); } catch (e) { } } const last = (p.lastEx && Date.now() - p.lastEx.t < 6 * HRS) ? 'Pamätáš? ' + p.lastEx.x : pick(BEAR_PEP); say(last); if ($('#brbub')) bearSay(last); else toast('🧸 ' + last); },
   'bear-feed': (d, el) => { const p = P(); const b = bearInit(p); if (!b.honey) { bearSay('Med zatiaľ nemáš. Dokonči nejaké učenie a dostaneš 🍯'); sfx('no'); return; } b.honey--; b.fed = Date.now(); b.asleep = false; const fig = $('.bcfig svg'); if (fig && el) { const a = el.getBoundingClientRect(), t = fig.getBoundingClientRect(); const j = document.createElement('span'); j.className = 'brfly'; j.textContent = '🍯'; j.style.left = a.left + a.width / 2 + 'px'; j.style.top = a.top + 'px'; j.style.setProperty('--dx', (t.left + t.width / 2 - a.left - a.width / 2) + 'px'); j.style.setProperty('--dy', (t.top + t.height * .55 - a.top) + 'px'); document.body.appendChild(j); setTimeout(() => j.remove(), 800); }
     sfx('pop'); setTimeout(() => { try { bearJoy($('.bcfig svg')); } catch (e) { } bearSay('Mňam, mňam! Ďakujem 🍯'); bearLoveUp(p, 2); setTimeout(() => { if (UI.view === 'home') { const c = $('#bearcorner'); if (c) c.outerHTML = bearCorner(P()); } }, 1500); }, 700); },
   'bear-pet': () => { const p = P(); const b = bearInit(p); if (b.asleep) { bearSay('Psst… Bystrík spí 💤'); return; } try { bearJoy($('.bcfig svg')); } catch (e) { } sfx('pop'); const t = pick(BEAR_PET); bearSay(t); say(t); bearLoveUp(p, 1); },
@@ -2174,6 +2190,7 @@ function closeSheet() { const w = $('#sheetwrap'); if (w) w.remove(); document.b
 function bearJoy(svg) { if (!svg) return; svg.classList.remove('bhappy'); void svg.getBoundingClientRect(); svg.classList.add('bhappy'); setTimeout(() => svg.classList.remove('bhappy'), 1300); const r = svg.getBoundingClientRect(); for (let i = 0; i < 5; i++) { const h = document.createElement('span'); h.className = 'bheart'; h.textContent = pick(['💛', '💖', '⭐', '✨', '💜']); h.style.left = (r.left + r.width * (.2 + Math.random() * .6)) + 'px'; h.style.top = (r.top + r.height * .3) + 'px'; h.style.setProperty('--dx', ((Math.random() - .5) * 90) + 'px'); h.style.animationDelay = (i * 70) + 'ms'; document.body.appendChild(h); setTimeout(() => h.remove(), 1500); } sfx('pop'); }
 document.addEventListener('pointerdown', e => { const bear = e.target.closest('svg.bear'); if (bear) bearJoy(bear); });
 document.addEventListener('pointerdown', e => { const b = e.target.closest('.btn,.opt,.key,.chip,.mp,.bin,.mi2'); if (!b || matchMedia('(prefers-reduced-motion: reduce)').matches) return; const r = b.getBoundingClientRect(); const sz = Math.max(r.width, r.height); const sp = document.createElement('span'); sp.className = 'ripple'; sp.style.cssText = `width:${sz}px;height:${sz}px;left:${e.clientX - r.left - sz / 2}px;top:${e.clientY - r.top - sz / 2}px`; b.appendChild(sp); setTimeout(() => sp.remove(), 550); });
+document.addEventListener('pointerdown', e => { const el = e.target.closest('.btn,.press,.nav button,.chip'); if (!el || el.closest('.designer') || matchMedia('(prefers-reduced-motion: reduce)').matches) return; const r = document.createElement('i'); r.className = 'tapfx'; r.style.left = e.clientX + 'px'; r.style.top = e.clientY + 'px'; document.body.appendChild(r); setTimeout(() => r.remove(), 520); }, { passive: true });
 document.addEventListener('click', e => { const el = e.target.closest('[data-a]'); if (!el) return; ac(); const f = ACT[el.dataset.a]; if (f) { e.preventDefault(); f(el.dataset, el, e); } });
 document.addEventListener('keydown', e => {
   if (e.key === 'Escape') { closeSheet(); return; }
@@ -2317,7 +2334,7 @@ function accCard() {
 document.addEventListener('visibilitychange', () => { if (document.hidden && DBREF === SUPADB && AUTH && DATA.profiles.length) { clearTimeout(syncT); SUPADB.set({ json: JSON.stringify(DATA), t: DATA.t }, true).catch(() => { }); } });
 /* ===== Súboj (naživo cez Supabase Realtime) a rebríček ===== */
 const RT_ON = () => !!(SUPA.url && SUPA.key && !(window.claude && window.claude.use));
-let WAVEN = 0; let D = null; var lbT = null; let LB = null; const LBK = 1000000;
+let WAVEN = 0, BTAP = 0; let D = null; var lbT = null; let LB = null; const LBK = 1000000;
 const lbRow = x => ({ ...x, n: Math.floor((x.xp || 0) / LBK), pts: (x.xp || 0) % LBK });
 function duelWs(code, onMsg, onReady) {
   const ws = new WebSocket(SUPA.url.replace(/^http/, 'ws') + '/realtime/v1/websocket?apikey=' + SUPA.key + '&vsn=1.0.0'); const topic = 'realtime:bystrik-duel-' + code; let ref = 1;
