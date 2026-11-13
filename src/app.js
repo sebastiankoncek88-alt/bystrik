@@ -417,8 +417,9 @@ function designerHTML() {
   const tab = DS.tab; let grid;
   if (tab === 'stk') grid = `<div class="stkpal">${STICKERS.map((it, i) => { const u = unlocked(it, lp); return `<button class="press ${u ? '' : 'lockb'}" data-a="ds-add" data-i="${i}" aria-label="Nálepka ${it.n}${u ? '' : ', ' + lockLabel(it)}">${it.e}</button>`; }).join('')}</div><p class="muted b" style="font-size:.82rem">Nálepky so zámkom odomkneš za level alebo sériu. Najviac ${16} nálepiek.</p>`;
   else if (tab === 'col') grid = `<div class="themes">${THEMES.map(t => { const u = unlocked(t, lp); return `<button class="press ${r.theme === t.id ? 'on' : ''} ${u ? '' : 'lockb'} ${t.dark ? 'dk' : ''}" style="background:${themeBg(t.id)}" data-a="ds-theme" data-i="${t.id}">${t.n}</button>`; }).join('')}</div>`;
+  else if (tab === 'int') grid = `<div class="themes ints">${INTS.map(it => `<button class="press ${(r.int || 'izba') === it.id ? 'on' : ''}" data-a="ds-int" data-i="${it.id}"><span class="intprev">${roomHTML({ ...r, int: it.id, stickers: [] })}</span><span class="intn">${it.e} ${it.n}</span></button>`).join('')}</div>`;
   else grid = `<div class="themes">${PATS.map(pt => `<button class="press ${r.pat === pt.id ? 'on' : ''} ${themeOf(r.theme).dark ? 'dk' : ''}" style="background:${themeBg(r.theme)}" data-a="ds-pat" data-i="${pt.id}"><span class="pat pat-${pt.id}" style="position:absolute;inset:0"></span><span style="position:relative">${pt.n}</span></button>`).join('')}</div>`;
-  return `<div class="designer" id="designer" data-a="ds-desel">${roomHTML(r, DS.sel)}<div class="dfig">${avatarSvg(DS.av, { noBg: true, cls: 'idle' })}</div></div>${tools}<div class="seg"><button class="${tab === 'stk' ? 'on' : ''}" data-a="ds-tab" data-t="stk">⭐ Nálepky</button><button class="${tab === 'col' ? 'on' : ''}" data-a="ds-tab" data-t="col">🎨 Farby</button><button class="${tab === 'pat' ? 'on' : ''}" data-a="ds-tab" data-t="pat">🔲 Vzor</button></div>${grid}`;
+  return `<div class="designer" id="designer" data-a="ds-desel">${roomHTML(r, DS.sel)}<div class="dfig">${avatarSvg(DS.av, { noBg: true, cls: 'idle' })}</div></div>${tools}<div class="seg"><button class="${tab === 'stk' ? 'on' : ''}" data-a="ds-tab" data-t="stk">⭐ Nálepky</button><button class="${tab === 'int' ? 'on' : ''}" data-a="ds-tab" data-t="int">🏠 Miesto</button><button class="${tab === 'col' ? 'on' : ''}" data-a="ds-tab" data-t="col">🎨 Farby</button><button class="${tab === 'pat' ? 'on' : ''}" data-a="ds-tab" data-t="pat">🔲 Vzor</button></div>${grid}`;
 }
 function dsRefresh() { const b = $('#dsgn'); if (b) b.innerHTML = designerHTML(); DS.save && DS.save(); }
 document.addEventListener('pointerdown', e => {
@@ -437,7 +438,7 @@ document.addEventListener('pointerup', () => { if (DRAG) { DRAG = null; DS.save 
 const lockProfile = () => (OB && UI.view === 'onboard' && !OB.edit) ? { xp: 0, streak: { best: 0 } } : P();
 function roomView() {
   const p = P(); DS = { room: p.room, av: p.av, sel: null, tab: DS && DS.tab || 'stk', lockP: p, save: () => { save(); applyRoom(); } };
-  return `${topbar('room-back')}<main class="view"><h1 style="font-size:2rem">Moje pozadie</h1><p class="muted b">Navrhni si vlastné pozadie: vyber farby, vzor a nalep nálepky. Ukáže sa za tvojou postavičkou.</p><div id="dsgn" style="display:flex;flex-direction:column;gap:12px">${designerHTML()}</div><button class="btn primary block" data-a="room-back">Hotovo</button></main>`;
+  return `${topbar('room-back')}<main class="view"><h1 style="font-size:2rem">Moje pozadie</h1><p class="muted b">Navrhni si vlastné pozadie: vyber miesto (izba, trieda, pláž…) alebo len vzor, farby a nalep nálepky. Ukáže sa za tvojou postavičkou.</p><div id="dsgn" style="display:flex;flex-direction:column;gap:12px">${designerHTML()}</div><button class="btn primary block" data-a="room-back">Hotovo</button></main>`;
 };
 
 /* ===== Pohľady ===== */
@@ -524,9 +525,14 @@ const TOUR = [
   { h: 'Ďalšie učenie', t: 'Čítanka, písanie prstom, denná výzva a tvoje poznámky.', v: 'learn', f: '.ltiles' },
   { h: 'Hry a súboj', t: 'Minihry na oddych a súboj s kamarátom.', v: 'games', f: '.gamelist' },
   { h: 'Ja', t: 'Tu je tvoj pokrok, čo už vieš, čo zopakovať a tvoji priatelia.', v: 'home', f: '.nav [data-v="me"]' },
-  { h: 'Slniečka a obchod', t: 'Za slniečka si kúpiš nové oblečenie.', v: 'home', f: '.coinchip' },
-  { h: 'Šatník a obchod', t: 'Tu sa oblečieš a hore prepneš na obchod.', v: 'home', f: '.nav [data-v="wardrobe"]' },
-  { h: 'Pre rodičov', t: 'V nastaveniach hore je Rodičovský účet. Rodičia tam vidia, ako sa ti darí.', v: 'settings', f: '.parentcard' },
+  { h: 'Slniečka', t: 'Za každú správnu odpoveď, hru aj úlohu dostaneš slniečka. Tu vidíš, koľko ich máš.', v: 'home', f: '.coinchip' },
+  { h: 'Poďme do šatníka', t: 'Ťukni dole na Šatník.', v: 'home', f: '.nav [data-v="wardrobe"]', tap: 1 },
+  { h: 'Tvoj šatník', t: 'Tu sa prezlečieš do vecí, ktoré už máš, a nastavíš im farby.', v: 'wardrobe', f: '.wardstage' },
+  { h: 'Obchod', t: 'Za slniečka si kúpiš nové oblečenie. Ťukni na Obchod.', v: 'wardrobe', f: '.wshop', tap: 1 },
+  { h: 'Vyskúšaj si niečo', t: 'Ťukni na túto vec a uvidíš, ako by ti pristala.', v: 'shop', f: '.shopitem .thbtn', tap: 1 },
+  { h: 'Skúšobná kabínka', t: 'Takto by si v nej vyzeral(a). Keď máš dosť slniečok, ťukneš na Kúpiť. Ponuka sa mení každý deň o polnoci.', v: 'shop', f: '#shopprev' },
+  { h: 'Rodičovský účet', t: 'Teraz ti ukážem, kde je účet pre rodičov. Ťukni hore na ozubené koliesko.', v: 'home', f: '.top [data-v="settings"]', tap: 1 },
+  { h: 'Toto je pre rodičov', t: 'Rodičovský účet si musia vytvoriť mama alebo ocko. Uvidia v ňom, ako sa ti darí, môžu ti zadať úlohu a nastaviť pravidlá. Ukáž im toto miesto!', v: 'settings', f: '.parentcard' },
   { h: 'Hotovo! 🚀', t: 'Poďme sa spolu učiť. Návod nájdeš kedykoľvek v nastaveniach.', v: 'home' }
 ];
 const PGUIDE = [
@@ -574,15 +580,22 @@ function showGuide(steps, i, end) {
   clearTut(); GUIDE = { steps, end, cur: (st.h ? st.h + '. ' : '') + st.t, i };
   const el = st.f ? $(st.f) : null; const fixed = el && (el.closest('.nav') || el.closest('.top'));
   if (el) { el.classList.add('tutfocus'); if (!fixed) el.scrollIntoView({ behavior: 'auto', block: 'center' }); }
-  const w = document.createElement('div'); w.className = 'tutsheet coach'; const last = i + 1 >= steps.length;
-  w.innerHTML = `<div class="in"><div class="tuthead"><span class="tutstep">${i + 1} / ${steps.length}</span><div class="tutbar"><i style="width:${(i + 1) / steps.length * 100}%"></i></div><button class="tutx" data-a="tut-skip" aria-label="Preskočiť návod">Preskočiť ✕</button></div><div class="tutrow">${st.e && !st.h ? `<span class="tutemoji">${st.e}</span>` : `<span class="tutbear">${owlSvg('')}</span>`}<div class="tuttxt">${st.h ? `<b>${st.h}</b>` : ''}<p>${st.t}</p></div><button class="iconbtn press tutsay" data-a="tut-say" aria-label="Prečítaj znova">🔊</button></div><div class="rowbtns" style="grid-template-columns:${i ? '1fr 2fr' : '1fr'}">${i ? `<button class="btn" data-a="tut-next" data-i="${i - 1}">← Späť</button>` : ''}<button class="btn primary" data-a="tut-next" data-i="${i + 1}">${last ? (st.go || 'Rozumiem! 👍') : 'Ďalej →'}</button></div></div>`;
+  const tap = st.tap && el; const w = document.createElement('div'); w.className = 'tutsheet coach'; const last = i + 1 >= steps.length;
+  w.innerHTML = `<div class="in"><div class="tuthead"><span class="tutstep">${i + 1} / ${steps.length}</span><div class="tutbar"><i style="width:${(i + 1) / steps.length * 100}%"></i></div><button class="tutx" data-a="tut-skip" aria-label="Preskočiť návod">Preskočiť ✕</button></div><div class="tutrow">${st.e && !st.h ? `<span class="tutemoji">${st.e}</span>` : `<span class="tutbear">${owlSvg('')}</span>`}<div class="tuttxt">${st.h ? `<b>${st.h}</b>` : ''}<p>${st.t}</p></div><button class="iconbtn press tutsay" data-a="tut-say" aria-label="Prečítaj znova">🔊</button></div><div class="rowbtns" style="grid-template-columns:${i ? '1fr 2fr' : '1fr'}">${i ? `<button class="btn" data-a="tut-next" data-i="${i - 1}">← Späť</button>` : ''}${tap ? '<div class="tuttap">👆 Ťukni na žiariace miesto</div>' : `<button class="btn primary" data-a="tut-next" data-i="${i + 1}">${last ? (st.go || 'Rozumiem! 👍') : 'Ďalej →'}</button>`}</div></div>`;
   document.body.appendChild(w);
   const place = () => { if (!el) { w.classList.add('mid'); return; } const r = el.getBoundingClientRect(); const h = w.offsetHeight; const below = innerHeight - r.bottom, above = r.top; w.classList.remove('mid'); if (below >= h + 24 || below >= above) { w.style.top = Math.min(innerHeight - h - 10, r.bottom + 18) + 'px'; w.style.bottom = 'auto'; w.classList.add('pup'); } else { w.style.top = Math.max(10, r.top - h - 18) + 'px'; w.style.bottom = 'auto'; w.classList.add('pdown'); } const ar = w.querySelector('.tutarrow') || w.appendChild(Object.assign(document.createElement('i'), { className: 'tutarrow' })); const wr = w.getBoundingClientRect(); ar.style.left = Math.max(26, Math.min(wr.width - 26, r.left + r.width / 2 - wr.left)) + 'px'; };
   place(); setTimeout(place, 60); say(GUIDE.cur); sfx('pop');
+  if (tap) {
+    const fg = document.createElement('span'); fg.className = 'tutfinger'; fg.textContent = '👆'; document.body.appendChild(fg);
+    const pos = () => { const r = el.getBoundingClientRect(); fg.style.left = (r.left + r.width / 2) + 'px'; fg.style.top = (r.top + r.height * .6) + 'px'; }; pos(); setTimeout(pos, 80);
+    TUTH = e => { if (e.target.closest('.tutsheet')) return; if (el.contains(e.target)) { if (GUIDE) GUIDE.nav = true; document.removeEventListener('click', TUTH, true); TUTH = null; fg.remove(); sfx('pop'); setTimeout(() => { if (GUIDE && GUIDE.steps === steps) showGuide(steps, i + 1, end); }, 450); return; } e.preventDefault(); e.stopPropagation(); w.classList.remove('nudge'); void w.offsetWidth; w.classList.add('nudge'); };
+    document.addEventListener('click', TUTH, true);
+  }
 }
+let TUTH = null;
 function endPTour() { clearTut(); DATA.parent.tour = 1; save(); PTAB = 'over'; if (UI.view === 'parent') render(null); toast('Návod nájdete znova v Nastaveniach rodičovského účtu.'); }
 function endTour() { clearTut(); const p = P(); if (p) { p.tourDone = true; save(); } if (UI.view !== 'home') go('home', {}, 'b'); confetti(120, .3); if (!(DATA.parent && DATA.parent.pin) && !DATA.pguideSeen) setTimeout(() => { if (UI.view === 'home' && !GUIDE) showGuide(PGUIDE, 0, endPGuide); }, 1600); }
-function clearTut() { document.querySelectorAll('.tutsheet').forEach(e => e.parentNode.removeChild(e)); document.querySelectorAll('.tutfocus').forEach(e => e.classList.remove('tutfocus')); }
+function clearTut() { if (TUTH) { document.removeEventListener('click', TUTH, true); TUTH = null; } document.querySelectorAll('.tutfinger').forEach(e => e.remove()); document.querySelectorAll('.tutsheet').forEach(e => e.parentNode.removeChild(e)); document.querySelectorAll('.tutfocus').forEach(e => e.classList.remove('tutfocus')); }
 function showTut(i = 0) { return showGuide(TUT, i, endTut); }
 function showTutOld(i = 0) {
   clearTut();
@@ -693,7 +706,7 @@ VIEWS.home = () => {
   const taskCard = `<section class="card tasks"><div class="sec"><h2>Dnešné úlohy</h2><span class="eyebrow">${d.claimed.length}/3</span></div>${tasks}${allCl && !d.bonus ? `<button class="btn sun block press" data-a="claim-bonus">Všetko splnené! Otvor truhlicu +50 🎁</button>` : allCl ? '<p class="b muted">Super! Zajtra budú nové úlohy.</p>' : '<p class="muted b" style="font-size:.85rem">Keď splníš všetky tri, dostaneš truhlicu s bonusom.</p>'}</section>`;
   const subj = k => { const ts = SUBJECTS[k].topics.filter(t => t.g === p.grade); const st = ts.reduce((s, t) => s + (p.topics[t.id]?.stars || 0), 0); const max = ts.length * 3; return `<button class="card subj ${k} press" data-a="subject" data-s="${k}"><span class="big">${k === 'mat' ? '1+2' : k === 'sjl' ? 'Aa' : '🌍'}</span><h3>${SUBJECTS[k].name}</h3><span class="muted b" style="font-size:.85rem">⭐ ${st} / ${max} hviezd</span><span class="pbar"><i style="width:${max ? st / max * 100 : 0}%"></i></span><span class="deco">${k === 'mat' ? '➗' : k === 'sjl' ? '✏️' : '🔭'}</span></button>`; };
   const dd = p.dailyDone === today();
-  const quick = `<div class="quickrow"><button class="card qk press" data-a="rtab-go" data-t="streak"><span class="qi">🔥</span><b>${p.streak.count} ${plural(p.streak.count, 'deň', 'dni', 'dní')}</b><small>${p.streak.last === today() ? 'séria drží' : 'uč sa dnes'}</small></button><button class="card qk press" data-a="nav" data-v="rewards"><span class="qi">🏆</span><b>Odmeny</b><small>Level ${li.L}</small></button><button class="card qk press" data-a="nav" data-v="board"><span class="qi">🥇</span><b>Rebríček</b><small>top 20</small></button><button class="card qk press" data-a="${DATA.parent && DATA.parent.pin ? 'parent-open' : 'pguide'}"><span class="qi">👨‍👩‍👧</span><b>Rodičia</b><small>${DATA.parent && DATA.parent.pin ? 'účet s PIN' : 'vytvoriť účet'}</small></button></div><div class="card tipcard">${owlSvg('')}<p>${pick(TIPS)}</p></div>`;
+  const quick = `<div class="quickrow"><button class="card qk press" data-a="rtab-go" data-t="streak"><span class="qi">🔥</span><b>${p.streak.count} ${plural(p.streak.count, 'deň', 'dni', 'dní')}</b><small>${p.streak.last === today() ? 'séria drží' : 'uč sa dnes'}</small></button><button class="card qk press" data-a="nav" data-v="rewards"><span class="qi">🏆</span><b>Odmeny</b><small>Level ${li.L}</small></button><button class="card qk press" data-a="nav" data-v="board"><span class="qi">🥇</span><b>Rebríček</b><small>dnešné kolo</small></button><button class="card qk press" data-a="${DATA.parent && DATA.parent.pin ? 'parent-open' : 'pguide'}"><span class="qi">👨‍👩‍👧</span><b>Rodičia</b><small>${DATA.parent && DATA.parent.pin ? 'účet s PIN' : 'vytvoriť účet'}</small></button></div><div class="card tipcard">${owlSvg('')}<p>${pick(TIPS)}</p></div>`;
   return `${topbar()}<main class="view pop-in">${stage}${goCard(p)}${quick}${parentNeedCard()}${a2hsCard()}${todayPath(p, d)}
   <div class="sec"><h2>Dnes</h2><span class="eyebrow">${p.grade}. ročník</span></div>
   ${drCard(p)}
@@ -2003,6 +2016,7 @@ const ACT = {
   'ds-add': d => { const it = STICKERS[+d.i]; if (!unlocked(it, DS.lockP)) { sfx('no'); toast(`🔒 Odomkneš: ${lockLabel(it)}`); return; } if (DS.room.stickers.length >= 16) { toast('Viac nálepiek sa už nezmestí. Niektorú zmaž.'); return; } DS.room.stickers.push({ e: it.e, x: R(12, 88), y: R(10, 70), s: 1, r: R(-15, 15) }); DS.sel = DS.room.stickers.length - 1; sfx('pop'); buzz(10); dsRefresh(); const el = $(`#designer .stk[data-i="${DS.sel}"]`); if (el) el.animate([{ transform: 'translate(-50%,-50%) scale(0)' }, { transform: 'translate(-50%,-50%) scale(1.3)' }, { transform: `translate(-50%,-50%) rotate(var(--r)) scale(var(--s))` }], { duration: 450, easing: 'cubic-bezier(.3,1.6,.5,1)' }); },
   'ds-theme': d => { const t = themeOf(d.i); if (!unlocked(t, DS.lockP)) { sfx('no'); toast(`🔒 Odomkneš: ${lockLabel(t)}`); return; } DS.room.theme = d.i; sfx('pop'); dsRefresh(); },
   'ds-pat': d => { DS.room.pat = d.i; sfx('pop'); dsRefresh(); },
+  'ds-int': d => { DS.room.int = d.i; sfx('pop'); dsRefresh(); },
   'ds-desel': (d, el, e) => { if (e.target.closest('.stk')) return; if (DS.sel !== null) { DS.sel = null; const b = $('#dsgn'); if (b) b.innerHTML = designerHTML(); } },
   'ds-tool': d => { const s = DS.room.stickers[DS.sel]; if (!s) return; if (d.t === 'plus') s.s = Math.min(2.6, +(s.s + .25).toFixed(2)); if (d.t === 'minus') s.s = Math.max(.5, +(s.s - .25).toFixed(2)); if (d.t === 'rot') s.r = (s.r + 20) % 360; if (d.t === 'del') { DS.room.stickers.splice(DS.sel, 1); DS.sel = null; } sfx('tap'); dsRefresh(); }
 };
@@ -2252,9 +2266,9 @@ async function lbAwards() {
   } catch (e) { }
 }
 VIEWS.board = () => {
-  const p = P(); const rows = lbRows(p, LBTAB); const first = !LB || (LB.loading && !LB.rows); const rest = rows.slice(3, 20); const mi = rows.findIndex(x => x.me);
+  const p = P(); const rows = lbRows(p, LBTAB); const first = !LB || (LB.loading && !LB.rows); const LBN = 23; const rest = rows.slice(3, LBN); const mi = rows.findIndex(x => x.me);
   const note = LB && LB.err ? `<p class="muted b" style="font-size:.88rem;padding:4px 0">${LB.err === 'net' ? 'Spoločný rebríček sa nepodarilo načítať. Zatiaľ vidíš hráčov z tohto zariadenia.' : LB.err === 'missing' ? 'Spoločný rebríček ešte nie je zapnutý. Zatiaľ vidíš hráčov z tohto zariadenia.' : 'Spoločný rebríček uvidíš po prihlásení. Zatiaľ vidíš hráčov z tohto zariadenia.'}</p>` : '';
-  const list = first ? '<div class="typing" style="margin:14px auto"><i></i><i></i><i></i></div>' : note + (rest.length ? rest.map((x, i) => lbLine(x, i + 3, LBTAB)).join('') : '') + (mi >= 20 ? `<div class="lbgap">⋯</div>${lbLine(rows[mi], mi, LBTAB)}` : '') + (rows.length <= 3 ? `<p class="muted b" style="padding:8px 0;text-align:center">${rows.length ? 'Ďalšie miesta sú zatiaľ voľné.' : 'Zatiaľ tu nikto nie je. Buď prvý!'}</p>` : '');
+  const list = first ? '<div class="typing" style="margin:14px auto"><i></i><i></i><i></i></div>' : note + rest.map((x, i) => lbLine(x, i + 3, LBTAB)).join('') + Array.from({ length: Math.max(0, LBN - 3 - rest.length) }, (_, k) => `<div class="lbrow empty"><span class="rk">${rest.length + k + 4}.</span><span class="lbav"><span class="lbini q">?</span></span><span class="nm">voľné miesto<small>môžeš tu byť ty</small></span></div>`).join('') + (mi >= LBN ? `<div class="lbgap">⋯</div>${lbLine(rows[mi], mi, LBTAB)}` : '');
   const desc = { d: 'Kto dnes splnil najviac zadaní. Každý deň o polnoci začína nové kolo.', n: 'Kto tento týždeň splnil najviac zadaní: kvízy, hry, čítanie, písanie aj súboje.', s: 'Kto sa učí najviac dní po sebe bez prestávky.' }[LBTAB];
   return `${topbar('home')}<main class="view pop-in"><div><h1 style="font-size:2rem">🏆 Rebríček</h1><p class="muted b">Kto ${LB_IDLE} dní neotvorí Bystríka, z rebríčka zmizne. Stačí sa znova učiť a vráti sa.</p></div>
   <div class="seg lbseg">${[['d', '📅 Dnes'], ['n', '🗓️ Týždeň'], ['s', '🔥 Séria']].map(([k, n]) => `<button class="${LBTAB === k ? 'on' : ''}" data-a="lbtab" data-t="${k}">${n}</button>`).join('')}</div><p class="muted b" style="font-size:.88rem;margin-top:-6px">${desc}</p>

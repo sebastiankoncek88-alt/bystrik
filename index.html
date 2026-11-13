@@ -130,6 +130,47 @@ p{margin:0}
 .rrug{left:50%;bottom:4%;width:200px;height:34px;transform:translateX(-50%);border-radius:50%;background:radial-gradient(ellipse at 50% 40%,rgba(255,255,255,.75),rgba(255,255,255,.35) 55%,rgba(0,0,0,.12) 72%,transparent 74%)}
 .rdust{inset:0;background-image:radial-gradient(circle,rgba(255,255,255,.9) 1.4px,transparent 2px),radial-gradient(circle,rgba(255,255,255,.7) 1px,transparent 1.6px);background-size:90px 110px,60px 80px;background-position:10px 20px,40px 5px;animation:rdust 18s linear infinite;opacity:.6}
 @keyframes rdust{to{background-position:10px -200px,40px -235px}}
+.int-nic{display:none}
+.roombg:has(.int-nic) .pat{opacity:1}
+/* trieda */
+.int-trieda .rwin{left:50%;right:auto;top:7%;width:58%;height:30%;transform:translateX(-50%);border-radius:8px;background:#2F6B4F;border:5px solid #9A6A3A;box-shadow:0 4px 0 var(--drop),inset 0 0 0 2px rgba(255,255,255,.08)}
+.int-trieda .rwin::before{content:"1 + 2 = 3   ★   A B C";width:auto;left:8%;right:8%;top:22%;bottom:auto;background:none;transform:none;color:rgba(255,255,255,.85);font:700 15px/1.2 var(--f-display);white-space:nowrap;overflow:hidden;text-align:center}
+.int-trieda .rwin::after{left:10%;right:auto;top:auto;bottom:-9px;width:30%;height:5px;background:#E8DCC6;border-radius:3px}
+.int-trieda .rfloor{--floor:#D9A066}
+.int-trieda .rfloor::before{background:repeating-linear-gradient(90deg,transparent 0 38px,rgba(90,50,10,.18) 38px 40px)}
+.int-trieda .rrug{background:radial-gradient(ellipse at 50% 40%,rgba(255,255,255,.45),transparent 70%)}
+/* lúka */
+.int-les .rwin{right:9%;top:8%;width:54px;height:54px;border-radius:50%;border:0;background:radial-gradient(circle,#FFE680 0 55%,#FFC93C 70%);box-shadow:0 0 0 10px rgba(255,214,60,.25),0 0 40px #FFD23F;animation:rsun 6s ease-in-out infinite}
+.int-les .rwin::before,.int-les .rwin::after{display:none}
+.int-les .rfloor{--floor:#7FD07A;border-radius:60% 40% 0 0/30px 26px 0 0;border-top-color:#4FA64F}
+.int-les .rfloor::before{background:radial-gradient(circle at 15% 30%,#FF8FA3 0 4px,transparent 5px),radial-gradient(circle at 38% 60%,#FFE066 0 4px,transparent 5px),radial-gradient(circle at 70% 35%,#fff 0 4px,transparent 5px),radial-gradient(circle at 88% 65%,#C9A0FF 0 4px,transparent 5px)}
+.int-les .rlight::after{content:"";position:absolute;left:12%;bottom:18%;width:70px;height:110px;background:radial-gradient(circle at 50% 32%,#5DBB63 0 34px,transparent 35px),linear-gradient(90deg,transparent 30px,#9A6A3A 30px 40px,transparent 40px)}
+.int-les .rrug{background:radial-gradient(ellipse at 50% 40%,rgba(0,80,0,.18),transparent 70%)}
+/* pláž */
+.int-plaz .rwin{right:9%;top:8%;width:54px;height:54px;border-radius:50%;border:0;background:radial-gradient(circle,#FFE680 0 55%,#FFB13C 70%);box-shadow:0 0 0 10px rgba(255,190,60,.25),0 0 40px #FFC23C;animation:rsun 6s ease-in-out infinite}
+.int-plaz .rwin::before,.int-plaz .rwin::after{display:none}
+.int-plaz .rfloor{--floor:#F6D79B;border-top-color:#E0B66A}
+.int-plaz .rfloor::after{content:"";position:absolute;left:0;right:0;top:-34px;height:34px;background:linear-gradient(180deg,#5EC8E8,#3AA8D8);border-top:3px solid #fff;animation:rwave 3s ease-in-out infinite}
+.int-plaz .rfloor::before{background:radial-gradient(circle at 20% 60%,#fff 0 3px,transparent 4px),radial-gradient(circle at 75% 40%,#FF9F8A 0 4px,transparent 5px)}
+/* mesiac */
+.int-vesmir{background:radial-gradient(circle at 20% 15%,#fff 0 1.5px,transparent 2px) 0 0/70px 60px,radial-gradient(circle at 60% 50%,#fff 0 1px,transparent 1.6px) 0 0/50px 45px,linear-gradient(180deg,rgba(20,18,60,.88),rgba(40,30,90,.7))}
+.int-vesmir .rwin{right:8%;top:9%;width:58px;height:58px;border-radius:50%;border:3px solid var(--edge);background:radial-gradient(circle at 35% 30%,#FFC7E0,#D96BA8);box-shadow:none}
+.int-vesmir .rwin::before{left:-16px;right:-16px;top:44%;bottom:auto;width:auto;height:8px;transform:rotate(-14deg);border-radius:50%;background:none;border:3px solid #FFD84D}
+.int-vesmir .rwin::after{display:none}
+.int-vesmir .rfloor{--floor:#B9B6CC;border-top-color:#8D89A6}
+.int-vesmir .rfloor::before{background:radial-gradient(ellipse at 18% 50%,rgba(0,0,0,.18) 0 12px,transparent 13px),radial-gradient(ellipse at 80% 40%,rgba(0,0,0,.15) 0 9px,transparent 10px),radial-gradient(ellipse at 60% 75%,rgba(0,0,0,.12) 0 6px,transparent 7px)}
+.int-vesmir .rlight{background:radial-gradient(ellipse 40% 50% at 50% 45%,rgba(180,170,255,.45),transparent 70%)}
+/* zámok */
+.int-zamok{background:linear-gradient(180deg,rgba(0,0,0,0) 0,rgba(0,0,0,0) 100%),repeating-linear-gradient(0deg,transparent 0 26px,rgba(80,70,90,.22) 26px 28px),repeating-linear-gradient(90deg,transparent 0 52px,rgba(80,70,90,.16) 52px 54px)}
+.int-zamok .rwin{left:9%;right:auto;top:8%;width:46px;height:70px;border-radius:24px 24px 4px 4px;background:linear-gradient(180deg,#6FA8FF,#BFE0FF)}
+.int-zamok .rlight::after{content:"";position:absolute;right:13%;top:16%;width:34px;height:48px;background:linear-gradient(90deg,#33203A 0 3px,transparent 3px),linear-gradient(180deg,#E8456B 0 60%,transparent 60%);clip-path:polygon(0 0,100% 0,100% 60%,55% 45%,10% 60%,10% 100%,0 100%)}
+.int-zamok .rfloor{--floor:#B48A5E;border-top-color:#7A5634}
+.int-zamok .rrug{width:150px;height:24%;bottom:0;border-radius:10px 10px 0 0;background:linear-gradient(90deg,#C8324F,#E8456B 50%,#C8324F);clip-path:polygon(30% 0,70% 0,100% 100%,0 100%);opacity:.85}
+@keyframes rsun{50%{transform:scale(1.08)}}@keyframes rwave{50%{transform:translateY(3px)}}
+.ints button{position:relative;min-height:92px;overflow:hidden;padding:0;display:flex;align-items:flex-end}
+.intprev{position:absolute;inset:0;pointer-events:none}.intprev .roombg{position:absolute;inset:0}
+.intprev .rwin{transform:scale(.6);transform-origin:top right}.intprev.int-trieda .rwin{transform:translateX(-50%) scale(.6)}
+.intn{position:relative;width:100%;background:var(--paper);border-top:2px solid var(--edge);font-weight:800;font-size:.8rem;padding:4px 2px;color:var(--ink)}
 .wardstage .rwin,.roomprev .rwin{display:none}
 .stage .stk,.wardstage .stk,.roomprev .stk{filter:drop-shadow(0 4px 3px rgba(0,0,0,.18))}
 .stage .stk{--rs:30px}
@@ -1085,6 +1126,7 @@ img.emo{width:1.18em;min-width:1.18em;height:1.18em;flex:none;vertical-align:-.2
 @keyframes pdglow{50%{box-shadow:0 0 0 7px #FFE58A,0 0 22px #FFD23F,0 6px 0 var(--drop)}}
 .lbav{width:38px;height:38px;flex:none;border-radius:50%;border:2.5px solid var(--edge);overflow:hidden;background:#fff;display:grid;place-items:center}
 .lbav svg{width:100%;height:100%}.lbav .lbini{font-size:1.1rem}
+.lbrow.empty{opacity:.5}.lbrow.empty .nm{font-weight:700;color:var(--muted)}
 .homelb .podium{pointer-events:none}
 @media (prefers-reduced-motion: reduce){.lbstage::before,.pdstep,.pdwho,.pdcrown,.pd1 .pdav{animation:none}}
 .lbprizes{padding:12px 14px;display:flex;flex-direction:column;gap:8px}.lbprizes .sec h2{font-size:1.15rem}
@@ -1127,6 +1169,12 @@ img.emo{width:1.18em;min-width:1.18em;height:1.18em;flex:none;vertical-align:-.2
 .tutx{background:none;border:0;font-family:inherit;font-weight:800;font-size:.8rem;color:var(--muted);cursor:pointer;padding:4px 2px;white-space:nowrap}
 .tutsheet.coach .tutrow{align-items:flex-start}.tutsheet.coach .tutbear{width:64px;height:64px}
 .tuttxt{flex:1;min-width:0}.tuttxt b{display:block;font-family:var(--f-display);font-size:1.25rem;line-height:1.15;margin-bottom:2px}.tuttxt p{font-weight:700;font-size:1rem;line-height:1.35;margin:0}
+.tuttap{font-family:var(--f-display);font-weight:800;font-size:1.05rem;text-align:center;padding:10px;border-radius:14px;background:var(--sun-soft);border:2.5px dashed var(--sun);animation:wig 2s infinite}
+.tutfinger{position:fixed;z-index:70;font-size:2.6rem;line-height:1;pointer-events:none;transform:translate(-30%,0);animation:tutfing 1s ease-in-out infinite;filter:drop-shadow(0 3px 2px rgba(0,0,0,.3))}
+.tutfinger img{width:44px;height:44px}
+@keyframes tutfing{50%{transform:translate(-30%,-12px) scale(.92)}}
+.tutsheet.coach.nudge{animation:tutnudge .4s}
+@keyframes tutnudge{25%{translate:-8px 0}50%{translate:8px 0}75%{translate:-4px 0}}
 .tutarrow{position:absolute;width:20px;height:20px;background:var(--paper);border:2.5px solid var(--edge);transform:translateX(-50%) rotate(45deg);border-radius:4px}
 .tutsheet.coach.pup .tutarrow{top:-11px;border-right:0;border-bottom:0}.tutsheet.coach.pdown .tutarrow{bottom:-11px;border-left:0;border-top:0}.tutsheet.coach.mid .tutarrow{display:none}
 .setv .pgroup{margin-top:6px}
@@ -2941,7 +2989,7 @@ function avatarSvg(av, opts = {}) {
   if (opts.mood === 'happy') { mouth = 'smiech'; if (eyes === 'bodky') eyes = 'stastne'; }
   if (opts.mood === 'sad') mouth = 'o';
 
-  let s = `<defs><linearGradient id="G${id}" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#FF6A8A"/><stop offset=".33" stop-color="#FFC23C"/><stop offset=".66" stop-color="#2FC08A"/><stop offset="1" stop-color="#6B7BFF"/></linearGradient><clipPath id="T${id}"><path d="M66 142 Q100 128 134 142 L138 212 H62 Z"/></clipPath><clipPath id="L${id}"><path d="M76 196 H124 L124 282 H102 L100 214 L98 282 H76 Z"/></clipPath>${bgPatternDef(av, id)}
+  let s = `<defs><linearGradient id="G${id}" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#FF6A8A"/><stop offset=".33" stop-color="#FFC23C"/><stop offset=".66" stop-color="#2FC08A"/><stop offset="1" stop-color="#6B7BFF"/></linearGradient><clipPath id="T${id}"><path d="M66 142 Q100 128 134 142 L139 209 Q100 218 61 209 Z"/></clipPath><clipPath id="L${id}"><path d="M76 196 H124 L124 282 H102 L100 214 L98 282 H76 Z"/></clipPath>${bgPatternDef(av, id)}
 <radialGradient id="IR${id}" cx="50%" cy="70%" r="60%"><stop offset="0" stop-color="#B07A4A"/><stop offset="1" stop-color="#5A3420"/></radialGradient><radialGradient id="BL${id}"><stop offset="0" stop-color="#FF6F8F" stop-opacity=".65"/><stop offset="1" stop-color="#FF6F8F" stop-opacity="0"/></radialGradient><filter id="O${id}" x="-10%" y="-10%" width="120%" height="120%"><feMorphology in="SourceAlpha" operator="dilate" radius="2.2" result="d"/><feFlood flood-color="#2A2440"/><feComposite in2="d" operator="in" result="o"/><feMerge><feMergeNode in="o"/><feMergeNode in="SourceGraphic"/></feMerge></filter><radialGradient id="SK${id}" cx="42%" cy="34%" r="75%"><stop offset="0" stop-color="${shade(skin, .12)}"/><stop offset=".6" stop-color="${skin}"/><stop offset="1" stop-color="${shade(skin, -.1)}"/></radialGradient>
 <pattern id="HT${id}" width="22" height="60" patternUnits="userSpaceOnUse" patternTransform="rotate(8)"><path d="M4 0 q6 15 0 30 t0 30" stroke="#000" stroke-opacity=".15" stroke-width="1.8" fill="none"/><path d="M12 0 q-5 15 0 30 t0 30" stroke="#fff" stroke-opacity=".22" stroke-width="1.5" fill="none"/><path d="M18 0 q4 15 0 30 t0 30" stroke="#000" stroke-opacity=".09" stroke-width="1.1" fill="none"/></pattern>
 <pattern id="HC${id}" width="20" height="20" patternUnits="userSpaceOnUse"><path d="M3 8 a5 5 0 1 1 8 4" stroke="#000" stroke-opacity=".16" stroke-width="1.8" fill="none" stroke-linecap="round"/><path d="M12 16 a4 4 0 1 1 6 -3" stroke="#fff" stroke-opacity=".22" stroke-width="1.5" fill="none" stroke-linecap="round"/></pattern>
@@ -2970,15 +3018,15 @@ function avatarSvg(av, opts = {}) {
   s += shoesSvg(top === 'astronaut' ? 'astro' : av.shoes, sc, s2);
 
   const torsoFill = top === 'vesta' ? t2 : FIXTOP[top] ? FIXTOP[top] : top === 'astronaut' ? '#EEF1F8' : top === 'rytier' ? '#C9CED9' : top === 'ninja' ? '#2A2A35' : tc;
-  s += `<path d="M66 142 Q100 128 134 142 L138 212 H62 Z" fill="${torsoFill}"/>`;
+  s += `<path d="M66 142 Q100 128 134 142 L139 209 Q100 218 61 209 Z" fill="${torsoFill}"/>`;
   s += topDetail(top, tc, t2, tcD, id);
-  s += `<path d="M66 142 Q100 128 134 142 L138 212 H62 Z" fill="url(#CS${id})"/><path d="M66 142 Q100 128 134 142 L138 212 H62 Z" fill="url(#CV${id})"/><path d="M73 158 q5 16 1 34 M127 158 q-5 16 -1 34" stroke="#000" stroke-opacity=".1" stroke-width="2.2" fill="none" stroke-linecap="round"/>`;
+  s += `<path d="M66 142 Q100 128 134 142 L139 209 Q100 218 61 209 Z" fill="url(#CS${id})"/><path d="M66 142 Q100 128 134 142 L139 209 Q100 218 61 209 Z" fill="url(#CV${id})"/><path d="M73 158 q5 16 1 34 M127 158 q-5 16 -1 34" stroke="#000" stroke-opacity=".1" stroke-width="2.2" fill="none" stroke-linecap="round"/>`;
   if (['tricko', 'pruhy', 'dres', 'tdino', 'tsrdce', 'tfutbal', 'traketa', 'tjednorozec', 'overal'].includes(top)) s += `<path d="M85 137.5 Q100 151 115 137.5" stroke="${tcD}" stroke-width="4.5" fill="none" stroke-linecap="round"/>`;
-  if (!dress && top !== 'astronaut' && top !== 'sveter') s += `<path d="M63 207 H137" stroke="#000" stroke-opacity=".16" stroke-width="2.5"/>`;
+  if (!dress && top !== 'astronaut' && top !== 'sveter') s += `<path d="M62 204 Q100 213 138 204" stroke="#000" stroke-opacity=".14" stroke-width="2.4" fill="none"/><path d="M64 199 Q100 207 136 199" stroke="#fff" stroke-opacity=".12" stroke-width="2" fill="none"/>`;
   const sleeve = top === 'vesta' ? t2 : FIXTOP[top] ? FIXTOP[top] : top === 'astronaut' ? '#EEF1F8' : top === 'rytier' ? '#AEB4C2' : top === 'ninja' ? '#2A2A35' : (top === 'dres' ? t2 : tc);
   const arm = side => {
-    const x1 = side < 0 ? 70 : 130, x2 = side < 0 ? 54 : 146;
-    return `<g${side > 0 ? ' class="wave"' : ''}><path d="M${x1} 148 L${x2} 204" stroke="${skin}" stroke-width="15" stroke-linecap="round"/><path d="M${x1 - side * 4} 152 L${x2 - side * 4} 204" stroke="#000" stroke-opacity=".1" stroke-width="5" stroke-linecap="round"/><path d="M${x1} 148 L${longSleeve ? x2 + (side < 0 ? 1 : -1) : (x1 + x2) / 2} ${longSleeve ? 196 : 172}" stroke="${sleeve}" stroke-width="18" stroke-linecap="round"/><path d="M${x1 - side * 5} 153 L${(longSleeve ? x2 + (side < 0 ? 1 : -1) : (x1 + x2) / 2) - side * 5} ${longSleeve ? 196 : 172}" stroke="#000" stroke-opacity=".13" stroke-width="5" stroke-linecap="round"/><path d="M${x1 + side * 4} 150 L${(longSleeve ? x2 + (side < 0 ? 1 : -1) : (x1 + x2) / 2) + side * 4} ${longSleeve ? 194 : 170}" stroke="#fff" stroke-opacity=".14" stroke-width="3" stroke-linecap="round"/>${top === 'tricko' ? `<path d="M${(x1 + x2) / 2 - 8} ${174} l16 -2" stroke="${t2}" stroke-width="4" stroke-linecap="round"/>` : ''}${longSleeve && top !== 'astronaut' ? `<path d="M${x2 + side * 1.6} 191 L${x2 + side * .3} 197" stroke="${dk(sleeve.startsWith('#') ? sleeve : '#888888', -.22)}" stroke-width="17" stroke-linecap="butt" opacity=".55"/>` : ''}<circle cx="${x2}" cy="208" r="9" fill="${top === 'astronaut' ? '#EEF1F8' : skin}"/></g>`;
+    const x1 = side < 0 ? 70 : 130, x2 = side < 0 ? 51 : 149;
+    return `<g${side > 0 ? ' class="wave"' : ''}><path d="M${x1} 148 L${x2} 204" stroke="${skin}" stroke-width="15" stroke-linecap="round"/><path d="M${x1 - side * 4} 152 L${x2 - side * 4} 204" stroke="#000" stroke-opacity=".1" stroke-width="5" stroke-linecap="round"/><path d="M${x1} 148 L${longSleeve ? x2 + (side < 0 ? 1 : -1) : (x1 + x2) / 2} ${longSleeve ? 196 : 172}" stroke="${sleeve}" stroke-width="18" stroke-linecap="round"/><path d="M${x1 - side * 5} 153 L${(longSleeve ? x2 + (side < 0 ? 1 : -1) : (x1 + x2) / 2) - side * 5} ${longSleeve ? 196 : 172}" stroke="#000" stroke-opacity=".13" stroke-width="5" stroke-linecap="round"/><path d="M${x1 + side * 4} 150 L${(longSleeve ? x2 + (side < 0 ? 1 : -1) : (x1 + x2) / 2) + side * 4} ${longSleeve ? 194 : 170}" stroke="#fff" stroke-opacity=".14" stroke-width="3" stroke-linecap="round"/>${top === 'tricko' ? `<path d="M${(x1 + x2) / 2 - 8} ${174} l16 -2" stroke="${t2}" stroke-width="4" stroke-linecap="round"/>` : ''}${longSleeve && top !== 'astronaut' ? `<path d="M${x2 + side * 1.6} 191 L${x2 + side * .3} 197" stroke="${dk(sleeve.startsWith('#') ? sleeve : '#888888', -.22)}" stroke-width="17" stroke-linecap="butt" opacity=".55"/>` : ''}${top === 'astronaut' ? `<circle cx="${x2}" cy="208" r="9" fill="#EEF1F8"/>` : `<g><ellipse cx="${x2 - side * .5}" cy="209" rx="7.6" ry="9" fill="${skin}"/><ellipse cx="${x2 - side * 5.6}" cy="206" rx="3.2" ry="4.6" fill="${skin}" transform="rotate(${-side * 28} ${x2 - side * 5.6} 206)"/><path d="M${x2 - side * 4} 213 q${side * 3} 2.6 ${side * 6} 0" stroke="${skinD}" stroke-width="1.6" fill="none" stroke-linecap="round"/><ellipse cx="${x2 - side * 2.4}" cy="205.4" rx="2.4" ry="1.6" fill="#fff" opacity=".35"/></g>`}</g>`;
   };
   s += arm(-1) + arm(1);
   s += `<rect x="91" y="118" width="18" height="22" rx="7" fill="${skinD}"/><ellipse cx="100" cy="130" rx="10" ry="4.5" fill="#000" opacity=".14"/>`;
@@ -3232,6 +3280,7 @@ const THEMES = [
   { id: 'duha', n: 'Dúha', c: ['#FFD1DC', '#FFE7B8', '#FFF6B8', '#C9F2D9', '#CFE3FF', '#E4D4FF'], lvl: 8 },
   { id: 'vesmir', n: 'Vesmír', c: ['#2A2266', '#1B1F4B', '#0F1A3A'], dark: true, streak: 14 }
 ];
+const INTS = [{ id: 'izba', n: 'Izba', e: '🛏️' }, { id: 'trieda', n: 'Trieda', e: '🏫' }, { id: 'les', n: 'Lúka', e: '🌳' }, { id: 'plaz', n: 'Pláž', e: '🏖️' }, { id: 'vesmir', n: 'Mesiac', e: '🚀' }, { id: 'zamok', n: 'Zámok', e: '🏰' }, { id: 'nic', n: 'Bez interiéru, len vzor', e: '🔲' }];
 const PATS = [{ id: 'nic', n: 'Bez vzoru' }, { id: 'bodky', n: 'Bodky' }, { id: 'pruhy', n: 'Pásiky' }, { id: 'kocky', n: 'Kocky' }, { id: 'vlnky', n: 'Vlnky' }, { id: 'mriezka', n: 'Mriežka' }, { id: 'diamanty', n: 'Diamanty' }, { id: 'bubliny', n: 'Bublinky' }, { id: 'luce', n: 'Lúče' }, { id: 'konfety', n: 'Konfety' }, { id: 'phviezdy', n: 'Hviezdičky' }, { id: 'psrdce', n: 'Srdiečka' }, { id: 'pkvety', n: 'Kvietky' }, { id: 'plabky', n: 'Labky' }, { id: 'pcikcak', n: 'Cik-cak' }, { id: 'ptrojuh', n: 'Trojuholníky' }, { id: 'pmesiac', n: 'Mesiačiky' }, { id: 'pduhy', n: 'Dúhy' }, { id: 'pnotky', n: 'Nôtky' }, { id: 'pvlocky', n: 'Snehové vločky' }];
 const STICKERS = [
   ...'😀,😍,😎,🦄,🐱,🐶,🐰,🐻,🐼,🦊,🐸,🐠,🦋,🐞,🐝,🦖,🌳,🌲,🌸,🌻,🌼,🌷,🍄,⭐,🌙,☀️,☁️,❄️,❤️,💜,🎈,🎀,🍭,🍦,🧁,🍓,🍉,⚽,🏀,🎵,🎨,✏️,📚,🚗,🚲,🏠,🏰,🪐,🐬,🐢,🦒,🍀,🌵,🍎,🎁,🧸,🦩,🍩,🎃,⛄,🐧,🦁,🍕,🎂,🎸,🏝️,🌊'.split(',').map(e => ({ e, n: e })),
@@ -3240,7 +3289,7 @@ const STICKERS = [
 function defaultRoom(g) { return { theme: g === 'd' ? 'ruzova' : 'nebo', pat: 'bodky', page: true, stickers: [{ e: '⭐', x: 16, y: 14, s: 1, r: -10 }, { e: g === 'd' ? '🌸' : '⚽', x: 84, y: 20, s: 1, r: 12 }, { e: '☁️', x: 20, y: 44, s: 1.2, r: 0 }, { e: g === 'd' ? '🦄' : '🦖', x: 82, y: 62, s: 1.1, r: 6 }] }; }
 const themeOf = id => THEMES.find(t => t.id === id) || THEMES[0];
 function themeBg(id, dark) { const t = themeOf(id); const c = dark && !t.dark ? t.c.map(x => shade(x, -.62)) : t.c; return `linear-gradient(165deg,${c.join(',')})`; }
-function roomHTML(r, sel = null, dark = false) { const t = themeOf(r.theme), fc = shade(t.c[Math.min(1, t.c.length - 1)], dark && !t.dark ? -.7 : t.dark ? -.25 : -.1); return `<div class="roombg" style="background:${themeBg(r.theme, dark)};--floor:${fc}"><div class="pat pat-${r.pat}${t.dark ? ' onDark' : ''}"></div><div class="rscene" aria-hidden="true"><i class="rlight"></i><i class="rwin"></i><i class="rfloor"></i><i class="rrug"></i><i class="rdust"></i></div>${r.stickers.map((s, i) => `<span class="stk ${sel === i ? 'sel' : ''}" data-i="${i}" style="left:${s.x}%;top:${s.y}%;--s:${s.s};--r:${s.r}deg">${s.e}</span>`).join('')}</div>`; }
+function roomHTML(r, sel = null, dark = false) { const t = themeOf(r.theme), fc = shade(t.c[Math.min(1, t.c.length - 1)], dark && !t.dark ? -.7 : t.dark ? -.25 : -.1); return `<div class="roombg" style="background:${themeBg(r.theme, dark)};--floor:${fc}"><div class="pat pat-${r.pat}${t.dark ? ' onDark' : ''}"></div><div class="rscene int-${r.int || 'izba'}" aria-hidden="true"><i class="rlight"></i><i class="rwin"></i><i class="rfloor"></i><i class="rrug"></i><i class="rdust"></i></div>${r.stickers.map((s, i) => `<span class="stk ${sel === i ? 'sel' : ''}" data-i="${i}" style="left:${s.x}%;top:${s.y}%;--s:${s.s};--r:${s.r}deg">${s.e}</span>`).join('')}</div>`; }
 const petName = av => av.petName || itemOf('pet', av.pet).n;
 
 for (const [cat, list] of Object.entries(CATALOG)) for (const it of list) if (it.price) it.sid = cat + ':' + it.id;
@@ -3663,8 +3712,9 @@ function designerHTML() {
   const tab = DS.tab; let grid;
   if (tab === 'stk') grid = `<div class="stkpal">${STICKERS.map((it, i) => { const u = unlocked(it, lp); return `<button class="press ${u ? '' : 'lockb'}" data-a="ds-add" data-i="${i}" aria-label="Nálepka ${it.n}${u ? '' : ', ' + lockLabel(it)}">${it.e}</button>`; }).join('')}</div><p class="muted b" style="font-size:.82rem">Nálepky so zámkom odomkneš za level alebo sériu. Najviac ${16} nálepiek.</p>`;
   else if (tab === 'col') grid = `<div class="themes">${THEMES.map(t => { const u = unlocked(t, lp); return `<button class="press ${r.theme === t.id ? 'on' : ''} ${u ? '' : 'lockb'} ${t.dark ? 'dk' : ''}" style="background:${themeBg(t.id)}" data-a="ds-theme" data-i="${t.id}">${t.n}</button>`; }).join('')}</div>`;
+  else if (tab === 'int') grid = `<div class="themes ints">${INTS.map(it => `<button class="press ${(r.int || 'izba') === it.id ? 'on' : ''}" data-a="ds-int" data-i="${it.id}"><span class="intprev">${roomHTML({ ...r, int: it.id, stickers: [] })}</span><span class="intn">${it.e} ${it.n}</span></button>`).join('')}</div>`;
   else grid = `<div class="themes">${PATS.map(pt => `<button class="press ${r.pat === pt.id ? 'on' : ''} ${themeOf(r.theme).dark ? 'dk' : ''}" style="background:${themeBg(r.theme)}" data-a="ds-pat" data-i="${pt.id}"><span class="pat pat-${pt.id}" style="position:absolute;inset:0"></span><span style="position:relative">${pt.n}</span></button>`).join('')}</div>`;
-  return `<div class="designer" id="designer" data-a="ds-desel">${roomHTML(r, DS.sel)}<div class="dfig">${avatarSvg(DS.av, { noBg: true, cls: 'idle' })}</div></div>${tools}<div class="seg"><button class="${tab === 'stk' ? 'on' : ''}" data-a="ds-tab" data-t="stk">⭐ Nálepky</button><button class="${tab === 'col' ? 'on' : ''}" data-a="ds-tab" data-t="col">🎨 Farby</button><button class="${tab === 'pat' ? 'on' : ''}" data-a="ds-tab" data-t="pat">🔲 Vzor</button></div>${grid}`;
+  return `<div class="designer" id="designer" data-a="ds-desel">${roomHTML(r, DS.sel)}<div class="dfig">${avatarSvg(DS.av, { noBg: true, cls: 'idle' })}</div></div>${tools}<div class="seg"><button class="${tab === 'stk' ? 'on' : ''}" data-a="ds-tab" data-t="stk">⭐ Nálepky</button><button class="${tab === 'int' ? 'on' : ''}" data-a="ds-tab" data-t="int">🏠 Miesto</button><button class="${tab === 'col' ? 'on' : ''}" data-a="ds-tab" data-t="col">🎨 Farby</button><button class="${tab === 'pat' ? 'on' : ''}" data-a="ds-tab" data-t="pat">🔲 Vzor</button></div>${grid}`;
 }
 function dsRefresh() { const b = $('#dsgn'); if (b) b.innerHTML = designerHTML(); DS.save && DS.save(); }
 document.addEventListener('pointerdown', e => {
@@ -3683,7 +3733,7 @@ document.addEventListener('pointerup', () => { if (DRAG) { DRAG = null; DS.save 
 const lockProfile = () => (OB && UI.view === 'onboard' && !OB.edit) ? { xp: 0, streak: { best: 0 } } : P();
 function roomView() {
   const p = P(); DS = { room: p.room, av: p.av, sel: null, tab: DS && DS.tab || 'stk', lockP: p, save: () => { save(); applyRoom(); } };
-  return `${topbar('room-back')}<main class="view"><h1 style="font-size:2rem">Moje pozadie</h1><p class="muted b">Navrhni si vlastné pozadie: vyber farby, vzor a nalep nálepky. Ukáže sa za tvojou postavičkou.</p><div id="dsgn" style="display:flex;flex-direction:column;gap:12px">${designerHTML()}</div><button class="btn primary block" data-a="room-back">Hotovo</button></main>`;
+  return `${topbar('room-back')}<main class="view"><h1 style="font-size:2rem">Moje pozadie</h1><p class="muted b">Navrhni si vlastné pozadie: vyber miesto (izba, trieda, pláž…) alebo len vzor, farby a nalep nálepky. Ukáže sa za tvojou postavičkou.</p><div id="dsgn" style="display:flex;flex-direction:column;gap:12px">${designerHTML()}</div><button class="btn primary block" data-a="room-back">Hotovo</button></main>`;
 };
 
 /* ===== Pohľady ===== */
@@ -3770,9 +3820,14 @@ const TOUR = [
   { h: 'Ďalšie učenie', t: 'Čítanka, písanie prstom, denná výzva a tvoje poznámky.', v: 'learn', f: '.ltiles' },
   { h: 'Hry a súboj', t: 'Minihry na oddych a súboj s kamarátom.', v: 'games', f: '.gamelist' },
   { h: 'Ja', t: 'Tu je tvoj pokrok, čo už vieš, čo zopakovať a tvoji priatelia.', v: 'home', f: '.nav [data-v="me"]' },
-  { h: 'Slniečka a obchod', t: 'Za slniečka si kúpiš nové oblečenie.', v: 'home', f: '.coinchip' },
-  { h: 'Šatník a obchod', t: 'Tu sa oblečieš a hore prepneš na obchod.', v: 'home', f: '.nav [data-v="wardrobe"]' },
-  { h: 'Pre rodičov', t: 'V nastaveniach hore je Rodičovský účet. Rodičia tam vidia, ako sa ti darí.', v: 'settings', f: '.parentcard' },
+  { h: 'Slniečka', t: 'Za každú správnu odpoveď, hru aj úlohu dostaneš slniečka. Tu vidíš, koľko ich máš.', v: 'home', f: '.coinchip' },
+  { h: 'Poďme do šatníka', t: 'Ťukni dole na Šatník.', v: 'home', f: '.nav [data-v="wardrobe"]', tap: 1 },
+  { h: 'Tvoj šatník', t: 'Tu sa prezlečieš do vecí, ktoré už máš, a nastavíš im farby.', v: 'wardrobe', f: '.wardstage' },
+  { h: 'Obchod', t: 'Za slniečka si kúpiš nové oblečenie. Ťukni na Obchod.', v: 'wardrobe', f: '.wshop', tap: 1 },
+  { h: 'Vyskúšaj si niečo', t: 'Ťukni na túto vec a uvidíš, ako by ti pristala.', v: 'shop', f: '.shopitem .thbtn', tap: 1 },
+  { h: 'Skúšobná kabínka', t: 'Takto by si v nej vyzeral(a). Keď máš dosť slniečok, ťukneš na Kúpiť. Ponuka sa mení každý deň o polnoci.', v: 'shop', f: '#shopprev' },
+  { h: 'Rodičovský účet', t: 'Teraz ti ukážem, kde je účet pre rodičov. Ťukni hore na ozubené koliesko.', v: 'home', f: '.top [data-v="settings"]', tap: 1 },
+  { h: 'Toto je pre rodičov', t: 'Rodičovský účet si musia vytvoriť mama alebo ocko. Uvidia v ňom, ako sa ti darí, môžu ti zadať úlohu a nastaviť pravidlá. Ukáž im toto miesto!', v: 'settings', f: '.parentcard' },
   { h: 'Hotovo! 🚀', t: 'Poďme sa spolu učiť. Návod nájdeš kedykoľvek v nastaveniach.', v: 'home' }
 ];
 const PGUIDE = [
@@ -3820,15 +3875,22 @@ function showGuide(steps, i, end) {
   clearTut(); GUIDE = { steps, end, cur: (st.h ? st.h + '. ' : '') + st.t, i };
   const el = st.f ? $(st.f) : null; const fixed = el && (el.closest('.nav') || el.closest('.top'));
   if (el) { el.classList.add('tutfocus'); if (!fixed) el.scrollIntoView({ behavior: 'auto', block: 'center' }); }
-  const w = document.createElement('div'); w.className = 'tutsheet coach'; const last = i + 1 >= steps.length;
-  w.innerHTML = `<div class="in"><div class="tuthead"><span class="tutstep">${i + 1} / ${steps.length}</span><div class="tutbar"><i style="width:${(i + 1) / steps.length * 100}%"></i></div><button class="tutx" data-a="tut-skip" aria-label="Preskočiť návod">Preskočiť ✕</button></div><div class="tutrow">${st.e && !st.h ? `<span class="tutemoji">${st.e}</span>` : `<span class="tutbear">${owlSvg('')}</span>`}<div class="tuttxt">${st.h ? `<b>${st.h}</b>` : ''}<p>${st.t}</p></div><button class="iconbtn press tutsay" data-a="tut-say" aria-label="Prečítaj znova">🔊</button></div><div class="rowbtns" style="grid-template-columns:${i ? '1fr 2fr' : '1fr'}">${i ? `<button class="btn" data-a="tut-next" data-i="${i - 1}">← Späť</button>` : ''}<button class="btn primary" data-a="tut-next" data-i="${i + 1}">${last ? (st.go || 'Rozumiem! 👍') : 'Ďalej →'}</button></div></div>`;
+  const tap = st.tap && el; const w = document.createElement('div'); w.className = 'tutsheet coach'; const last = i + 1 >= steps.length;
+  w.innerHTML = `<div class="in"><div class="tuthead"><span class="tutstep">${i + 1} / ${steps.length}</span><div class="tutbar"><i style="width:${(i + 1) / steps.length * 100}%"></i></div><button class="tutx" data-a="tut-skip" aria-label="Preskočiť návod">Preskočiť ✕</button></div><div class="tutrow">${st.e && !st.h ? `<span class="tutemoji">${st.e}</span>` : `<span class="tutbear">${owlSvg('')}</span>`}<div class="tuttxt">${st.h ? `<b>${st.h}</b>` : ''}<p>${st.t}</p></div><button class="iconbtn press tutsay" data-a="tut-say" aria-label="Prečítaj znova">🔊</button></div><div class="rowbtns" style="grid-template-columns:${i ? '1fr 2fr' : '1fr'}">${i ? `<button class="btn" data-a="tut-next" data-i="${i - 1}">← Späť</button>` : ''}${tap ? '<div class="tuttap">👆 Ťukni na žiariace miesto</div>' : `<button class="btn primary" data-a="tut-next" data-i="${i + 1}">${last ? (st.go || 'Rozumiem! 👍') : 'Ďalej →'}</button>`}</div></div>`;
   document.body.appendChild(w);
   const place = () => { if (!el) { w.classList.add('mid'); return; } const r = el.getBoundingClientRect(); const h = w.offsetHeight; const below = innerHeight - r.bottom, above = r.top; w.classList.remove('mid'); if (below >= h + 24 || below >= above) { w.style.top = Math.min(innerHeight - h - 10, r.bottom + 18) + 'px'; w.style.bottom = 'auto'; w.classList.add('pup'); } else { w.style.top = Math.max(10, r.top - h - 18) + 'px'; w.style.bottom = 'auto'; w.classList.add('pdown'); } const ar = w.querySelector('.tutarrow') || w.appendChild(Object.assign(document.createElement('i'), { className: 'tutarrow' })); const wr = w.getBoundingClientRect(); ar.style.left = Math.max(26, Math.min(wr.width - 26, r.left + r.width / 2 - wr.left)) + 'px'; };
   place(); setTimeout(place, 60); say(GUIDE.cur); sfx('pop');
+  if (tap) {
+    const fg = document.createElement('span'); fg.className = 'tutfinger'; fg.textContent = '👆'; document.body.appendChild(fg);
+    const pos = () => { const r = el.getBoundingClientRect(); fg.style.left = (r.left + r.width / 2) + 'px'; fg.style.top = (r.top + r.height * .6) + 'px'; }; pos(); setTimeout(pos, 80);
+    TUTH = e => { if (e.target.closest('.tutsheet')) return; if (el.contains(e.target)) { if (GUIDE) GUIDE.nav = true; document.removeEventListener('click', TUTH, true); TUTH = null; fg.remove(); sfx('pop'); setTimeout(() => { if (GUIDE && GUIDE.steps === steps) showGuide(steps, i + 1, end); }, 450); return; } e.preventDefault(); e.stopPropagation(); w.classList.remove('nudge'); void w.offsetWidth; w.classList.add('nudge'); };
+    document.addEventListener('click', TUTH, true);
+  }
 }
+let TUTH = null;
 function endPTour() { clearTut(); DATA.parent.tour = 1; save(); PTAB = 'over'; if (UI.view === 'parent') render(null); toast('Návod nájdete znova v Nastaveniach rodičovského účtu.'); }
 function endTour() { clearTut(); const p = P(); if (p) { p.tourDone = true; save(); } if (UI.view !== 'home') go('home', {}, 'b'); confetti(120, .3); if (!(DATA.parent && DATA.parent.pin) && !DATA.pguideSeen) setTimeout(() => { if (UI.view === 'home' && !GUIDE) showGuide(PGUIDE, 0, endPGuide); }, 1600); }
-function clearTut() { document.querySelectorAll('.tutsheet').forEach(e => e.parentNode.removeChild(e)); document.querySelectorAll('.tutfocus').forEach(e => e.classList.remove('tutfocus')); }
+function clearTut() { if (TUTH) { document.removeEventListener('click', TUTH, true); TUTH = null; } document.querySelectorAll('.tutfinger').forEach(e => e.remove()); document.querySelectorAll('.tutsheet').forEach(e => e.parentNode.removeChild(e)); document.querySelectorAll('.tutfocus').forEach(e => e.classList.remove('tutfocus')); }
 function showTut(i = 0) { return showGuide(TUT, i, endTut); }
 function showTutOld(i = 0) {
   clearTut();
@@ -3939,7 +4001,7 @@ VIEWS.home = () => {
   const taskCard = `<section class="card tasks"><div class="sec"><h2>Dnešné úlohy</h2><span class="eyebrow">${d.claimed.length}/3</span></div>${tasks}${allCl && !d.bonus ? `<button class="btn sun block press" data-a="claim-bonus">Všetko splnené! Otvor truhlicu +50 🎁</button>` : allCl ? '<p class="b muted">Super! Zajtra budú nové úlohy.</p>' : '<p class="muted b" style="font-size:.85rem">Keď splníš všetky tri, dostaneš truhlicu s bonusom.</p>'}</section>`;
   const subj = k => { const ts = SUBJECTS[k].topics.filter(t => t.g === p.grade); const st = ts.reduce((s, t) => s + (p.topics[t.id]?.stars || 0), 0); const max = ts.length * 3; return `<button class="card subj ${k} press" data-a="subject" data-s="${k}"><span class="big">${k === 'mat' ? '1+2' : k === 'sjl' ? 'Aa' : '🌍'}</span><h3>${SUBJECTS[k].name}</h3><span class="muted b" style="font-size:.85rem">⭐ ${st} / ${max} hviezd</span><span class="pbar"><i style="width:${max ? st / max * 100 : 0}%"></i></span><span class="deco">${k === 'mat' ? '➗' : k === 'sjl' ? '✏️' : '🔭'}</span></button>`; };
   const dd = p.dailyDone === today();
-  const quick = `<div class="quickrow"><button class="card qk press" data-a="rtab-go" data-t="streak"><span class="qi">🔥</span><b>${p.streak.count} ${plural(p.streak.count, 'deň', 'dni', 'dní')}</b><small>${p.streak.last === today() ? 'séria drží' : 'uč sa dnes'}</small></button><button class="card qk press" data-a="nav" data-v="rewards"><span class="qi">🏆</span><b>Odmeny</b><small>Level ${li.L}</small></button><button class="card qk press" data-a="nav" data-v="board"><span class="qi">🥇</span><b>Rebríček</b><small>top 20</small></button><button class="card qk press" data-a="${DATA.parent && DATA.parent.pin ? 'parent-open' : 'pguide'}"><span class="qi">👨‍👩‍👧</span><b>Rodičia</b><small>${DATA.parent && DATA.parent.pin ? 'účet s PIN' : 'vytvoriť účet'}</small></button></div><div class="card tipcard">${owlSvg('')}<p>${pick(TIPS)}</p></div>`;
+  const quick = `<div class="quickrow"><button class="card qk press" data-a="rtab-go" data-t="streak"><span class="qi">🔥</span><b>${p.streak.count} ${plural(p.streak.count, 'deň', 'dni', 'dní')}</b><small>${p.streak.last === today() ? 'séria drží' : 'uč sa dnes'}</small></button><button class="card qk press" data-a="nav" data-v="rewards"><span class="qi">🏆</span><b>Odmeny</b><small>Level ${li.L}</small></button><button class="card qk press" data-a="nav" data-v="board"><span class="qi">🥇</span><b>Rebríček</b><small>dnešné kolo</small></button><button class="card qk press" data-a="${DATA.parent && DATA.parent.pin ? 'parent-open' : 'pguide'}"><span class="qi">👨‍👩‍👧</span><b>Rodičia</b><small>${DATA.parent && DATA.parent.pin ? 'účet s PIN' : 'vytvoriť účet'}</small></button></div><div class="card tipcard">${owlSvg('')}<p>${pick(TIPS)}</p></div>`;
   return `${topbar()}<main class="view pop-in">${stage}${goCard(p)}${quick}${parentNeedCard()}${a2hsCard()}${todayPath(p, d)}
   <div class="sec"><h2>Dnes</h2><span class="eyebrow">${p.grade}. ročník</span></div>
   ${drCard(p)}
@@ -5249,6 +5311,7 @@ const ACT = {
   'ds-add': d => { const it = STICKERS[+d.i]; if (!unlocked(it, DS.lockP)) { sfx('no'); toast(`🔒 Odomkneš: ${lockLabel(it)}`); return; } if (DS.room.stickers.length >= 16) { toast('Viac nálepiek sa už nezmestí. Niektorú zmaž.'); return; } DS.room.stickers.push({ e: it.e, x: R(12, 88), y: R(10, 70), s: 1, r: R(-15, 15) }); DS.sel = DS.room.stickers.length - 1; sfx('pop'); buzz(10); dsRefresh(); const el = $(`#designer .stk[data-i="${DS.sel}"]`); if (el) el.animate([{ transform: 'translate(-50%,-50%) scale(0)' }, { transform: 'translate(-50%,-50%) scale(1.3)' }, { transform: `translate(-50%,-50%) rotate(var(--r)) scale(var(--s))` }], { duration: 450, easing: 'cubic-bezier(.3,1.6,.5,1)' }); },
   'ds-theme': d => { const t = themeOf(d.i); if (!unlocked(t, DS.lockP)) { sfx('no'); toast(`🔒 Odomkneš: ${lockLabel(t)}`); return; } DS.room.theme = d.i; sfx('pop'); dsRefresh(); },
   'ds-pat': d => { DS.room.pat = d.i; sfx('pop'); dsRefresh(); },
+  'ds-int': d => { DS.room.int = d.i; sfx('pop'); dsRefresh(); },
   'ds-desel': (d, el, e) => { if (e.target.closest('.stk')) return; if (DS.sel !== null) { DS.sel = null; const b = $('#dsgn'); if (b) b.innerHTML = designerHTML(); } },
   'ds-tool': d => { const s = DS.room.stickers[DS.sel]; if (!s) return; if (d.t === 'plus') s.s = Math.min(2.6, +(s.s + .25).toFixed(2)); if (d.t === 'minus') s.s = Math.max(.5, +(s.s - .25).toFixed(2)); if (d.t === 'rot') s.r = (s.r + 20) % 360; if (d.t === 'del') { DS.room.stickers.splice(DS.sel, 1); DS.sel = null; } sfx('tap'); dsRefresh(); }
 };
@@ -5498,9 +5561,9 @@ async function lbAwards() {
   } catch (e) { }
 }
 VIEWS.board = () => {
-  const p = P(); const rows = lbRows(p, LBTAB); const first = !LB || (LB.loading && !LB.rows); const rest = rows.slice(3, 20); const mi = rows.findIndex(x => x.me);
+  const p = P(); const rows = lbRows(p, LBTAB); const first = !LB || (LB.loading && !LB.rows); const LBN = 23; const rest = rows.slice(3, LBN); const mi = rows.findIndex(x => x.me);
   const note = LB && LB.err ? `<p class="muted b" style="font-size:.88rem;padding:4px 0">${LB.err === 'net' ? 'Spoločný rebríček sa nepodarilo načítať. Zatiaľ vidíš hráčov z tohto zariadenia.' : LB.err === 'missing' ? 'Spoločný rebríček ešte nie je zapnutý. Zatiaľ vidíš hráčov z tohto zariadenia.' : 'Spoločný rebríček uvidíš po prihlásení. Zatiaľ vidíš hráčov z tohto zariadenia.'}</p>` : '';
-  const list = first ? '<div class="typing" style="margin:14px auto"><i></i><i></i><i></i></div>' : note + (rest.length ? rest.map((x, i) => lbLine(x, i + 3, LBTAB)).join('') : '') + (mi >= 20 ? `<div class="lbgap">⋯</div>${lbLine(rows[mi], mi, LBTAB)}` : '') + (rows.length <= 3 ? `<p class="muted b" style="padding:8px 0;text-align:center">${rows.length ? 'Ďalšie miesta sú zatiaľ voľné.' : 'Zatiaľ tu nikto nie je. Buď prvý!'}</p>` : '');
+  const list = first ? '<div class="typing" style="margin:14px auto"><i></i><i></i><i></i></div>' : note + rest.map((x, i) => lbLine(x, i + 3, LBTAB)).join('') + Array.from({ length: Math.max(0, LBN - 3 - rest.length) }, (_, k) => `<div class="lbrow empty"><span class="rk">${rest.length + k + 4}.</span><span class="lbav"><span class="lbini q">?</span></span><span class="nm">voľné miesto<small>môžeš tu byť ty</small></span></div>`).join('') + (mi >= LBN ? `<div class="lbgap">⋯</div>${lbLine(rows[mi], mi, LBTAB)}` : '');
   const desc = { d: 'Kto dnes splnil najviac zadaní. Každý deň o polnoci začína nové kolo.', n: 'Kto tento týždeň splnil najviac zadaní: kvízy, hry, čítanie, písanie aj súboje.', s: 'Kto sa učí najviac dní po sebe bez prestávky.' }[LBTAB];
   return `${topbar('home')}<main class="view pop-in"><div><h1 style="font-size:2rem">🏆 Rebríček</h1><p class="muted b">Kto ${LB_IDLE} dní neotvorí Bystríka, z rebríčka zmizne. Stačí sa znova učiť a vráti sa.</p></div>
   <div class="seg lbseg">${[['d', '📅 Dnes'], ['n', '🗓️ Týždeň'], ['s', '🔥 Séria']].map(([k, n]) => `<button class="${LBTAB === k ? 'on' : ''}" data-a="lbtab" data-t="${k}">${n}</button>`).join('')}</div><p class="muted b" style="font-size:.88rem;margin-top:-6px">${desc}</p>
