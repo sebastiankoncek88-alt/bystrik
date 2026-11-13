@@ -80,7 +80,7 @@ function avatarSvg(av, opts = {}) {
   if (opts.mood === 'sad') mouth = 'o';
 
   let s = `<defs><linearGradient id="G${id}" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#FF6A8A"/><stop offset=".33" stop-color="#FFC23C"/><stop offset=".66" stop-color="#2FC08A"/><stop offset="1" stop-color="#6B7BFF"/></linearGradient><clipPath id="T${id}"><path d="M66 142 Q100 128 134 142 L138 212 H62 Z"/></clipPath><clipPath id="L${id}"><path d="M76 196 H124 L124 282 H102 L100 214 L98 282 H76 Z"/></clipPath>${bgPatternDef(av, id)}
-<radialGradient id="SK${id}" cx="42%" cy="34%" r="75%"><stop offset="0" stop-color="${shade(skin, .12)}"/><stop offset=".6" stop-color="${skin}"/><stop offset="1" stop-color="${shade(skin, -.1)}"/></radialGradient>
+<radialGradient id="IR${id}" cx="50%" cy="70%" r="60%"><stop offset="0" stop-color="#B07A4A"/><stop offset="1" stop-color="#5A3420"/></radialGradient><radialGradient id="BL${id}"><stop offset="0" stop-color="#FF6F8F" stop-opacity=".65"/><stop offset="1" stop-color="#FF6F8F" stop-opacity="0"/></radialGradient><filter id="O${id}" x="-10%" y="-10%" width="120%" height="120%"><feMorphology in="SourceAlpha" operator="dilate" radius="2.2" result="d"/><feFlood flood-color="#2A2440"/><feComposite in2="d" operator="in" result="o"/><feMerge><feMergeNode in="o"/><feMergeNode in="SourceGraphic"/></feMerge></filter><radialGradient id="SK${id}" cx="42%" cy="34%" r="75%"><stop offset="0" stop-color="${shade(skin, .12)}"/><stop offset=".6" stop-color="${skin}"/><stop offset="1" stop-color="${shade(skin, -.1)}"/></radialGradient>
 <pattern id="HT${id}" width="22" height="60" patternUnits="userSpaceOnUse" patternTransform="rotate(8)"><path d="M4 0 q6 15 0 30 t0 30" stroke="#000" stroke-opacity=".15" stroke-width="1.8" fill="none"/><path d="M12 0 q-5 15 0 30 t0 30" stroke="#fff" stroke-opacity=".22" stroke-width="1.5" fill="none"/><path d="M18 0 q4 15 0 30 t0 30" stroke="#000" stroke-opacity=".09" stroke-width="1.1" fill="none"/></pattern>
 <pattern id="HC${id}" width="20" height="20" patternUnits="userSpaceOnUse"><path d="M3 8 a5 5 0 1 1 8 4" stroke="#000" stroke-opacity=".16" stroke-width="1.8" fill="none" stroke-linecap="round"/><path d="M12 16 a4 4 0 1 1 6 -3" stroke="#fff" stroke-opacity=".22" stroke-width="1.5" fill="none" stroke-linecap="round"/></pattern>
 <linearGradient id="HG${id}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff" stop-opacity=".3"/><stop offset=".4" stop-color="#fff" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity=".2"/></linearGradient>
@@ -91,6 +91,7 @@ function avatarSvg(av, opts = {}) {
   const hairB = hairBack(av.hair, hc, hcD), hairF = hairFront(av.hair, hc, hcD);
   const hairLayer = (fn, base) => base ? base + `<g class="htex" pointer-events="none">${fn(av.hair, HTX, 'none')}${fn(av.hair, HGL, 'none')}</g>` : '';
   if (!opts.noBg) s += bgLayer(av, id);
+  const bgEnd = s.length;
 
   if (top === 'kral') s += `<path d="M66 144 L36 276 Q100 294 164 276 L134 144 Z" fill="${tc}"/><path d="M36 276 Q100 294 164 276" stroke="#fff" stroke-width="8" fill="none"/>`;
   if (av.acc === 'kridla') s += `<g class="wings"><path d="M84 156 C40 120 6 140 14 186 C30 176 46 182 60 196 C66 180 76 170 88 168Z" fill="#fff" stroke="${ac}" stroke-width="3"/><path d="M116 156 C160 120 194 140 186 186 C170 176 154 182 140 196 C134 180 124 170 112 168Z" fill="#fff" stroke="${ac}" stroke-width="3"/><path d="M30 160 Q50 160 70 176 M170 160 Q150 160 130 176" stroke="${a2}" stroke-width="3" fill="none"/></g>`;
@@ -128,8 +129,8 @@ function avatarSvg(av, opts = {}) {
   s += `<circle cx="51" cy="96" r="11" fill="${skin}"/><circle cx="149" cy="96" r="11" fill="${skin}"/><path d="M47 92 q5 4 2 10 M153 92 q-5 4 -2 10" stroke="${skinD}" stroke-width="2.2" fill="none" stroke-linecap="round"/>`;
   s += `<path d="M50 86 C50 52 72 38 100 38 C128 38 150 52 150 86 C150 116 131 143.5 100 143.5 C69 143.5 50 116 50 86Z" fill="url(#SK${id})"/>`;
   s += `<path d="M71 81 Q81 75.5 91 80 M109 80 Q119 75.5 129 81" stroke="${hcD.startsWith('url') ? '#6B4FD6' : shade(hcD.startsWith('#') ? hcD : '#5A3B2A', -.15)}" stroke-width="3.2" fill="none" stroke-linecap="round" opacity=".75"/>`;
-  s += `<ellipse cx="70" cy="113" rx="9" ry="5.5" fill="#FF7F9B" opacity=".4"/><ellipse cx="130" cy="113" rx="9" ry="5.5" fill="#FF7F9B" opacity=".4"/>`;
-  s += `<path d="M96 104 Q100 109 104 104" stroke="${skinD}" stroke-width="3" fill="none" stroke-linecap="round"/>`;
+  s += `<ellipse cx="69" cy="113" rx="12" ry="7.5" fill="url(#BL${id})"/><ellipse cx="131" cy="113" rx="12" ry="7.5" fill="url(#BL${id})"/><path d="M64 110 l3 -1.6 M70 110.6 l3 -1.6 M127 109 l3 1.6 M133 109.6 l3 1.6" stroke="#fff" stroke-width="1.6" stroke-linecap="round" opacity=".6"/>`;
+  s += `<ellipse cx="100" cy="106" rx="4.6" ry="3.4" fill="${shade(skin, -.18)}" opacity=".55"/><ellipse cx="98.6" cy="104.8" rx="1.6" ry="1" fill="#fff" opacity=".7"/>`;
   s += `<g class="eyes">${eyesSvg(eyes, ink, av.gender)}</g>`;
   s += mouthSvg(mouth, ink);
   s += hairLayer(hairFront, hairF);
@@ -137,6 +138,7 @@ function avatarSvg(av, opts = {}) {
   else s += accSvg(av.acc, ac, a2, ink);
   s += `</g>`;
 
+  s = s.slice(0, bgEnd) + `<g filter="url(#O${id})">` + s.slice(bgEnd) + '</g>';
   const pet = itemOf('pet', av.pet);
   if (false && pet.e && !opts.crop && !opts.noPet) s += `<g class="pet"><ellipse cx="166" cy="296" rx="20" ry="5" fill="#000" opacity=".12"/><text x="166" y="291" font-size="38" text-anchor="middle">${pet.e}</text></g>`;
 
@@ -222,12 +224,12 @@ function hairFront(h, c, d) {
 function eyesSvg(e, ink, g) {
   const lash = g === 'd' ? `<path d="M70 88 L66 84 M74 86 L72 81 M130 88 L134 84 M126 86 L128 81" stroke="${ink}" stroke-width="2.5" stroke-linecap="round"/>` : '';
   switch (e) {
-    case 'velke': return `<g><ellipse cx="82" cy="96" rx="11" ry="12.5" fill="#fff"/><circle cx="83" cy="97" r="7.5" fill="#5A3B2A"/><circle cx="83" cy="97" r="4" fill="${ink}"/><circle cx="86" cy="94" r="2.6" fill="#fff"/></g><g><ellipse cx="118" cy="96" rx="11" ry="12.5" fill="#fff"/><circle cx="119" cy="97" r="7.5" fill="#5A3B2A"/><circle cx="119" cy="97" r="4" fill="${ink}"/><circle cx="122" cy="94" r="2.6" fill="#fff"/></g>${lash}`;
+    case 'velke': { const E = x => `<g><ellipse cx="${x}" cy="96" rx="11.5" ry="13" fill="#fff" stroke="${ink}" stroke-width="2.2"/><circle cx="${x + 1}" cy="98" r="8.2" fill="url(#IRa${AVID})"/><circle cx="${x + 1}" cy="98" r="4.4" fill="${ink}"/><ellipse cx="${x + 4.2}" cy="93.6" rx="3" ry="3.4" fill="#fff"/><circle cx="${x - 2.4}" cy="102" r="1.5" fill="#fff" opacity=".85"/><path d="M${x - 12} 92 Q${x} 79 ${x + 12} 92" stroke="${ink}" stroke-width="3.6" fill="none" stroke-linecap="round"/></g>`; return E(82) + E(118) + lash; }
     case 'stastne': return `<path d="M73 99 Q82 88 91 99 M109 99 Q118 88 127 99" stroke="${ink}" stroke-width="4.5" fill="none" stroke-linecap="round"/>${lash}`;
     case 'mrk': return `<circle cx="82" cy="96" r="6.5" fill="${ink}"/><circle cx="84" cy="94" r="2" fill="#fff"/><path d="M110 97 Q118 102 127 97" stroke="${ink}" stroke-width="4.5" fill="none" stroke-linecap="round"/>${lash}`;
     case 'hviezdy': { const st = (cx, cy) => { let p = ''; for (let i = 0; i < 10; i++) { const r = i % 2 ? 4.5 : 11, a = -Math.PI / 2 + i * Math.PI / 5; p += `${(cx + r * Math.cos(a)).toFixed(1)},${(cy + r * Math.sin(a)).toFixed(1)} `; } return `<polygon points="${p}" fill="#FFC23C" stroke="${ink}" stroke-width="2" stroke-linejoin="round"/>`; }; return st(82, 96) + st(118, 96); }
     case 'srdce': { const h = (x, y) => `<path d="M${x} ${y + 9} C${x - 14} ${y} ${x - 8} ${y - 10} ${x} ${y - 3} C${x + 8} ${y - 10} ${x + 14} ${y} ${x} ${y + 9}Z" fill="#F0475A" stroke="${ink}" stroke-width="2"/>`; return h(82, 96) + h(118, 96); }
-    default: return `<circle cx="82" cy="96" r="6.5" fill="${ink}"/><circle cx="118" cy="96" r="6.5" fill="${ink}"/><circle cx="84" cy="94" r="2" fill="#fff"/><circle cx="120" cy="94" r="2" fill="#fff"/>${lash}`;
+    default: { const E = x => `<ellipse cx="${x}" cy="97" rx="6.6" ry="8" fill="${ink}"/><ellipse cx="${x}" cy="99.5" rx="4.4" ry="4.6" fill="url(#IRa${AVID})" opacity=".9"/><ellipse cx="${x + 2.2}" cy="93.6" rx="2.6" ry="2.9" fill="#fff"/><circle cx="${x - 2.2}" cy="101.4" r="1.2" fill="#fff" opacity=".85"/>`; return E(82) + E(118) + lash; }
   }
 }
 function mouthSvg(m, ink) {
@@ -236,7 +238,7 @@ function mouthSvg(m, ink) {
     case 'o': return `<ellipse cx="100" cy="121" rx="6.5" ry="8" fill="#8A2A3E"/>`;
     case 'jazyk': return `<path d="M87 116 Q100 127 113 116" stroke="${ink}" stroke-width="4" fill="none" stroke-linecap="round"/><path d="M95 121 Q100 134 107 121 Z" fill="#FF7A93"/>`;
     case 'zuby': return `<path d="M85 114 Q100 132 115 114 Z" fill="#8A2A3E"/><rect x="93" y="114" width="6.5" height="7" rx="1.5" fill="#fff"/><rect x="100.5" y="114" width="6.5" height="7" rx="1.5" fill="#fff"/>`;
-    default: return `<path d="M86 115 Q100 128 114 115" stroke="${ink}" stroke-width="4" fill="none" stroke-linecap="round"/>`;
+    default: return `<path d="M87 114 Q100 131 113 114 Q100 118 87 114Z" fill="#8A2A3E" stroke="${ink}" stroke-width="2.6" stroke-linejoin="round"/><path d="M90.5 115.2 Q100 118.4 109.5 115.2 L108.4 118 Q100 120.4 91.6 118Z" fill="#fff"/><path d="M94 124.4 Q100 120.6 106 124.4 Q100 128.6 94 124.4Z" fill="#FF8FA6"/><path d="M84.6 112.4 q2.4 .4 3.4 2.2 M115.4 112.4 q-2.4 .4 -3.4 2.2" stroke="${ink}" stroke-width="2.2" fill="none" stroke-linecap="round"/>`;
   }
 }
 function accSvg(a, c, c2, ink) {
@@ -376,7 +378,7 @@ const STICKERS = [
 function defaultRoom(g) { return { theme: g === 'd' ? 'ruzova' : 'nebo', pat: 'bodky', page: true, stickers: [{ e: '⭐', x: 16, y: 14, s: 1, r: -10 }, { e: g === 'd' ? '🌸' : '⚽', x: 84, y: 20, s: 1, r: 12 }, { e: '☁️', x: 20, y: 44, s: 1.2, r: 0 }, { e: g === 'd' ? '🦄' : '🦖', x: 82, y: 62, s: 1.1, r: 6 }] }; }
 const themeOf = id => THEMES.find(t => t.id === id) || THEMES[0];
 function themeBg(id, dark) { const t = themeOf(id); const c = dark && !t.dark ? t.c.map(x => shade(x, -.62)) : t.c; return `linear-gradient(165deg,${c.join(',')})`; }
-function roomHTML(r, sel = null, dark = false) { return `<div class="roombg" style="background:${themeBg(r.theme, dark)}"><div class="pat pat-${r.pat}${themeOf(r.theme).dark ? ' onDark' : ''}"></div>${r.stickers.map((s, i) => `<span class="stk ${sel === i ? 'sel' : ''}" data-i="${i}" style="left:${s.x}%;top:${s.y}%;--s:${s.s};--r:${s.r}deg">${s.e}</span>`).join('')}</div>`; }
+function roomHTML(r, sel = null, dark = false) { const t = themeOf(r.theme), fc = shade(t.c[Math.min(1, t.c.length - 1)], dark && !t.dark ? -.7 : t.dark ? -.25 : -.1); return `<div class="roombg" style="background:${themeBg(r.theme, dark)};--floor:${fc}"><div class="pat pat-${r.pat}${t.dark ? ' onDark' : ''}"></div><div class="rscene" aria-hidden="true"><i class="rlight"></i><i class="rwin"></i><i class="rfloor"></i><i class="rrug"></i><i class="rdust"></i></div>${r.stickers.map((s, i) => `<span class="stk ${sel === i ? 'sel' : ''}" data-i="${i}" style="left:${s.x}%;top:${s.y}%;--s:${s.s};--r:${s.r}deg">${s.e}</span>`).join('')}</div>`; }
 const petName = av => av.petName || itemOf('pet', av.pet).n;
 
 for (const [cat, list] of Object.entries(CATALOG)) for (const it of list) if (it.price) it.sid = cat + ':' + it.id;
