@@ -27,7 +27,10 @@ function migrate(p) {
   p.av.pet = 'nic'; if (WCAT === 'pet') WCAT = 'hair';
   if (!p.room) p.room = defaultRoom(p.av.gender); p.room.stickers = p.room.stickers || [];
 }
-function applyTheme() { try { const de = document.documentElement; de.classList.add('thx'); clearTimeout(applyTheme.t); applyTheme.t = setTimeout(() => de.classList.remove('thx'), 520); } catch (e) { } setTimeout(applyPageBg, 0); const t = DATA.settings.theme; if (t === 'light' || t === 'dark') document.documentElement.dataset.theme = t; else if (document.documentElement.dataset.theme && THEME_SET) delete document.documentElement.dataset.theme; THEME_SET = t !== 'auto'; }
+/* keď Bystrík spí, celá appka prejde do nočného režimu */
+function nightOn() { const p = (DATA.profiles || []).find(x => x.id === DATA.current); return !!(p && p.bear && p.bear.asleep); }
+let LASTNIGHT = null;
+function applyTheme(slow) { LASTNIGHT = nightOn(); try { const de = document.documentElement; de.classList.add('thx'); de.classList.toggle('slow', !!slow); de.classList.toggle('bnight', LASTNIGHT); clearTimeout(applyTheme.t); applyTheme.t = setTimeout(() => de.classList.remove('thx', 'slow'), slow ? 1700 : 520); } catch (e) { } setTimeout(applyPageBg, 0); const t = LASTNIGHT ? 'dark' : DATA.settings.theme; if (t === 'light' || t === 'dark') document.documentElement.dataset.theme = t; else if (document.documentElement.dataset.theme && THEME_SET) delete document.documentElement.dataset.theme; THEME_SET = t !== 'auto'; }
 let THEME_SET = false;
 function load() { try { const s = localStorage.getItem(KEY); if (s) DATA = Object.assign(DATA, JSON.parse(s)); } catch (e) { } normalize(); }
 function save() { DATA.t = Date.now(); try { localStorage.setItem(KEY, JSON.stringify(DATA)); } catch (e) { } queueSync(); if (typeof lbPush === 'function') lbPush(); }
@@ -368,7 +371,7 @@ function render(dir) {
   app.innerHTML = VIEWS[UI.view](UI.params);
   const v = app.querySelector('.view'); if (v && dir) v.classList.add('enter-' + dir);
   AFTER[UI.view] && AFTER[UI.view]();
-  applyRoom(); if (CHG) setTimeout(chgStep, 260);
+  applyRoom(); if (CHG) setTimeout(chgStep, 260); if (nightOn() !== LASTNIGHT) applyTheme(true);
   if (!['quiz', 'cards', 'pexeso', 'match', 'sort', 'game', 'result', 'onboard'].includes(UI.view)) setTimeout(flushPending, 350);
 }
 let LASTCOINS = -1;
@@ -575,7 +578,7 @@ function bearCorner(p) {
   <small class="bchint">🍯 Med dostaneš za každé dokončené učenie alebo hru. Za starostlivosť rastie priateľstvo 💖.</small></section>`;
 }
 let BEARIV = null; const BEAR_IDLE = ['bhappy', 'bwiggle', 'bpeek', 'bhop'];
-function bearIdleStart() { clearInterval(BEARIV); BEARIV = setInterval(() => { const fig = $('.bearroom .bcfig svg'), room = $('#bearcorner'); if (!fig) { clearInterval(BEARIV); return; } if (document.hidden || room.classList.contains('busy') || $('#brscene.night') || fig.classList.contains('bdance')) return; const c = pick(BEAR_IDLE); fig.classList.add(c); setTimeout(() => fig.classList.remove(c), 1400); }, 6500); }
+function bearIdleStart() { clearInterval(BEARIV); BEARIV = setInterval(() => { const fig = $('.bearroom .bcfig svg'), room = $('#bearcorner'); if (!fig || !room) { clearInterval(BEARIV); return; } if (document.hidden || room.classList.contains('busy') || $('#brscene.night') || fig.classList.contains('bdance')) return; const c = pick(BEAR_IDLE); fig.classList.add(c); setTimeout(() => fig.classList.remove(c), 1400); }, 6500); }
 function bearSay(t) { const el = $('#brbub'); if (el) { el.textContent = t; el.classList.remove('pop'); void el.offsetWidth; el.classList.add('pop'); } }
 function bearLoveUp(p, n) { const b = bearInit(p); const before = bearLove(b).lv; b.love = (b.love || 0) + n; const after = bearLove(b).lv; bearCare(p); const el = $('.brlove'); if (el) el.innerHTML = `💖 Lv ${after}<i><b style="width:${bearLove(b).pr * 10}%"></b></i>`; if (after > before) { toast(`💖 Priateľstvo s Bystríkom: level ${after}!`); sfx('level'); try { confetti(80, .4); } catch (e) { } } }
 let BREC = null;
@@ -1904,8 +1907,8 @@ const ACT = {
     if (!room || !sc || !fig) { render(null); return; }
     room.classList.add('busy'); fig.classList.remove('comfort'); const btn = $('[data-a="bear-sleep"]'); if (btn) btn.innerHTML = going ? '<span>☀️</span>Zobudiť' : '<span>🌙</span>Spať';
     const fin = () => { room.classList.remove('busy'); const e = $('.brst:nth-child(2) .brbar i'); if (e) e.style.width = bearStats(b).energy + '%'; };
-    if (going) { fig.classList.add('byawn'); bearSay('Uaaah… som ospalý 🥱'); setTimeout(() => { fig.classList.remove('byawn'); sc.classList.add('night'); room.className = room.className.replace(/bm-\w+/, 'bm-sleep'); bearSay('Dobrú noc… 🌙'); }, 1300); setTimeout(() => { bearSay(BEAR_TXT.sleep); fin(); }, 3000); }
-    else { sc.classList.remove('night'); room.className = room.className.replace(/bm-\w+/, 'bm-' + bearMood(p)); setTimeout(() => { fig.classList.add('bstretch'); bearSay('Dobré ráno! ☀️ Poďme sa učiť!'); sfx('level'); }, 900); setTimeout(() => { fig.classList.remove('bstretch'); fin(); }, 2600); }
+    if (going) { fig.classList.add('byawn'); bearSay('Uaaah… som ospalý 🥱'); setTimeout(() => { fig.classList.remove('byawn'); sc.classList.add('night'); room.className = room.className.replace(/bm-\w+/, 'bm-sleep'); bearSay('Dobrú noc… 🌙'); applyTheme(true); toast('🌙 Bystrík spí, appka prešla do nočného režimu'); }, 1300); setTimeout(() => { bearSay(BEAR_TXT.sleep); fin(); }, 3000); }
+    else { sc.classList.remove('night'); applyTheme(true); room.className = room.className.replace(/bm-\w+/, 'bm-' + bearMood(p)); setTimeout(() => { fig.classList.add('bstretch'); bearSay('Dobré ráno! ☀️ Poďme sa učiť!'); sfx('level'); }, 900); setTimeout(() => { fig.classList.remove('bstretch'); fin(); }, 2600); }
   },
   'bear-rec': async (d, el) => {
     if (BREC) { try { BREC.mr.stop(); } catch (e) { } return; }

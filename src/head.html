@@ -1177,6 +1177,10 @@ div.frrow{cursor:default}.frrow .btn.small{flex:none;min-height:40px;padding:4px
 .invbox{width:100%;text-align:left;background:var(--paper2);border-radius:16px;padding:10px 12px;box-sizing:border-box}.invbox>b{font-family:var(--f-display);font-size:1.05rem}
 .over.invite .box{gap:10px}
 .thx,.thx *,.thx *::before,.thx *::after{transition:background-color .45s ease,color .45s ease,border-color .45s ease,box-shadow .45s ease,fill .45s ease!important}
+.thx.slow,.thx.slow *,.thx.slow *::before,.thx.slow *::after{transition-duration:1.5s!important}
+html.bnight body::after{content:"";position:fixed;inset:0;pointer-events:none;z-index:-1;background-image:radial-gradient(circle,rgba(255,255,255,.7) 1.2px,transparent 2px),radial-gradient(circle,rgba(255,240,180,.55) 1px,transparent 1.6px);background-size:120px 140px,80px 96px;background-position:20px 30px,60px 10px;animation:bnstars 4s ease-in-out infinite;opacity:.5}
+@keyframes bnstars{50%{opacity:.25}}
+@media (prefers-reduced-motion: reduce){html.bnight body::after{animation:none}}
 .drcard{box-sizing:border-box;display:flex;align-items:center;gap:12px;padding:14px;text-align:left;width:100%;font-family:inherit;color:#33203A;background:linear-gradient(120deg,#FFE08A,#FFC24B);position:relative;animation:pcpulse 1.6s ease-in-out infinite}
 .drcard .ic{flex:none;font-size:2.2rem;width:54px;height:54px;border-radius:16px;background:#fff8;border:2px solid var(--edge);display:grid;place-items:center;animation:wig 1.6s infinite}
 .drcard>span:nth-child(2){flex:1;min-width:0;display:flex;flex-direction:column}.drcard b{font-family:var(--f-display);font-size:1.2rem;line-height:1.15}
