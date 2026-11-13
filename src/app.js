@@ -1477,6 +1477,30 @@ let PLOCKT = null; const plockArm = () => { clearTimeout(PLOCKT); if (typeof PAR
 ['pointerdown', 'keydown'].forEach(ev => document.addEventListener(ev, plockArm, true));
 document.addEventListener('visibilitychange', () => { if (document.hidden && typeof PARENT_OK !== 'undefined' && PARENT_OK && ['parent', 'remote'].includes(UI.view)) { PARENT_OK = false; go(P() ? 'home' : 'profiles', {}, 'b'); } });
 let PSET = null, CSET = null;
+/* ===== Ja – môj pokrok ===== */
+function meStats(p) {
+  const rows = ALL_TOPICS.filter(t => t.g && p.topics[t.id] && p.topics[t.id].total).map(t => { const st = p.topics[t.id]; return { t, n: st.total, pct: Math.round(st.correct / st.total * 100), stars: st.stars || 0 }; });
+  const ok = rows.filter(r => r.n >= 3 && (r.stars >= 3 || r.pct >= 85)).sort((a, b) => b.pct - a.pct);
+  const bad = rows.filter(r => r.n >= 3 && r.pct < 70).sort((a, b) => a.pct - b.pct);
+  const mid = rows.filter(r => !ok.includes(r) && !bad.includes(r));
+  return { rows, ok, bad, mid };
+}
+const meGrade = pct => pct >= 90 ? ['Výborný', '🌟', 'var(--good)'] : pct >= 75 ? ['Chválitebný', '😊', 'var(--good)'] : pct >= 60 ? ['Dobrý', '🙂', 'var(--sun)'] : pct >= 40 ? ['Ešte trénuj', '💪', 'var(--accent)'] : ['Začíname', '🌱', 'var(--muted)'];
+VIEWS.me = () => {
+  const p = P(); const li = levelInfo(p.xp); const acc = p.stats.answered ? Math.round(p.stats.correct / p.stats.answered * 100) : 0; const g = meGrade(acc); const ms = meStats(p);
+  const due = typeof reviewDue === 'function' ? reviewDue(p).length : 0; const days = Object.keys(p.days || {}).length;
+  const subj = k => { const r = ms.rows.filter(x => x.t.s === k); const n = r.reduce((a, x) => a + x.n, 0); const c = r.reduce((a, x) => a + Math.round(x.pct * x.n / 100), 0); return n ? Math.round(c / n * 100) : null; };
+  const line = (r, kind) => `<button class="merow press" data-a="topic" data-id="${r.t.id}"><span class="mti">${r.t.icon}</span><span class="grow"><b>${esc(r.t.name)}</b><small>${SUBJECTS[r.t.s].short || SUBJECTS[r.t.s].name} · ${r.t.g}. ročník · ${r.n} ${plural(r.n, 'odpoveď', 'odpovede', 'odpovedí')}</small><span class="mbar"><i style="width:${r.pct}%;background:${kind === 'ok' ? 'var(--good)' : kind === 'bad' ? 'var(--bad)' : 'var(--sun)'}"></i></span></span><em class="mpct ${kind}">${r.pct} %</em></button>`;
+  return `${topbar('nav-settings')}<main class="view pop-in mev">
+  <section class="card mehead"><span class="meav">${avatarSvg(p.av, { crop: 'head' })}</span><div class="grow"><span class="eyebrow">Ja</span><b>${esc(p.name)}</b><small>${p.grade}. ročník · Level ${li.L} · ${title(li.L)}</small></div><div class="megrade" style="--gc:${g[2]}"><span>${g[1]}</span><b>${acc} %</b><small>${g[0]}</small></div></section>
+  <div class="mestats"><div class="card"><b>${p.stats.correct}</b><small>správnych odpovedí</small></div><div class="card"><b>${p.stats.answered}</b><small>všetkých odpovedí</small></div><div class="card"><b>🔥 ${p.streak.best || 0}</b><small>najdlhšia séria</small></div><div class="card"><b>${days}</b><small>${plural(days, 'deň', 'dni', 'dní')} s učením</small></div></div>
+  <section class="card vizcard"><div class="sec"><h2>📊 Úspešnosť v predmetoch</h2></div><div class="vrings">${['mat', 'sjl', 'prv'].map(k => { const v = subj(k); return vizRing(v == null ? 0 : v, `var(--c-${k})`, SUBJECTS[k].short || SUBJECTS[k].name, v == null ? 'ešte nič' : 'správne'); }).join('')}</div></section>
+  ${due ? `<button class="card revcard press" data-a="review"><span class="ic">🧠</span><span><b>Na zopakovanie: ${due} ${plural(due, 'otázka', 'otázky', 'otázok')}</b><span class="b" style="font-size:.88rem">Otázky, ktoré sa ti minule nepodarili.</span></span><em>${due}</em></button>` : ''}
+  <div class="sec"><h2>🔁 Toto si zopakuj</h2><span class="eyebrow">${ms.bad.length}</span></div>${ms.bad.length ? `<section class="card melist">${ms.bad.map(r => line(r, 'bad')).join('')}</section>` : `<p class="muted b">${ms.rows.length ? 'Nič nutné. Ide ti to výborne! 🌟' : 'Keď sa začneš učiť, uvidíš tu, čo treba zopakovať.'}</p>`}
+  <div class="sec"><h2>✅ Toto už vieš</h2><span class="eyebrow">${ms.ok.length}</span></div>${ms.ok.length ? `<section class="card melist">${ms.ok.map(r => line(r, 'ok')).join('')}</section>` : '<p class="muted b">Témy, kde máš 3 hviezdy alebo nad 85 %, sa ukážu tu.</p>'}
+  ${ms.mid.length ? `<div class="sec"><h2>📚 Rozpracované</h2><span class="eyebrow">${ms.mid.length}</span></div><section class="card melist">${ms.mid.sort((a, b) => b.pct - a.pct).map(r => line(r, 'mid')).join('')}</section>` : ''}
+  <p class="muted b" style="font-size:.78rem;text-align:center">Hodnotenie je z tvojich odpovedí v kvízoch a testoch. Ťukni na tému a môžeš ju hneď precvičiť.</p></main>${nav('')}`;
+};
 function csetView(html) {
   const pre = html.slice(0, html.indexOf('<h3 class="pgroup">')); let rest = html.slice(pre.length);
   const parts = rest.split('<h3 class="pgroup">').slice(1).map(part => { const e = part.indexOf('</h3>'); const title = part.slice(0, e).trim(); return { title, rest: part.slice(e + 5) }; });
@@ -1484,7 +1508,7 @@ function csetView(html) {
   const ic = t => (t.match(/^(\p{Extended_Pictographic}️?)/u) || [])[1] || '⚙️'; const nm = t => t.replace(/^(\p{Extended_Pictographic}️?)\s*/u, '');
   const vals = { 'E-mail účet': typeof AUTH !== 'undefined' && AUTH && AUTH.email ? AUTH.email : 'prihlásenie e-mailom', 'Môj profil': `${esc(P().name)} · ${P().grade}. ročník`, 'Zvuk a hlas': `Zvuky ${DATA.settings.sound ? 'zapnuté' : 'vypnuté'} · čítanie ${DATA.settings.voice ? 'zapnuté' : 'vypnuté'}`, 'Vzhľad': { auto: 'Automaticky', light: 'Svetlý režim', dark: 'Tmavý režim' }[DATA.settings.theme] || 'Automaticky', 'Pomoc': 'Návod, pridať na plochu' };
   if (CSET != null && parts[CSET]) { const x = parts[CSET]; return `${head}<div class="psethead"><button class="btn small" data-a="cset" data-i="-1">← Nastavenia</button><b><span>${ic(x.title)}</span> ${nm(x.title)}</b></div><div class="psetbody">${x.rest}</div>`; }
-  return `${head}${h1}${pcard}<div class="card pslist">${parts.map((x, i) => `<button class="psrow press" data-a="cset" data-i="${i}"><span class="psi">${ic(x.title)}</span><span class="grow"><b>${nm(x.title)}</b><small>${vals[nm(x.title)] || ''}</small></span><span class="pcgo">›</span></button>`).join('')}</div>`;
+  return `${head}${h1}<button class="card mecard press" data-a="nav" data-v="me"><span class="meav">${avatarSvg(P().av, { crop: 'head' })}</span><span class="grow"><span class="eyebrow">Ja</span><b>Môj pokrok</b><small>Čo už viem, čo zopakovať a hodnotenie v percentách</small></span><em>${P().stats.answered ? Math.round(P().stats.correct / P().stats.answered * 100) + ' %' : '›'}</em></button>${pcard}<div class="card pslist">${parts.map((x, i) => `<button class="psrow press" data-a="cset" data-i="${i}"><span class="psi">${ic(x.title)}</span><span class="grow"><b>${nm(x.title)}</b><small>${vals[nm(x.title)] || ''}</small></span><span class="pcgo">›</span></button>`).join('')}</div>`;
 }
 function psetMenu(html, p) {
   const parts = html.split('<h3 class="pgroup">'); const secs = parts.slice(1).map(part => { const e = part.indexOf('</h3>'); const title = part.slice(0, e); let rest = part.slice(e + 5); let sub = ''; const m = rest.match(/^<p class="pgsub">([^<]*)<\/p>/); if (m) { sub = m[1]; rest = rest.slice(m[0].length); } const ic = (title.match(/^(\p{Extended_Pictographic}️?)\s*/u) || [])[1] || '⚙️'; return { title: title.replace(/^(\p{Extended_Pictographic}️?)\s*/u, ''), ic, sub, rest, todo: rest.includes('backup blink') }; });
@@ -1727,6 +1751,7 @@ const ACT = {
     try { fetch(SUPA.url + '/auth/v1/logout', { method: 'POST', headers: { apikey: SUPA.key, Authorization: 'Bearer ' + AUTH.at } }).catch(() => { }); } catch (e) { }
     setAuth(null); DBREF = null; try { localStorage.removeItem('bystrik.owner'); } catch (e) { } resetData(); PARENT_OK = false; go('login', {}, 'u');
   },
+  'nav-settings': () => go('settings', {}, 'b'),
   'cset': d => { CSET = +d.i < 0 ? null : +d.i; sfx('tap'); render(null); scrollTo({ top: 0 }); },
   'pset': d => { PSET = +d.i < 0 ? null : +d.i; sfx('tap'); render(null); scrollTo({ top: 0 }); },
   'ptab': d => { PSET = null; PTAB = d.t; sfx('tap'); render(null); scrollTo({ top: 0 }); const td = $('.pacc.todo'); if (td) setTimeout(() => td.scrollIntoView({ behavior: 'smooth', block: 'start' }), 150); },

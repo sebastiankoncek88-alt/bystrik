@@ -1198,6 +1198,18 @@ body{background-attachment:fixed!important}
 .psethead{display:flex;align-items:center;gap:10px;flex-wrap:wrap}.psethead b{font-family:var(--f-display);font-size:1.3rem;display:flex;align-items:center;gap:6px}
 .psetbody{display:flex;flex-direction:column;gap:12px;animation:inR .2s ease-out}
 .headbub svg.avatar,.frav svg.avatar,.rhme svg.avatar,.pth svg.avatar{width:100%!important;height:100%!important;max-width:none!important;display:block}
+.mecard{display:flex;align-items:center;gap:12px;padding:12px 14px;width:100%;box-sizing:border-box;text-align:left;font-family:inherit;color:var(--ink);background:linear-gradient(120deg,var(--c-mat-soft),var(--paper) 75%);cursor:pointer}
+.meav{flex:none;width:56px;height:56px;border-radius:50%;overflow:hidden;border:2.5px solid var(--edge);background:var(--paper)}.meav svg{width:100%!important;height:100%!important;display:block}
+.mecard .grow,.mehead .grow{flex:1;min-width:0;display:flex;flex-direction:column}.mecard b,.mehead b{font-family:var(--f-display);font-size:1.2rem;line-height:1.15}.mecard small,.mehead small{font-weight:700;font-size:.78rem;color:var(--muted)}
+.mecard em{flex:none;font-style:normal;font-family:var(--f-display);font-weight:900;font-size:1.15rem;background:var(--paper);border:2px solid var(--edge);border-radius:12px;padding:4px 10px}
+.mehead{display:flex;align-items:center;gap:12px;padding:12px 14px}
+.megrade{flex:none;display:flex;flex-direction:column;align-items:center;padding:6px 10px;border-radius:16px;border:2.5px solid var(--gc);background:color-mix(in srgb,var(--gc) 14%,var(--paper))}.megrade span{font-size:1.2rem;line-height:1}.megrade b{font-size:1.35rem!important}.megrade small{color:var(--ink)!important;font-size:.68rem!important}
+.mestats{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}.mestats .card{padding:10px;display:flex;flex-direction:column;align-items:center;text-align:center;box-shadow:0 3px 0 var(--drop)}.mestats b{font-family:var(--f-display);font-size:1.5rem;line-height:1.1}.mestats small{font-weight:700;font-size:.74rem;color:var(--muted)}
+.melist{padding:4px 0;overflow:hidden}.merow{display:flex;align-items:center;gap:10px;width:100%;padding:9px 12px;background:none;border:0;border-bottom:2px solid var(--line);font-family:inherit;color:var(--ink);text-align:left;cursor:pointer}.merow:last-child{border-bottom:0}
+.mti{flex:none;width:38px;height:38px;border-radius:12px;display:grid;place-items:center;font-size:1.3rem;background:var(--paper2)}.merow .grow{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px}.merow b{font-family:var(--f-display);font-size:.96rem;line-height:1.15}.merow small{font-weight:600;font-size:.7rem;color:var(--muted)}
+.mbar{height:6px;border-radius:9px;background:var(--line);overflow:hidden;display:block}.mbar i{display:block;height:100%;border-radius:9px}
+.mpct{flex:none;font-style:normal;font-family:var(--f-display);font-weight:900;font-size:1rem}.mpct.ok{color:var(--good)}.mpct.bad{color:var(--bad)}.mpct.mid{color:#C98A00}
+@media (min-width:900px){.mestats{grid-template-columns:repeat(4,1fr)}}
 /* ===== Vlastný vzhľad „mapa dobrodružstva“ ===== */
 .card{border-width:2px;box-shadow:0 6px 0 var(--drop),0 14px 24px -14px var(--drop)}
 .btn{border-width:2px;border-radius:999px;letter-spacing:.01em}
