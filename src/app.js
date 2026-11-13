@@ -789,8 +789,9 @@ function startMode(id) {
 
 /* --- kvíz --- */
 let Q = null;
+function quizCap(ids) { let n = 0; for (const id of ids) { const t = TOPIC[id]; if (!t || t.gen) return 10; try { n += topicItems(t).length; } catch (e) { return 10; } } return Math.max(4, Math.min(10, n)); }
 function startQuiz(topicIds, mode, back, opts = {}) {
-  Q = { topicIds, mode, back, i: 0, total: opts.total || 10, seq: opts.seq || null, fixed: opts.fixed || null, correct: 0, combo: 0, seen: new Set(), xp: 0, cur: null, input: '', answered: false, left: 60, tlog: [] };
+  Q = { topicIds, mode, back, i: 0, total: opts.total || (mode === 'time' || opts.seq ? 10 : quizCap(topicIds)), seq: opts.seq || null, fixed: opts.fixed || null, correct: 0, combo: 0, seen: new Set(), xp: 0, cur: null, input: '', answered: false, left: 60, tlog: [] };
   nextQ(); go('quiz', {}, 'u');
   if (mode === 'time') TIMERS.push(setInterval(() => { Q.left--; const el = $('.timer'); if (el) { el.textContent = Q.left + ' s'; el.classList.toggle('low', Q.left <= 10); } if (Q.left <= 10 && Q.left > 0) sfx('tick'); if (Q.left <= 0) { clearTimers(); finishQuiz(); } }, 1000));
 }

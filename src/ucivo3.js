@@ -62,7 +62,13 @@ const U3_PRV = [
     Kedy maľujeme vajíčka?|na Veľkú noc|na Vianoce;na Silvestra;na Deň matiek
     Ktorý deň je posledný v roku?|Silvester|Nový rok;Štedrý deň;Veľká noc
     Komu dávame darček na Deň matiek?|mame|učiteľke z inej školy;susedovmu psovi;nikomu
-    Čo robíme na Štedrý večer?|stretneme sa s rodinou pri večeri|ideme do školy;maľujeme vajíčka;púšťame šarkana`) },
+    Čo robíme na Štedrý večer?|stretneme sa s rodinou pri večeri|ideme do školy;maľujeme vajíčka;púšťame šarkana
+    Čo zapaľujeme na adventnom venci?|sviečky|prskavky;lampáše;ohník
+    Ktorý sviatok je 1. januára?|Nový rok|Vianoce;Veľká noc;Deň detí
+    Kedy je Deň detí?|1. júna|24. decembra;1. januára;6. decembra
+    Čo robíme na Veľkonočný pondelok podľa tradície?|oblievame a šibeme|zdobíme stromček;púšťame ohňostroj;spievame koledy
+    Čo sú koledy?|piesne, ktoré spievame na Vianoce|veľkonočné vajíčka;druh koláča;hra s loptou
+    Čo pečieme pred Vianocami?|medovníky|pizzu;chlieb na grile;tortu na Deň detí`) },
   { id: 'e4-spolu', g: 4, type: 'qa', area: 'etika', name: 'Žijeme spolu', icon: '🌍', items: lines(`
     Čo znamená byť tolerantný?|rešpektovať, že sú ľudia rôzni|smiať sa z iných;nehrať sa s inými;myslieť si, že mám vždy pravdu
     Spolužiak je nový a nikoho nepozná. Čo urobíš?|predstavím sa a ukážem mu školu|nevšímam si ho;posmievam sa mu;ohováram ho
