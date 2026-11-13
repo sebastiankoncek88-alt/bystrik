@@ -1189,6 +1189,7 @@ h1,h2,.logintitle{letter-spacing:-.01em}
   .nav button{font-size:.82rem}
   .tiles2{grid-template-columns:repeat(4,1fr)}
   .items{grid-template-columns:repeat(6,1fr)}
+  .shopgrid{grid-template-columns:repeat(4,1fr)}
   .ptiles{grid-template-columns:repeat(3,1fr)}
   .bkinfo{grid-template-columns:1fr 1fr}
   .stage{height:360px}
@@ -3215,11 +3216,11 @@ function shopMs() { const d = new Date(); const now = Date.UTC(d.getFullYear(), 
 function cdHTML() { let t = Math.floor(shopMs() / 1000); const dd = Math.floor(t / 86400); t %= 86400; const hh = Math.floor(t / 3600); t %= 3600; const mm = Math.floor(t / 60), ss = t % 60; const b = (v, l) => `<span class="cdb"><b>${String(v).padStart(2, '0')}</b><small>${l}</small></span>`; return b(dd, plural(dd, 'deň', 'dni', 'dní')) + b(hh, 'hod') + b(mm, 'min') + b(ss, 'sek'); }
 AFTER.shop = () => { TIMERS.push(setInterval(() => { const e = $('#shopcd'); if (!e) return; if (shopMs() <= 0) return render(null); e.innerHTML = cdHTML(); const s = e.querySelector('.cdb:last-child b'); if (s) { s.classList.remove('tick'); void s.offsetWidth; s.classList.add('tick'); } }, 1000)); };
 function shopLeft() { const d = new Date(); const now = Date.UTC(d.getFullYear(), d.getMonth(), d.getDate(), d.getHours(), d.getMinutes()); const ms = (shopPeriod() + 1) * SHOP_DAYS * DAYMS - now; const h = Math.max(1, Math.ceil(ms / 3600000)); return h >= 24 ? `${Math.floor(h / 24)} ${plural(Math.floor(h / 24), 'deň', 'dni', 'dní')} a ${h % 24} h` : `${h} h`; }
-function shopPremium(p) { const rnd = seeded('prem' + shopPeriod() + p.id); return shopItems(p).filter(([, it]) => it.price >= 200 && !p.owned.includes(it.sid)).sort(() => rnd() - .5).slice(0, 2); }
+function shopPremium(p) { const rnd = seeded('prem' + shopPeriod() + p.id); return shopItems(p).filter(([, it]) => it.price >= 200 && !p.owned.includes(it.sid)).sort(() => rnd() - .5).slice(0, 4); }
 function shopOffer(p) {
   const rnd = seeded('shop' + shopPeriod() + p.id); const all = shopItems(p).filter(([, it]) => it.price < 200 && !p.owned.includes(it.sid)).sort(() => rnd() - .5);
   const out = []; for (const c of ['top', 'shoes', 'acc']) { const x = all.find(([cc]) => cc === c); if (x) out.push(x); }
-  for (const x of all) { if (out.length >= 6) break; if (!out.includes(x)) out.push(x); }
+  for (const x of all) { if (out.length >= 12) break; if (!out.includes(x)) out.push(x); }
   return out.sort((a, b) => a[1].price - b[1].price);
 }
 VIEWS.shop = () => {
