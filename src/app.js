@@ -1380,15 +1380,17 @@ CAT_LABEL.room = 'Pozadie';
 VIEWS.wardrobe = () => {
   const p = P(); p.seenRewards = levelInfo(p.xp).L; save();
   return `${topbar()}<main class="view">${wsTabs('w')}<section class="card wardstage"><div class="fig" id="wfig" data-a="wave">${roomHTML(p.room)}${avatarSvg(p.av, { cls: 'idle', noBg: true })}</div><div class="info"><span class="eyebrow">Môj šatník</span><h2>${esc(p.name)}</h2><div class="seg" role="radiogroup" aria-label="Postava"><button class="${p.av.gender === 'd' ? 'on' : ''}" data-a="gender" data-g="d">Dievča</button><button class="${p.av.gender === 'c' ? 'on' : ''}" data-a="gender" data-g="c">Chlapec</button></div><span class="muted b" style="font-size:.82rem">Vyber kúsok a pod ním mu nastav farby. Veci so zámkom odomkneš za level alebo sériu.</span></div></section>
-  <div class="cats">${WCATS.map(c => `<button class="chip ${c === WCAT ? 'on' : ''}" data-a="wcat" data-c="${c}">${CAT_LABEL[c]}</button>`).join('')}</div><div id="witems">${wardItems()}</div></main>${nav('wardrobe')}`;
+  <div class="cats">${WCATS.map(c => { const l = c === 'room' ? null : CATALOG[c].filter(it => !it.g || it.g === p.av.gender); const u = l ? l.filter(it => unlocked(it, p)).length : 0; return `<button class="chip ${c === WCAT ? 'on' : ''}" data-a="wcat" data-c="${c}">${CAT_LABEL[c] || 'Pozadie'}${l && l.length > 6 ? `<em class="ccount">${u}/${l.length}</em>` : ''}</button>`; }).join('')}</div><div id="witems">${wardItems()}</div></main>${nav('wardrobe')}`;
 };
 function wardItems() {
   const p = P();
   if (WCAT === 'room') return `<section class="card colorbox"><div class="roomprev">${roomHTML(p.room)}<div class="dfig">${avatarSvg(p.av, { noBg: true })}</div></div><p class="muted b" style="font-size:.88rem">Pozadie si navrhneš sám: farby, vzor a nálepky ako smajlík, jednorožec, stromček či mačička.</p><button class="btn primary block" data-a="nav" data-v="room">🎨 Navrhnúť pozadie</button></section>`;
   let list = CATALOG[WCAT].filter(it => !it.g || it.g === p.av.gender);
+  if (WCAT !== 'skin') list = list.map((it, i) => [it, i]).sort((a, b) => (unlocked(b[0], p) - unlocked(a[0], p)) || a[1] - b[1]).map(x => x[0]);
+  const nU = list.filter(it => unlocked(it, p)).length;
   let html;
   if (WCAT === 'skin') html = `<section class="card colorbox"><b>Farba pleti</b><div class="swatches">${list.map(it => `<button class="sw press ${p.av.skin === it.id ? 'on' : ''}" style="background:${it.c}" data-a="wear" data-i="${it.id}" aria-label="Pleť"></button>`).join('')}</div></section>`;
-  else html = (WCAT === 'pet' && itemOf('pet', p.av.pet).e ? `<section class="card colorbox"><b>Meno zvieratka</b><div style="display:flex;gap:8px"><input class="field" id="petname" maxlength="14" style="font-size:1.15rem;padding:8px 12px" value="${esc(petName(p.av))}"><button class="btn small" data-a="petname">Uložiť</button></div></section>` : '') + `<div class="items">${list.map((it, i) => { const u = unlocked(it, p); return `<button class="item press ${p.av[WCAT] === it.id ? 'on' : ''} ${u ? '' : 'lock'}" data-a="wear" data-i="${it.id}" style="animation:popin .35s ${i * 30}ms backwards cubic-bezier(.3,1.6,.5,1)">${itemThumb(WCAT, it, p.av)}${u ? '' : `<span class="lk"><b>🔒</b>${lockLabel(it)}</span>`}<span class="lab">${it.n || ''}</span></button>`; }).join('')}</div>`;
+  else html = (WCAT === 'pet' && itemOf('pet', p.av.pet).e ? `<section class="card colorbox"><b>Meno zvieratka</b><div style="display:flex;gap:8px"><input class="field" id="petname" maxlength="14" style="font-size:1.15rem;padding:8px 12px" value="${esc(petName(p.av))}"><button class="btn small" data-a="petname">Uložiť</button></div></section>` : '') + `${list.length > 6 ? `<p class="wsum"><b>${nU}</b> z ${list.length} máš odomknutých${nU < list.length ? ' · ďalšie získaš za level, sériu, v obchode alebo v truhle 🎁' : ' · máš všetko! 🏆'}</p>` : ''}<div class="items">${list.map((it, i) => { const u = unlocked(it, p); const rk = (it.price || it.chest) ? rarity(it) : null; return `<button class="item press ${p.av[WCAT] === it.id ? 'on' : ''} ${u ? '' : 'lock'} ${rk ? 'rk rk-' + rk : ''}" ${rk ? `style="--rc:${RARE[rk].c};animation:popin .35s ${Math.min(i, 12) * 30}ms backwards cubic-bezier(.3,1.6,.5,1)"` : `style="animation:popin .35s ${Math.min(i, 12) * 30}ms backwards cubic-bezier(.3,1.6,.5,1)"`} data-a="wear" data-i="${it.id}">${rk && rk !== 'common' ? `<span class="rkdot" title="${RARE[rk].n}">${rk === 'leg' ? '🌟' : rk === 'epic' ? '💜' : '💎'}</span>` : ''}${itemThumb(WCAT, it, p.av)}${u ? '' : `<span class="lk"><b>🔒</b>${lockLabel(it)}</span>`}<span class="lab">${it.n || ''}</span></button>`; }).join('')}</div>`;
   const slots = COLOR_SLOTS[WCAT];
   if (slots && !(WCAT === 'acc' && p.av.acc === 'nic') && !(WCAT === 'bgp' && p.av.bgp === 'vesmir')) {
     html += `<section class="card colorbox">${slots.map(([slot, label, pal]) => { const curr = slot === 'bg' ? p.av.bg : p.av.col[slot]; return `<b>${label}</b><div class="swatches">${pal.filter(it => !it.g || it.g === p.av.gender).map(it => { const u = unlocked(it, p); return `<button class="sw press ${curr === it.id ? 'on' : ''} ${u ? '' : 'lock'} ${it.c === 'RAINBOW' ? 'rb' : ''}" style="background:${it.c}" data-a="color" data-s="${slot}" data-i="${it.id}" aria-label="${it.n || 'farba'}${u ? '' : ', ' + lockLabel(it)}"></button>`; }).join('')}</div>`; }).join('')}</section>`;
@@ -1401,12 +1403,16 @@ function wear(id) {
   if (!unlocked(it, p)) { sfx('no'); toast(it.price ? `🛍️ Kúp si to v obchode za ${it.price} slniečok` : `🔒 Odomkneš: ${lockLabel(it)}`); const el = $(`[data-a="wear"][data-i="${id}"]`); if (el) { el.style.animation = 'none'; void el.offsetWidth; el.style.animation = 'shake .45s'; } return; }
   if (WCAT === 'pet' && p.av.pet !== id && (p.av.petName || '') === '') p.av.petName = '';
   p.av[WCAT] = id; if (WCAT === 'bottom' && ['saty', 'princezna', 'astronaut'].includes(p.av.top)) p.av.top = 'tricko';
-  p.stats.style++; checkBadges(p); save(); sfx('pop'); buzz(10); refreshWard(true);
+  p.stats.style++; checkBadges(p); save(); sfx('pop'); buzz(10);
+  const tile = $(`#witems [data-a="wear"][data-i="${id}"] svg`), fig = $('#wfig');
+  if (tile && fig && !matchMedia('(prefers-reduced-motion: reduce)').matches) { const a = tile.getBoundingClientRect(), b = fig.getBoundingClientRect(); const f = tile.cloneNode(true); f.classList.add('wfly'); f.style.cssText = `left:${a.left}px;top:${a.top}px;width:${a.width}px;height:${a.height}px;--dx:${b.left + b.width / 2 - a.left - a.width / 2}px;--dy:${b.top + b.height / 2 - a.top - a.height / 2}px`; document.body.appendChild(f); setTimeout(() => { f.remove(); refreshWard(true); wardPuff(); }, 380); }
+  else refreshWard(true);
 }
+function wardPuff() { const fig = $('#wfig'); if (!fig) return; const pf = document.createElement('span'); pf.className = 'wpuff'; pf.innerHTML = '<i></i><i></i><i></i><i></i><i></i><i></i><b></b>'; fig.appendChild(pf); setTimeout(() => pf.remove(), 800); }
 function setColor(slot, id) {
   const p = P(); const pal = slot === 'hair' ? HAIRC : slot === 'bg' ? BGC : PAL; const it = pal.find(x => x.id === id);
   if (!unlocked(it, p)) { sfx('no'); toast(`🔒 Odomkneš: ${lockLabel(it)}`); return; }
-  if (slot === 'bg') p.av.bg = id; else p.av.col[slot] = id; p.stats.style++; checkBadges(p); save(); sfx('pop'); refreshWard(true);
+  if (slot === 'bg') p.av.bg = id; else p.av.col[slot] = id; p.stats.style++; checkBadges(p); save(); sfx('pop'); refreshWard(true); wardPuff();
 }
 
 /* --- odmeny --- */
