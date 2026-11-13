@@ -24,6 +24,7 @@ function migrate(p) {
   p.stats = Object.assign({ correct: 0, answered: 0, quizzes: 0, perfect: 0, cards: 0, pexeso: 0, bestTime: 0, style: 0, daily: 0, games: 0, match: 0, chat: 0, tasks: 0 }, p.stats || {});
   p.topics = p.topics || {}; p.badges = p.badges || [];
   p.coins = p.coins || 0; p.owned = p.owned || []; p.readings = p.readings || [];
+  p.av.pet = 'nic'; if (WCAT === 'pet') WCAT = 'hair';
   if (!p.room) p.room = defaultRoom(p.av.gender); p.room.stickers = p.room.stickers || [];
 }
 function applyTheme() { try { const de = document.documentElement; de.classList.add('thx'); clearTimeout(applyTheme.t); applyTheme.t = setTimeout(() => de.classList.remove('thx'), 520); } catch (e) { } setTimeout(applyPageBg, 0); const t = DATA.settings.theme; if (t === 'light' || t === 'dark') document.documentElement.dataset.theme = t; else if (document.documentElement.dataset.theme && THEME_SET) delete document.documentElement.dataset.theme; THEME_SET = t !== 'auto'; }
@@ -64,7 +65,7 @@ function apiSample(key) {
       res = await fetch('https://api.anthropic.com/v1/messages', { method: 'POST', headers: { 'content-type': 'application/json', 'x-api-key': key, 'anthropic-version': '2026-10-21', 'anthropic-beta': 'server-side-fallback-2026-07-01', 'anthropic-dangerous-direct-browser-access': 'true' }, body: JSON.stringify({ model: 'claude-opus-5-5', max_tokens: opts.max || 4000, output_config: { effort: opts.effort || 'low' }, fallbacks: 'default', messages }) });
     } catch (e) { throw { code: 'network', message: 'Bez pripojenia na internet.' }; }
     if (!res.ok) { let msg = ''; try { msg = (await res.json()).error.message; } catch (e) { } throw { code: res.status === 401 || res.status === 403 ? 'not_granted' : res.status === 429 ? 'rate_limited' : res.status === 400 && /credit|balance/i.test(msg) ? 'no_credit' : 'api_error', message: msg || 'HTTP ' + res.status }; }
-    const j = await res.json();
+    const j = await res.json(); try { LAST_USAGE = ((j.usage && j.usage.input_tokens) || 0) + ((j.usage && j.usage.output_tokens) || 0) || null; } catch (e) { }
     if (j.stop_reason === 'refusal') throw { code: 'refused', message: 'refusal' };
     const text = (j.content || []).filter(b => b.type === 'text').map(b => b.text).join('').trim();
     if (opts.onText) { try { opts.onText({ text, delta: text }); } catch (e) { } }
@@ -96,7 +97,7 @@ function geminiSample(key) {
         if (res.status === 404 || res.status === 429 || res.status === 403 || res.status >= 500) continue;
         throw lastErr;
       }
-      const j = await res.json(); GEM_OK = model;
+      const j = await res.json(); GEM_OK = model; try { LAST_USAGE = (j.usageMetadata && j.usageMetadata.totalTokenCount) || null; } catch (e) { }
       const c = (j.candidates || [])[0];
       if (!c || c.finishReason === 'SAFETY' || c.finishReason === 'PROHIBITED_CONTENT' || (j.promptFeedback && j.promptFeedback.blockReason)) throw { code: 'refused', message: 'refusal' };
       const text = ((c.content && c.content.parts) || []).filter(x => !x.thought).map(x => x.text || '').join('').trim();
@@ -110,7 +111,25 @@ function geminiSample(key) {
   return call;
 }
 function keySample(k) { return k.startsWith('sk-ant-') ? apiSample(k) : geminiSample(k); }
-function getSample() { if (!SAMPLE) SAMPLE = (window.claude && window.claude.use) ? window.claude.use('sample').catch(() => null) : Promise.resolve(getApiKey() ? keySample(getApiKey()) : null); return SAMPLE; }
+/* ===== Denný limit AI tokenov ===== */
+let LAST_USAGE = null; const AIL_LS = 'bystrik.aiuse';
+const AI_LIMITS = [5000, 10000, 20000, 40000, 80000];
+const aiLimit = () => { const v = +(DATA.settings && DATA.settings.aiLimit); return v > 0 ? v : 20000; };
+function aiUsed() { const t = today(); let a = 0, b = 0; try { const x = JSON.parse(localStorage.getItem(AIL_LS) || 'null'); if (x && x.d === t) a = +x.u || 0; } catch (e) { } if (DATA.aiUse && DATA.aiUse.d === t) b = +DATA.aiUse.u || 0; return Math.max(a, b); }
+function aiAdd(n) { const t = today(); const u = aiUsed() + Math.max(1, Math.round(n || 0)); DATA.aiUse = { d: t, u }; try { localStorage.setItem(AIL_LS, JSON.stringify({ d: t, u })); } catch (e) { } save(); const L = aiLimit(); if (u >= L * .8 && u < L && DATA.aiWarn !== t) { DATA.aiWarn = t; save(); setTimeout(() => toast('🧸 Bystrík bude dnes čoskoro unavený. AI zostáva už len trochu.'), 300); } }
+const aiLeft = () => Math.max(0, aiLimit() - aiUsed());
+const aiEst = x => { if (x == null) return 0; if (typeof x === 'string') return Math.ceil(x.length / 3.5); if (Array.isArray(x)) return x.reduce((a, m) => a + aiEst(m && m.content != null ? String(m.content) : JSON.stringify(m)), 0); return Math.ceil(JSON.stringify(x).length / 3.5); };
+const AIL_MSG = 'Na dnes som už minul všetky svoje AI sily 🧸. Zajtra ti zase rád odpoviem. Zatiaľ si môžeš zahrať kvíz alebo kartičky z tejto témy.';
+function aiGuard(raw) {
+  if (!raw) return null;
+  const pre = (input, opts) => { const need = aiEst(input) + 200 + ((opts && opts.images && opts.images.length) || 0) * 1300; if (aiUsed() + need > aiLimit()) throw { code: 'ai_limit', message: AIL_MSG }; return need; };
+  const w = async (input, opts = {}) => { const need = pre(input, opts); LAST_USAGE = null; const r = await raw(input, opts); aiAdd(LAST_USAGE || need + aiEst(r && r.text)); return r; };
+  w.json = async (input, opts = {}) => { const need = pre(input, opts); LAST_USAGE = null; const r = await raw.json(input, opts); aiAdd(LAST_USAGE || need + aiEst(r)); return r; };
+  w.limits = raw.limits ? (...a) => raw.limits(...a) : async () => null;
+  return w;
+}
+function aiMeter(compact) { const L = aiLimit(), u = Math.min(aiUsed(), L), pct = Math.round(u / L * 100); const col = pct >= 100 ? 'var(--bad)' : pct >= 80 ? 'var(--sun)' : 'var(--good)'; return `<div class="aimeter ${compact ? 'cmp' : ''}" role="meter" aria-label="AI dnes" aria-valuemin="0" aria-valuemax="${L}" aria-valuenow="${u}"><div class="aimt"><b>${compact ? '🧸 AI dnes' : 'Využité dnes'}</b><span>${fmt(u)} / ${fmt(L)} tokenov · zostáva ${fmt(L - u)}</span></div><div class="aimb"><i style="width:${pct}%;background:${col}"></i></div>${pct >= 100 ? '<small>Limit je na dnes vyčerpaný. Obnoví sa o polnoci.</small>' : pct >= 80 ? '<small>Blíži sa denný limit.</small>' : ''}</div>`; }
+function getSample() { if (!SAMPLE) SAMPLE = ((window.claude && window.claude.use) ? window.claude.use('sample').catch(() => null) : Promise.resolve(getApiKey() ? keySample(getApiKey()) : null)).then(aiGuard); return SAMPLE; }
 
 /* ===== Zvuky, hlas ===== */
 let AC = null;
@@ -204,7 +223,7 @@ const TITLES = ['Zvedavé vajíčko', 'Malý bystrík', 'Šikovná hlávka', 'P�
 const title = L => TITLES[Math.min(TITLES.length - 1, Math.floor(L / 2))];
 const unlocked = (it, p) => (!it.lvl || levelInfo(p.xp).L >= it.lvl) && (!it.streak || (p.streak.best || 0) >= it.streak) && (!it.price || (p.owned || []).includes(it.sid)) && (!it.lb || (p.owned || []).includes('lb:' + it.id));
 const lockLabel = it => it.lb ? `Rebríček: ${it.lb}. miesto` : it.price ? `Obchod 🪙 ${it.price}` : it.lvl ? `Level ${it.lvl}` : `Séria ${it.streak} dní`;
-const REW_CATS = ['hair', 'top', 'bottom', 'shoes', 'acc', 'eyes', 'mouth', 'pet'];
+const REW_CATS = ['hair', 'top', 'bottom', 'shoes', 'acc', 'eyes', 'mouth'];
 function allRewardItems(g) {
   const out = [];
   for (const c of REW_CATS) for (const it of CATALOG[c]) if ((it.lvl || it.streak) && (!it.g || it.g === g)) out.push([c, it]);
@@ -299,7 +318,7 @@ function bump(k, n = 1) {
   d.cnt[k] = (d.cnt[k] || 0) + n;
   d.tasks.forEach(id => { const T = TASKS.find(x => x.id === id); if (!before.includes(id) && (d.cnt[T.k] || 0) >= T.t) setTimeout(() => { toast(`✅ Úloha splnená: ${T.n}`); sfx('coin'); }, 300); });
 }
-function logAct(k, id, c, n) { const p = P(); if (k !== 'gift' && k !== 'ptask') { const wk = weekId(); if (!p.wk || p.wk.w !== wk) p.wk = { w: wk, xp: 0 }; p.wk.n = (p.wk.n || 0) + 1; const dd = p.days[today()] || (p.days[today()] = { q: 0, c: 0 }); dd.n = (dd.n || 0) + 1; } p.log.unshift({ t: Date.now(), k, id, c, n }); if (p.log.length > 300) p.log.length = 300; }
+function logAct(k, id, c, n) { const p = P(); if (p && k !== 'gift' && k !== 'ptask' && k !== 'rread') { bearInit(p); p.bear.honey = Math.min(5, (p.bear.honey || 0) + 1); } if (k !== 'gift' && k !== 'ptask') { const wk = weekId(); if (!p.wk || p.wk.w !== wk) p.wk = { w: wk, xp: 0 }; p.wk.n = (p.wk.n || 0) + 1; const dd = p.days[today()] || (p.days[today()] = { q: 0, c: 0 }); dd.n = (dd.n || 0) + 1; } p.log.unshift({ t: Date.now(), k, id, c, n }); if (p.log.length > 300) p.log.length = 300; }
 function countDay(ok) { const p = P(); const d = p.days[today()] || (p.days[today()] = { q: 0, c: 0 }); d.q++; if (ok) d.c++; }
 const DR = [{ xp: 20, i: '⭐' }, { xp: 25, i: '⭐' }, { xp: 30, i: '💎' }, { xp: 40, i: '⭐' }, { xp: 50, i: '💎' }, { xp: 60, i: '🎁' }, { xp: 100, i: '👑' }];
 const drReady = p => p.dailyReward.last !== today();
@@ -423,7 +442,7 @@ function roomView() {
 const VIEWS = {}, AFTER = {};
 VIEWS.learn = () => {
   const p = P(); const dd = p.dailyDone === today();
-  const card = k => { const ts = SUBJECTS[k].topics.filter(t => t.g === p.grade); const st = ts.reduce((a, t) => a + (p.topics[t.id]?.stars || 0), 0); const max = ts.length * 3; const d = { mat: ['1+2', 'Počty, násobilka, geometria, slovné úlohy', '➗'], sjl: ['Aa', 'Písmená, y/i, vybrané slová, slovné druhy', '✏️'], prv: ['🌍', '🌿 Príroda · 🗺️ Slovensko a svet · 🇬🇧 Angličtina', '🔭'] }[k]; return `<button class="card lsubj ${k} press" data-a="subject" data-s="${k}"><span class="big">${d[0]}</span><span class="lt"><b>${SUBJECTS[k].name}</b><span>${d[1]}</span><span class="pbar"><i style="width:${max ? st / max * 100 : 0}%"></i></span><small>⭐ ${st} / ${max} hviezd · ${ts.length} tém</small></span><span class="deco">${d[2]}</span></button>`; };
+  const card = k => { const ts = SUBJECTS[k].topics.filter(t => t.g === p.grade); const st = ts.reduce((a, t) => a + (p.topics[t.id]?.stars || 0), 0); const max = ts.length * 3; const d = { mat: ['1+2', 'Počty, násobilka, geometria, slovné úlohy', '➗'], sjl: ['Aa', 'Písmená, y/i, vybrané slová, slovné druhy', '✏️'], prv: ['🌍', p.grade <= 2 ? '🌱 Prvouka · 🇬🇧 Angličtina · 💛 Etika' : '🔬 Prírodoveda · 🗺️ Vlastiveda · 🇬🇧 Angličtina · 💻 Informatika · 💛 Etika', '🔭'] }[k]; return `<button class="card lsubj ${k} press" data-a="subject" data-s="${k}"><span class="big">${d[0]}</span><span class="lt"><b>${SUBJECTS[k].name}</b><span>${d[1]}</span><span class="pbar"><i style="width:${max ? st / max * 100 : 0}%"></i></span><small>⭐ ${st} / ${max} hviezd · ${ts.length} tém</small></span><span class="deco">${d[2]}</span></button>`; };
   return `${topbar()}<main class="view pop-in"><div><h1 style="font-size:2rem">Učenie</h1><p class="muted b">Vyber si predmet. Učivo je pre ${p.grade}. ročník, iný ročník si vyberieš v predmete.</p></div>${card('mat')}${card('sjl')}${card('prv')}
   ${reviewCard(p)}
   <div class="sec"><h2>Ďalšie učenie</h2></div>
@@ -432,29 +451,38 @@ VIEWS.learn = () => {
 };
 /* --- obchod --- */
 let SHOPCAT = 'all', SHOPSEL = null;
-const SHOPCATS = [['all', 'Všetko'], ['top', '👕 Oblečenie'], ['shoes', '👟 Topánky'], ['acc', '🎩 Doplnky']];
-function shopItems(p) { const out = []; for (const c of ['top', 'shoes', 'acc']) for (const it of CATALOG[c]) if (it.price && (!it.g || it.g === p.av.gender)) out.push([c, it]); return out.sort((a, b) => a[1].price - b[1].price); }
-const SHOP_DAYS = 2, DAYMS = 86400000;
+const SHOPCATS = [['all', 'Všetko'], ['top', '👕 Vrch'], ['bottom', '👖 Spodok'], ['shoes', '👟 Topánky'], ['acc', '🎩 Doplnky']];
+function shopItems(p) { const out = []; for (const c of ['top', 'bottom', 'shoes', 'acc']) for (const it of CATALOG[c]) if (it.price && (!it.g || it.g === p.av.gender)) out.push([c, it]); return out.sort((a, b) => a[1].price - b[1].price); }
+const SHOP_DAYS = 1, DAYMS = 86400000;
 function shopPeriod() { const d = new Date(); return Math.floor(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()) / DAYMS / SHOP_DAYS); }
 function shopMs() { const d = new Date(); const now = Date.UTC(d.getFullYear(), d.getMonth(), d.getDate(), d.getHours(), d.getMinutes(), d.getSeconds()); return Math.max(0, (shopPeriod() + 1) * SHOP_DAYS * DAYMS - now); }
 function cdHTML() { let t = Math.floor(shopMs() / 1000); const dd = Math.floor(t / 86400); t %= 86400; const hh = Math.floor(t / 3600); t %= 3600; const mm = Math.floor(t / 60), ss = t % 60; const b = (v, l) => `<span class="cdb"><b>${String(v).padStart(2, '0')}</b><small>${l}</small></span>`; return b(dd, plural(dd, 'deň', 'dni', 'dní')) + b(hh, 'hod') + b(mm, 'min') + b(ss, 'sek'); }
 AFTER.shop = () => { TIMERS.push(setInterval(() => { const e = $('#shopcd'); if (!e) return; if (shopMs() <= 0) return render(null); e.innerHTML = cdHTML(); const s = e.querySelector('.cdb:last-child b'); if (s) { s.classList.remove('tick'); void s.offsetWidth; s.classList.add('tick'); } }, 1000)); };
 function shopLeft() { const d = new Date(); const now = Date.UTC(d.getFullYear(), d.getMonth(), d.getDate(), d.getHours(), d.getMinutes()); const ms = (shopPeriod() + 1) * SHOP_DAYS * DAYMS - now; const h = Math.max(1, Math.ceil(ms / 3600000)); return h >= 24 ? `${Math.floor(h / 24)} ${plural(Math.floor(h / 24), 'deň', 'dni', 'dní')} a ${h % 24} h` : `${h} h`; }
-function shopPremium(p) { const rnd = seeded('prem' + shopPeriod() + p.id); return shopItems(p).filter(([, it]) => it.price >= 200 && !p.owned.includes(it.sid)).sort(() => rnd() - .5).slice(0, 4); }
+function shopPremium(p) { const rnd = seeded('prem' + shopPeriod() + p.id); return shopItems(p).filter(([, it]) => it.price >= 200).sort(() => rnd() - .5).slice(0, 4); }
 function shopOffer(p) {
-  const rnd = seeded('shop' + shopPeriod() + p.id); const all = shopItems(p).filter(([, it]) => it.price < 200 && !p.owned.includes(it.sid)).sort(() => rnd() - .5);
-  const out = []; for (const c of ['top', 'shoes', 'acc']) { const x = all.find(([cc]) => cc === c); if (x) out.push(x); }
+  const rnd = seeded('shop' + shopPeriod() + p.id); const all = shopItems(p).filter(([, it]) => it.price < 200).sort(() => rnd() - .5);
+  const out = []; for (const c of ['top', 'bottom', 'shoes', 'acc']) { const x = all.find(([cc]) => cc === c); if (x) out.push(x); }
   for (const x of all) { if (out.length >= 12) break; if (!out.includes(x)) out.push(x); }
   return out.sort((a, b) => a[1].price - b[1].price);
 }
 VIEWS.shop = () => {
-  const p = P(); const list = shopOffer(p); const prem = shopPremium(p);
-  const itemCard = ([c, it], i) => { const own = p.owned.includes(it.sid); const worn = p.av[c] === it.id; const can = (p.coins || 0) >= it.price; const sel = SHOPSEL === it.sid; const pr = it.price >= 200; return `<div class="card shopitem ${own ? 'own' : ''} ${pr ? 'premium' : ''}" style="animation:popUp .4s ${i * 35}ms backwards">${pr ? '<span class="prem">👑 PRÉMIUM</span>' : ''}<span class="th">${itemThumb(c, it, p.av)}</span><b>${it.n}</b>${own ? (worn ? '<span class="tag">Máš to oblečené ✓</span>' : `<button class="btn small good" data-a="shop-wear" data-c="${c}" data-i="${it.id}">Obliecť</button>`) : sel ? `<button class="btn small primary" data-a="buy" data-c="${c}" data-i="${it.id}">Áno, kúpiť!</button>` : `<button class="btn small ${can ? 'sun' : ''}" data-a="buy-ask" data-c="${c}" data-i="${it.id}" ${can ? '' : 'aria-disabled="true"'}>${COIN} ${it.price}</button>`}${!own && !can ? `<span class="muted b" style="font-size:.75rem">Chýba ${it.price - (p.coins || 0)}</span>` : ''}</div>`; };
+  const p = P(); const list = shopOffer(p); const prem = shopPremium(p); const all = [...prem, ...list];
+  const sel = all.find(([, it]) => it.sid === SHOPSEL);
+  const state = it => p.owned.includes(it.sid) ? 'own' : (p.coins || 0) >= it.price ? 'can' : 'lock';
+  const itemCard = ([c, it], i) => { const st = state(it); const worn = p.av[c] === it.id; const pr = it.price >= 200; return `<div class="card shopitem st-${st} ${pr ? 'premium' : ''} ${SHOPSEL === it.sid ? 'sel' : ''}" style="animation:popUp .35s ${i * 25}ms backwards">${pr ? '<span class="prem">👑 PRÉMIUM</span>' : ''}<span class="stbadge">${st === 'own' ? '✓ Kúpené' : st === 'lock' ? '🔒' : ''}</span><button class="th thbtn" data-a="shop-prev" data-c="${c}" data-i="${it.id}" aria-label="Vyskúšať ${esc(it.n)}">${itemThumb(c, it, p.av)}</button><b>${it.n}</b>${st === 'own' ? (worn ? '<span class="tag">Oblečené ✓</span>' : `<button class="btn small good" data-a="shop-wear" data-c="${c}" data-i="${it.id}">Obliecť</button>`) : `<button class="btn small ${st === 'can' ? 'sun' : ''}" data-a="shop-prev" data-c="${c}" data-i="${it.id}">${COIN} ${it.price}</button>`}${st === 'lock' ? `<span class="muted b" style="font-size:.72rem">Chýba ${it.price - (p.coins || 0)}</span>` : ''}</div>`; };
+  const prevAv = sel ? { ...p.av, [sel[0]]: sel[1].id, ...(sel[0] === 'top' && ['saty', 'princezna'].includes(sel[1].id) ? {} : {}) } : null;
+  const prev = sel ? (() => { const [c, it] = sel; const st = state(it); return `<section class="card shopprev" id="shopprev"><div class="spfig">${avatarSvg(prevAv, { cls: 'idle' })}</div><div class="spinfo"><span class="eyebrow">Skúšobná kabínka</span><b>${it.n}</b><span class="muted b" style="font-size:.84rem">${st === 'own' ? 'Túto vec už máš.' : st === 'can' ? 'Takto by si vyzeral(a). Páči sa ti?' : `Chýba ti ešte ${COIN} ${it.price - (p.coins || 0)}. Uč sa a zbieraj!`}</span><div class="bkbtns" style="margin-top:6px">${st === 'own' ? `<button class="btn small good" data-a="shop-wear" data-c="${c}" data-i="${it.id}">Obliecť</button>` : st === 'can' ? `<button class="btn small primary" data-a="buy" data-c="${c}" data-i="${it.id}">Kúpiť za ${COIN} ${it.price}</button>` : ''}<button class="btn small" data-a="shop-prev-x">Zavrieť</button></div></div></section>`; })() : '';
+  const fil = arr => SHOPCAT === 'all' ? arr : arr.filter(([c]) => c === SHOPCAT);
   return `${topbar()}<main class="view"><section class="card shophead"><span class="coinbig">${COIN}</span><div><span class="eyebrow">Tvoje slniečka</span><b>${p.coins || 0}</b><span class="muted b" style="font-size:.85rem;display:block">Slniečka získaš za každú správnu odpoveď, hry, úlohy a čítanie.</span></div></section>
-  <section class="card shoptimer"><div class="sthead"><span class="hourglass">⏳</span><div><b>Nový tovar o:</b><span class="muted b" style="display:block;font-size:.8rem">Ponuka sa mení každé ${SHOP_DAYS} dni. Čo si kúpiš, nájdeš v šatníku.</span></div></div><div class="cd" id="shopcd">${cdHTML()}</div></section><p class="muted b" style="font-size:.82rem">Slniečka sa nekupujú za peniaze, získaš ich učením.</p>
-  ${prem.length ? `<div class="sec"><h2>👑 Prémiová ponuka</h2><span class="eyebrow">od 200</span></div><div class="shopgrid">${prem.map(itemCard).join('')}</div><div class="sec"><h2>Bežná ponuka</h2></div>` : ''}
-  <div class="shopgrid">${list.length ? '' : '<p class="b muted">Všetko z ponuky už máš! Nový tovar príde čoskoro.</p>'}${list.map(([c, it], i) => { const own = p.owned.includes(it.sid); const worn = p.av[c] === it.id; const can = (p.coins || 0) >= it.price; const sel = SHOPSEL === it.sid; return `<div class="card shopitem ${own ? 'own' : ''}" style="animation:popUp .4s ${i * 35}ms backwards"><span class="th">${itemThumb(c, it, p.av)}</span><b>${it.n}</b>${own ? (worn ? '<span class="tag">Máš to oblečené ✓</span>' : `<button class="btn small good" data-a="shop-wear" data-c="${c}" data-i="${it.id}">Obliecť</button>`) : sel ? `<button class="btn small primary" data-a="buy" data-c="${c}" data-i="${it.id}">Áno, kúpiť!</button>` : `<button class="btn small ${can ? 'sun' : ''}" data-a="buy-ask" data-c="${c}" data-i="${it.id}" ${can ? '' : 'aria-disabled="true"'}>${COIN} ${it.price}</button>`}${!own && !can ? `<span class="muted b" style="font-size:.75rem">Chýba ${it.price - (p.coins || 0)} ${COIN}</span>` : ''}</div>`; }).join('')}</div></main>${nav('shop')}`;
+  <section class="card shoptimer"><div class="sthead"><span class="hourglass">⏳</span><div><b>Nová ponuka o:</b><span class="muted b" style="display:block;font-size:.8rem">Ponuka sa mení raz za 24 hodín, vždy o polnoci. Dovtedy ostáva rovnaká.</span></div></div><div class="cd" id="shopcd">${cdHTML()}</div></section>
+  <div class="shoplegend"><span><i class="lg can"></i>Môžeš kúpiť</span><span><i class="lg lock"></i>Zatiaľ zamknuté</span><span><i class="lg own"></i>Kúpené</span></div>
+  <div class="chips">${SHOPCATS.map(([k, n]) => `<button class="chip ${SHOPCAT === k ? 'on' : ''}" data-a="shopcat" data-c="${k}">${n}</button>`).join('')}</div>
+  ${prev}
+  ${fil(prem).length ? `<div class="sec"><h2>👑 Prémiová ponuka</h2><span class="eyebrow">od 200</span></div><div class="shopgrid">${fil(prem).map(itemCard).join('')}</div><div class="sec"><h2>Bežná ponuka</h2></div>` : ''}
+  <div class="shopgrid">${fil(list).length ? fil(list).map(itemCard).join('') : '<p class="b muted">V tejto kategórii dnes nič nie je. Pozri sa zajtra!</p>'}</div><p class="muted b" style="font-size:.8rem">Ťukni na vec a vyskúšaš si ju na postavičke ešte pred kúpou.</p></main>${nav('shop')}`;
 };
+
 /* --- čítanka --- */
 let RD = null, RDG = null, REC = null;
 VIEWS.reads = () => {
@@ -487,7 +515,7 @@ const TUT = [
 const TOUR = [
   { h: 'Ahoj, som Bystrík! 🧸', t: 'Ukážem ti, kde čo nájdeš. Trvá to len minútku.', v: 'home' },
   { h: 'Toto si ty', t: 'Keď na seba ťukneš, zamávaš. Vzhľad si zmeníš v šatníku.', v: 'home', f: '.stage' },
-  { h: 'Denná odmena', t: 'Každý deň ťa tu v časti Dnes čaká darček. Stačí naň ťuknúť.', v: 'home', f: '.drcard' },
+  { h: 'Denná odmena', t: 'Každý deň ťa tu čaká darček. Siedmy deň v rade je najväčší.', v: 'home', f: '#drcard' },
   { h: 'Dnešné úlohy', t: 'Tri úlohy na dnes. Za splnené dostaneš body a slniečka.', v: 'home', f: '.tasks' },
   { h: 'Predmety', t: 'Tu sa učíš matematiku, slovenčinu a prehľad.', v: 'home', f: '.subjects' },
   { h: 'Ďalšie učenie', t: 'Čítanka, písanie prstom, denná výzva a tvoje poznámky.', v: 'learn', f: '.ltiles' },
@@ -511,6 +539,18 @@ function todayPath(p, d) {
   const bx = all ? X(nodes.length - 1) : X(cur), by = all ? Y(nodes.length - 1) : Y(cur);
   return `<section class="card pathcard"><div class="sec"><h2>🗺️ Dnešná cesta</h2><span class="eyebrow">${doneN}/${nodes.length}</span></div><div class="pathwrap"><svg viewBox="0 0 340 118" preserveAspectRatio="xMidYMid meet" aria-hidden="true"><defs><linearGradient id="psky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="var(--c-mat-soft)"/><stop offset="1" stop-color="var(--paper2)"/></linearGradient></defs><rect width="340" height="118" rx="16" fill="url(#psky)"/><circle cx="302" cy="24" r="13" fill="#FFD23F"/><g fill="#fff" opacity=".85"><ellipse cx="70" cy="22" rx="20" ry="7"/><ellipse cx="84" cy="17" rx="12" ry="7"/><ellipse cx="210" cy="16" rx="16" ry="6"/></g><path d="M0 92 Q60 60 120 86 T240 82 T340 76 V118 H0Z" fill="var(--c-prv-soft)"/><path d="M0 104 Q80 84 170 102 T340 96 V118 H0Z" fill="color-mix(in srgb,var(--c-prv) 35%,var(--c-prv-soft))"/><path d="${path}" fill="none" stroke="var(--paper)" stroke-width="9" stroke-linecap="round" stroke-linejoin="round"/><path d="${path}" fill="none" stroke="var(--edge)" stroke-width="2.5" stroke-dasharray="2 7" stroke-linecap="round" stroke-linejoin="round" opacity=".55"/>${nodes.map((x, k) => `<g transform="translate(${X(k)} ${Y(k)})"><circle r="15" fill="${x.done ? 'var(--good)' : k === cur ? 'var(--sun)' : 'var(--paper)'}" stroke="var(--edge)" stroke-width="2.5"/>${x.done ? '<path d="M-6 0 l4 4.5 l8 -9" stroke="#fff" stroke-width="3.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>' : `<text y="6" text-anchor="middle" font-size="16">${x.e}</text>`}</g>`).join('')}</svg><span class="pathbear ${all ? 'win' : ''}" style="left:${bx / 340 * 100}%;top:${by / 118 * 100}%">${bearSvg(all ? 'cheer' : '')}</span></div><p class="muted b" style="font-size:.86rem;margin:0">${all ? 'Dnes máš všetko splnené. Bystrík je na teba hrdý! 🎉' : 'Ďalšia zastávka: <b style="color:var(--ink)">' + nodes[cur].n + '</b>. Bystrík ide s tebou.'}</p></section>`;
 }
+/* ===== Bystrík – malý kútik starostlivosti (nie je hlavná úloha) ===== */
+const HRS = 3600000;
+function bearInit(p) { if (!p.bear) p.bear = { fed: Date.now(), slept: Date.now(), care: Date.now(), honey: 2, asleep: false }; return p.bear; }
+function bearMood(p) { const b = bearInit(p); const since = Date.now() - (b.care || 0); if (since > 48 * HRS) return 'sick'; if (b.asleep) return 'sleep'; if (Date.now() - (b.fed || 0) > 20 * HRS) return 'hungry'; if (Date.now() - (b.slept || 0) > 26 * HRS) return 'tired'; return 'happy'; }
+const BEAR_TXT = { sick: 'Bystrík je trochu nachladnutý 🤧. Stačí ho nakŕmiť alebo uložiť spať a hneď mu bude lepšie.', sleep: 'Bystrík sladko spí 💤. Zobuď ho, keď sa budeš chcieť učiť.', hungry: 'Bystrík by si dal trochu medu 🍯.', tired: 'Bystrík zíva. Možno by si rád zdriemol.', happy: 'Bystrík má dobrú náladu! Ťukni naňho.' };
+const BEAR_PEP = ['Ide ti to skvele! 💪', 'Ešte jedna úloha a dáme si pauzu?', 'Chyby sú v poriadku, z nich sa učíme.', 'Som na teba hrdý!', 'Poďme sa naučiť niečo nové!', 'Pamätáš si, čo sme sa učili včera?'];
+function bearCorner(p) {
+  const b = bearInit(p); const m = bearMood(p); const h = b.honey || 0;
+  return `<section class="card bearcorner bm-${m}" id="bearcorner"><button class="bcfig press" data-a="bear-tap" aria-label="Ťukni na Bystríka">${bearSvg(m === 'happy' ? '' : m === 'sick' || m === 'tired' ? 'comfort' : '')}${m === 'sleep' ? '<span class="bzz" aria-hidden="true">💤</span>' : m === 'sick' ? '<span class="bzz" aria-hidden="true">🤧</span>' : ''}</button><div class="bcinfo"><b>Bystríkov kútik</b><small>${BEAR_TXT[m]}</small><div class="bcact"><button class="btn small" data-a="bear-feed" ${h ? '' : 'aria-disabled="true"'}>🍯 Nakŕmiť <em>${h}</em></button><button class="btn small" data-a="bear-sleep">${b.asleep ? '☀️ Zobudiť' : '🌙 Uložiť spať'}</button><button class="btn small" data-a="bear-rec" aria-label="Podrž a povedz niečo, Bystrík to zopakuje">🎤 Zopakuj</button></div><small class="bchint">🍯 Med dostaneš za každé dokončené učenie alebo hru.</small></div></section>`;
+}
+let BREC = null;
+function bearCare(p) { const b = bearInit(p); b.care = Date.now(); save(); }
 function parentNeedCard() { if (DATA.parent && DATA.parent.pin) return ''; return `<button class="card pneed press" data-a="pguide"><span class="ic">👨‍👩‍👧</span><span><b>Rodičia: vytvorte si účet</b><span class="b" style="font-size:.9rem">Trvá to minútu. Ťuknite a prevediem vás.</span></span><em>!</em></button>`; }
 function a2hsCard() { if ((window.claude && window.claude.use) || isStandalone() || DATA.a2hsHide) return ''; const ios = /iphone|ipad|ipod/i.test(navigator.userAgent); return `<div class="card a2card"><span class="ic">📲</span><span><b>Daj si Bystríka na plochu</b><span class="b" style="font-size:.86rem">${A2HS ? 'Bude mať vlastnú ikonku a otvorí sa na celú obrazovku.' : ios ? 'V Safari ťukni dole na Zdieľať a zvoľ „Pridať na plochu“.' : 'V ponuke prehliadača ⋮ zvoľ „Pridať na plochu“ alebo „Inštalovať aplikáciu“.'}</span>${A2HS ? '<button class="btn small primary" data-a="install" style="margin-top:6px">📲 Pridať na plochu</button>' : ''}</span><button class="tutx" data-a="a2hs-hide" aria-label="Skryť">✕</button></div>`; }
 const PTOUR = [
@@ -640,7 +680,7 @@ VIEWS.home = () => {
   const nr = nextL ? rewardsAt(nextL, p.av.gender) : [];
   const toNext = nextL ? (() => { let x = li.need - li.cur; for (let L = li.L + 1; L < nextL; L++) x += need(L); return x; })() : 0;
   const stage = `<section class="card stage"><div class="bgav">${roomHTML(p.room)}</div><div class="fig" data-a="wave">${avatarSvg(p.av, { cls: 'idle', noBg: true })}</div>
-    <div class="nameplate">${esc(p.name)}<small>${title(li.L)}</small>${pet.e ? `<small>${pet.e} ${esc(petName(p.av))}</small>` : ''}</div></section>`;
+    <div class="nameplate">${esc(p.name)}<small>${title(li.L)}</small></div></section>`;
   const wk = ['Po', 'Ut', 'St', 'Št', 'Pi', 'So', 'Ne']; const now = new Date(); const dow = (now.getDay() + 6) % 7;
   const week = wk.map((n, i) => { const dd = new Date(); dd.setDate(now.getDate() - dow + i); const k = dkey(dd); const on = !!p.days[k]; return `<span><i class="${on ? 'on' : ''} ${i === dow ? 'today' : ''}" style="animation-delay:${i * 50}ms">${on ? '🔥' : ''}</i>${n}</span>`; }).join('');
   const nextStreak = streakRewards(p.av.gender).find(([, it]) => it.streak > (p.streak.best || 0));
@@ -653,14 +693,15 @@ VIEWS.home = () => {
   const quick = `<div class="quickrow"><button class="card qk press" data-a="rtab-go" data-t="streak"><span class="qi">🔥</span><b>${p.streak.count} ${plural(p.streak.count, 'deň', 'dni', 'dní')}</b><small>${p.streak.last === today() ? 'séria drží' : 'uč sa dnes'}</small></button><button class="card qk press" data-a="nav" data-v="rewards"><span class="qi">🏆</span><b>Odmeny</b><small>Level ${li.L}</small></button><button class="card qk press" data-a="nav" data-v="board"><span class="qi">🥇</span><b>Rebríček</b><small>top 20</small></button><button class="card qk press" data-a="${DATA.parent && DATA.parent.pin ? 'parent-open' : 'pguide'}"><span class="qi">👨‍👩‍👧</span><b>Rodičia</b><small>${DATA.parent && DATA.parent.pin ? 'účet s PIN' : 'vytvoriť účet'}</small></button></div><div class="card tipcard">${owlSvg('')}<p>${pick(TIPS)}</p></div>`;
   return `${topbar()}<main class="view pop-in">${stage}${quick}${parentNeedCard()}${a2hsCard()}${todayPath(p, d)}
   <div class="sec"><h2>Dnes</h2><span class="eyebrow">${p.grade}. ročník</span></div>
-  ${drReady(p) ? `<button class="card drcard press" data-a="dreward"><span class="ic">🎁</span><span><b>Denná odmena čaká!</b><span class="b" style="font-size:.9rem">Ťukni a vyzdvihni si dnešný darček.</span></span><em>!</em></button>` : ''}
+  ${drCard(p)}
   ${reviewCard(p)}
   <button class="card daily press ${dd ? 'done' : ''}" data-a="daily"><span class="ic">${dd ? '✅' : '🎯'}</span><span><b>${dd ? 'Denná výzva splnená!' : 'Denná výzva'}</b><span class="b" style="font-size:.9rem">${dd ? 'Môžeš si ju zahrať znova, len tak pre radosť.' : 'Opakovanie toho, čo si nedávno precvičoval(a), a ľahké otázky o svete · +50 bodov'}</span></span></button>
   ${ptaskCard(p)}${taskCard}
-  <div style="display:flex;flex-direction:column;gap:8px"><div class="sec"><h2>Učenie</h2><span class="eyebrow">${p.grade}. ročník</span></div><div class="subjects">${subj('mat')}${subj('sjl')}${subj('prv')}</div><p class="muted b" style="font-size:.85rem">Prehľad: príroda, Slovensko a svet okolo nás a angličtina.</p></div>
+  <div style="display:flex;flex-direction:column;gap:8px"><div class="sec"><h2>Učenie</h2><span class="eyebrow">${p.grade}. ročník</span></div><div class="subjects">${subj('mat')}${subj('sjl')}${subj('prv')}</div><p class="muted b" style="font-size:.85rem">Prehľad: ${p.grade <= 2 ? 'prvouka, angličtina a etika' : 'prírodoveda, vlastiveda, angličtina, informatika a etika'}.</p></div>
   ${progressCard(p)}
   ${homeBoard(p)}
   ${streak}
+  ${bearCorner(p)}
   ${nextL ? `<button class="card next press" data-a="nav" data-v="rewards"><span class="thumb">${itemThumb(nr[0][0], nr[0][1], p.av)}</span><span style="min-width:0"><span class="eyebrow">Ďalšia odmena · level ${nextL}</span><b style="display:block;font-family:var(--f-display);font-size:1.1rem;line-height:1.15">${nr.map(x => rewardName(...x)).join(', ')}</b><span class="muted b" style="font-size:.88rem">Chýba ti ešte ${toNext} bodov</span></span></button>` : ''}
   </main>${nav('home')}`;
 };
@@ -717,7 +758,7 @@ Pravidlá: všetko po slovensky, jednoducho a primerane veku. summary má 3 až 
     const n = { id: Date.now().toString(36), t: Date.now(), title: String(r.title || 'Moje poznámky').slice(0, 40), summary, qs };
     p.notes = [n, ...(p.notes || [])].slice(0, 10); noteTopic(n); p.stats.chat++; save();
     NOTE = { busy: false, err: '', preview: '' }; if (UI.view === 'notes') render(null); sfx('level'); confetti(120); say('Hotovo! Tvoje poznámky som zhrnul do bodov a pripravil som ti kvíz.');
-  } catch (e) { fail(e && e.code === 'rate_limited' ? 'Bystrík si musí chvíľu oddýchnuť. Skús to o pár minút.' : e && e.code === 'not_granted' ? 'Bystrík nemá povolenie. Popros rodičov.' : 'Poznámky sa nepodarilo spracovať. Skús to znova.'); }
+  } catch (e) { fail(e && e.code === 'ai_limit' ? AIL_MSG : e && e.code === 'rate_limited' ? 'Bystrík si musí chvíľu oddýchnuť. Skús to o pár minút.' : e && e.code === 'not_granted' ? 'Bystrík nemá povolenie. Popros rodičov.' : 'Poznámky sa nepodarilo spracovať. Skús to znova.'); }
 }
 let PAREA = 'all';
 VIEWS.subject = ({ s, g }) => {
@@ -730,8 +771,8 @@ VIEWS.subject = ({ s, g }) => {
   <div class="modehelp"><span style="font-size:1.6rem">${MODES[m].i}</span><span>${MODES[m].d}</span></div>
   <span class="eyebrow">2. Vyber ročník a tému</span>
   <div class="chips">${[1, 2, 3, 4].map(x => `<button class="chip ${x === g ? 'on' : ''}" data-a="grade-chip" data-g="${x}" data-s="${s}">${x}. ročník</button>`).join('')}</div>
-  ${s === 'prv' ? `<div class="chips">${[['all', '✨ Všetko'], ...Object.entries(AREAS).map(([k, a]) => [k, a.i + ' ' + a.n])].map(([k, n]) => `<button class="chip ${PAREA === k ? 'on' : ''}" data-a="parea" data-k="${k}">${n}</button>`).join('')}</div>` : ''}
-  ${(s === 'prv' ? Object.keys(AREAS).filter(k => PAREA === 'all' || PAREA === k).map(k => [k, ts.filter(t => (TOPIC[t.id].area || 'bio') === k)]) : [[null, ts]]).filter(([, list]) => list.length).map(([k, list]) => `${k ? `<div class="areahead a-${k}"><span>${AREAS[k].i}</span>${AREAS[k].n}</div>` : ''}<div class="topics">${list.map((t, i) => { const st = p.topics[t.id]; const ok = modeOk(t, m); return `<button class="card topic press ${ok ? '' : 'na'}" data-a="topic" data-id="${t.id}" style="animation:popUp .4s ${i * 45}ms backwards"><span class="ti" style="background:var(--c-${s}-soft)">${t.icon}</span><span class="tn">${t.name}<small>${ok ? (st && st.total ? `${Math.round(st.correct / st.total * 100)} % správne` : 'Ešte nevyskúšané') : `${MODES[m].n} tu nie je, vyber iný spôsob`}</small></span>${starStr(st?.stars || 0)}${ok ? '<span class="go">Hrať</span>' : ''}</button>`; }).join('')}</div>`).join('')}</main>${nav('learn')}`;
+  ${s === 'prv' ? `<div class="chips">${[['all', '✨ Všetko'], ...areasFor(g).map(k => [k, AREA_DEF[k].i + ' ' + AREA_DEF[k].n])].map(([k, n]) => `<button class="chip ${PAREA === k ? 'on' : ''}" data-a="parea" data-k="${k}">${n}</button>`).join('')}</div>` : ''}
+  ${(s === 'prv' ? areasFor(g).filter(k => PAREA === 'all' || PAREA === k || !areasFor(g).includes(PAREA)).map(k => [k, ts.filter(t => areaOf(t, g) === k)]) : [[null, ts]]).filter(([, list]) => list.length).map(([k, list]) => `${k ? `<div class="areahead a-${k}"><span>${AREA_DEF[k].i}</span>${AREA_DEF[k].n}</div>` : ''}<div class="topics">${list.map((t, i) => { const st = p.topics[t.id]; const ok = modeOk(t, m); return `<button class="card topic press ${ok ? '' : 'na'}" data-a="topic" data-id="${t.id}" style="animation:popUp .4s ${i * 45}ms backwards"><span class="ti" style="background:var(--c-${s}-soft)">${t.icon}</span><span class="tn">${t.name}<small>${ok ? (st && st.total ? `${Math.round(st.correct / st.total * 100)} % správne` : 'Ešte nevyskúšané') : `${MODES[m].n} tu nie je, vyber iný spôsob`}</small></span>${starStr(st?.stars || 0)}${ok ? '<span class="go">Hrať</span>' : ''}</button>`; }).join('')}</div>`).join('')}</main>${nav('learn')}`;
 };
 function startMode(id) {
   const t = TOPIC[id]; const p = P(); const m = p.mode[t.s] || 'quiz'; const back = { v: 'subject', p: { s: t.s, g: t.g } };
@@ -825,6 +866,7 @@ function answer(val, el) {
   else { const opts = $('#opts'); opts.classList.add('locked'); opts.querySelectorAll('.opt').forEach(b => { const v = q.options[+b.dataset.i]; if (v === q.answer) b.classList.add('right'); else if (b === el) b.classList.add('wrong'); else b.classList.add('dim'); }); }
   if (Q.mode === 'time') { TIMERS.push(setTimeout(() => { if (!Q || Q.left <= 0 || UI.view !== 'quiz') return; Q.i++; nextQ(); renderQ(); }, ok ? 450 : 1100)); return; }
   const fb = document.createElement('div'); fb.className = 'fb ' + (ok ? 'ok' : 'no'); fb.id = 'fb';
+  if (q.ex) p.lastEx = { x: String(q.ex).slice(0, 160), t: Date.now() };
   const fem = p.av && p.av.gender === 'd'; const bsay = ok ? pick([`Super, si ${fem ? 'šikovná' : 'šikovný'}!`, 'Výborne, ide ti to!', `Paráda, si ${fem ? 'jednotka' : 'jednotka'}!`, 'Presne tak, len tak ďalej!', `Bravo, ${fem ? 'zvládla' : 'zvládol'} si to!`]) : pick(['Nevadí, skús to znova!', 'Nič sa nedeje, nabudúce to dáš!', 'Nevadí, chybami sa učíme!', 'Skoro! Skúsime to ešte raz.']);
   if (!(q.sayAfter || q.speakLang)) setTimeout(() => say(bsay), 200);
   fb.innerHTML = `<div class="in"><div class="fbtop"><span class="fbbear">${bearSvg(ok ? 'cheer' : 'comfort')}</span><div class="fbbub"><h3>${ok ? '✓' : '✗'} ${bsay}</h3></div></div>${ok && q.calcUsed ? '<p class="muted">🧮 Použil(a) si kalkulačku, preto len polovica bodov.</p>' : ''}${!ok && !q.ex ? `<p class="muted">💡 Zapamätaj si správnu odpoveď. Nabudúce to už budeš vedieť!</p>` : ''}${!ok ? `<p>Správna odpoveď: <b>${esc(q.full || q.answer)}</b></p>` : ''}${q.ex && (!ok || q.full) ? `<p class="muted">${esc(q.ex)}</p>` : ''}<div id="explain"></div><div class="rowbtns" style="grid-template-columns:${!ok && CHAT_ON() ? '1fr 1fr' : '1fr'}">${!ok && CHAT_ON() ? '<button class="btn lilac" data-a="explain">🧸 Vysvetli mi to</button>' : ''}<button class="btn ${ok ? 'good' : 'primary'}" data-a="next">${Q.i + 1 >= Q.total ? 'Výsledok' : 'Ďalej'}</button></div></div>`;
@@ -851,7 +893,7 @@ async function explainQ() {
   if (!sample) { $('#extext').textContent = 'Bystrík teraz nemôže odpovedať. Chat funguje, keď je apka otvorená v Claude alebo keď rodič zadá AI kľúč v rodičovskom účte.'; return; }
   const p = P(); const prompt = `${tutorIntro(p)}\n\nDieťa práve odpovedalo nesprávne na úlohu z predmetu ${SUBJECTS[q.s].name}.\nÚloha: ${q.text}${q.speak && q.speak !== q.text ? ' (' + q.speak + ')' : ''}\nSprávna odpoveď: ${q.full || q.answer}\nDoplňujúce vysvetlenie: ${q.ex || '-'}\n\nVysvetli dieťaťu krátko (3–4 vety) a jednoducho, prečo je správna odpoveď práve táto a ako na to nabudúce príde. Povzbuď ho.`;
   try { p.stats.chat++; await sample(prompt, { cache: false, onText: ({ text }) => { const e = $('#extext'); if (e) e.textContent = text; } }); save(); }
-  catch (e) { const el = $('#extext'); if (el) el.textContent = e && e.code === 'rate_limited' ? 'Bystrík si musí chvíľu oddýchnuť. Skús to o chvíľu.' : 'Teraz sa to nepodarilo. Skús to neskôr.'; }
+  catch (e) { const el = $('#extext'); if (el) el.textContent = e && e.code === 'ai_limit' ? AIL_MSG : e && e.code === 'rate_limited' ? 'Bystrík si musí chvíľu oddýchnuť. Skús to o chvíľu.' : 'Teraz sa to nepodarilo. Skús to neskôr.'; }
 }
 
 /* --- diktát --- */
@@ -1075,6 +1117,21 @@ function wordNext() {
 }
 function wordHTML() { const w = GM.w; return `<section class="card wordbox"><div class="wemo">${w.e}</div><div class="wslots">${w.word.map((c, i) => `<i class="${i < w.pos ? 'ok' : i === w.pos ? 'cur' : ''}">${i < w.pos ? c : ''}</i>`).join('')}</div></section><div class="wtiles">${w.tiles.map(t => `<button class="wtile press ${t.used ? 'used' : ''}" data-a="wl" data-i="${t.i}" ${t.used ? 'disabled' : ''}>${t.c}</button>`).join('')}</div><p class="deckinfo" id="wordinfo">Ťukaj písmená v správnom poradí.</p>`; }
 function wordOut() { if (!GM || GM.ended || GM.busy) return; GM.busy = true; gHit(false, $('.wordbox')); const el = $('#wordinfo'); if (el) el.textContent = '⏰ Čas vypršal! Bolo to: ' + GM.w.word.join(''); setTimeout(() => { if (!GM || GM.ended) return; GM.busy = false; wordNext(); const b = $('#wordwrap'); if (b) b.innerHTML = wordHTML(); qTimer(wordOut, 2.4); }, 1300); }
+let JUSTUNL = null;
+function unlockAnim(k) {
+  const card = document.querySelector(`[data-gk="${k}"]`); const g = GAMES[k]; const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (card) card.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'center' });
+  sfx('coin'); setTimeout(() => sfx('level'), reduce ? 0 : 700);
+  if (reduce || !card) { toast('🔓 Hra ' + g.n + ' je odomknutá!'); setTimeout(() => { JUSTUNL = null; }, 1500); return; }
+  setTimeout(() => {
+    const r = card.getBoundingClientRect(); const a = document.createElement('div'); a.className = 'unl'; a.setAttribute('aria-hidden', 'true');
+    a.style.cssText = `left:${r.left + r.width / 2}px;top:${r.top + r.height / 2}px`;
+    a.innerHTML = `<svg viewBox="0 0 120 120"><g class="ushackle"><path d="M38 56 V38 a22 22 0 0 1 44 0 V56" fill="none" stroke="#C99511" stroke-width="11" stroke-linecap="round"/></g><rect x="26" y="52" width="68" height="54" rx="12" fill="#F8BD3A" stroke="#C99511" stroke-width="4"/><circle cx="60" cy="74" r="7" fill="#7A5300"/><rect x="57" y="76" width="6" height="14" rx="3" fill="#7A5300"/><g class="ukey"><circle cx="60" cy="118" r="10" fill="none" stroke="#E8456B" stroke-width="6"/><rect x="57" y="78" width="6" height="32" rx="2" fill="#E8456B"/><rect x="63" y="84" width="8" height="5" rx="1.5" fill="#E8456B"/></g></svg>`;
+    document.body.appendChild(a); try { burst(card, 30); } catch (e) { }
+    setTimeout(() => { try { confetti(90, .35); } catch (e) { } toast('🔓 Hra ' + g.n + ' je odomknutá!'); }, 1050);
+    setTimeout(() => { if (a.parentNode) a.parentNode.removeChild(a); JUSTUNL = null; const c2 = document.querySelector(`[data-gk="${k}"]`); if (c2) c2.classList.remove('gjust'); }, 1700);
+  }, 380);
+}
 const gameLocked = (p, k) => !!(GAMES[k] && GAMES[k].cost) && !(p.gown || []).includes(k);
 /* Zoraď čísla */
 function orderNext() { const g = GM.g; const n = g <= 1 ? 6 : g === 2 ? 8 : 9; const max = g <= 1 ? 20 : g === 2 ? 100 : g === 3 ? 1000 : 10000; const st = new Set(); while (st.size < n) st.add(R(g >= 3 ? 10 : 1, max)); const v = [...st]; GM.o = { vals: shuffle(v.slice()), sorted: v.slice().sort((a, b) => a - b), pos: 0 }; }
@@ -1103,7 +1160,7 @@ function moleRule(g) {
   };
   return pick(rules[g] || rules[1]);
 }
-VIEWS.games = () => { const p = P(); return `${topbar()}<main class="view"><h1 style="font-size:2rem">Minihry</h1><p class="muted b">Krátke hry na 45 sekúnd podľa tvojho ročníka. Za každú hru dostaneš body na level.</p>${DATA.settings.gameLimit ? `<section class="card gleft ${gamesLeft(p) ? '' : 'none'}"><span style="font-size:1.8rem">${gamesLeft(p) ? '🎟️' : '🌙'}</span><div><b>${gamesLeft(p) ? `Dnes môžeš hrať ešte ${gamesLeft(p)}×` : 'Na dnes už žiadne hry'}</b><span class="muted b" style="display:block;font-size:.85rem">${gamesLeft(p) ? `Denne môžeš hrať ${DATA.settings.gameLimit}× spolu. Potom sa uč 📚` : 'Zajtra sa hry znova odomknú. Zatiaľ sa môžeš učiť.'}</span></div></section>` : ''}${RT_ON() ? `<div class="tiles2"><button class="card tile2 press duelt" data-a="nav" data-v="duel"><span class="i">⚔️</span><b>Súboj s kamarátom</b><span>Kto vie viac? Hrajte naraz na dvoch zariadeniach</span></button><button class="card tile2 press boardt" data-a="nav" data-v="board"><span class="i">🏆</span><b>Rebríček</b><span>Kto získal tento týždeň najviac bodov</span></button></div>` : ''}<div class="gamelist pop-in">${Object.entries(GAMES).map(([k, g]) => `<button class="card gcard press ${gamesLeft(p) ? '' : 'glock'} ${gameLocked(p, k) ? 'gbuy' : ''}" data-a="game" data-g="${k}"><span class="gi" style="background:${g.bg}">${g.i}</span><span><b>${g.n}</b><span>${g.d}</span>${gameLocked(p, k) ? `<span class="gprice">🔒 Odomknúť za ${COIN} ${g.cost}</span>` : `<span style="color:var(--accent)">🏆 Najlepšie: ${p.best[k] || 0}</span>`}</span></button>`).join('')}</div></main>${nav('games')}`; };
+VIEWS.games = () => { const p = P(); return `${topbar()}<main class="view"><h1 style="font-size:2rem">Minihry</h1><p class="muted b">Krátke hry na 45 sekúnd podľa tvojho ročníka. Za každú hru dostaneš body na level.</p>${DATA.settings.gameLimit ? `<section class="card gleft ${gamesLeft(p) ? '' : 'none'}"><span style="font-size:1.8rem">${gamesLeft(p) ? '🎟️' : '🌙'}</span><div><b>${gamesLeft(p) ? `Dnes môžeš hrať ešte ${gamesLeft(p)}×` : 'Na dnes už žiadne hry'}</b><span class="muted b" style="display:block;font-size:.85rem">${gamesLeft(p) ? `Denne môžeš hrať ${DATA.settings.gameLimit}× spolu. Potom sa uč 📚` : 'Zajtra sa hry znova odomknú. Zatiaľ sa môžeš učiť.'}</span></div></section>` : ''}${RT_ON() ? `<div class="tiles2"><button class="card tile2 press duelt" data-a="nav" data-v="duel"><span class="i">⚔️</span><b>Súboj s kamarátom</b><span>Kto vie viac? Hrajte naraz na dvoch zariadeniach</span></button><button class="card tile2 press boardt" data-a="nav" data-v="board"><span class="i">🏆</span><b>Rebríček</b><span>Kto získal tento týždeň najviac bodov</span></button></div>` : ''}<div class="gamelist pop-in">${Object.entries(GAMES).map(([k, g]) => `<button class="card gcard press ${gamesLeft(p) ? '' : 'glock'} ${gameLocked(p, k) ? 'gbuy' : ''} ${JUSTUNL === k ? 'gjust' : ''}" data-a="game" data-g="${k}" data-gk="${k}" aria-label="${esc(g.n)}${gameLocked(p, k) ? ', zamknuté, odomknutie za ' + g.cost + ' slniečok' : ''}"><span class="gi" style="background:${g.bg}">${g.i}${gameLocked(p, k) ? '<span class="glk" aria-hidden="true">🔒</span>' : ''}</span><span><b>${g.n}</b><span>${g.d}</span>${gameLocked(p, k) ? `<span class="gprice">🔑 Odomkni za ${COIN} ${g.cost}${(p.coins || 0) >= g.cost ? '' : ` · chýba ${g.cost - (p.coins || 0)}`}</span>` : `<span style="color:var(--accent)">🏆 Najlepšie: ${p.best[k] || 0}</span>`}</span></button>`).join('')}</div></main>${nav('games')}`; };
 let GM = null;
 function gamesToday(p) { return p.gp && p.gp.d === today() ? p.gp.n : 0; }
 function gamesLeft(p) { const L = DATA.settings.gameLimit; return L ? Math.max(0, L - gamesToday(p)) : Infinity; }
@@ -1165,7 +1222,7 @@ function endGame() {
 
 /* --- šatník --- */
 let WCAT = 'hair';
-const WCATS = ['hair', 'top', 'bottom', 'shoes', 'acc', 'pet', 'room', 'eyes', 'mouth', 'skin'];
+const WCATS = ['hair', 'top', 'bottom', 'shoes', 'acc', 'room', 'eyes', 'mouth', 'skin'];
 CAT_LABEL.room = 'Pozadie';
 VIEWS.wardrobe = () => {
   const p = P(); p.seenRewards = levelInfo(p.xp).L; save();
@@ -1207,8 +1264,10 @@ VIEWS.rewards = () => {
     const lv = []; for (let l = 2; l <= 20; l++) { const r = rewardsAt(l, p.av.gender); if (r.length) lv.push([l, r]); }
     const meL = lv.filter(([l]) => l <= L).map(([l]) => l).pop();
     const nextL = lv.find(([l]) => l > L); const toNext = nextL ? (() => { let x = li.need - li.cur; for (let k = L + 1; k < nextL[0]; k++) x += need(k); return x; })() : 0;
-    body = `<section class="card" style="padding:14px;display:flex;flex-direction:column;gap:8px;background:var(--sun-soft)"><b style="font-family:var(--f-display);font-size:1.2rem">Si na leveli ${L} · ${title(L)}</b>${nextL ? `<span class="b muted">Ďalšia odmena je na leveli ${nextL[0]}. Chýba ti ${toNext} bodov.</span>` : '<span class="b">Máš všetky odmeny za levely! 👑</span>'}<div class="xpbar" style="height:16px"><i style="width:${li.pct}%"></i></div><span class="muted b" style="font-size:.85rem">Body získaš za každú správnu odpoveď, minihry, úlohy a dennú odmenu.</span></section>
-    <div class="road" id="road"><svg class="path" id="roadpath"></svg>${lv.map(([l, r], i) => `<div class="node ${i % 2 ? 'r' : ''} ${l <= L ? 'got' : ''} ${nextL && l === nextL[0] ? 'now' : ''}">${l === meL ? `<span class="me">${avatarSvg(p.av, { crop: 'head' })}</span>` : ''}<span class="ln">${l <= L ? '✓' : `<span><small>LEVEL</small>${l}</span>`}</span><div class="nc"><b>${l <= L ? `Level ${l} · získané` : nextL && l === nextL[0] ? `Level ${l} · už čoskoro!` : 'Level ' + l}</b><div class="ri">${r.map(([c, it]) => `<span class="rt"><span class="t">${itemThumb(c, it, p.av)}</span>${rewardName(c, it)}</span>`).join('')}</div></div></div>`).join('')}</div>`;
+    const got = lv.filter(([l]) => l <= L).length; const nextI = lv.findIndex(([l]) => l > L);
+    const node = ([l, r], i) => { const st = l <= L ? 'got' : i === nextI ? 'now' : 'fut'; const pct = st === 'now' ? Math.max(4, Math.round((1 - toNext / Math.max(1, (() => { let x = 0; for (let k = (lv[i - 1] ? lv[i - 1][0] : 1) + 1; k <= l; k++) x += need(k - 1); return x; })())) * 100)) : 0; return `<li class="mile st-${st} ${i % 2 ? 'r' : 'l'}" aria-label="Level ${l}: ${st === 'got' ? 'získané' : st === 'now' ? 'ďalšia odmena' : 'neskôr'}"><span class="mdot">${st === 'got' ? '✓' : st === 'now' ? '⭐' : '🔒'}<em>${l}</em></span><div class="mcard"><span class="mlv">${st === 'got' ? 'Získané' : st === 'now' ? 'Ďalšia odmena' : 'Level ' + l}</span><div class="mitems">${r.slice(0, 3).map(([c, it]) => `<span class="mit"><span class="t">${itemThumb(c, it, p.av)}</span><small>${rewardName(c, it)}</small></span>`).join('')}${r.length > 3 ? `<span class="mmore">+${r.length - 3}</span>` : ''}</div>${st === 'now' ? `<div class="mprog"><i style="width:${Math.min(100, pct)}%"></i></div><small class="mleft">Chýba ${toNext} bodov</small>` : ''}</div></li>`; };
+    body = `<section class="card roadhead"><div class="rhl"><span class="rhme">${avatarSvg(p.av, { crop: 'head' })}</span><div><b>Level ${L} · ${title(L)}</b><small>${nextL ? `Ďalšia odmena na leveli ${nextL[0]}` : 'Máš všetky odmeny za levely! 👑'}</small></div></div><div class="xpbar" style="height:14px"><i style="width:${li.pct}%"></i></div><div class="rhstats"><span><i class="lg own"></i>${got} získané</span><span><i class="lg can"></i>${nextL ? 1 : 0} ďalšia</span><span><i class="lg lock"></i>${lv.length - got - (nextL ? 1 : 0)} neskôr</span></div></section>
+    <ol class="miles">${lv.map(node).join('')}</ol><p class="muted b" style="font-size:.82rem;text-align:center">Body získaš za správne odpovede, hry, úlohy a dennú odmenu.</p>`;
   } else if (RTAB === 'streak') {
     const sr = streakRewards(p.av.gender); const dn = drNextDay(p);
     body = `<section class="card streak" style="align-items:center;text-align:center"><span class="flame" style="font-size:4rem">🔥</span><b class="n" style="font-size:2rem">${p.streak.count} ${plural(p.streak.count, 'deň', 'dni', 'dní')} po sebe</b><span class="b muted">Najdlhšia séria: ${p.streak.best || 0}. Séria rastie, keď sa učíš každý deň.</span></section>
@@ -1227,6 +1286,11 @@ function drawRoad() {
 AFTER.rewards = () => setTimeout(drawRoad, 30);
 
 /* --- denná odmena --- */
+function drCard(p) {
+  const ready = drReady(p); const cur = ready ? drNextDay(p) : (p.dailyReward.day || 1); const next = ready ? cur : (cur % 7) + 1; const nextVal = DR[next - 1];
+  const cells = DR.map((x, i) => { const n = i + 1; const got = ready ? n < cur : n <= cur; const now = ready && n === cur; return `<div class="drd ${got ? 'got' : ''} ${now ? 'now' : ''} ${!ready && n === next ? 'next' : ''} ${n === 7 ? 'big' : ''}" aria-label="${n}. deň: ${x.xp} bodov${got ? ', vyzdvihnuté' : now ? ', dnes' : ''}"><span class="di">${got ? '✓' : x.i}</span><b>${n}.</b><small>+${x.xp}</small></div>`; }).join('');
+  return `<section class="card drcard2 ${ready ? 'ready' : 'done'}" id="drcard"><div class="drh"><span class="dri">${ready ? '🎁' : '✅'}</span><div class="grow"><b>${ready ? `Denná odmena: ${cur}. deň` : 'Dnešná odmena je tvoja'}</b><small>${ready ? 'Príď každý deň v rade. Na 7. deň je veľká odmena.' : `Zajtra: ${next}. deň · +${nextVal.xp} bodov ${nextVal.i}`}</small></div></div><div class="drrow">${cells}</div>${ready ? `<button class="btn sun block" data-a="dr-claim">🎁 Vyzdvihnúť +${DR[cur - 1].xp} bodov</button>` : ''}</section>`;
+}
 function openDailyReward() {
   const p = P(); if (!drReady(p)) { toast('Dnešnú odmenu už máš. Príď zajtra! 🙂'); return; }
   const dn = drNextDay(p);
@@ -1248,7 +1312,7 @@ const SUGG = {
 VIEWS.chat = () => {
   if (DATA.settings.chat && !CHAT_ON()) return `${topbar('home')}<main class="view"><section class="card duelbox">${bearSvg('')}<h2>AI Bystrík ešte spí</h2><p class="muted b">Aby vedel odpovedať na otázky, musí ho rodič raz zapnúť. Je to zadarmo a trvá to asi 2 minúty.</p><div class="gethow" style="text-align:left;width:100%;box-sizing:border-box"><b>Pre rodiča</b><p>1. Otvorte <b>Rodičovský účet</b>.<br>2. Záložka <b>Nastavenia</b> → <b>Účet a AI</b>.<br>3. Ťuknite na <b>Zapnúť AI s návodom</b>.</p></div><button class="btn primary block" data-a="parent-open">👨‍👩‍👧 Otvoriť rodičovský účet</button></section></main>${nav('')}`;
   if (!DATA.settings.chat) return `${topbar('home')}<main class="view"><section class="card" style="padding:18px;text-align:center;display:flex;flex-direction:column;align-items:center;gap:8px">${owlSvg()}<h2>Chat je vypnutý</h2><p class="muted b">Rodičia ho môžu zapnúť v rodičovskom účte.</p></section></main>${nav('')}`;
-  return `${topbar('home')}<main class="view"><div style="display:flex;align-items:center;gap:12px"><span style="width:64px;height:64px;flex:none;display:block">${owlSvg('')}</span><div><h1 style="font-size:1.7rem">Opýtaj sa Bystríka</h1><p class="muted b" style="font-size:.9rem">Nerozumieš niečomu z matiky, slovenčiny, prírody alebo angličtiny? Napíš mi! Otázky dole sú pre ${P().grade}. ročník.</p></div></div>
+  return `${topbar('home')}<main class="view"><div style="display:flex;align-items:center;gap:12px"><span style="width:64px;height:64px;flex:none;display:block">${owlSvg('')}</span><div><h1 style="font-size:1.7rem">Opýtaj sa Bystríka</h1><p class="muted b" style="font-size:.9rem">Nerozumieš niečomu z matiky, slovenčiny, prírody alebo angličtiny? Napíš mi! Otázky dole sú pre ${P().grade}. ročník.</p></div></div>${aiMeter(true)}
   <div class="chatlog" id="chatlog">${CHAT.msgs.length ? CHAT.msgs.map((m, i) => m.r === 'me' ? `<div class="msg me">${esc(m.t)}</div>` : `<div class="msg bot">${owlSvg('')}<span ${i === CHAT.msgs.length - 1 ? 'id="lastbot"' : ''}>${m.t ? esc(m.t) : '<span class="typing"><i></i><i></i><i></i></span>'}</span></div>`).join('') : `<div class="msg bot">${owlSvg('')}<span>Ahoj, ${esc(P().name)}! Na čo sa chceš opýtať? Môžeš si vybrať aj otázku nižšie. 👇</span></div><div class="sugg">${[...(SUGG[P().grade] || SUGG[1]), SUGG_PRV[P().grade] || SUGG_PRV[1]].map(s => `<button class="press" data-a="ask" data-q="${esc(s)}">${esc(s)}</button>`).join('')}</div>`}</div>
   <form class="chatin" id="chatform"><input id="chatq" maxlength="300" autocomplete="off" placeholder="Napíš otázku…" ${CHAT.busy ? 'disabled' : ''}><button class="btn primary small" type="submit" ${CHAT.busy ? 'disabled' : ''} aria-label="Poslať">➤</button></form></main>${nav('')}`;
 };
@@ -1262,7 +1326,7 @@ async function askBot(q) {
   const msgs = [{ role: 'user', content: tutorIntro(p) + '\n\nZačni rozhovor.' }, { role: 'assistant', content: `Ahoj ${p.name}! Som Bystrík. Na čo sa chceš opýtať?` }];
   hist.forEach(m => { if (m.t) msgs.push({ role: m.r === 'me' ? 'user' : 'assistant', content: m.t }); });
   try { p.stats.chat++; checkBadges(p); save(); const res = await sample(msgs, { cache: false, onText: ({ text }) => { CHAT.msgs[CHAT.msgs.length - 1].t = text; const e = $('#lastbot'); if (e) e.textContent = text; } }); finish(res.text); }
-  catch (e) { finish(e && e.code === 'rate_limited' ? 'Musím si chvíľu oddýchnuť. Skús to o pár minút. 🧸' : e && e.code === 'not_granted' ? 'Chat nie je povolený. Popros rodičov, nech ho povolia.' : (e && e.text) || 'Niečo sa pokazilo. Skús to znova.'); }
+  catch (e) { finish(e && e.code === 'ai_limit' ? AIL_MSG : e && e.code === 'rate_limited' ? 'Musím si chvíľu oddýchnuť. Skús to o pár minút. 🧸' : e && e.code === 'not_granted' ? 'Chat nie je povolený. Popros rodičov, nech ho povolia.' : (e && e.text) || 'Niečo sa pokazilo. Skús to znova.'); }
 }
 
 /* --- kalkulačka --- */
@@ -1359,14 +1423,15 @@ function aiGuide(i) {
   setTimeout(() => { const b = $('#aigover .bear'); if (b) b.classList.remove('talking'); }, Math.min(6000, st.say.length * 70));
 }
 async function readClip() { try { return ((await navigator.clipboard.readText()) || '').trim(); } catch (e) { return ''; } }
+function aiLimitCard() { const L = aiLimit(); return `<section class="card pcard ailimcard"><span class="eyebrow">⏳ Denný limit AI</span><p class="muted b" style="font-size:.84rem;padding:4px 0">Koľko môže Bystrík denne „premýšľať“. Jedna otázka v chate je asi 300 až 800 tokenov, fotka poznámok asi 2 000. Limit sa obnoví o polnoci.</p>${aiMeter(false)}<div class="chips" style="padding:6px 0;flex-wrap:wrap">${AI_LIMITS.map(n => `<button class="chip ${L === n ? 'on' : ''}" data-a="ai-limit" data-n="${n}">${fmt(n)}</button>`).join('')}</div></section>`; }
 function aiCard() {
-  if (window.claude && window.claude.use) return '';
+  if (window.claude && window.claude.use) return aiLimitCard();
   const has = !!getApiKey();
   return `<section class="card pcard aicard"><span class="eyebrow">🧸 Bystrík (AI) na webe</span>${has ? '<p class="b" style="color:var(--good);font-size:.9rem;padding:4px 0">✅ AI kľúč je uložený. Chat, „Vysvetli mi to“ a Moje poznámky fungujú.</p>' : '<p class="b" style="font-size:.9rem;padding:4px 0">Zapnite chat s Bystríkom, vysvetľovanie chýb a čítanie poznámok z fotiek.</p>'}
   ${has ? '' : '<button class="btn primary aiguidebtn" data-a="ai-guide">▶️ Zapnúť AI s návodom</button><p class="muted b" style="font-size:.8rem;text-align:center;margin:6px 0 10px">Zadarmo · bez platobnej karty · asi 2 minúty</p>'}
   <input class="field" id="aikey" type="password" autocomplete="off" placeholder="${has ? '•••••••• (uložený)' : 'Sem vložte kľúč'}" style="font-size:1rem;padding:10px 12px;text-align:left">
   <div class="bkbtns" style="margin-top:8px"><button class="btn small" data-a="ai-paste">📋 Vložiť</button><button class="btn small primary" data-a="ai-save">💾 Uložiť</button>${has ? '<button class="btn small" data-a="ai-test">🔎 Otestovať</button><button class="btn small" data-a="ai-link">📲 Odkaz pre ďalší telefón</button><button class="btn small" data-a="ai-del">🗑️ Odstrániť</button>' : ''}</div>
-  <p class="muted b" style="font-size:.78rem">Kľúč zostane len v tomto zariadení a nie je v zálohe. S bezplatným kľúčom Google má Bystrík denný limit otázok. Google môže otázky z bezplatnej verzie použiť na zlepšovanie svojej AI, preto deti nech nepíšu osobné údaje. Kto má prístup k tomuto telefónu, môže kľúč používať.</p></section>`;
+  <p class="muted b" style="font-size:.78rem">Kľúč zostane len v tomto zariadení a nie je v zálohe. S bezplatným kľúčom Google má Bystrík denný limit otázok. Google môže otázky z bezplatnej verzie použiť na zlepšovanie svojej AI, preto deti nech nepíšu osobné údaje. Kto má prístup k tomuto telefónu, môže kľúč používať.</p></section>${aiLimitCard()}`;
 }
 function backupCard() {
   const nb = needBackup(); const inClaude = !!(window.claude && window.claude.use);
@@ -1496,7 +1561,7 @@ const ACT = {
   'card-yes': () => cardAnswer(true), 'card-no': () => cardAnswer(false),
   tile: d => tileTap(+d.i), 'm-pick': d => mPick(d.s, +d.i), bin: (d, el) => binTap(+d.i, el),
   game: d => { sfx('tap'); const p = P(); if (gameLocked(p, d.g)) { const g = GAMES[d.g]; const can = (p.coins || 0) >= g.cost; const w = document.createElement('div'); w.className = 'over'; w.innerHTML = `<div class="card box"><div style="font-size:4rem;line-height:1">${g.i}</div><h2>${g.n}</h2><p class="muted b">${g.d}</p><p class="b">Odomknutie stojí ${COIN} ${g.cost}. Máš ${COIN} ${p.coins || 0}.</p>${can ? `<button class="btn primary block" data-a="game-buy" data-g="${d.g}">🔓 Odomknúť hru</button>` : `<p class="b" style="color:var(--bad)">Chýba ti ešte ${g.cost - (p.coins || 0)} slniečok. Uč sa a zbieraj!</p><button class="btn primary block" data-a="ov-learn">📚 Ísť sa učiť</button>`}<button class="btn block" data-a="ov-close">Zrušiť</button></div>`; document.body.appendChild(w); return; } startGame(d.g); },
-  'game-buy': d => { const p = P(); const g = GAMES[d.g]; if (!g || !gameLocked(p, d.g) || (p.coins || 0) < g.cost) return; p.coins -= g.cost; p.gown = [...(p.gown || []), d.g]; save(); $$('.over').forEach(e => e.remove()); sfx('level'); try { confetti(100, .35); } catch (e) { } toast('🔓 Hra ' + g.n + ' je odomknutá!'); render(null); },
+  'game-buy': d => { const p = P(); const g = GAMES[d.g]; if (!g || !gameLocked(p, d.g) || (p.coins || 0) < g.cost) return; p.coins -= g.cost; p.gown = [...(p.gown || []), d.g]; save(); $$('.over').forEach(e => e.parentNode.removeChild(e)); JUSTUNL = d.g; render(null); unlockAnim(d.g); },
   'ord': (d, el) => { if (!GM || GM.ended || GM.busy) return; const o = GM.o; const v = +el.dataset.v; if (v === o.sorted[o.pos]) { o.pos++; el.classList.add('done'); el.disabled = true; sfx('pop'); buzz(8); if (o.pos >= o.sorted.length) { GM.busy = true; if (GM.qt) clearTimeout(GM.qt); gHit(true, $('#ordgrid')); if (o.sorted.length >= 8) { GM.score++; const sc = $('#gscore'); if (sc) sc.textContent = '⭐ ' + GM.score; } setTimeout(() => { if (!GM || GM.ended) return; GM.busy = false; orderNext(); const b = $('#ordwrap'); if (b) b.innerHTML = orderHTML(); qTimer(orderOut, 3); }, 600); } } else { el.classList.remove('bad'); void el.offsetWidth; el.classList.add('bad'); gHit(false, el); } },
   'simon-pad': (d, el) => { if (!GM || GM.ended || GM.lockIn) return; const i = +el.dataset.i; simonLit(i, 220); if (i === GM.seq[GM.in]) { GM.in++; if (GM.in >= GM.seq.length) { GM.lockIn = true; gHit(true, $('#simon')); GM.seq.push(R(0, 3)); GM.in = 0; TIMERS.push(setTimeout(simonPlay, 900)); } } else { GM.lockIn = true; gHit(false, $('#simon')); GM.in = 0; const el2 = $('#simoninfo'); if (el2) el2.textContent = 'Ups! Pozri sa ešte raz.'; if (!GM.ended) TIMERS.push(setTimeout(simonPlay, 1100)); } },
   'race-ans': (d, el) => { if (!GM || GM.ended || GM.busy) return; const ok = GM.rq.opts[+el.dataset.i] === GM.rq.answer; if (ok) { GM.pos++; gHit(true, el); if (GM.pos >= 10) { GM.busy = true; GM.score += 5; const sc = $('#gscore'); if (sc) sc.textContent = '⭐ ' + GM.score; sfx('level'); try { confetti(80, .3); } catch (e) { } toast('🏁 Vyhral(a) si preteky! +5 ⭐'); TIMERS.push(setTimeout(() => { if (!GM || GM.ended) return; GM.pos = 0; GM.bot = 0; GM.busy = false; GM.rq = frogQ(GM.g); raceDraw(true); }, 1200)); return; } } else gHit(false, el); if (GM.ended) return; GM.rq = frogQ(GM.g); raceDraw(true); },
@@ -1528,8 +1593,8 @@ const ACT = {
   gift: (d, el) => { el.classList.add('open'); sfx('gift'); confetti(80, .4); setTimeout(() => { el.remove(); $('.over .rewards').hidden = false; $('[data-a="ov-wear"]').hidden = false; }, 450); },
   'ov-close': () => { $('.over')?.remove(); setTimeout(flushPending, 200); },
   'ov-wear': () => { $('.over')?.remove(); PENDING = []; go('wardrobe', {}, 'f'); },
-  dreward: () => { sfx('tap'); openDailyReward(); },
-  'dr-claim': (d, el) => { const p = P(); const dn = drNextDay(p); p.dailyReward = { last: today(), day: dn }; $('.over')?.remove(); confetti(120); touchStreak(p); grant(DR[dn - 1].xp, el); if (UI.view === 'home' || UI.view === 'rewards') render(null); },
+  dreward: () => { sfx('tap'); const p = P(); if (UI.view !== 'home') { go('home', {}, 'f'); return setTimeout(() => { const e = $('#drcard'); if (e) e.scrollIntoView({ behavior: 'smooth', block: 'center' }); }, 300); } if (drReady(p)) ACT['dr-claim']({}, $('#drcard')); else { const e = $('#drcard'); if (e) e.scrollIntoView({ behavior: 'smooth', block: 'center' }); } },
+  'dr-claim': (d, el) => { const p = P(); if (!drReady(p)) return; const dn = drNextDay(p); p.dailyReward = { last: today(), day: dn }; $('.over')?.remove(); confetti(120); touchStreak(p); grant(DR[dn - 1].xp, el); if (UI.view === 'home' || UI.view === 'rewards') render(null); },
   claim: (d, el) => { const p = P(); const dd = ensureDay(p); if (dd.claimed.includes(d.id)) return; dd.claimed.push(d.id); p.stats.tasks++; checkBadges(p); const T = TASKS.find(x => x.id === d.id); confetti(50, .5); grant(T.xp, el); render(null); },
   'claim-bonus': (d, el) => { const p = P(); const dd = ensureDay(p); if (dd.bonus) return; dd.bonus = true; confetti(160); grant(50, el); render(null); },
   'rtab-go': d => { RTAB = d.t; go('rewards', {}, 'f'); },
@@ -1617,6 +1682,18 @@ const ACT = {
   'auth-chmail': () => { const w = document.createElement('div'); w.className = 'over'; w.innerHTML = `<div class="card box"><h2>✉️ Nový e-mail</h2><p class="muted b">Teraz: ${esc(AUTH.email || '')}. Zadajte novú adresu. Na potvrdenie vám príde e-mail.</p><input class="field" id="chm" type="email" inputmode="email" autocapitalize="off" autocomplete="email" placeholder="novy@email.sk" style="width:100%;box-sizing:border-box;font-size:1.05rem;padding:12px;text-align:left"><p class="loginmsg" id="chmmsg"></p><button class="btn primary block" data-a="auth-chmail-go">Poslať potvrdenie</button><button class="btn block" data-a="ov-close">Zavrieť</button></div>`; document.body.appendChild(w); },
   'auth-chmail-go': async (d, el) => { const v = ($('#chm').value || '').trim().toLowerCase(); const m = $('#chmmsg'); if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v)) { m.textContent = 'Zadajte platný e-mail.'; sfx('no'); return; } if (v === (AUTH.email || '').toLowerCase()) { m.textContent = 'To je váš terajší e-mail.'; sfx('no'); return; } el.disabled = true; try { const t = await supaToken(); const r = await fetch(SUPA.url + '/auth/v1/user?redirect_to=' + encodeURIComponent(location.origin + location.pathname), { method: 'PUT', headers: { apikey: SUPA.key, Authorization: 'Bearer ' + t, 'content-type': 'application/json' }, body: JSON.stringify({ email: v }) }); const j = await r.json().catch(() => ({})); if (!r.ok) throw { message: j.msg || j.message || '', code: j.error_code || '', status: r.status }; if (j.email && j.email.toLowerCase() === v) { setAuth({ ...AUTH, email: j.email }); m.className = 'loginmsg ok'; m.textContent = 'E-mail je zmenený ✓'; sfx('ok'); render(null); } else { m.className = 'loginmsg ok'; m.textContent = 'Poslali sme potvrdzovací e-mail. Kliknite na odkaz v ňom (pozrite starú aj novú schránku a spam). Dovtedy platí starý e-mail.'; sfx('ok'); } } catch (e) { el.disabled = false; const x = (e.message || '') + (e.code || '') + (e.status || ''); m.className = 'loginmsg'; m.textContent = /exists|registered|taken/i.test(x) ? 'Tento e-mail už používa iný účet.' : /rate|429/i.test(x) ? 'Teraz sa nedá poslať e-mail. Skúste to o hodinu.' : 'Nepodarilo sa. Skúste to znova.'; sfx('no'); } },
   'auth-switch': async (d, el) => { await ACT['auth-out'](d, el); if (UI.view === 'login') { LOGIN.mode = 'up'; LOGIN.msg = ''; render(null); toast('Odhlásené. Prihláste sa iným e-mailom alebo si vytvorte nový účet.'); } },
+  'bear-tap': () => { const p = P(); const b = bearInit(p); const fig = $('.bcfig svg'); if (b.asleep) { toast('Psst… Bystrík spí 💤'); return; } try { bearJoy(fig); } catch (e) { } const last = (p.lastEx && Date.now() - p.lastEx.t < 6 * HRS) ? 'Pamätáš? ' + p.lastEx.x : pick(BEAR_PEP); say(last); toast('🧸 ' + last); },
+  'bear-feed': () => { const p = P(); const b = bearInit(p); if (!b.honey) { toast('Med zatiaľ nemáš. Dokonči nejaké učenie a dostaneš 🍯'); sfx('no'); return; } b.honey--; b.fed = Date.now(); b.asleep = false; bearCare(p); sfx('pop'); toast('Mňam! Ďakujem 🍯'); render(null); },
+  'bear-sleep': () => { const p = P(); const b = bearInit(p); b.asleep = !b.asleep; if (b.asleep) b.slept = Date.now(); bearCare(p); sfx('tap'); render(null); },
+  'bear-rec': async (d, el) => {
+    if (BREC) { try { BREC.mr.stop(); } catch (e) { } return; }
+    if (!navigator.mediaDevices || !window.MediaRecorder) { toast('Tu sa mikrofón zapnúť nedá.'); return; }
+    let st; try { st = await navigator.mediaDevices.getUserMedia({ audio: true }); } catch (e) { toast('Mikrofón nie je povolený. Rodič ho môže povoliť v prehliadači.'); return; }
+    const ch = []; const mr = new MediaRecorder(st); BREC = { mr }; el.classList.add('on'); el.innerHTML = '⏹️ Hotovo';
+    mr.ondataavailable = e => { if (e.data && e.data.size) ch.push(e.data); };
+    mr.onstop = () => { st.getTracks().forEach(t => t.stop()); BREC = null; el.classList.remove('on'); el.innerHTML = '🎤 Zopakuj'; const url = URL.createObjectURL(new Blob(ch, { type: mr.mimeType || 'audio/webm' })); const a = new Audio(url); a.preservesPitch = false; a.mozPreservesPitch = false; a.webkitPreservesPitch = false; a.playbackRate = 1.45; const fig = $('.bcfig svg'); if (fig) fig.classList.add('talking'); a.onended = () => { URL.revokeObjectURL(url); if (fig) fig.classList.remove('talking'); }; a.play().catch(() => { }); bearCare(P()); };
+    mr.start(); setTimeout(() => { if (BREC && BREC.mr === mr) try { mr.stop(); } catch (e) { } }, 5000);
+  },
   'auth-login': () => { PARENT_OK = false; go('login', {}, 'f'); },
   'auth-chpass': () => { const w = document.createElement('div'); w.className = 'over'; w.innerHTML = `<div class="card box"><h2>🔑 Nové heslo</h2><p class="muted b">Zadajte nové heslo k účtu ${esc(AUTH.email || '')}.</p><input class="field" id="chp" type="password" autocomplete="new-password" placeholder="Aspoň 6 znakov" style="width:100%;box-sizing:border-box;font-size:1.05rem;padding:12px;text-align:left"><p class="loginmsg" id="chpmsg"></p><button class="btn primary block" data-a="auth-chpass-go">💾 Uložiť heslo</button><button class="btn block" data-a="ov-close">Zrušiť</button></div>`; document.body.appendChild(w); },
   'auth-chpass-go': async (d, el) => { const v = ($('#chp').value || ''); const m = $('#chpmsg'); if (v.length < 6) { m.textContent = 'Heslo musí mať aspoň 6 znakov.'; sfx('no'); return; } el.disabled = true; try { const t = await supaToken(); const r = await fetch(SUPA.url + '/auth/v1/user', { method: 'PUT', headers: { apikey: SUPA.key, Authorization: 'Bearer ' + t, 'content-type': 'application/json' }, body: JSON.stringify({ password: v }) }); const j = await r.json().catch(() => ({})); if (!r.ok) throw { message: j.msg || j.message || '', code: j.error_code || '' }; $$('.over').forEach(e => e.parentNode.removeChild(e)); sfx('ok'); toast('Heslo je zmenené ✓'); } catch (e) { el.disabled = false; m.textContent = /same_password|different/i.test((e.message || '') + (e.code || '')) ? 'Nové heslo musí byť iné ako staré.' : 'Nepodarilo sa. Skúste to znova.'; sfx('no'); } },
@@ -1692,8 +1769,9 @@ const ACT = {
   'duel-invite': async d => { const me = P(); const f = (FR && FR.list || []).find(x => x.code === d.c); if (!f) return; sfx('tap'); const code = duelCreate(); D.inv = f.name; render(null); try { await sb('POST', 'messages', { from_code: me.fc, to_code: f.code, kind: 'duel', body: code }, 'return=minimal'); } catch (e) { } inboxSend(f.code, 'invite', { from: me.fc, name: me.name, code }); },
   'fc-menu': () => { if (FC) return ACT['fr-menu']({ c: FC.code }); const w = document.createElement('div'); w.className = 'over'; w.innerHTML = `<div class="card box"><h2>Priateľ</h2><p class="muted b">Ak priateľa odstrániš, zmizne zo zoznamu a jeho správy sa ti prestanú zobrazovať.</p><button class="btn block" data-a="fr-remove">🚫 Odstrániť priateľa</button><button class="btn primary block" data-a="ov-close">Zrušiť</button></div>`; document.body.appendChild(w); },
   'fr-remove': async d => { const code = (d && d.c) || (FC && FC.code); if (!code) return; const me = P(); me.fblock = [...new Set([...(me.fblock || []), code])]; save(); try { await sb('DELETE', `friends?my_code=eq.${me.fc}&friend_code=eq.${code}`); } catch (e) { } $$('.over').forEach(e => e.remove()); if (FR) FR.at = 0; go('friends', {}, 'b'); toast('Priateľ odstránený.'); },
+  'ai-limit': d => { DATA.settings.aiLimit = +d.n; save(); sfx('tap'); toast('Denný limit AI: ' + fmt(+d.n) + ' tokenov'); render(null); },
   'ai-del': () => { setApiKey(''); toast('AI kľúč odstránený.'); render(null); },
-  'ai-test': async (d, el) => { el.disabled = true; el.textContent = '⏳ Testujem…'; try { const s2 = await getSample(); const r = await s2('Odpovedz po slovensky jednou krátkou vetou: pozdrav dieťa.', { cache: false }); toast('✅ Funguje! Bystrík hovorí: ' + r.text.slice(0, 80)); } catch (e) { toast(e && e.code === 'not_granted' ? '❌ Kľúč nie je platný. Skontrolujte ho.' : e && e.code === 'no_credit' ? '❌ Na účte chýba kredit (Billing).' : e && e.code === 'rate_limited' ? '⏳ Dnešný limit je minutý alebo príliš veľa požiadaviek. Skúste neskôr.' : '❌ Nepodarilo sa: ' + ((e && e.message) || 'chyba')); } render(null); },
+  'ai-test': async (d, el) => { el.disabled = true; el.textContent = '⏳ Testujem…'; try { const s2 = await getSample(); const r = await s2('Odpovedz po slovensky jednou krátkou vetou: pozdrav dieťa.', { cache: false }); toast('✅ Funguje! Bystrík hovorí: ' + r.text.slice(0, 80)); } catch (e) { toast(e && e.code === 'ai_limit' ? '⏳ Denný limit AI je vyčerpaný. Zvýšte ho nižšie alebo počkajte do zajtra.' : e && e.code === 'not_granted' ? '❌ Kľúč nie je platný. Skontrolujte ho.' : e && e.code === 'no_credit' ? '❌ Na účte chýba kredit (Billing).' : e && e.code === 'rate_limited' ? '⏳ Dnešný limit je minutý alebo príliš veľa požiadaviek. Skúste neskôr.' : '❌ Nepodarilo sa: ' + ((e && e.message) || 'chyba')); } render(null); },
   'pt-add': () => { const p = DATA.profiles.find(x => x.id === PSEL); p.ptasks = p.ptasks || []; if (p.ptasks.filter(t => !t.done).length >= 3) { toast('Naraz môžu byť najviac 3 aktívne úlohy.'); return; } p.ptasks.unshift({ id: 'pt' + Date.now().toString(36), topic: $('#pt-topic').value, stars: +$('#pt-stars').value, coins: +$('#pt-coins').value, t: Date.now(), done: 0 }); if (p.ptasks.length > 20) p.ptasks.length = 20; save(); sfx('pop'); toast('Úloha zadaná ✓ Dieťa ju uvidí na domovskej obrazovke.'); render(null); },
   'pt-del': d => { const p = DATA.profiles.find(x => x.id === PSEL); p.ptasks = (p.ptasks || []).filter(t => t.id !== d.id); save(); render(null); },
   'pt-go': d => { sfx('tap'); const t = TOPIC[d.id]; startQuiz([d.id], 'quiz', { v: 'home', p: {} }); },
@@ -1714,9 +1792,11 @@ const ACT = {
   theme: d => { const bc = PAGE_BG.find(x => x[0] === DATA.settings.bgc); if (bc && bc[4] && bc[4] !== d.t) DATA.settings.bgc = 'auto'; DATA.settings.theme = d.t; save(); applyTheme(); sfx('pop'); render(null); },
   'tour-again': () => { go('home', {}, 'b'); setTimeout(() => showGuide(TOUR, 0, endTour), 700); },
   shopcat: d => { SHOPCAT = d.c; SHOPSEL = null; sfx('tap'); render(null); },
+  'shop-prev': d => { const it = itemOf(d.c, d.i); SHOPSEL = it.sid; sfx('pop'); render(null); const e = $('#shopprev'); if (e) e.scrollIntoView({ behavior: 'smooth', block: 'center' }); },
+  'shop-prev-x': () => { SHOPSEL = null; sfx('tap'); render(null); },
   'buy-ask': d => { const p = P(); const it = itemOf(d.c, d.i); if ((p.coins || 0) < it.price) { sfx('no'); toast(`Chýba ti ešte ${it.price - (p.coins || 0)} slniečok. Uč sa a zbieraj! 🪙`); return; } SHOPSEL = it.sid; sfx('tap'); render(null); },
-  buy: (d, el) => { const p = P(); const it = itemOf(d.c, d.i); if ((p.coins || 0) < it.price || p.owned.includes(it.sid)) return; p.coins -= it.price; p.owned.push(it.sid); SHOPSEL = null; save(); sfx('gift'); buzz([30, 40, 30]); burst(el, 40); confetti(90, .4); toast(`Kúpené: ${it.n}! 🎉`); render(null); },
-  'shop-wear': d => { const p = P(); p.av[d.c] = d.i; if (d.c === 'top' && false) { } save(); sfx('pop'); toast('Oblečené ✓'); render(null); },
+  buy: (d, el) => { const p = P(); const it = itemOf(d.c, d.i); if ((p.coins || 0) < it.price || p.owned.includes(it.sid)) return; p.coins -= it.price; p.owned.push(it.sid); p.av[d.c] = it.id; if (d.c === 'bottom' && ['saty', 'princezna', 'astronaut'].includes(p.av.top)) p.av.top = 'tricko'; save(); sfx('gift'); buzz([30, 40, 30]); burst(el, 40); confetti(90, .4); toast(`Kúpené a oblečené: ${it.n}! 🎉`); render(null); },
+  'shop-wear': d => { const p = P(); p.av[d.c] = d.i; if (d.c === 'bottom' && ['saty', 'princezna', 'astronaut'].includes(p.av.top)) p.av.top = 'tricko'; save(); sfx('pop'); toast('Oblečené ✓'); render(null); },
   'rd-grade': d => { RDG = +d.g; sfx('tap'); render(null); },
   'rd-open': d => { RD = { id: d.id, opts: {}, ans: {}, correct: 0 }; sfx('tap'); go('read', {}, 'f'); },
   'rd-back': () => { if (REC && RD.recording) { try { REC.mr.stop(); } catch (e) { } } RD = null; go('reads', {}, 'b'); },
