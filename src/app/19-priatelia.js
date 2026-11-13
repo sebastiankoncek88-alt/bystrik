@@ -104,7 +104,10 @@ function boot() {
   if (!P()) return go('profiles', {}, 'u');
   go('home', { wave: true }, 'u');
 }
-load(); applyTheme(); registerNotes();
+load();
+/* ráno sa Bystrík zobudí sám, aby sa appka cez deň neotvárala v nočnom režime */
+try { const p0 = P(); if (p0 && p0.bear && p0.bear.asleep) { const m = new Date(); m.setHours(6, 0, 0, 0); if (Date.now() >= m.getTime() && (p0.bear.slept || 0) < m.getTime()) { p0.bear.asleep = false; p0.bear.wokeAuto = Date.now(); save(); setTimeout(() => toast('☀️ Dobré ráno! Bystrík sa už zobudil.'), 1200); } } } catch (e) { }
+applyTheme(); registerNotes();
 try { const m = location.hash.match(/[#&]k=([^&]+)/); if (m && !(window.claude && window.claude.use)) { setApiKey(decodeURIComponent(m[1])); history.replaceState(null, '', location.pathname + location.search); setTimeout(() => toast('🧸 AI kľúč uložený. Bystrík teraz vie odpovedať!'), 900); } } catch (e) { }
 if (MAGIC) { (async () => { try { const r = await fetch(SUPA.url + '/auth/v1/user', { headers: { apikey: SUPA.key, Authorization: 'Bearer ' + MAGIC.at } }); const j = await r.json(); if (!r.ok || !j.id) throw 0; setAuth({ at: MAGIC.at, rt: MAGIC.rt, exp: MAGIC.exp, uid: j.id, email: j.email }); try { await supaSync(); } catch (e) { DBREF = SUPADB; } toast('Prihlásenie úspešné ✓'); } catch (e) { LOGIN.msg = 'Odkaz už neplatí. Požiadajte o nový.'; } MAGIC = null; boot(); })(); }
 boot();

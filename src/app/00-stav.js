@@ -34,7 +34,7 @@ function migrate(p) {
 function nightOn() { const p = (DATA.profiles || []).find(x => x.id === DATA.current); return !!(p && p.bear && p.bear.asleep); }
 let LASTNIGHT = null;
 function applyTheme(slow) {
-  const run = () => { LASTNIGHT = nightOn(); document.documentElement.classList.toggle('bnight', LASTNIGHT); document.documentElement.classList.toggle('lite', !!DATA.settings.lite); applyPageBg(); const t = LASTNIGHT ? 'dark' : DATA.settings.theme; if (t === 'light' || t === 'dark') document.documentElement.dataset.theme = t; else if (document.documentElement.dataset.theme && THEME_SET) delete document.documentElement.dataset.theme; THEME_SET = t !== 'auto'; };
+  const run = () => { LASTNIGHT = nightOn(); document.documentElement.classList.toggle('bnight', LASTNIGHT); document.documentElement.classList.toggle('lite', !!DATA.settings.lite); const t = LASTNIGHT ? 'dark' : DATA.settings.theme; if (t === 'light' || t === 'dark') document.documentElement.dataset.theme = t; else if (document.documentElement.dataset.theme && THEME_SET) delete document.documentElement.dataset.theme; THEME_SET = t !== 'auto'; applyPageBg(); };
   /* plynulý prechod: prehliadač prelína dve snímky obrazovky (lacné), inak krátky prechod farieb */
   const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
   if (slow && !reduce && document.startViewTransition) { document.documentElement.classList.add('vtslow'); const vt = document.startViewTransition(run); vt.finished.finally(() => document.documentElement.classList.remove('vtslow')); return; }
