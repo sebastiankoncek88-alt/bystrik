@@ -7,9 +7,9 @@ const $ = (s, r = document) => r.querySelector(s);
 const $$ = (s, r = document) => [...r.querySelectorAll(s)];
 const esc = s => String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 function normalize() {
-  DATA.settings = Object.assign({ sound: true, voice: true, calc: true, chat: true, gameLimit: 0, theme: 'auto', lb: false, friends: true, freeChat: false, msgOk: false }, DATA.settings || {});
+  DATA.settings = Object.assign({ sound: true, voice: true, calc: true, chat: true, gameLimit: 0, theme: 'auto', lb: true, friends: true, freeChat: false, msgOk: false }, DATA.settings || {});
   if (DATA.settings.lite === undefined) DATA.settings.lite = !!(navigator.deviceMemory && navigator.deviceMemory <= 2);
-  if (!DATA.lbOpt) { DATA.settings.lb = false; DATA.lbOpt = 1; } /* rebríček len so súhlasom rodiča */
+  if (DATA.lbOpt === 1) { DATA.settings.lb = true; DATA.lbOpt = 2; DATA.lbDel = 0; } /* rebríček predvolene zapnutý, rodič ho môže vypnúť */
   if (!DATA.settings.glimFree) { if (DATA.settings.gameLimit === 2) DATA.settings.gameLimit = 0; DATA.settings.glimFree = 1; }
   DATA.parent = DATA.parent || { pin: null };
   DATA.profiles.forEach(migrate);
