@@ -230,8 +230,8 @@ const need = L => 60 + 30 * (L - 1);
 function levelInfo(xp) { let L = 1, r = xp; while (r >= need(L)) { r -= need(L); L++; } return { L, cur: r, need: need(L), pct: Math.round(r / need(L) * 100) }; }
 const TITLES = ['Zvedavé vajíčko', 'Malý bystrík', 'Šikovná hlávka', 'Pátrač', 'Objaviteľ', 'Vynálezca', 'Majster slov', 'Kráľ čísel', 'Profesor', 'Génius', 'Legenda'];
 const title = L => TITLES[Math.min(TITLES.length - 1, Math.floor(L / 2))];
-const unlocked = (it, p) => (!it.lvl || levelInfo(p.xp).L >= it.lvl) && (!it.streak || (p.streak.best || 0) >= it.streak) && (!it.price || (p.owned || []).includes(it.sid)) && (!it.lb || (p.owned || []).includes('lb:' + it.id));
-const lockLabel = it => it.lb ? `Rebríček: ${it.lb}. miesto` : it.price ? `Obchod 🪙 ${it.price}` : it.lvl ? `Level ${it.lvl}` : `Séria ${it.streak} dní`;
+const unlocked = (it, p) => (!it.lvl || levelInfo(p.xp).L >= it.lvl) && (!it.streak || (p.streak.best || 0) >= it.streak) && (!it.price || (p.owned || []).includes(it.sid)) && (!it.lb || (p.owned || []).includes('lb:' + it.id)) && (!it.chest || (p.owned || []).includes(it.sid));
+const lockLabel = it => it.chest ? '🎁 Len zo záhadnej truhly' : it.lb ? `Rebríček: ${it.lb}. miesto` : it.price ? `Obchod 🪙 ${it.price}` : it.lvl ? `Level ${it.lvl}` : `Séria ${it.streak} dní`;
 const REW_CATS = ['hair', 'top', 'bottom', 'shoes', 'acc', 'eyes', 'mouth'];
 function allRewardItems(g) {
   const out = [];
@@ -494,6 +494,7 @@ VIEWS.shop = () => {
   const prev = sel ? (() => { const [c, it] = sel; const st = state(it); return `<section class="card shopprev" id="shopprev"><div class="spfig">${avatarSvg(prevAv, { cls: 'idle' })}</div><div class="spinfo"><span class="eyebrow">Skúšobná kabínka</span><b>${it.n}</b><span class="muted b" style="font-size:.84rem">${st === 'own' ? (p.av[c] === it.id ? 'Máš ju na sebe. Pristane ti! 😎' : 'Túto vec už máš.') : st === 'can' ? 'Takto by si vyzeral(a). Páči sa ti?' : `Chýba ti ešte ${COIN} ${it.price - (p.coins || 0)}. Uč sa a zbieraj!`}</span><div class="bkbtns" style="margin-top:6px">${st === 'own' ? (p.av[c] === it.id ? '<span class="tag">Oblečené ✓</span>' : `<button class="btn small good" data-a="shop-wear" data-c="${c}" data-i="${it.id}">Obliecť</button>`) : st === 'can' ? `<button class="btn small primary" data-a="buy" data-c="${c}" data-i="${it.id}">Kúpiť za ${COIN} ${it.price}</button>` : ''}<button class="btn small" data-a="shop-prev-x">Zavrieť</button></div></div></section>`; })() : '';
   const fil = arr => SHOPCAT === 'all' ? arr : arr.filter(([c]) => c === SHOPCAT);
   return `${topbar()}<main class="view">${wsTabs('s')}<section class="card shophead"><span class="coinbig">${COIN}</span><div><span class="eyebrow">Tvoje slniečka</span><b>${p.coins || 0}</b><span class="muted b" style="font-size:.85rem;display:block">Slniečka získaš za každú správnu odpoveď, hry, úlohy a čítanie.</span></div></section>
+  <section class="card mystery"><button class="mychest press" data-a="mystery" aria-label="Otvoriť záhadnú truhlu"><i class="cbody"></i><i class="clid"></i><b>?</b></button><div class="myinfo"><span class="eyebrow">Novinka</span><b>Záhadná truhla</b><small>1 náhodná vec, ktorú ešte nemáš. Niektoré sa dajú získať len tu!</small><div class="myodds">${Object.values(RARE).map(r => `<span style="--rc:${r.c}">${r.n} ${r.p} %</span>`).join('')}</div><button class="btn sun small" data-a="mystery">Otvoriť za ${COIN} ${MYST_PRICE}</button></div></section>
   <section class="card shoptimer"><div class="sthead"><span class="hourglass">⏳</span><div><b>Nová ponuka o:</b><span class="muted b" style="display:block;font-size:.8rem">Ponuka sa mení raz za 24 hodín, vždy o polnoci. Dovtedy ostáva rovnaká.</span></div></div><div class="cd" id="shopcd">${cdHTML()}</div></section>
   <div class="shoplegend"><span><i class="lg can"></i>Môžeš kúpiť</span><span><i class="lg lock"></i>Zatiaľ zamknuté</span><span><i class="lg own"></i>Kúpené</span></div>
   <div class="chips">${SHOPCATS.map(([k, n]) => `<button class="chip ${SHOPCAT === k ? 'on' : ''}" data-a="shopcat" data-c="${k}">${n}</button>`).join('')}</div>
@@ -572,6 +573,39 @@ const BEAR_PEP = ['Ide ti to skvele! 💪', 'Ešte jedna úloha a dáme si pauzu
 const bearEve = () => { const h = new Date().getHours(); return h >= 19 || h < 7; };
 const season = () => { const m = new Date().getMonth(); return m === 11 || m < 2 ? 'winter' : m < 5 ? 'spring' : m < 8 ? 'summer' : 'autumn'; };
 /* kométa pri sérii správnych odpovedí */
+const MYST_PRICE = 100;
+function mysteryRoll(p) {
+  const ex = ['top', 'bottom', 'shoes', 'acc'].flatMap(c => CATALOG[c].filter(it => it.chest && (!it.g || it.g === p.av.gender)).map(it => [c, it]));
+  const pool = [...shopItems(p), ...ex].filter(([, it]) => !(p.owned || []).includes(it.sid)); if (!pool.length) return null;
+  const r = Math.random() * 100; const order = ['common', 'rare', 'epic', 'leg']; const want = r < 1 ? 'leg' : r < 3 ? 'epic' : r < 10 ? 'rare' : 'common';
+  const i = order.indexOf(want); const tryOrder = [want, ...order.slice(0, i).reverse(), ...order.slice(i + 1)];
+  for (const t of tryOrder) { const list = pool.filter(([, it]) => rarity(it) === t); if (list.length) { const x = list[Math.floor(Math.random() * list.length)]; return [x[0], x[1], t]; } }
+  return null;
+}
+/* záhadná truhla: napätie (3 ťuknutia), výbuch vo farbe rarity, odhalenie veci */
+function openMystery(c, it, rk) {
+  const R = RARE[rk], p = P(); const o = document.createElement('div'); o.className = 'over myov r-' + rk; o.style.setProperty('--rc', R.c);
+  o.innerHTML = `<div class="mybig"><p class="chtip">Ťukni na truhlu! 👆</p><button class="chest mych shake" aria-label="Otvoriť"><i class="crays"></i><i class="cbody"></i><i class="clid"></i><b class="myq">?</b></button>
+  <div class="myres" hidden><div class="myrar">${rk === 'leg' ? '🌟 ' : ''}${R.n.toUpperCase()}${rk === 'leg' ? ' 🌟' : ''}</div><div class="mycard"><span class="th">${itemThumb(c, it, p.av)}</span><b>${esc(it.n)}</b><small>${it.chest ? 'Exkluzívne, len zo záhadnej truhly' : CAT_LABEL[c]}</small></div><div class="myfig"></div><div class="rowbtns"><button class="btn primary" data-a="myst-wear" data-c="${c}" data-i="${it.id}">😎 Obliecť hneď</button><button class="btn" data-a="ov-close">Neskôr</button></div></div></div>`;
+  document.body.appendChild(o); sfx('pop');
+  const ch = o.querySelector('.mych'), tip = o.querySelector('.chtip'); let step = 0, auto;
+  const lvl = { common: 0, rare: 1, epic: 2, leg: 3 }[rk];
+  const hit = () => { clearTimeout(auto); step++; ch.classList.remove('h1', 'h2', 'h3'); void ch.offsetWidth; ch.classList.add('h' + step); sfx('tap'); buzz(20 * step);
+    if (step === 2 && lvl >= 1) { ch.classList.add('glow'); tip.textContent = 'Niečo sa v nej svieti… ✨'; }
+    else if (step === 2) tip.textContent = 'Ešte raz!';
+    if (step >= 3) return boom(); auto = setTimeout(hit, 1400); };
+  const boom = () => { ch.classList.add('glow', 'open'); tip.textContent = lvl >= 2 ? 'NIEČO ÚŽASNÉ!!! 🤯' : 'Wow! 🤩'; sfx('gift'); const fl = document.createElement('div'); fl.className = 'myflash'; o.appendChild(fl); setTimeout(() => fl.remove(), 900);
+    if (lvl >= 2) { const root = document.documentElement; root.classList.remove('fxshake'); void root.offsetWidth; root.classList.add('fxshake'); setTimeout(() => root.classList.remove('fxshake'), 700); buzz([60, 40, 120]); }
+    setTimeout(() => { try { confetti(60 + lvl * 60, .35); } catch (e) { } ch.classList.add('gone'); tip.hidden = true; o.querySelector('.myres').hidden = false; sfx(lvl >= 2 ? 'level' : 'coin'); if (rk === 'leg') { o.querySelector('.mybig').insertAdjacentHTML('beforeend', `<span class="myrain">${'✦★✦★✦★✦★✦★✦★'.match(/./gu).map((e, i) => `<i style="left:${i * 8 + 3}%;animation-delay:${(i % 6) * .25}s">${e}</i>`).join('')}</span>`); } }, 650); };
+  ch.addEventListener('click', hit); auto = setTimeout(hit, 1200);
+}
+/* skutočné otočenie postavičky: prikrčí sa, vyskočí, otočí sa (vidno chrbát), dopadne */
+function celebrateWear(box, av) {
+  if (!box) return; const old = box.innerHTML;
+  box.innerHTML = `<div class="cw"><i class="cwbeam"></i><i class="cwshadow"></i><div class="cwturn"><div class="cwf">${avatarSvg(av, { noBg: true })}</div><div class="cwb">${avatarSvg(av, { noBg: true, back: true })}</div></div><i class="cwdust d1"></i><i class="cwdust d2"></i><span class="cwring">${'✨⭐💫✨⭐💫✨⭐'.match(/./gu).map((e, i) => `<i style="--a:${i * 45}deg">${e}</i>`).join('')}</span><i class="cwflash"></i><b class="cwnew">NOVÉ!</b></div>`;
+  sfx('pop'); setTimeout(() => sfx('whoosh'), 300); setTimeout(() => { sfx('coin'); buzz([40, 30, 60]); const root = document.documentElement; root.classList.remove('fxshake'); void root.offsetWidth; root.classList.add('fxshake'); setTimeout(() => root.classList.remove('fxshake'), 650); }, 1150);
+  setTimeout(() => { if (box.isConnected) box.innerHTML = old; }, 2600);
+}
 function openChest(n) {
   const o = document.createElement('div'); o.className = 'over chestov'; o.innerHTML = `<div class="chestbox"><p class="chtip">Ťukni na truhlicu!</p><button class="chest shake" aria-label="Otvoriť truhlicu"><i class="crays"></i><i class="cbody"></i><i class="clid"></i><span class="ccoins">${COIN.repeat(6)}</span></button><b class="cplus">+${n} bodov a slniečka</b><button class="btn primary block chok" data-a="ov-close" hidden>Paráda!</button></div>`;
   document.body.appendChild(o); sfx('pop');
@@ -2084,8 +2118,10 @@ const ACT = {
   'shop-prev': d => { const it = itemOf(d.c, d.i); SHOPSEL = it.sid; sfx('pop'); render(null); const e = $('#shopprev'); if (e) e.scrollIntoView({ behavior: 'smooth', block: 'center' }); },
   'shop-prev-x': () => { SHOPSEL = null; sfx('tap'); render(null); },
   'buy-ask': d => { const p = P(); const it = itemOf(d.c, d.i); if ((p.coins || 0) < it.price) { sfx('no'); toast(`Chýba ti ešte ${it.price - (p.coins || 0)} slniečok. Uč sa a zbieraj! 🪙`); return; } SHOPSEL = it.sid; sfx('tap'); render(null); },
-  buy: (d, el) => { const p = P(); const it = itemOf(d.c, d.i); if ((p.coins || 0) < it.price || p.owned.includes(it.sid)) return; p.coins -= it.price; p.owned.push(it.sid); p.av[d.c] = it.id; if (d.c === 'bottom' && ['saty', 'princezna', 'astronaut'].includes(p.av.top)) p.av.top = 'tricko'; save(); sfx('gift'); buzz([30, 40, 30]); burst(el, 40); confetti(90, .4); toast(`Kúpené a oblečené: ${it.n}! 🎉`); render(null); const f = $('#shopprev .spfig'); if (f) { f.classList.add('twirl'); f.insertAdjacentHTML('beforeend', '<span class="twring" aria-hidden="true">' + '✨⭐✨💫✨⭐'.match(/./gu).map((e, i) => `<i style="--a:${i * 60}deg">${e}</i>`).join('') + '</span>'); setTimeout(() => { f.classList.remove('twirl'); const r = f.querySelector('.twring'); if (r) r.remove(); }, 1600); } },
-  'shop-wear': d => { const p = P(); p.av[d.c] = d.i; if (d.c === 'bottom' && ['saty', 'princezna', 'astronaut'].includes(p.av.top)) p.av.top = 'tricko'; save(); sfx('pop'); toast('Oblečené ✓'); render(null); },
+  buy: (d, el) => { const p = P(); const it = itemOf(d.c, d.i); if ((p.coins || 0) < it.price || p.owned.includes(it.sid)) return; p.coins -= it.price; p.owned.push(it.sid); p.av[d.c] = it.id; if (d.c === 'bottom' && ['saty', 'princezna', 'astronaut'].includes(p.av.top)) p.av.top = 'tricko'; save(); sfx('gift'); buzz([30, 40, 30]); burst(el, 40); confetti(90, .4); toast(`Kúpené a oblečené: ${it.n}! 🎉`); render(null); celebrateWear($('#shopprev .spfig'), p.av); },
+  'shop-wear': d => { const p = P(); p.av[d.c] = d.i; if (d.c === 'bottom' && ['saty', 'princezna', 'astronaut'].includes(p.av.top)) p.av.top = 'tricko'; save(); sfx('pop'); toast('Oblečené ✓'); render(null); celebrateWear($('#shopprev .spfig'), p.av); },
+  'mystery': () => { const p = P(); if ((p.coins || 0) < MYST_PRICE) { sfx('no'); toast(`Chýba ti ešte ${MYST_PRICE - (p.coins || 0)} slniečok. Uč sa a zbieraj! ☀️`); return; } const w = mysteryRoll(p); if (!w) { toast('Máš už všetky veci! 🏆'); return; } p.coins -= MYST_PRICE; p.owned.push(w[1].sid); save(); render(null); openMystery(...w); },
+  'myst-wear': (d, el) => { const p = P(); const it = itemOf(d.c, d.i); p.av[d.c] = it.id; if (d.c === 'bottom' && ['saty', 'princezna', 'astronaut'].includes(p.av.top)) p.av.top = 'tricko'; save(); el.closest('.rowbtns').innerHTML = '<button class="btn primary block" data-a="ov-close">Paráda! 😎</button>'; const mc = $('.myov .mycard'); if (mc) mc.hidden = true; const mf = $('.myov .myfig'); if (mf) { mf.innerHTML = avatarSvg(p.av, { noBg: true }); celebrateWear(mf, p.av); } },
   'rd-grade': d => { RDG = +d.g; sfx('tap'); render(null); },
   'rd-open': d => { RD = { id: d.id, opts: {}, ans: {}, correct: 0 }; sfx('tap'); go('read', {}, 'f'); },
   'rd-back': () => { if (REC && RD.recording) { try { REC.mr.stop(); } catch (e) { } } RD = null; go('reads', {}, 'b'); },

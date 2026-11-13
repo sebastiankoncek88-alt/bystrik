@@ -1279,7 +1279,7 @@ body{background-attachment:fixed!important}
 .shopitem.st-own{border-color:var(--good);background:linear-gradient(180deg,var(--good-soft),var(--paper) 60%)}.shopitem.st-own .stbadge{color:var(--good)}
 .shopitem.st-lock .th{filter:saturate(.35);opacity:.75}.shopitem.sel{outline:4px solid var(--accent);outline-offset:2px}
 .thbtn{background:none;border:0;padding:0;cursor:pointer;display:block;width:100%}
-.shopprev{display:flex;gap:12px;align-items:center;padding:12px;background:linear-gradient(120deg,var(--lilac-soft),var(--paper) 70%);animation:popUp .3s}
+.shopprev{overflow:visible;position:relative;z-index:2;display:flex;gap:12px;align-items:center;padding:12px;background:linear-gradient(120deg,var(--lilac-soft),var(--paper) 70%);animation:popUp .3s}
 .spfig{flex:none;width:118px;height:180px}.spfig svg{width:100%;height:100%}.spinfo{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px}.spinfo b{font-family:var(--f-display);font-size:1.2rem;line-height:1.15}
 .roadhead{padding:12px 14px;display:flex;flex-direction:column;gap:8px;background:linear-gradient(120deg,var(--sun-soft),var(--paper) 80%)}
 .rhl{display:flex;align-items:center;gap:10px}.rhme{width:48px;height:48px;border-radius:50%;overflow:hidden;border:2px solid var(--edge);flex:none;background:var(--paper)}.rhme svg{width:100%;height:100%}
@@ -1390,13 +1390,66 @@ html.fxshake #app{animation:fxshake .6s cubic-bezier(.36,.07,.19,.97)}
 @keyframes lvst{0%{opacity:0;transform:translate(calc(var(--x) - 50%),calc(var(--y) - 50%)) scale(.6)}25%{opacity:1}85%{opacity:1;transform:translate(-50%,-50%) scale(1)}100%{opacity:0;transform:translate(-50%,-50%) scale(.2)}}
 .lvnum{animation:lvnum .7s .8s cubic-bezier(.3,1.7,.5,1) both}
 @keyframes lvnum{0%{opacity:0;transform:scale(.2)}100%{opacity:1;transform:scale(1)}}
-/* obchod */
-.spfig{position:relative}.spfig.twirl svg{animation:twirl 1.2s cubic-bezier(.4,0,.2,1)}
-@keyframes twirl{0%{transform:rotateY(0) scale(1)}50%{transform:rotateY(180deg) scale(1.08)}100%{transform:rotateY(360deg) scale(1)}}
-.twring{position:absolute;left:50%;top:50%;width:0;height:0;pointer-events:none}
-.twring i{position:absolute;font-style:normal;font-size:1.2rem;animation:twring 1.4s ease-out forwards;transform:rotate(var(--a)) translateY(0) rotate(calc(var(--a) * -1));opacity:0}
-.twring i img{width:22px;height:22px}
-@keyframes twring{20%{opacity:1}100%{opacity:0;transform:rotate(calc(var(--a) + 120deg)) translateY(-70px) rotate(calc((var(--a) + 120deg) * -1))}}
+/* obchod: skutočné otočenie */
+.cw{position:relative;width:100%;height:100%;perspective:600px}
+.cwturn{position:absolute;inset:0;transform-style:preserve-3d;animation:cwturn 2.2s cubic-bezier(.3,.1,.3,1) both;transform-origin:50% 100%}
+.cwf,.cwb{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden}.cwb{transform:rotateY(180deg)}
+.cwf svg,.cwb svg{width:100%;height:100%}
+@keyframes cwturn{0%{transform:translateY(0) rotateY(0) scale(1,1)}14%{transform:translateY(6px) rotateY(0) scale(1.14,.8)}22%{transform:translateY(-30px) rotateY(40deg) scale(.9,1.12)}38%{transform:translateY(-78px) rotateY(200deg) scale(1)}50%{transform:translateY(-70px) rotateY(320deg) scale(1)}58%{transform:translateY(0) rotateY(360deg) scale(1.18,.8)}66%{transform:translateY(-16px) rotateY(360deg) scale(.95,1.06)}74%{transform:translateY(0) rotateY(360deg) scale(1.06,.95)}84%{transform:translateY(-4px) rotateY(360deg) scale(1)}100%{transform:translateY(0) rotateY(360deg) scale(1)}}
+.cwshadow{position:absolute;left:50%;bottom:-2px;width:80%;height:14px;margin-left:-40%;border-radius:50%;background:rgba(0,0,0,.22);animation:cwsh 2.2s ease both}
+@keyframes cwsh{14%{transform:scale(1.15)}38%,50%{transform:scale(.4);opacity:.4}58%{transform:scale(1.25);opacity:1}100%{transform:scale(1)}}
+.cwbeam{position:absolute;left:50%;top:-40%;bottom:0;width:160%;margin-left:-80%;background:conic-gradient(from 160deg at 50% 0%,transparent 0deg,rgba(255,240,160,.55) 15deg,rgba(255,255,255,.75) 20deg,rgba(255,240,160,.55) 25deg,transparent 40deg);opacity:0;animation:cwbeam 2.2s ease both;pointer-events:none}
+@keyframes cwbeam{20%{opacity:0}40%,75%{opacity:1}100%{opacity:0}}
+.cwdust{position:absolute;bottom:0;width:26px;height:16px;border-radius:50%;background:radial-gradient(circle,rgba(255,255,255,.95),rgba(220,210,240,.6) 60%,transparent 70%);opacity:0}
+.cwdust.d1{left:4%;animation:cwd1 2.2s ease-out both}.cwdust.d2{right:4%;animation:cwd2 2.2s ease-out both}
+@keyframes cwd1{56%{opacity:0;transform:translate(30px,0) scale(.4)}60%{opacity:1}100%{opacity:0;transform:translate(-26px,-10px) scale(2)}}
+@keyframes cwd2{56%{opacity:0;transform:translate(-30px,0) scale(.4)}60%{opacity:1}100%{opacity:0;transform:translate(26px,-10px) scale(2)}}
+.cwring{position:absolute;left:50%;top:55%;width:0;height:0}
+.cwring i{position:absolute;font-style:normal;font-size:1.3rem;opacity:0;animation:cwring 1s ease-out 1.25s both}
+.cwring i img{width:24px;height:24px}
+@keyframes cwring{0%{opacity:1;transform:rotate(var(--a)) translateY(0) scale(.4)}100%{opacity:0;transform:rotate(var(--a)) translateY(-95px) scale(1.2)}}
+.cwflash{position:absolute;inset:-20%;border-radius:50%;background:radial-gradient(circle,rgba(255,255,255,.95),rgba(255,255,255,0) 65%);opacity:0;animation:cwfl .6s ease-out 1.2s both;pointer-events:none}
+@keyframes cwfl{0%{opacity:0}20%{opacity:1}100%{opacity:0}}
+.cwnew{position:absolute;left:50%;top:6%;transform:translateX(-50%);font-family:var(--f-display);font-weight:900;font-size:1.3rem;color:#fff;background:var(--accent);border:2.5px solid var(--edge);border-radius:12px;padding:2px 10px;box-shadow:0 3px 0 var(--drop);opacity:0;animation:cwnew 1.2s cubic-bezier(.3,1.8,.5,1) 1.3s both;white-space:nowrap}
+@keyframes cwnew{0%{opacity:0;transform:translateX(-50%) scale(2.5) rotate(-15deg)}40%{opacity:1;transform:translateX(-50%) scale(.9) rotate(-6deg)}60%,85%{opacity:1;transform:translateX(-50%) scale(1) rotate(-6deg)}100%{opacity:0;transform:translateX(-50%) scale(1) rotate(-6deg)}}
+.aura{pointer-events:none}.auras{animation:auras 2s ease-in-out infinite}
+@keyframes auras{50%{opacity:.25}}
+/* záhadná truhla v obchode */
+.mystery{display:flex;gap:12px;align-items:center;padding:12px;background:linear-gradient(120deg,#2B1B4E,#4A2A7A 60%,#7A3E9E);color:#fff;overflow:hidden;position:relative}
+.mystery::before{content:"";position:absolute;inset:0;background:radial-gradient(circle at 15% 50%,rgba(255,214,60,.35),transparent 45%);animation:mypulse 2.4s ease-in-out infinite}
+@keyframes mypulse{50%{opacity:.4}}
+.mystery .eyebrow{color:#FFD45C}.myinfo{position:relative;flex:1;min-width:0;display:flex;flex-direction:column;gap:3px}.myinfo>b{font-family:var(--f-display);font-size:1.3rem}.myinfo small{font-weight:700;font-size:.78rem;opacity:.85}
+.myodds{display:flex;flex-wrap:wrap;gap:4px;margin:2px 0 4px}.myodds span{font-size:.66rem;font-weight:800;padding:1px 6px;border-radius:8px;background:color-mix(in srgb,var(--rc) 30%,transparent);border:1.5px solid var(--rc)}
+.mychest{position:relative;flex:none;width:92px;height:86px;background:none;border:0;padding:0;cursor:pointer;animation:chshake 2.2s ease-in-out infinite}
+.mychest i{position:absolute;display:block;left:6px;right:6px}
+.mychest .cbody{height:46px}.mychest .clid{bottom:42px;height:32px}.mychest .cbody::before{width:16px;height:18px}.mychest .cbody::after{top:18px;height:7px}.mychest .clid::after{bottom:7px;height:7px}
+.mychest b{position:absolute;left:50%;top:-6px;transform:translateX(-50%);font-family:var(--f-display);font-size:1.6rem;color:#FFE066;text-shadow:0 2px 0 #33203A;animation:bob 1.6s ease-in-out infinite}
+/* záhadná truhla – otváranie */
+.mybig{position:relative;display:flex;flex-direction:column;align-items:center;gap:12px;width:min(340px,88vw)}
+.mych.h1{animation:myh .35s ease-in-out}.mych.h2{animation:myh .35s ease-in-out;transform:scale(1.08)}.mych.h3{animation:myh .35s ease-in-out}
+@keyframes myh{25%{transform:rotate(-12deg) scale(1.1)}50%{transform:rotate(12deg) scale(1.15)}75%{transform:rotate(-6deg) scale(1.1)}}
+.mych.glow .cbody,.mych.glow .clid{box-shadow:0 0 24px 6px var(--rc),inset 0 -10px 0 rgba(0,0,0,.15)}
+.myov .crays{background:repeating-conic-gradient(from 0deg,var(--rc) 0 10deg,transparent 10deg 30deg)!important;opacity:.85}
+.myq{position:absolute;left:50%;top:22px;transform:translateX(-50%);font-family:var(--f-display);font-size:2rem;color:#FFE066;text-shadow:0 2px 0 #33203A;z-index:2}
+.mych.open .myq{display:none}
+.mych.gone{height:0;animation:none;margin-bottom:-12px}.mych.gone .cbody,.mych.gone .clid,.mych.gone .myq{opacity:0;transition:opacity .35s}.mych.gone .crays{bottom:-140px}
+.mych.gone~*{}
+.myflash{position:fixed;inset:0;z-index:5;pointer-events:none;background:radial-gradient(circle at 50% 45%,#fff,var(--rc) 45%,transparent 80%);animation:myfl .9s ease-out forwards}
+@keyframes myfl{0%{opacity:0}15%{opacity:1}100%{opacity:0}}
+.myres{position:relative;z-index:3;display:flex;flex-direction:column;align-items:center;gap:10px;width:100%}
+.myres:not([hidden]){animation:popUp .5s cubic-bezier(.3,1.6,.5,1)}
+.myrar{font-family:var(--f-display);font-weight:900;font-size:1.6rem;color:#fff;letter-spacing:.06em;text-shadow:0 3px 0 rgba(0,0,0,.35),0 0 24px var(--rc);animation:myrar 1.2s ease-in-out infinite alternate}
+@keyframes myrar{to{text-shadow:0 3px 0 rgba(0,0,0,.35),0 0 40px var(--rc),0 0 70px var(--rc)}}
+.r-leg .myrar{font-size:2rem;background:linear-gradient(90deg,#FFE066,#FFB300,#FFF4C2,#FFB300);-webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 3px 0 #33203A)}
+.mycard{display:flex;flex-direction:column;align-items:center;gap:2px;background:var(--paper);color:var(--ink);border:3px solid var(--rc);border-radius:20px;padding:10px 18px;box-shadow:0 0 0 4px rgba(0,0,0,.25),0 0 30px var(--rc);animation:myflip .7s cubic-bezier(.3,1.4,.5,1)}
+@keyframes myflip{from{transform:perspective(500px) rotateY(90deg) scale(.6)}}
+.mycard .th{width:96px;height:96px;display:block}.mycard .th svg{width:100%;height:100%}.mycard b{font-family:var(--f-display);font-size:1.2rem}.mycard small{font-weight:700;color:var(--muted);font-size:.78rem}
+.myfig{width:120px;height:180px}.myfig:empty{display:none}.myfig svg{width:100%;height:100%}
+.myov .rowbtns{width:100%}
+.myrain{position:absolute;inset:-40px 0 0 0;pointer-events:none;overflow:visible}
+.myrain i{position:absolute;top:-20px;font-style:normal;color:#FFD23F;font-size:1.2rem;text-shadow:0 0 8px #FFB300;animation:myrain 2s linear infinite}
+@keyframes myrain{to{transform:translateY(520px) rotate(360deg);opacity:0}}
+@media (prefers-reduced-motion: reduce){.cwturn,.cwbeam,.cwring i,.mychest,.myrain{animation:none!important}}
 /* ročné obdobie v okne */
 .brwin .brfall{inset:0;border-radius:0;pointer-events:none}
 .brfall s{position:absolute;top:-8px;display:block;width:4px;height:4px;border-radius:50%;background:#fff;text-decoration:none;animation:brfall 4s linear infinite}
