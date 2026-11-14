@@ -62,7 +62,7 @@ function pmsgCard(p) {
   if (!PM || PM.pid !== p.id) { PM = { pid: p.id, loading: true }; setTimeout(() => pmLoad(p), 0); }
   if (PM.loading) return '<section class="card pcard"><div class="typing" style="margin:10px auto"><i></i><i></i><i></i></div></section>';
   if (PM.err) return `<section class="card pcard"><p class="muted b">Nepodarilo sa načítať správy.</p><button class="btn small" data-a="pm-reload">Skúsiť znova</button></section>`;
-  const st = `<p class="b" style="margin:0 0 6px;font-size:.88rem">${DATA.settings.msgOk ? '✅ Písanie je povolené' : '🔒 Písanie je vypnuté (zapnete v Pravidlá pre dieťa)'}</p>`;
+  const st = `<p class="b" style="margin:0 0 6px;font-size:.88rem">${DATA.settings.msgOk ? '✅ Vlastné písanie je povolené' : '💬 Len hotové vety a smajlíky (vlastné písanie zapnete v Pravidlá pre dieťa)'}</p>`;
   if (!PM.friends.length) return `<section class="card pcard">${st}<p class="muted b">Dieťa zatiaľ nemá žiadnych priateľov.</p></section>`;
   const rows = PM.friends.map(f => { const n = PM.msgs.filter(m => m.from_code === f.code || m.to_code === f.code).length; return `<button class="psrow press ${PM.sel === f.code ? 'on' : ''}" data-a="pm-open" data-c="${f.code}"><span class="psi">${frAv(f.av)}</span><span class="grow"><b>${esc(f.name)}</b><small>${f.grade ? f.grade + '. ročník · ' : ''}${n} ${plural(n, 'správa', 'správy', 'správ')}</small></span><span class="pcgo">${PM.sel === f.code ? '⌄' : '›'}</span></button>`; }).join('');
   let hist = '';
