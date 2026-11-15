@@ -7,7 +7,7 @@ mkdir -p web
   printf '%s\n' '<!doctype html>' '<html lang="sk">' '<head>' \
     '<meta charset="utf-8">' \
     '<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">' \
-    '<title>Bystrík – hravé učenie pre 1. až 4. ročník</title>' \
+    '<title>Bystrík</title>' \
     '<meta name="theme-color" content="#2B1B30">' \
     '<meta name="description" content="Bystrík je bezplatná apka na hravé učenie pre deti 1. až 4. ročníka: matematika, slovenčina, prehľad, čítanie, minihry, súboje s kamarátmi a rebríček.">' \
     '<meta name="keywords" content="Bystrík, bystrik, učenie pre deti, matematika 1. ročník, slovenčina, vybrané slová, násobilka, apka pre prvákov">' \
@@ -34,7 +34,7 @@ mkdir -p web
 } > web/index.html
 cat > web/manifest.webmanifest <<'EOF'
 {
-  "name": "Bystrík – hravé učenie",
+  "name": "Bystrík",
   "id": "./",
   "description": "Hravé učenie matematiky, slovenčiny a prehľadu pre 1. až 4. ročník.",
   "categories": ["education", "kids"],
