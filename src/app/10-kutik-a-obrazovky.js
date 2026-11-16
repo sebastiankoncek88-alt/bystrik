@@ -441,7 +441,7 @@ function syncPeek() {
   const need = Q && Q.cur && Q.mode !== 'test' && (Q.cur.s === 'mat' || Q.cur.s === 'sjl') && !String(Q.cur.topic).startsWith('note-'); let pk = $('.peek');
   if (pk && need && pk.dataset.s !== Q.cur.s) { pk.dataset.s = Q.cur.s; }
   if (need && !pk) {
-    pk = document.createElement('button'); pk.className = 'peek peekbear'; pk.dataset.a = 'calc'; pk.dataset.s = Q.cur.s; pk.setAttribute('aria-label', 'Medvedík Bystrík s pomôckami'); pk.innerHTML = bearSvg(''); document.body.appendChild(pk);
+    pk = document.createElement('button'); pk.className = 'peek peekbear'; pk.dataset.a = 'calc'; pk.dataset.s = Q.cur.s; pk.setAttribute('aria-label', 'Medvedík Bystrík s pomôckami'); pk.innerHTML = bearSvg(''); document.body.appendChild(pk); try { buddyDecorate(pk.querySelector('svg')); } catch (e) { }
     if (!Q.peekHint) { Q.peekHint = true; peekSay(DATA.settings.calc ? (Q.cur.s === 'mat' ? 'Ťukni na mňa: mám kalkulačku a tabuľky!' : 'Ťukni na mňa, mám pre teba pomôcky!') : 'Držím ti palce!', 3400); }
   } else if (!need && pk) { pk.remove(); $$('.peekbub').forEach(e => e.remove()); }
 }

@@ -22,7 +22,7 @@ function burst(el, n = 26) {
   if (!fx.run) { fx.run = true; requestAnimationFrame(tickFx); }
 }
 /* upozornenie pre dieťa: Bystrík ho aj prečíta nahlas (prváci ešte nevedia čítať) */
-function hint(msg) { const d = document.createElement('div'); d.className = 'tst tbear'; d.innerHTML = `<span class="tbi">${bearSvg('talking')}</span><span>${esc(msg)}</span>`; const ms = Math.max(3200, msg.length * 85); d.style.animationDuration = ms + 'ms'; $('#toast').appendChild(d); setTimeout(() => d.remove(), ms + 100); try { say(msg.replace(/\p{Extended_Pictographic}|\uFE0F|\u200D/gu, '').replace(/\s+/g, ' ').trim()); } catch (e) { } }
+function hint(msg, silent) { const d = document.createElement('div'); d.className = 'tst tbear'; d.innerHTML = `<span class="tbi">${bearSvg('talking')}</span><span>${esc(msg)}</span>`; const ms = Math.max(3200, msg.length * 85); d.style.animationDuration = ms + 'ms'; $('#toast').appendChild(d); setTimeout(() => d.remove(), ms + 100); if (!silent) try { say(msg.replace(/\p{Extended_Pictographic}|\uFE0F|\u200D/gu, '').replace(/\s+/g, ' ').trim()); } catch (e) { } }
 function toast(msg) { const d = document.createElement('div'); d.className = 'tst'; d.textContent = msg; $('#toast').appendChild(d); setTimeout(() => d.remove(), 2900); }
 function floatXp(el, txt) { if (!el) return; const r = el.getBoundingClientRect(); const d = document.createElement('div'); d.className = 'floatxp'; d.textContent = txt; d.style.left = (r.left + r.width / 2 - 20) + 'px'; d.style.top = (r.top - 6) + 'px'; document.body.appendChild(d); setTimeout(() => d.remove(), 1000); }
 
