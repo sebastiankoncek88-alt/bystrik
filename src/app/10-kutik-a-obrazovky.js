@@ -354,7 +354,7 @@ VIEWS.subject = ({ s, g }) => {
   <span class="eyebrow">1. Ako sa chceš učiť?</span>
   <div class="modepick" role="radiogroup">${Object.entries(MODES).map(([k, x]) => `<button class="mp press ${k === m ? 'on' : ''}" data-a="mode" data-m="${k}" data-s="${s}" role="radio" aria-checked="${k === m}"><span class="mi">${x.i}</span>${x.n}</button>`).join('')}</div>
   <div class="modehelp"><span style="font-size:1.6rem">${MODES[m].i}</span><span>${MODES[m].d}</span></div>
-  <span class="eyebrow">2. Vyber ročník a tému</span>
+  <span class="eyebrow">2. Vyber ročník a tému</span><p class="muted b" style="font-size:.82rem;margin:-4px 0 0">🎁 Keď tému prvýkrát zvládneš na plný počet, dostaneš odmenu: oblečenie, kľúč alebo ×2 slniečka.</p>
   <div class="chips">${[1, 2, 3, 4].map(x => `<button class="chip ${x === g ? 'on' : ''}" data-a="grade-chip" data-g="${x}" data-s="${s}">${x}. ročník</button>`).join('')}</div>
   ${s === 'prv' ? `<div class="chips">${[['all', '✨ Všetko'], ...areasFor(g).map(k => [k, AREA_DEF[k].i + ' ' + AREA_DEF[k].n])].map(([k, n]) => `<button class="chip ${PAREA === k ? 'on' : ''}" data-a="parea" data-k="${k}">${n}</button>`).join('')}</div>` : ''}
   ${(s === 'prv' ? areasFor(g).filter(k => PAREA === 'all' || PAREA === k || !areasFor(g).includes(PAREA)).map(k => [k, ts.filter(t => areaOf(t, g) === k)]) : [[null, ts]]).filter(([, list]) => list.length).map(([k, list]) => `${k ? `<div class="areahead a-${k}"><span>${AREA_DEF[k].i}</span>${AREA_DEF[k].n}</div>` : ''}<div class="topics">${list.map((t, i) => { const st = p.topics[t.id]; const ok = modeOk(t, m); return `<button class="card topic press ${ok ? '' : 'na'}" data-a="topic" data-id="${t.id}" style="animation:popUp .4s ${i * 45}ms backwards"><span class="ti" style="background:var(--c-${s}-soft)">${t.icon}</span><span class="tn">${t.name}${dts.includes(t.id) ? ' <em class="tday">🌟 dnes ×2</em>' : ''}<small>${ok ? (st && st.total ? `${Math.round(st.correct / st.total * 100)} % správne` : 'Ešte nevyskúšané') : `${MODES[m].n} tu nie je, vyber iný spôsob`}</small></span>${starStr(st?.stars || 0)}${ok ? '<span class="go">Hrať</span>' : ''}</button>`; }).join('')}</div>`).join('')}</main>${nav('learn')}`;
@@ -479,6 +479,21 @@ function answer(val, el) {
   document.body.appendChild(fb);
 }
 function nextStep() { const fb = $('#fb'); if (fb) fb.remove(); Q.i++; if (Q.i >= Q.total) return finishQuiz(); nextQ(); renderQ(); sfx('tap'); }
+/* odmena za prvé zvládnutie témy na plný počet (každá téma raz): oblečenie, kľúč alebo ×2 slniečka na 10 min */
+let TREW = null;
+function topicReward(p, id) {
+  const r = Math.random(); const free = shopItems(p).filter(([, it]) => it.price <= 200 && !p.owned.includes(it.sid) && !it.chest);
+  if (r < .4 && free.length) { const [c, it] = pick(free); p.owned.push(it.sid); return { k: 'item', c, it, id }; }
+  if (r < .8 && (p.keys || 0) < KEY_MAX) { giveKey(p); return { k: 'key', id }; }
+  p.boost = Date.now() + 10 * 60000; return { k: 'boost', id };
+}
+function showTopicReward(rw) {
+  const p = P(); const t = TOPIC[rw.id]; const o = document.createElement('div'); o.className = 'over';
+  const body = rw.k === 'item' ? `<div class="lbprize"><span class="pth">${itemThumb(rw.c, rw.it, p.av)}</span><div><b>${rw.it.n}</b><small>Nový kúsok do šatníka</small></div></div><button class="btn primary block" data-a="trew-wear" data-c="${rw.c}" data-i="${rw.it.id}">👕 Obliecť</button>` : rw.k === 'key' ? `<div style="font-size:4rem;line-height:1">🔑</div><p class="b">Dostal(a) si kľúč od truhly odmien!</p>` : `<div style="font-size:4rem;line-height:1">✖️2️⃣</div><p class="b">Najbližších 10 minút dostávaš dvojnásobné slniečka!</p>`;
+  o.innerHTML = `<div class="card box">${bearSvg('cheer')}<h2>🏆 Téma zvládnutá!</h2><p class="b muted">${esc(t ? t.name : '')}</p>${body}<button class="btn ${rw.k === 'item' ? '' : 'primary '}block" data-a="ov-close">Paráda!</button></div>`;
+  document.body.appendChild(o); sfx('level'); try { confetti(140, .3); } catch (e) { }
+  say(rw.k === 'item' ? 'Téma zvládnutá! Dostal si nový kúsok oblečenia ' + rw.it.n + '.' : rw.k === 'key' ? 'Téma zvládnutá! Dostal si kľúč od truhly odmien.' : 'Téma zvládnutá! Desať minút dostávaš dvojnásobné slniečka.');
+}
 function finishQuiz() {
   const fb = $('#fb'); if (fb) fb.remove(); clearTimers();
   const p = P(); const before = p.xp; let bonus = 0, stars = 0;
@@ -486,12 +501,12 @@ function finishQuiz() {
   else if (Q.mode === 'quiz' || Q.mode === 'daily' || Q.mode === 'test' || Q.mode === 'go') {
     stars = Q.correct >= 10 ? 3 : Q.correct >= 8 ? 2 : Q.correct >= 5 ? 1 : 0; p.stats.quizzes++; bump('quizzes'); if (stars === 3) bump('stars3');
     if (Q.correct === 10) { p.stats.perfect++; bonus += 30; }
-    if (Q.mode === 'quiz' || Q.mode === 'test') { const ts = topicStat(p, Q.topicIds[0]); ts.played++; ts.best = Math.max(ts.best, Q.correct); ts.stars = Math.max(ts.stars, stars); logAct('quiz', Q.topicIds[0], Q.correct, Q.total); checkPTasks(p, Q.topicIds[0], stars); }
+    if (Q.mode === 'quiz' || Q.mode === 'test') { const ts = topicStat(p, Q.topicIds[0]); ts.played++; ts.best = Math.max(ts.best, Q.correct); ts.stars = Math.max(ts.stars, stars); logAct('quiz', Q.topicIds[0], Q.correct, Q.total); checkPTasks(p, Q.topicIds[0], stars); if (!ts.mastered && (stars === 3 || (Q.total >= 5 && Q.total < 10 && Q.correct === Q.total))) { ts.mastered = Date.now(); TREW = topicReward(p, Q.topicIds[0]); } }
     else if (Q.mode === 'go') { if (p.goDone !== today()) { p.goDone = today(); bonus += 30; } logAct('go', null, Q.correct, Q.total); }
     else { if (p.dailyDone !== today()) { p.dailyDone = today(); p.stats.daily++; bonus += 50; } bump('daily'); logAct('daily', null, Q.correct, Q.total); }
   } else { p.stats.bestTime = Math.max(p.stats.bestTime, Q.correct); const ts = topicStat(p, Q.topicIds[0]); ts.time = Math.max(ts.time || 0, Q.correct); bump('time'); logAct('time', Q.topicIds[0], Q.correct, Q.i + 1); }
   gain(p, Q.xp + bonus); touchStreak(p); checkBadges(p); save(); clsPush();
-  go('result', { tlog: Q.tlog, kind: Q.mode, correct: Q.correct, total: Q.mode === 'time' ? Q.i + (Q.answered ? 1 : 0) : Q.total, stars, xp: Q.xp + bonus, bonus, before, after: p.xp, retry: Q.topicIds, back: Q.back }, 'u');
+  if (TREW) { const rw = TREW; TREW = null; const tryShow = n => { if ($('.over') || PENDING.length || ['quiz', 'game'].includes(UI.view)) { if (n < 60) setTimeout(() => tryShow(n + 1), 800); return; } showTopicReward(rw); }; setTimeout(() => tryShow(0), 2200); } go('result', { tlog: Q.tlog, kind: Q.mode, correct: Q.correct, total: Q.mode === 'time' ? Q.i + (Q.answered ? 1 : 0) : Q.total, stars, xp: Q.xp + bonus, bonus, before, after: p.xp, retry: Q.topicIds, back: Q.back }, 'u');
 }
 async function explainQ() {
   const q = Q.cur; const box = $('#explain'); const btn = $('[data-a="explain"]'); if (btn) btn.remove();

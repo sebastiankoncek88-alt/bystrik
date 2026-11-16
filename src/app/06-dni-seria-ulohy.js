@@ -40,7 +40,7 @@ const drReady = p => p.dailyReward.last !== today();
 const drNextDay = p => p.dailyReward.last === daysAgo(1) ? (p.dailyReward.day % 7) + 1 : 1;
 let PENDING = [];
 const dyOf = p => { const t = today(); if (!p.dy || p.dy.d !== t) p.dy = { d: t, n: 0, xp: 0 }; return p.dy; };
-function gain(p, n) { const wk = weekId(); if (!p.wk || p.wk.w !== wk) p.wk = { w: wk, xp: 0 }; p.wk.xp += n; dyOf(p).xp += n; p.xp += n; p.coins = (p.coins || 0) + Math.max(1, Math.round(n / 5)); }
+function gain(p, n) { const wk = weekId(); if (!p.wk || p.wk.w !== wk) p.wk = { w: wk, xp: 0 }; p.wk.xp += n; dyOf(p).xp += n; p.xp += n; /* slniečka: 1 za 10 bodov (zvyšok sa zbiera), počas ×2 dvojnásobne */ const boost = (p.boost || 0) > Date.now() ? 2 : 1; p.cf = (p.cf || 0) + n / 10 * boost; const c = Math.floor(p.cf); p.cf -= c; p.coins = (p.coins || 0) + c; }
 function addXp(n) { const p = P(); const a = levelInfo(p.xp).L; gain(p, n); const b = levelInfo(p.xp).L; return { from: a, to: b }; }
 function flushPending() { if ($('.over')) return; const x = PENDING.shift(); if (x) showRewardOverlay(x); }
 function coinFly(el, k = 6) {
