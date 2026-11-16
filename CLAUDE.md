@@ -11,6 +11,10 @@ Web: https://sebastiankoncek88-alt.github.io/bystrik/ · Artefakt: https://claud
 - `build.sh` → `bystrik.html` (artefakt) · `build_web.sh` → `web/` (GitHub Pages, PWA, `sw.js` cache `bystrik-vN` – pri väčšej zmene zvýšiť)
 - `supabase/*.sql` – SQL, ktoré používateľ spúšťa ručne v Supabase SQL Editore
 
+## Súkromie (požiadavka používateľa)
+- Do commitov NEPÍSAŤ zmienky o Claude/AI ani odkazy na reláciu; neutrálne správy. Nikde nezverejňovať, ako appka vznikla.
+- Web je zminifikovaný (`tools/minify.js` v `build_web.sh`, závislosti `tools/package.json`). Cieľ: súkromný repozitár so zdrojom + verejný len hotový web.
+
 ## Nasadenie
 1. `./build_web.sh && ./build.sh && node tests/smoke.js` (test musí vypísať OK)
 2. skopírovať `web/*`, `src/`, build skripty do repa, commit, `git push origin main` aj `main:gh-pages`
@@ -38,7 +42,7 @@ Písanie priateľom je predvolene vypnuté (`DATA.settings.msgOk`). Úsporný re
 - Denný cyklus učiva: `dayItems(t)` = každý deň iných ~60 % otázok témy (seed dátum+id, `dayShuffle`); `dayTopics(p)` = 3 Témy dňa (mat/sjl/prv), karta na Učení, v predmete navrchu s odznakom, ×2 body (`isDayTopic`).
 - Slniečka: 1 za 10 bodov (zvyšok `p.cf`), počas `p.boost` ×2. Prvé zvládnutie témy na plný počet (`ts.mastered`) → `topicReward`: 40 % oblečenie (≤200, nevlastnené), 40 % kľúč, inak ×2 slniečka na 10 min; okno `showTopicReward` čaká, kým sa uvoľnia iné okná.
 - Denná odmena `DR` (7 dní v rade): 15 slniečok, 30 bodov, kľúč, 25 slniečok, ×2 na 15 min, 40 slniečok + 50 bodov, oblečenie (≤250); `drGrant`, okno cez `showTopicReward` s `rw.title`.
-- Sprievodca Bystrík (`src/app/07b-buddy.js`): na mobile sa vysunie z ľavého okraja (`buddyShow`, trieda `bd-show`) – po odpovediach v kvíze (`buddyAnswer`, 3 správne za sebou = oslava), v témach, pri výsledku, so zábavnými faktmi (`BUDDY_FACTS`, `buddyFact`, ťuknutie 45 %, samé raz za ~2,5 min mimo kvízu/hier) – a schová sa; na širokej obrazovke (≥900 px, myš) je stále vpravo dole (`bd-pin`) a hýbe sa. Nálady `buddyMood(m, text)`: wink, wave, smile, laugh, happy, cheer, sad, cry, love, think, surprise, shy, nod, yawn, spin, dance, hop, wiggle, peek; spánok `buddySleep`.
+- Sprievodca Bystrík (`src/app/07b-buddy.js`): na mobile sa vysunie z ľavého okraja (`buddyShow`, trieda `bd-show`) – po odpovediach v kvíze (`buddyAnswer`, 3 správne za sebou = oslava), v témach, pri výsledku, so zábavnými faktmi (`BUDDY_FACTS`, `buddyFact`, ťuknutie 45 %, samé raz za ~2,5 min mimo kvízu/hier) – a schová sa; natrvalo v rohu nie je nikde (používateľ to nechce). Nálady `buddyMood(m, text)`: wink, wave, smile, laugh, happy, cheer, sad, cry, love, think, surprise, shy, nod, yawn, spin, dance, hop, wiggle, peek; spánok `buddySleep`.
 - Angličtina: 31 tém (`-en-` v `prehlad.js`, vocab s emoji).
 - Chat priateľov: hotové vety a smajlíky vždy, vlastný text až po `settings.msgOk` (rodič).
 

@@ -1,4 +1,4 @@
-/* ===== Bystrík – sprievodca: na mobile sa vysunie z okraja (najmä v témach), na širokej obrazovke je stále vidno ===== */
+/* ===== Bystrík – sprievodca: vysunie sa z okraja (najmä v témach) a schová sa ===== */
 const BUDDY_MS = { wink: 1500, wave: 1900, smile: 1600, happy: 900, cheer: 2000, sad: 2300, cry: 2800, yawn: 1500, love: 2200, think: 2200, surprise: 1300, spin: 1000, dance: 2600, peek: 1300, hop: 1200, wiggle: 1300, nod: 1300, shy: 1900, laugh: 1800 };
 const BUDDY_ALIAS = { happy: 'bhappy', cheer: 'cheer', spin: 'bspin', dance: 'bdance', hop: 'bhop', wiggle: 'bwiggle', peek: 'bpeek', yawn: 'byawn' };
 const BUDDY_IDLE = ['wink', 'wave', 'smile', 'peek', 'wiggle', 'hop', 'nod', 'shy', 'think', 'love'];
@@ -39,7 +39,7 @@ const BUDDY_FACTS = [
   'Mačky spia väčšinu dňa.', 'Psy cítia vône oveľa lepšie ako ľudia.', 'Sova vie otočiť hlavu skoro dookola.', 'Motýle ochutnávajú nohami.', 'Žaba pije vodu cez kožu.'
 ];
 function buddyBubble(txt, ms) { const b = buddyEl(), s = b.querySelector('.bdbub'); if (!txt) return; ms = ms || Math.max(2400, txt.length * 70); s.textContent = txt; s.hidden = false; s.style.animation = 'none'; void s.offsetWidth; s.style.animation = ''; clearTimeout(BUDDYBT); BUDDYBT = setTimeout(() => { s.hidden = true; }, ms); try { if (typeof emoWalk === 'function') emoWalk(s); } catch (e) { } buddyShow(ms + 600); }
-const buddyWide = () => matchMedia('(min-width: 900px) and (hover: hover)').matches;
+const buddyWide = () => false; /* v rohu natrvalo nie – len vysunutie z okraja */
 let BUDDYHT = null;
 /* vysunutie z okraja; na širokej obrazovke ostáva */
 function buddyShow(ms = 3000) { const b = buddyEl(); b.classList.add('bd-show'); clearTimeout(BUDDYHT); if (!buddyWide()) BUDDYHT = setTimeout(() => { if (!b.matches(':hover')) b.classList.remove('bd-show'); }, ms); }

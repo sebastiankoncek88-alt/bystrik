@@ -54,7 +54,7 @@ cat > web/manifest.webmanifest <<'EOF'
 }
 EOF
 cat > web/sw.js <<'EOF'
-const CACHE = 'bystrik-v33';
+const CACHE = 'bystrik-v34';
 const FILES = ['./', './index.html', './manifest.webmanifest', './icon-192.png', './icon-512.png', './icon-maskable-512.png'];
 self.addEventListener('install', e => { e.waitUntil(caches.open(CACHE).then(c => c.addAll(FILES))); self.skipWaiting(); });
 self.addEventListener('activate', e => { e.waitUntil(caches.keys().then(k => Promise.all(k.filter(x => x !== CACHE).map(x => caches.delete(x))))); self.clients.claim(); });
@@ -63,4 +63,6 @@ self.addEventListener('fetch', e => {
   e.respondWith(fetch(e.request).then(r => { const copy = r.clone(); if (new URL(e.request.url).origin === location.origin) caches.open(CACHE).then(c => c.put(e.request, copy)); return r; }).catch(() => caches.match(e.request).then(r => r || caches.match('./index.html'))));
 });
 EOF
+[ -d tools/node_modules ] || (cd tools && npm i --silent >/dev/null 2>&1)
+node tools/minify.js web/index.html
 echo "web ready: $(wc -c < web/index.html) bytes"
