@@ -43,6 +43,7 @@ Písanie priateľom je predvolene vypnuté (`DATA.settings.msgOk`). Úsporný re
 - Slniečka: 1 za 10 bodov (zvyšok `p.cf`), počas `p.boost` ×2. Prvé zvládnutie témy na plný počet (`ts.mastered`) → `topicReward`: 40 % oblečenie (≤200, nevlastnené), 40 % kľúč, inak ×2 slniečka na 10 min; okno `showTopicReward` čaká, kým sa uvoľnia iné okná.
 - Denná odmena `DR` (7 dní v rade): 15 slniečok, 30 bodov, kľúč, 25 slniečok, ×2 na 15 min, 40 slniečok + 50 bodov, oblečenie (≤250); `drGrant`, okno cez `showTopicReward` s `rw.title`.
 - Bystrík reakcie (`src/app/07b-buddy.js`): ŽIADNY plávajúci medvedík (používateľ nechce). V kvíze animuje existujúceho medvedíka dole (`.peekbear`, `buddyMood(m, text)` → `peekSay`): po odpovediach `buddyAnswer` (zlá = smutný/plače, 3 správne = oslava). Zábavné fakty `BUDDY_FACTS` cez `hint(msg, silent)` v hornom pruhu (raz za ~3 min mimo kvízu/hier/rodiča, po výsledku). Nálady: wink, wave, smile, laugh, happy, cheer, sad, cry, love, think, surprise, shy, nod, yawn, spin, dance, hop, wiggle, peek (doplnky `buddyDecorate`).
+- Bystrík vzhľad: 3D tieňovanie (defs `bfur`, `b3shade`, `b3gloss`, `b3rim` v head.html, prekrytia v `bearSvg`), väčšie očká (cx 41/79, cy 52), bucľatejšie telo; obrys jemný cez CSS `.bear [stroke="#5E3A18"]`.
 - Angličtina: 31 tém (`-en-` v `prehlad.js`, vocab s emoji).
 - Chat priateľov: hotové vety a smajlíky vždy, vlastný text až po `settings.msgOk` (rodič).
 

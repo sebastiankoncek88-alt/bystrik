@@ -22,7 +22,7 @@ const BUDDY_FACTS = [
 /* doplnky pre nálady (slzy, zzz, ?, !, žmurk, smutné ústa, srdiečka) do ľubovoľného medvedíka */
 function buddyDecorate(svg) { if (!svg || svg.querySelector('.bx')) return; const head = svg.querySelector('.b-head'); if (head) head.insertAdjacentHTML('beforeend', DECO); }
 const DECO = `<g class="bx">
-    <path class="bx-wink" d="M73.5 51 Q80 44 86.5 51" stroke="#2E1A14" stroke-width="3.4" fill="none" stroke-linecap="round"/>
+    <path class="bx-wink" d="M72 53 Q79 45.5 86 53" stroke="#2E1A14" stroke-width="3.4" fill="none" stroke-linecap="round"/>
     <path class="bx-sad" d="M52 74 Q60 67.5 68 74" stroke="#3A2430" stroke-width="2.4" fill="none" stroke-linecap="round"/>
     <g class="bx-laugh"><path d="M50.5 68 Q60 65.5 69.5 68 Q68.5 81 60 81 Q51.5 81 50.5 68Z" fill="#7A2335" stroke="#3A2430" stroke-width="1.8"/><path d="M53.5 76.5 Q60 72.5 66.5 76.5 Q64 80.2 60 80.2 Q56 80.2 53.5 76.5Z" fill="#FF8FA6"/></g>
     <path class="bx-tear t1" d="M36 58 q-3 6 0 8 q3 -2 0 -8z" fill="#6EC3FF" stroke="#2F86C9" stroke-width=".8"/>
