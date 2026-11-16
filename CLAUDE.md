@@ -13,7 +13,7 @@ Web: https://sebastiankoncek88-alt.github.io/bystrik/ · Artefakt: https://claud
 
 ## Súkromie (požiadavka používateľa)
 - Do commitov NEPÍSAŤ zmienky o Claude/AI ani odkazy na reláciu; neutrálne správy. Nikde nezverejňovať, ako appka vznikla.
-- Web je zminifikovaný (`tools/minify.js` v `build_web.sh`, závislosti `tools/package.json`). Cieľ: súkromný repozitár so zdrojom + verejný len hotový web.
+- Web je zminifikovaný (`tools/minify.js` v `build_web.sh`, závislosti `tools/package.json`).
 
 ## Nasadenie
 1. `./build_web.sh && ./build.sh && node tests/smoke.js` (test musí vypísať OK)
