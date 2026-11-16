@@ -1243,6 +1243,62 @@ canvas.fwcv{position:fixed;inset:0;width:100vw;height:100vh;z-index:9997;pointer
 .daytop{display:flex;flex-direction:column;gap:2px;padding:14px;background:linear-gradient(160deg,#FFF4CC,var(--card))}.dtlist{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
 .dt{display:flex;flex-direction:column;align-items:center;gap:4px;padding:10px 6px;text-align:center}.dt .ti{width:42px;height:42px;border-radius:12px;display:grid;place-items:center;font-size:1.5rem}.dt b{font-size:.82rem;line-height:1.15}.dt small{font-weight:800;font-size:.7rem;color:var(--muted)}
 .tday{font-style:normal;font-size:.68rem;font-weight:900;background:#FFD84D;color:#3A2400;border-radius:99px;padding:1px 7px;margin-left:4px;vertical-align:middle;white-space:nowrap}
+/* ===== Bystrík sprievodca ===== */
+#buddy{position:fixed;right:max(8px,env(safe-area-inset-right,0px));bottom:calc(env(safe-area-inset-bottom,0px) + 96px);width:70px;height:70px;z-index:40;cursor:pointer;filter:drop-shadow(0 3px 4px rgba(0,0,0,.2));transition:top .35s ease,bottom .35s ease,width .3s,height .3s;-webkit-tap-highlight-color:transparent;touch-action:manipulation}
+#buddy svg{width:100%;height:100%;overflow:visible}
+html.bd-top #buddy{bottom:auto;right:auto;left:max(4px,env(safe-area-inset-left,0px));top:calc(env(safe-area-inset-top,0px) + 66px);width:50px;height:50px}
+#buddy.bd-nohit{pointer-events:none;opacity:.9}
+.bdbub{position:absolute;right:calc(100% - 4px);bottom:58%;max-width:min(62vw,240px);width:max-content;background:var(--card);border:2.5px solid var(--edge);border-radius:16px 16px 4px 16px;padding:6px 10px;font:800 .84rem/1.25 var(--f-display);color:var(--ink);box-shadow:0 3px 0 var(--drop);animation:bdbub .3s cubic-bezier(.3,1.6,.5,1);pointer-events:none}
+html.bd-top .bdbub{bottom:auto;top:30%;right:auto;left:calc(100% - 4px);border-radius:16px 16px 16px 4px}
+@keyframes bdbub{from{transform:scale(.4) translateX(20px);opacity:0}}
+.bear .bx>*{opacity:0;transition:opacity .25s}.bear .bx *{transform-box:fill-box;transform-origin:center}
+/* žmurk */
+.bear.bd-wink .b-eyes>ellipse:nth-of-type(2),.bear.bd-wink .b-look>ellipse:nth-of-type(2),.bear.bd-wink .b-look>circle:nth-of-type(2){opacity:0}
+.bear.bd-wink .bx-wink{opacity:1}.bear.bd-wink .b-head{animation:bdtilt 1.5s ease-in-out}
+@keyframes bdtilt{30%,70%{transform:rotate(-7deg)}}
+/* kývanie */
+.bear.bd-wave .b-arm-r{transform-box:fill-box;transform-origin:20% 10%;animation:bdwave 1.9s ease-in-out}
+@keyframes bdwave{10%{transform:rotate(-120deg)}20%,40%,60%{transform:rotate(-150deg)}30%,50%,70%{transform:rotate(-105deg)}85%{transform:rotate(-120deg)}100%{transform:none}}
+.bear.bd-wave .b-eyes{opacity:0}.bear.bd-wave .b-happyeyes{opacity:1}
+/* úsmev a smiech */
+.bear.bd-smile .b-eyes,.bear.bd-laugh .b-eyes,.bear.bd-love .b-eyes{opacity:0}.bear.bd-smile .b-happyeyes,.bear.bd-laugh .b-happyeyes,.bear.bd-love .b-happyeyes{opacity:1}
+.bear.bd-smile .b-cheek{animation:bdcheek 1.6s ease-in-out}@keyframes bdcheek{30%,70%{transform:scale(1.35)}}
+.bear.bd-laugh .b-smile{opacity:0}.bear.bd-laugh .bx-laugh{opacity:1}.bear.bd-laugh .b-all{animation:bdlaugh .3s ease-in-out 6}@keyframes bdlaugh{50%{transform:translateY(-3px) rotate(2deg)}}
+/* smútok a plač */
+.bear.bd-sad .b-smile,.bear.bd-cry .b-smile{opacity:0}.bear.bd-sad .bx-sad,.bear.bd-cry .bx-sad{opacity:1}
+.bear.bd-sad .b-brows path:first-child,.bear.bd-cry .b-brows path:first-child{transform-box:fill-box;transform-origin:center;transform:rotate(-18deg) translateY(2px)}
+.bear.bd-sad .b-brows path:last-child,.bear.bd-cry .b-brows path:last-child{transform-box:fill-box;transform-origin:center;transform:rotate(18deg) translateY(2px)}
+.bear.bd-sad .b-head,.bear.bd-cry .b-head{animation:bdsadh 2.3s ease-in-out}@keyframes bdsadh{20%,80%{transform:translateY(3px) rotate(4deg)}}
+.bear.bd-sad .b-look,.bear.bd-cry .b-look{transform:translateY(2px)}
+.bear.bd-cry .bx-tear{opacity:1;animation:bdtear .9s ease-in infinite}.bear.bd-cry .bx-tear.t2{animation-delay:.45s}
+@keyframes bdtear{0%{transform:translateY(-2px) scale(.6);opacity:0}25%{opacity:1}100%{transform:translateY(16px) scale(1);opacity:0}}
+.bear.bd-cry .b-all{animation:bdsob .35s ease-in-out 7}@keyframes bdsob{50%{transform:translateY(1.5px)}}
+/* láska */
+.bear.bd-love .bx-heart{opacity:1;animation:bdheart 1.1s ease-out 2}.bear.bd-love .bx-heart.h2{animation-delay:.35s}
+@keyframes bdheart{0%{transform:translateY(6px) scale(.4);opacity:0}30%{opacity:1}100%{transform:translateY(-16px) scale(1.2);opacity:0}}
+.bear.bd-love .b-cheek{transform:scale(1.4);transform-box:fill-box;transform-origin:center}
+/* premýšľanie */
+.bear.bd-think .bx-q{opacity:1;animation:bdq 1s ease-in-out 2}@keyframes bdq{50%{transform:translateY(-4px) rotate(10deg)}}
+.bear.bd-think .b-look{transform:translate(2px,-3px);animation:none}.bear.bd-think .b-head{animation:bdthink 2.2s ease-in-out}@keyframes bdthink{25%,75%{transform:rotate(8deg)}}
+.bear.bd-think .b-arm-l{transform-box:fill-box;transform-origin:50% 10%;animation:bdchin 2.2s ease-in-out}@keyframes bdchin{25%,75%{transform:rotate(130deg) translateY(-6px)}}
+/* prekvapenie */
+.bear.bd-surprise .bx-ex{opacity:1;animation:bdex .5s cubic-bezier(.3,1.8,.5,1)}@keyframes bdex{from{transform:scale(0)}}
+.bear.bd-surprise .b-smile{opacity:0}.bear.bd-surprise .b-mouth{opacity:1;transform:scale(.8)}
+.bear.bd-surprise .b-eyes{transform:scale(1.18);transform-box:fill-box}.bear.bd-surprise .b-all{animation:bjump .6s cubic-bezier(.3,1.7,.5,1)}
+/* prikývnutie, hanblivosť */
+.bear.bd-nod .b-head{animation:bdnod 1.3s ease-in-out}@keyframes bdnod{20%,60%{transform:translateY(4px) rotate(2deg)}40%,80%{transform:translateY(-1px)}}
+.bear.bd-shy .b-head{animation:bdshy 1.9s ease-in-out}@keyframes bdshy{20%,80%{transform:rotate(-10deg) translateY(2px)}}
+.bear.bd-shy .b-cheek{transform:scale(1.6);transform-box:fill-box;transform-origin:center;filter:saturate(1.6)}
+.bear.bd-shy .b-look{transform:translate(-2px,3px);animation:none}
+.bear.bd-shy .b-arm-l,.bear.bd-shy .b-arm-r{transform-box:fill-box;transform-origin:50% 10%}.bear.bd-shy .b-arm-l{animation:barmup-l 1.9s ease-in-out}
+/* spánok */
+.bear.bd-sleep .b-eyes,.bear.bd-sleep .b-smile{opacity:0}.bear.bd-sleep .b-happyeyes{opacity:1;transform:scaleY(-1);transform-box:fill-box;transform-origin:center}
+.bear.bd-sleep .bx-z{opacity:1;animation:bdz 2.2s ease-in-out infinite}.bear.bd-sleep .bx-z.z2{animation-delay:1.1s}
+@keyframes bdz{0%{transform:translate(-4px,6px) scale(.5);opacity:0}30%{opacity:1}100%{transform:translate(6px,-8px) scale(1.1);opacity:0}}
+.bear.bd-sleep .b-all{animation:bdbreath 3.2s ease-in-out infinite;transform-origin:50% 100%}@keyframes bdbreath{50%{transform:scale(1.03,.97)}}
+.bear.bd-sleep .b-look,.bear.bd-sleep .b-brows{animation:none}
+html.lite #buddy{filter:none}
+@media (prefers-reduced-motion: reduce){#buddy .bear *{animation-duration:.01ms!important;animation-iteration-count:1!important}}
 #thfade{position:fixed;inset:0;z-index:9998;pointer-events:none;opacity:.85;transition:opacity 1.1s ease-out;will-change:opacity}#thfade.go{opacity:0}
 
 html.bnight body::after{content:"";position:fixed;inset:0;pointer-events:none;z-index:-1;background-image:radial-gradient(circle,rgba(255,255,255,.7) 1.2px,transparent 2px),radial-gradient(circle,rgba(255,240,180,.55) 1px,transparent 1.6px);background-size:120px 140px,80px 96px;background-position:20px 30px,60px 10px;opacity:.5}

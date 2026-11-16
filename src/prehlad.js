@@ -470,6 +470,192 @@ const PRV = [
     potato|zemiak
     cake|koláč
     juice|džús`) },
+  /* angličtina – rozšírenie (11/2026) */
+  { id: 'p1-en-ovocie', g: 1, type: 'vocab', name: 'Angličtina: ovocie a zelenina', icon: '🍓', items: lines(`
+    apple|jablko|🍎
+    banana|banán|🍌
+    orange|pomaranč|🍊
+    pear|hruška|🍐
+    grapes|hrozno|🍇
+    strawberry|jahoda|🍓
+    cherry|čerešňa|🍒
+    lemon|citrón|🍋
+    carrot|mrkva|🥕
+    tomato|paradajka|🍅
+    potato|zemiak|🥔
+    corn|kukurica|🌽`) },
+  { id: 'p1-en-domace', g: 1, type: 'vocab', name: 'Angličtina: domáce zvieratá', icon: '🐶', items: lines(`
+    dog|pes|🐶
+    cat|mačka|🐱
+    cow|krava|🐮
+    pig|prasa|🐷
+    horse|kôň|🐴
+    sheep|ovca|🐑
+    hen|sliepka|🐔
+    duck|kačica|🦆
+    goat|koza|🐐
+    rabbit|zajac|🐰
+    mouse|myš|🐭
+    fish|ryba|🐟`) },
+  { id: 'p1-en-tvary', g: 1, type: 'vocab', name: 'Angličtina: tvary a veľkosti', icon: '🔺', items: lines(`
+    circle|kruh|⚪
+    square|štvorec|🟥
+    triangle|trojuholník|🔺
+    star|hviezda|⭐
+    heart|srdce|❤️
+    big|veľký|🐘
+    small|malý|🐭
+    long|dlhý|🐍
+    short|krátky|✏️
+    round|okrúhly|⚽`) },
+  { id: 'p1-en-tvar', g: 1, type: 'vocab', name: 'Angličtina: hlava a tvár', icon: '🙂', items: lines(`
+    head|hlava|🙂
+    eye|oko|👁️
+    ear|ucho|👂
+    nose|nos|👃
+    mouth|ústa|👄
+    hair|vlasy|💇
+    tooth|zub|🦷
+    face|tvár|😊
+    tongue|jazyk|👅
+    smile|úsmev|😁`) },
+  { id: 'p2-en-oblecenie', g: 2, type: 'vocab', name: 'Angličtina: oblečenie', icon: '👕', items: lines(`
+    T-shirt|tričko|👕
+    trousers|nohavice|👖
+    dress|šaty|👗
+    shoes|topánky|👟
+    socks|ponožky|🧦
+    hat|klobúk|👒
+    cap|šiltovka|🧢
+    coat|kabát|🧥
+    scarf|šál|🧣
+    gloves|rukavice|🧤
+    boots|čižmy|👢
+    skirt|sukňa|👗`) },
+  { id: 'p2-en-dom', g: 2, type: 'vocab', name: 'Angličtina: môj dom', icon: '🏠', items: lines(`
+    house|dom|🏠
+    door|dvere|🚪
+    window|okno|🪟
+    bed|posteľ|🛏️
+    table|stôl|🍽️
+    chair|stolička|🪑
+    kitchen|kuchyňa|🍳
+    bathroom|kúpeľňa|🛁
+    bedroom|spálňa|🛌
+    garden|záhrada|🌷
+    lamp|lampa|💡
+    sofa|gauč|🛋️`) },
+  { id: 'p2-en-pocity', g: 2, type: 'vocab', name: 'Angličtina: ako sa cítim', icon: '😊', items: lines(`
+    happy|šťastný|😊
+    sad|smutný|😢
+    angry|nahnevaný|😠
+    tired|unavený|😴
+    hungry|hladný|🍽️
+    thirsty|smädný|🥤
+    scared|vystrašený|😨
+    sick|chorý|🤒
+    hot|horúco mi|🥵
+    cold|zima mi|🥶`) },
+  { id: 'p2-en-cisla20', g: 2, type: 'vocab', name: 'Angličtina: čísla 11–20', icon: '🔢', items: lines(`
+    eleven|jedenásť
+    twelve|dvanásť
+    thirteen|trinásť|
+    fourteen|štrnásť|
+    fifteen|pätnásť|
+    sixteen|šestnásť|
+    seventeen|sedemnásť|
+    eighteen|osemnásť|
+    nineteen|devätnásť|
+    twenty|dvadsať|`) },
+  { id: 'p3-en-mesiace', g: 3, type: 'vocab', name: 'Angličtina: mesiace', icon: '📅', items: lines(`
+    January|január|⛄
+    February|február|❄️
+    March|marec|🌱
+    April|apríl|🌷
+    May|máj|🌸
+    June|jún|🍓
+    July|júl|🏖️
+    August|august|☀️
+    September|september|🎒
+    October|október|🍂
+    November|november|🌧️
+    December|december|🎄`) },
+  { id: 'p3-en-sport', g: 3, type: 'vocab', name: 'Angličtina: šport a hry', icon: '⚽', items: lines(`
+    football|futbal|⚽
+    basketball|basketbal|🏀
+    tennis|tenis|🎾
+    swimming|plávanie|🏊
+    running|beh|🏃
+    bike|bicykel|🚲
+    skiing|lyžovanie|⛷️
+    skating|korčuľovanie|⛸️
+    ball|lopta|🏐
+    team|tím|👥
+    goal|gól|🥅
+    game|hra|🎲`) },
+  { id: 'p3-en-priroda', g: 3, type: 'vocab', name: 'Angličtina: príroda', icon: '🌳', items: lines(`
+    tree|strom|🌳
+    flower|kvet|🌸
+    grass|tráva|🌿
+    river|rieka|🏞️
+    lake|jazero|💧
+    mountain|hora|⛰️
+    forest|les|🌲
+    sun|slnko|☀️
+    moon|mesiac|🌙
+    sky|obloha|🌤️
+    rain|dážď|🌧️
+    snow|sneh|❄️`) },
+  { id: 'p4-en-povolania', g: 4, type: 'vocab', name: 'Angličtina: povolania', icon: '👩‍⚕️', items: lines(`
+    doctor|lekár|🩺
+    teacher|učiteľ|🧑‍🏫
+    police officer|policajt|👮
+    firefighter|hasič|🧑‍🚒
+    cook|kuchár|🧑‍🍳
+    farmer|farmár|🧑‍🌾
+    driver|vodič|🚗
+    nurse|zdravotná sestra|💉
+    pilot|pilot|✈️
+    baker|pekár|🥖
+    shop assistant|predavač|🛒
+    singer|spevák|🎤`) },
+  { id: 'p4-en-mesto', g: 4, type: 'vocab', name: 'Angličtina: mesto a doprava', icon: '🏙️', items: lines(`
+    street|ulica|🛣️
+    shop|obchod|🏪
+    school|škola|🏫
+    hospital|nemocnica|🏥
+    park|park|🌳
+    bank|banka|🏦
+    car|auto|🚗
+    bus|autobus|🚌
+    train|vlak|🚆
+    plane|lietadlo|✈️
+    bridge|most|🌉
+    station|stanica|🚉`) },
+  { id: 'p4-en-opacne', g: 4, type: 'vocab', name: 'Angličtina: opačné slová', icon: '↔️', items: lines(`
+    big – small|veľký – malý|🐘
+    hot – cold|horúci – studený|🔥
+    fast – slow|rýchly – pomalý|🐇
+    old – new|starý – nový|📦
+    happy – sad|veselý – smutný|😊
+    tall – short|vysoký – nízky|🦒
+    open – closed|otvorený – zatvorený|🚪
+    clean – dirty|čistý – špinavý|🧼
+    light – heavy|ľahký – ťažký|🪶
+    day – night|deň – noc|🌗`) },
+  { id: 'p4-en-cas', g: 4, type: 'vocab', name: 'Angličtina: čas a časti dňa', icon: '⏰', items: lines(`
+    morning|ráno|🌅
+    afternoon|popoludnie|🌤️
+    evening|večer|🌆
+    night|noc|🌙
+    today|dnes|📅
+    tomorrow|zajtra|➡️
+    yesterday|včera|⬅️
+    week|týždeň|🗓️
+    clock|hodiny|🕰️
+    hour|hodina|⏳
+    minute|minúta|⏱️
+    weekend|víkend|🎉`) },
 ];
 
 SUBJECTS.prv = { name: 'Prehľad', short: 'Prehľad', icon: '🌍', topics: PRV };

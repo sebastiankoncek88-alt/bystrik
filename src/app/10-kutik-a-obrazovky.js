@@ -453,7 +453,7 @@ const COMFORT = ['Nevadí!', 'Skoro!', 'Nabudúce to dáš!', 'Nevzdávaj sa!'];
 function setMood(m) { const mini = $('#mini'); if (!mini) return; mini.innerHTML = avatarSvg(P().av, { crop: 'head', mood: m }); mini.querySelector('svg').classList.add(m === 'happy' ? 'jump' : 'shake'); }
 function answer(val, el) {
   if (Q.answered) return; Q.answered = true;
-  const q = Q.cur, p = P(); const ok = q.input ? Number(val) === q.raw : val === q.answer;
+  const q = Q.cur, p = P(); const ok = q.input ? Number(val) === q.raw : val === q.answer; try { buddyAnswer(ok); } catch (e) { }
   if (Q.mode === 'test') {
     const ts = topicStat(p, q.topic); ts.total++; p.stats.answered++; countDay(ok); bump(q.s);
     if (ok) { ts.correct++; p.stats.correct++; Q.correct++; bump('correct'); Q.xp += Q.topicIds.length === 1 && isDayTopic(p, Q.topicIds[0]) ? 24 : 12; }
@@ -491,7 +491,7 @@ function showTopicReward(rw) {
   const p = P(); const t = TOPIC[rw.id]; const o = document.createElement('div'); o.className = 'over';
   const body = rw.k === 'item' ? `<div class="lbprize"><span class="pth">${itemThumb(rw.c, rw.it, p.av)}</span><div><b>${rw.it.n}</b><small>Nový kúsok do šatníka</small></div></div><button class="btn primary block" data-a="trew-wear" data-c="${rw.c}" data-i="${rw.it.id}">👕 Obliecť</button>` : rw.k === 'key' ? `<div style="font-size:4rem;line-height:1">🔑</div><p class="b">Dostal(a) si kľúč od truhly odmien!</p>` : `<div style="font-size:4rem;line-height:1">✖️2️⃣</div><p class="b">Najbližších ${rw.min || 10} minút dostávaš dvojnásobné slniečka!</p>`;
   o.innerHTML = `<div class="card box">${bearSvg('cheer')}<h2>${rw.title || '🏆 Téma zvládnutá!'}</h2><p class="b muted">${esc(rw.sub || (t ? t.name : ''))}</p>${body}<button class="btn ${rw.k === 'item' ? '' : 'primary '}block" data-a="ov-close">Paráda!</button></div>`;
-  document.body.appendChild(o); sfx('level'); try { confetti(140, .3); } catch (e) { }
+  document.body.appendChild(o); sfx('level'); try { confetti(140, .3); buddyMood('cheer'); } catch (e) { }
   const pre = rw.title ? 'Denná odmena! ' : 'Téma zvládnutá! '; say(pre + (rw.k === 'item' ? 'Dostal si nový kúsok oblečenia ' + rw.it.n + '.' : rw.k === 'key' ? 'Dostal si kľúč od truhly odmien.' : 'Teraz dostávaš dvojnásobné slniečka.'));
 }
 function finishQuiz() {

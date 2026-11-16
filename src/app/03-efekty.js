@@ -41,5 +41,5 @@ function fireworks(n) {
     for (const s of sparks) { if (s.life <= 0) continue; alive = true; s.x += s.vx; s.y += s.vy; s.vy += .05; s.vx *= .985; s.vy *= .985; s.life -= .012; g.globalAlpha = Math.max(0, s.life); g.fillStyle = s.c; g.beginPath(); g.arc(s.x, s.y, 2.4, 0, 7); g.fill(); }
     g.globalAlpha = 1; if (alive && el < 9000) requestAnimationFrame(step); else cv.remove();
   };
-  requestAnimationFrame(step);
+  requestAnimationFrame(step); try { buddyMood('dance', 'Hurá! 🎆'); } catch (e) { }
 }

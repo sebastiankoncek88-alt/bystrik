@@ -34,7 +34,7 @@ function render(dir) {
   app.innerHTML = VIEWS[UI.view](UI.params);
   const v = app.querySelector('.view'); if (v && dir) v.classList.add('enter-' + dir);
   AFTER[UI.view] && AFTER[UI.view]();
-  applyRoom(); navPill(); if (CHG) setTimeout(chgStep, 260); if (nightOn() !== LASTNIGHT) applyTheme(true); bearObs(); pathFireworks();
+  applyRoom(); navPill(); if (CHG) setTimeout(chgStep, 260); if (nightOn() !== LASTNIGHT) applyTheme(true); bearObs(); pathFireworks(); try { buddySync(); } catch (e) { }
   if (!['quiz', 'cards', 'pexeso', 'match', 'sort', 'game', 'result', 'onboard'].includes(UI.view)) setTimeout(flushPending, 350);
 }
 let LASTCOINS = -1;
