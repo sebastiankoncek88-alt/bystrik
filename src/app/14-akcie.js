@@ -70,7 +70,7 @@ const ACT = {
   'ov-close': () => { $('.over')?.remove(); setTimeout(flushPending, 200); setTimeout(pathFireworks, 350); },
   'ov-wear': () => { $('.over')?.remove(); PENDING = []; go('wardrobe', {}, 'f'); },
   dreward: () => { sfx('tap'); const p = P(); if (UI.view !== 'home') { go('home', {}, 'f'); return setTimeout(() => { const e = $('#drcard'); if (e) e.scrollIntoView({ behavior: 'smooth', block: 'center' }); }, 300); } if (drReady(p)) ACT['dr-claim']({}, $('#drcard')); else { const e = $('#drcard'); if (e) e.scrollIntoView({ behavior: 'smooth', block: 'center' }); } },
-  'dr-claim': (d, el) => { const p = P(); if (!drReady(p)) return; const dn = drNextDay(p); p.dailyReward = { last: today(), day: dn }; $('.over')?.remove(); confetti(120); touchStreak(p); grant(DR[dn - 1].xp, el); if (UI.view === 'home' || UI.view === 'rewards') render(null); },
+  'dr-claim': (d, el) => { const p = P(); if (!drReady(p)) return; const dn = drNextDay(p); p.dailyReward = { last: today(), day: dn }; $('.over')?.remove(); confetti(120); touchStreak(p); drGrant(p, DR[dn - 1], el); if (UI.view === 'home' || UI.view === 'rewards') render(null); },
   claim: (d, el) => { const p = P(); const dd = ensureDay(p); if (dd.claimed.includes(d.id)) return; dd.claimed.push(d.id); p.stats.tasks++; checkBadges(p); const T = TASKS.find(x => x.id === d.id); confetti(50, .5); grant(T.xp, el); render(null); },
   'claim-bonus': (d, el) => { const p = P(); const dd = ensureDay(p); if (dd.bonus) return; dd.bonus = true; giveKey(p); save(); openChest(50); },
   'rtab-go': d => { RTAB = d.t; go('rewards', {}, 'f'); },
