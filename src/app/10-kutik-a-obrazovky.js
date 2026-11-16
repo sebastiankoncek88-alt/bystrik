@@ -9,6 +9,7 @@ const season = () => { const m = new Date().getMonth(); return m === 11 || m < 2
 /* kométa pri sérii správnych odpovedí */
 const KEY_MAX = 3; const learnedToday = p => { const d = p.days[today()]; return !!(d && ((d.n || 0) > 0 || (d.q || 0) > 0)); };
 const SHOP_LOCK_MSG = 'Najprv sa dnes nauč aspoň jednu vec 📚 Potom môžeš nakupovať.';
+let SHOPSAID = false; function shopLockSay() { if (SHOPSAID) return; SHOPSAID = true; setTimeout(() => { if (UI.view === 'shop' || document.querySelector('.shoplock')) say('Nakupovať môžeš po dnešnom učení. Veci si môžeš pozrieť a vyskúšať hneď. Kúpiť ich môžeš, keď sa dnes niečo naučíš.'); }, 500); }
 function giveKey(p) { if ((p.keys || 0) >= KEY_MAX) return false; p.keys = (p.keys || 0) + 1; return true; }
 function mysteryRoll(p) {
   const ex = ['top', 'bottom', 'shoes', 'acc'].flatMap(c => CATALOG[c].filter(it => it.chest && (!it.g || it.g === p.av.gender)).map(it => [c, it]));
@@ -90,7 +91,7 @@ function bearCorner(p) {
   <small class="bchint">🍯 Med dostaneš za každé dokončené učenie alebo hru. Za starostlivosť rastie priateľstvo 💖.</small></section>`;
 }
 let BEARIV = null; const BEAR_IDLE = ['bhappy', 'bwiggle', 'bpeek', 'bhop'];
-function bearIdleStart() { clearInterval(BEARIV); BEARIV = setInterval(() => { const fig = $('.bearroom .bcfig svg'), room = $('#bearcorner'); if (!fig || !room) { clearInterval(BEARIV); return; } if (document.hidden || room.classList.contains('busy') || $('#brscene.night') || fig.classList.contains('bdance')) return; const c = pick(BEAR_IDLE); fig.classList.add(c); setTimeout(() => fig.classList.remove(c), 1400); }, 6500); }
+function bearIdleStart() { clearInterval(BEARIV); BEARIV = setInterval(() => { const fig = $('.bearroom .bcfig svg'), room = $('#bearcorner'); if (!fig || !room) { clearInterval(BEARIV); return; } if (document.hidden || room.classList.contains('offs') || room.classList.contains('busy') || $('#brscene.night') || fig.classList.contains('bdance')) return; const c = pick(BEAR_IDLE); fig.classList.add(c); setTimeout(() => fig.classList.remove(c), 1400); }, 6500); }
 function bearSay(t) { const el = $('#brbub'); if (el) { el.textContent = t; el.classList.remove('pop'); void el.offsetWidth; el.classList.add('pop'); } }
 function bearLoveUp(p, n) { const b = bearInit(p); const before = bearLove(b).lv; b.love = (b.love || 0) + n; const after = bearLove(b).lv; bearCare(p); const el = $('.brlove'); if (el) el.innerHTML = `💖 Lv ${after}<i><b style="width:${bearLove(b).pr * 10}%"></b></i>`; if (after > before) { toast(`💖 Priateľstvo s Bystríkom: level ${after}!`); sfx('level'); try { confetti(80, .4); } catch (e) { } } }
 let BREC = null;
@@ -350,7 +351,7 @@ VIEWS.subject = ({ s, g }) => {
 };
 function startMode(id) {
   const t = TOPIC[id]; const p = P(); const m = p.mode[t.s] || 'quiz'; const back = { v: 'subject', p: { s: t.s, g: t.g } };
-  if (!modeOk(t, m)) { toast(`${MODES[m].n} v tejto téme nie je. Vyber iný spôsob hore.`); sfx('no'); return; }
+  if (!modeOk(t, m)) { hint(`${MODES[m].n} v tejto téme nie je. Vyber iný spôsob hore.`); sfx('no'); return; }
   if (m === 'quiz' || m === 'time' || m === 'test') return startQuiz([id], m, back);
   if (m === 'cards') { const deck = topicCards(t); CD = { t: id, deck, total: deck.length, known: 0, xp: 0, back }; return go('cards', {}, 'u'); }
   if (m === 'pex') { let pairs = t.pex ? t.pex() : null; for (let k = 0; k < 5 && !pairs; k++) pairs = pexesoPairs(t); const tiles = shuffle(pairs.flatMap(([a, b], i) => [{ v: a, pair: i }, { v: b, pair: i }])); PX = { t: id, tiles, moves: 0, lock: false, back }; return go('pexeso', {}, 'u'); }
@@ -760,7 +761,7 @@ VIEWS.games = () => { const p = P(); return `${topbar()}<main class="view"><h1 s
 let GM = null;
 function gamesToday(p) { return p.gp && p.gp.d === today() ? p.gp.n : 0; }
 function gamesLeft(p) { const L = DATA.settings.gameLimit; return L ? Math.max(0, L - gamesToday(p)) : Infinity; }
-function gameLimitMsg() { const p = P(); sfx('no'); buzz([30, 40, 30]); const w = document.createElement('div'); w.className = 'over'; w.innerHTML = `<div class="card box"><div style="font-size:4rem;line-height:1">🌙</div><h2>Na dnes stačilo hier!</h2><p class="b muted">Dnes si už zahral(a) ${DATA.settings.gameLimit} ${plural(DATA.settings.gameLimit, 'minihru', 'minihry', 'miníhier')}. Zajtra môžeš znova. Zatiaľ sa môžeš učiť a zbierať slniečka 📚</p><button class="btn primary block" data-a="ov-learn">📚 Ísť sa učiť</button><button class="btn block" data-a="ov-close">OK</button></div>`; document.body.appendChild(w); }
+function gameLimitMsg() { const p = P(); sfx('no'); buzz([30, 40, 30]); const w = document.createElement('div'); w.className = 'over'; w.innerHTML = `<div class="card box"><div style="font-size:4rem;line-height:1">🌙</div><h2>Na dnes stačilo hier!</h2><p class="b muted">Dnes si už zahral(a) ${DATA.settings.gameLimit} ${plural(DATA.settings.gameLimit, 'minihru', 'minihry', 'miníhier')}. Zajtra môžeš znova. Zatiaľ sa môžeš učiť a zbierať slniečka 📚</p><button class="btn primary block" data-a="ov-learn">📚 Ísť sa učiť</button><button class="btn block" data-a="ov-close">OK</button></div>`; document.body.appendChild(w); say('Na dnes stačilo hier! Zajtra môžeš znova. Zatiaľ sa môžeš učiť a zbierať slniečka.'); }
 function startGame(k, d) { const pp = P(); if (!d) return pickDiff(k); pp.gdiff = pp.gdiff || {}; pp.gdiff[k] = d; if (gamesLeft(pp) <= 0) return gameLimitMsg(); pp.gp = { d: today(), n: gamesToday(pp) + 1 }; save(); const g = pp.grade; GM = { k, g, d, score: 0, lives: 3, left: 45, combo: 0 }; if (k === 'balloons') { GM.target = balloonTarget(g); GM.hits = 0; } if (k === 'rain') GM.setup = rainSetup(g); if (k === 'tf') GM.st = makeStatement(g); if (k === 'mole') GM.rule = moleRule(g); if (k === 'word') { GM.left = 60; wordNext(); } if (k === 'order') { GM.left = 60; orderNext(); } if (k === 'simon') { GM.left = 90; GM.seq = [R(0, 3), R(0, 3)]; GM.in = 0; GM.lockIn = true; } if (k === 'race') { GM.left = 75; GM.pos = 0; GM.bot = 0; GM.rq = frogQ(g); } if (k === 'frog') { GM.step = 0; GM.shores = 0; GM.fq = frogQ(g); GM.left = 60; } go('game', {}, 'u'); }
 VIEWS.game = () => {
   const head = `<div class="qtop"><button class="iconbtn press" data-a="quit-game" aria-label="Ukončiť">✕</button><span class="hearts" id="hearts">${'❤️'.repeat(GM.lives)}${'🤍'.repeat(3 - GM.lives)}</span><div style="flex:1"></div><span class="timer dtag">${DF().e}</span><span class="timer" id="gscore">⭐ ${GM.score}</span><span class="timer" id="gtime">${GM.left} s</span></div>`;
@@ -854,7 +855,7 @@ function wear(id) {
 function wardPuff() { const fig = $('#wfig'); if (!fig) return; const pf = document.createElement('span'); pf.className = 'wpuff'; pf.innerHTML = '<i></i><i></i><i></i><i></i><i></i><i></i><b></b>'; fig.appendChild(pf); setTimeout(() => pf.remove(), 800); }
 function setColor(slot, id) {
   const p = P(); const pal = slot === 'hair' ? HAIRC : slot === 'bg' ? BGC : PAL; const it = pal.find(x => x.id === id);
-  if (!unlocked(it, p)) { sfx('no'); toast(`🔒 Odomkneš: ${lockLabel(it)}`); return; }
+  if (!unlocked(it, p)) { sfx('no'); hint(`🔒 Odomkneš: ${lockLabel(it)}`); return; }
   if (slot === 'bg') p.av.bg = id; else p.av.col[slot] = id; p.stats.style++; checkBadges(p); save(); sfx('pop'); refreshWard(true); wardPuff();
 }
 

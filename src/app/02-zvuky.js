@@ -1,8 +1,16 @@
 /* ===== Zvuky, hlas ===== */
 let AC = null;
-function ac() { if (!AC) { try { AC = new (window.AudioContext || window.webkitAudioContext)(); } catch (e) { } } if (AC && AC.state === 'suspended') AC.resume(); return AC; }
+function ac() { if (!AC) { try { AC = new (window.AudioContext || window.webkitAudioContext)(); } catch (e) { } } if (AC && AC.state !== 'running') { try { AC.resume(); } catch (e) { } } return AC; }
+/* iPhone: zvuk musí odomknúť ťuknutie (synchronne) a bez „playback“ ho stlmí prepínač tichého režimu */
+function audioUnlock() {
+  try { if (navigator.audioSession) navigator.audioSession.type = 'playback'; } catch (e) { }
+  const a = ac(); if (!a) return;
+  try { const b = a.createBuffer(1, 1, 22050), s = a.createBufferSource(); s.buffer = b; s.connect(a.destination); s.start(0); } catch (e) { }
+}
+['pointerdown', 'touchend', 'click', 'keydown'].forEach(ev => document.addEventListener(ev, audioUnlock, { capture: true, passive: true }));
+document.addEventListener('visibilitychange', () => { if (!document.hidden && AC && AC.state !== 'running') { try { AC.resume(); } catch (e) { } } });
 function tone(f, d, type = 'sine', vol = .14, when = 0, slide) {
-  const a = ac(); if (!a) return; const t = a.currentTime + when;
+  const a = ac(); if (!a) return; if (a.state !== 'running') { try { a.resume().then(() => tone(f, d, type, vol, when, slide)).catch(() => { }); } catch (e) { } return; } const t = a.currentTime + when;
   const o = a.createOscillator(), g = a.createGain(); o.type = type; o.frequency.setValueAtTime(f, t);
   if (slide) o.frequency.exponentialRampToValueAtTime(slide, t + d);
   g.gain.setValueAtTime(.0001, t); g.gain.exponentialRampToValueAtTime(vol, t + .012); g.gain.exponentialRampToValueAtTime(.0001, t + d);

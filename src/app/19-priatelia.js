@@ -82,7 +82,7 @@ async function fcLoad() {
   if (FC) FC.busy = false;
 }
 async function fcSend(kind, body) {
-  if (!FC || FC.sending) return; if (kind === 'text' && !DATA.settings.msgOk && !FC_PRESETS.includes(body) && !FC_EMOJI.includes(body)) { toast('Vlastné písanie musí povoliť rodič.'); return; } body = String(body || '').trim().slice(0, 200); if (!body) return; FC.sending = true; const me = P();
+  if (!FC || FC.sending) return; if (kind === 'text' && !DATA.settings.msgOk && !FC_PRESETS.includes(body) && !FC_EMOJI.includes(body)) { hint('Vlastné písanie musí povoliť rodič.'); return; } body = String(body || '').trim().slice(0, 200); if (!body) return; FC.sending = true; const me = P();
   try { await sb('POST', 'messages', { from_code: me.fc, to_code: FC.code, kind, body }, 'return=minimal'); sfx('pop'); if (FC.ws) FC.ws.say('new', {}); if (kind === 'text') inboxSend(FC.code, 'msg', { from: me.fc }); FC.sending = false; await fcLoad(); }
   catch (e) { FC.sending = false; toast('Správu sa nepodarilo odoslať.'); }
 }

@@ -34,11 +34,14 @@ function migrate(p) {
 function nightOn() { const p = (DATA.profiles || []).find(x => x.id === DATA.current); return !!(p && p.bear && p.bear.asleep); }
 let LASTNIGHT = null;
 function applyTheme(slow) {
-  const run = () => { LASTNIGHT = nightOn(); document.documentElement.classList.toggle('bnight', LASTNIGHT); document.documentElement.classList.toggle('lite', !!DATA.settings.lite); const t = LASTNIGHT ? 'dark' : DATA.settings.theme; if (t === 'light' || t === 'dark') document.documentElement.dataset.theme = t; else if (document.documentElement.dataset.theme && THEME_SET) delete document.documentElement.dataset.theme; THEME_SET = t !== 'auto'; applyPageBg(); };
-  /* plynulý prechod: prehliadač prelína dve snímky obrazovky (lacné), inak krátky prechod farieb */
+  const de = document.documentElement;
+  const run = () => { LASTNIGHT = nightOn(); de.classList.toggle('bnight', LASTNIGHT); de.classList.toggle('lite', !!DATA.settings.lite); const t = LASTNIGHT ? 'dark' : DATA.settings.theme; if (t === 'light' || t === 'dark') de.dataset.theme = t; else if (de.dataset.theme && THEME_SET) delete de.dataset.theme; THEME_SET = t !== 'auto'; applyPageBg(); try { const m = document.querySelector('meta[name="theme-color"]'); if (m) m.content = getComputedStyle(document.body).backgroundColor || '#FBF3E4'; } catch (e) { } };
+  /* plynulý prechod: jedna vrstva cez obrazovku sa rozsvieti/stmavne (lacné aj na slabom telefóne); stav sa nastaví hneď */
   const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
-  if (slow && !reduce && document.startViewTransition) { document.documentElement.classList.add('vtslow'); const vt = document.startViewTransition(run); vt.finished.finally(() => document.documentElement.classList.remove('vtslow')); return; }
-  try { const de = document.documentElement; de.classList.add('thx'); clearTimeout(applyTheme.t); applyTheme.t = setTimeout(() => de.classList.remove('thx'), 520); } catch (e) { } run();
+  const was = de.dataset.theme || '', wasNight = de.classList.contains('bnight');
+  run();
+  if (!slow || reduce || (was === (de.dataset.theme || '') && wasNight === de.classList.contains('bnight'))) return;
+  try { let f = document.getElementById('thfade'); if (f) f.remove(); f = document.createElement('div'); f.id = 'thfade'; f.style.background = LASTNIGHT ? '#1A1240' : '#FFF6E0'; document.body.appendChild(f); requestAnimationFrame(() => { f.classList.add('go'); }); setTimeout(() => f.remove(), 1300); } catch (e) { }
 }
 let THEME_SET = false;
 function load() { try { const s = localStorage.getItem(KEY); if (s) DATA = Object.assign(DATA, JSON.parse(s)); } catch (e) { } normalize(); }

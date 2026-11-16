@@ -8,7 +8,7 @@ mkdir -p web
     '<meta charset="utf-8">' \
     '<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">' \
     '<title>Bystrík</title>' \
-    '<meta name="theme-color" content="#2B1B30">' \
+    '<meta name="theme-color" content="#FBF3E4">' \
     '<meta name="description" content="Bystrík je bezplatná apka na hravé učenie pre deti 1. až 4. ročníka: matematika, slovenčina, prehľad, čítanie, minihry, súboje s kamarátmi a rebríček.">' \
     '<meta name="keywords" content="Bystrík, bystrik, učenie pre deti, matematika 1. ročník, slovenčina, vybrané slová, násobilka, apka pre prvákov">' \
     '<meta name="robots" content="index,follow">' \
@@ -54,7 +54,7 @@ cat > web/manifest.webmanifest <<'EOF'
 }
 EOF
 cat > web/sw.js <<'EOF'
-const CACHE = 'bystrik-v28';
+const CACHE = 'bystrik-v29';
 const FILES = ['./', './index.html', './manifest.webmanifest', './icon-192.png', './icon-512.png', './icon-maskable-512.png'];
 self.addEventListener('install', e => { e.waitUntil(caches.open(CACHE).then(c => c.addAll(FILES))); self.skipWaiting(); });
 self.addEventListener('activate', e => { e.waitUntil(caches.keys().then(k => Promise.all(k.filter(x => x !== CACHE).map(x => caches.delete(x))))); self.clients.claim(); });

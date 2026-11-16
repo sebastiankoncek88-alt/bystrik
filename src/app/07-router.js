@@ -34,7 +34,7 @@ function render(dir) {
   app.innerHTML = VIEWS[UI.view](UI.params);
   const v = app.querySelector('.view'); if (v && dir) v.classList.add('enter-' + dir);
   AFTER[UI.view] && AFTER[UI.view]();
-  applyRoom(); navPill(); if (CHG) setTimeout(chgStep, 260); if (nightOn() !== LASTNIGHT) applyTheme(true);
+  applyRoom(); navPill(); if (CHG) setTimeout(chgStep, 260); if (nightOn() !== LASTNIGHT) applyTheme(true); bearObs();
   if (!['quiz', 'cards', 'pexeso', 'match', 'sort', 'game', 'result', 'onboard'].includes(UI.view)) setTimeout(flushPending, 350);
 }
 let LASTCOINS = -1;
@@ -70,3 +70,7 @@ function avail(t) {
 }
 const modeOk = (t, m) => m === 'pex' ? avail(t).pairs : m === 'match' ? avail(t).match : true;
 
+
+/* kútik: animácie bežia len keď je vidno (šetrí výkon na telefóne) */
+let BOBS = null;
+function bearObs() { try { const r = document.querySelector('.bearroom'); if (!r || !('IntersectionObserver' in window)) return; if (!BOBS) BOBS = new IntersectionObserver(es => es.forEach(e => e.target.classList.toggle('offs', !e.isIntersecting)), { rootMargin: '60px' }); BOBS.observe(r); } catch (e) { } }
