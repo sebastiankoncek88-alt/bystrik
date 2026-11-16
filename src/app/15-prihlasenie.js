@@ -111,6 +111,33 @@ function a2Guide() {
   w.innerHTML = `<div class="scrim" data-a="close-sheet"></div><div class="sheet" role="dialog" aria-label="Pridať na plochu"><div class="grab"></div><h2>📲 Bystrík na plochu</h2><p class="muted b" style="font-size:.9rem;margin-bottom:10px">${G[0]}</p><div class="dsteps">${G[1].map((t, i) => `<div><span>${i + 1}</span><p>${t}</p></div>`).join('')}</div>${A2HS ? '<button class="btn primary block" style="margin-top:12px" data-a="install">📲 Pridať na plochu</button>' : ''}<button class="btn block" style="margin-top:10px" data-a="a2copy">🔗 Skopírovať odkaz</button><button class="btn block" style="margin-top:10px" data-a="close-sheet">Rozumiem</button></div>`;
   document.body.appendChild(w);
 }
+let A2TAB = null;
+const A2T = {
+  ios: [['Otvor Bystríka v <b>Safari</b> a ťukni na <b>Zdieľať</b> ⬆️ dole. Na novom iOS najprv <b>⋯</b> vpravo dole.', 'share'], ['Posuň ponuku nižšie a ťukni na <b>Pridať na plochu</b>.', 'list'], ['Nechaj zapnuté <b>Otvoriť ako webovú aplikáciu</b> a ťukni na <b>Pridať</b>.', 'add'], ['Hotovo! Bystrík je na ploche a otvára sa na celú obrazovku.', 'home']],
+  android: [['Otvor Bystríka v <b>Chrome</b> a ťukni na <b>⋮</b> vpravo hore.', 'dots'], ['Zvoľ <b>Pridať na plochu</b> alebo <b>Inštalovať aplikáciu</b>.', 'amenu'], ['Potvrď <b>Inštalovať</b>.', 'ainst'], ['Hotovo! Bystrík je na ploche a otvára sa na celú obrazovku.', 'home']],
+  pc: [['Otvor Bystríka v <b>Chrome</b> alebo <b>Edge</b>.', 'pcbar'], ['V adresnom riadku vpravo klikni na ikonu <b>Inštalovať</b> (alebo ponuka ⋮ → Inštalovať).', 'pcinst'], ['Potvrď <b>Inštalovať</b>, zaškrtni odkaz na ploche.', 'ainst'], ['Hotovo! Bystrík má vlastné okno a ikonu.', 'home']]
+};
+function a2Mock(k) {
+  const bar = (inner, top) => `<div class="mk-bar ${top ? 'top' : ''}">${inner}</div>`, hl = t => `<i class="mk-hl">${t}</i>`, page = '<div class="mk-page"><i></i><i></i><i style="width:60%"></i></div>';
+  const ic = '<span class="mk-app me">🧸</span>';
+  const M = {
+    share: `${bar('<span>bystrik</span>', 1)}${page}${bar(`<span>‹</span><span>›</span>${hl('⬆️')}<span>📖</span><span>⧉</span>`)}`,
+    list: `${page}<div class="mk-sheet"><div class="mk-row">📋 Kopírovať</div><div class="mk-row">🔖 Pridať záložku</div>${hl('<span class="mk-row">➕ Pridať na plochu</span>')}<div class="mk-row">🖨️ Tlačiť</div></div>`,
+    add: `<div class="mk-dlg"><div class="mk-dh"><span>Zrušiť</span><b>Na plochu</b>${hl('Pridať')}</div><div class="mk-drow">${ic}<span>Bystrík</span></div><div class="mk-drow mkswr"><span>Otvoriť ako webovú apku</span><i class="mk-sw"></i></div></div>`,
+    home: `<div class="mk-home"><span class="mk-app">📷</span><span class="mk-app">💬</span><span class="mk-app">🎵</span><span class="mk-app">🗺️</span><span class="mk-app">☀️</span>${ic}<span class="mk-app">📅</span><span class="mk-app">⚙️</span></div><b class="mk-lbl">Bystrík</b>`,
+    dots: `${bar(`<span>🏠</span><span class="mk-url">bystrik</span>${hl('⋮')}`, 1)}${page}`,
+    amenu: `${bar('<span class="mk-url">bystrik</span><span>⋮</span>', 1)}<div class="mk-menu"><div class="mk-row">🆕 Nová karta</div><div class="mk-row">📜 História</div>${hl('<span class="mk-row">📲 Pridať na plochu</span>')}<div class="mk-row">⚙️ Nastavenia</div></div>`,
+    ainst: `${page}<div class="mk-dlg mid"><div class="mk-drow">${ic}<b>Inštalovať aplikáciu?</b></div><div class="mk-btns"><span>Zrušiť</span>${hl('Inštalovať')}</div></div>`,
+    pcbar: `<div class="mk-pc">${bar('<span>‹ ›</span><span class="mk-url">sebastiankoncek88-alt.github.io/bystrik</span><span>⋮</span>', 1)}${page}</div>`,
+    pcinst: `<div class="mk-pc">${bar(`<span>‹ ›</span><span class="mk-url">…/bystrik</span>${hl('🖥️⬇')}<span>⋮</span>`, 1)}${page}</div>`
+  };
+  return `<div class="mk ${k.startsWith('pc') ? 'wide' : ''}">${M[k]}</div>`;
+}
+function pinstCard() {
+  if (isStandalone()) return `<section class="card pcard"><p class="b" style="margin:4px 0">✅ Bystrík je na tomto zariadení už pridaný na plochu.</p></section>`;
+  const pl = a2Plat(), def = /^ios/.test(pl) ? 'ios' : /android|samsung|firefox/.test(pl) ? 'android' : pl === 'pc' ? 'pc' : 'ios'; const t = A2TAB || def;
+  return `<section class="card pcard"><p class="b" style="font-size:.88rem;margin:2px 0 8px">Bystrík bude mať vlastnú ikonku a otvorí sa na celú obrazovku ako bežná apka. Pridajte si ho aj do telefónu dieťaťa.</p><div class="chips" style="padding:0 0 8px">${[['ios', '🍎 iPhone'], ['android', '🤖 Android'], ['pc', '💻 Počítač']].map(([k, n]) => `<button class="chip ${t === k ? 'on' : ''}" data-a="a2tab" data-t="${k}">${n}</button>`).join('')}</div><p class="muted b" style="font-size:.76rem;margin:0 0 4px;text-align:right">posuň do strany ➜</p><div class="a2tut">${A2T[t].map(([txt, m], i) => `<div class="a2step">${a2Mock(m)}<div class="a2txt"><span>${i + 1}</span><p>${txt}</p></div></div>`).join('')}</div>${A2HS ? '<button class="btn primary block" style="margin-top:10px" data-a="install">📲 Pridať na plochu teraz</button>' : ''}<button class="btn small block" style="margin-top:10px" data-a="a2copy">🔗 Skopírovať odkaz na Bystríka</button></section>`;
+}
 function installCard() {
   if ((window.claude && window.claude.use) || isStandalone()) return '';
   const ios = /iphone|ipad|ipod/i.test(navigator.userAgent);

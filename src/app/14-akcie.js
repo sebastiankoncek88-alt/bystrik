@@ -254,6 +254,7 @@ const ACT = {
   'getapp-web': () => { try { localStorage.setItem('bystrik.web', '1'); } catch (e) { } boot(); },
   'getapp-install': async () => { if (!A2HS) return; try { A2HS.prompt(); const r = await A2HS.userChoice; if (r && r.outcome === 'accepted') { try { localStorage.setItem('bystrik.web', '1'); } catch (e) { } toast('Bystrík je na ploche 🎉 Otvor ho odtiaľ.'); boot(); return; } } catch (e) { } render(null); },
   'a2guide': () => a2Guide(),
+  'a2tab': d => { A2TAB = d.t; render(null); },
   'a2copy': async () => { const u = 'https://sebastiankoncek88-alt.github.io/bystrik/'; try { await navigator.clipboard.writeText(u); toast('Odkaz je skopírovaný 🔗'); } catch (e) { prompt('Skopíruj odkaz:', u); } },
   'install': async () => { if (!A2HS) return; closeSheet(); try { A2HS.prompt(); const r = await A2HS.userChoice; if (r && r.outcome === 'accepted') toast('Bystrík je na ploche 🎉'); } catch (e) { } A2HS = null; render(null); },
   'fr-copy': async () => { const c = P().fc || ''; try { await navigator.clipboard.writeText(c); toast('Kód skopírovaný: ' + c); } catch (e) { toast('Tvoj kód: ' + c); } },
