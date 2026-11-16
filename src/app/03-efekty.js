@@ -26,3 +26,20 @@ function hint(msg) { const d = document.createElement('div'); d.className = 'tst
 function toast(msg) { const d = document.createElement('div'); d.className = 'tst'; d.textContent = msg; $('#toast').appendChild(d); setTimeout(() => d.remove(), 2900); }
 function floatXp(el, txt) { if (!el) return; const r = el.getBoundingClientRect(); const d = document.createElement('div'); d.className = 'floatxp'; d.textContent = txt; d.style.left = (r.left + r.width / 2 - 20) + 'px'; d.style.top = (r.top - 6) + 'px'; document.body.appendChild(d); setTimeout(() => d.remove(), 1000); }
 
+
+/* ohňostroj: rakety vyletia, vybuchnú do farebných iskier (canvas, ~4 s) */
+function fireworks(n) {
+  const lite = document.documentElement.classList.contains('lite'); n = n || (lite ? 4 : 9);
+  if (matchMedia('(prefers-reduced-motion: reduce)').matches) { confetti(80); return; }
+  const cv = document.createElement('canvas'); cv.className = 'fwcv'; const dpr = Math.min(2, window.devicePixelRatio || 1); const W = innerWidth, H = innerHeight; cv.width = W * dpr; cv.height = H * dpr; document.body.appendChild(cv); const g = cv.getContext('2d'); g.scale(dpr, dpr);
+  const COLS = ['#FF4F7B', '#FFC94D', '#5FE0B8', '#7DB8FF', '#C59BFF', '#FF8A3D', '#FFFFFF']; const rockets = [], sparks = []; let t0 = performance.now();
+  for (let i = 0; i < n; i++) rockets.push({ at: i * (lite ? 420 : 330) + Math.random() * 150, x: W * (.15 + Math.random() * .7), y: H, ty: H * (.18 + Math.random() * .3), c: COLS[i % COLS.length], up: false, done: false });
+  const boom = r => { const k = lite ? 26 : 46; for (let i = 0; i < k; i++) { const a = Math.PI * 2 * i / k + Math.random() * .2, v = 2.2 + Math.random() * 2.6; sparks.push({ x: r.x, y: r.y, vx: Math.cos(a) * v, vy: Math.sin(a) * v, life: 1, c: Math.random() < .25 ? '#FFFFFF' : r.c }); } sfx('pop'); setTimeout(() => sfx('star', Math.floor(Math.random() * 3)), 60); buzz(12); };
+  const step = now => {
+    const el = now - t0; g.clearRect(0, 0, W, H); let alive = false;
+    for (const r of rockets) { if (r.done) continue; alive = true; if (el < r.at) continue; if (!r.up) { r.up = true; sfx('whoosh'); } r.y -= Math.max(4, (r.y - r.ty) * .07); g.fillStyle = r.c; g.beginPath(); g.arc(r.x, r.y, 3, 0, 7); g.fill(); g.fillStyle = 'rgba(255,220,150,.5)'; g.fillRect(r.x - 1, r.y + 4, 2, 14); if (r.y - r.ty < 6) { r.done = true; boom(r); } }
+    for (const s of sparks) { if (s.life <= 0) continue; alive = true; s.x += s.vx; s.y += s.vy; s.vy += .05; s.vx *= .985; s.vy *= .985; s.life -= .012; g.globalAlpha = Math.max(0, s.life); g.fillStyle = s.c; g.beginPath(); g.arc(s.x, s.y, 2.4, 0, 7); g.fill(); }
+    g.globalAlpha = 1; if (alive && el < 9000) requestAnimationFrame(step); else cv.remove();
+  };
+  requestAnimationFrame(step);
+}

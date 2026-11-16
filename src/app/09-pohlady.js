@@ -99,8 +99,11 @@ const PGUIDE = [
   { h: 'Krok 2: Rodičovský účet', t: 'Je to táto karta úplne hore. Zadáte meno, denný cieľ a PIN, aby sa sem nedostali deti.', v: 'settings', f: '.parentcard', go: 'Vytvoriť účet →' }
 ];
 function endPGuide() { clearTut(); DATA.pguideSeen = 1; save(); if (!DATA.parent.pin) { sfx('tap'); PSEL = DATA.current; PTAB = 'over'; go('parent', {}, 'f'); } }
+function pathNodes(p, d) { return [{ e: '🎁', n: 'Odmena', done: !drReady(p) }, { e: '🎯', n: 'Výzva', done: p.dailyDone === today() }, ...d.tasks.map((id, k) => { const T = TASKS.find(x => x.id === id); return { e: T.i, n: 'Úloha ' + (k + 1), done: d.claimed.includes(id) }; }), { e: '🏆', n: 'Truhlica', done: !!d.bonus }]; }
+/* ohňostroj raz za deň, keď je celá Dnešná cesta hotová (až keď nie je otvorené žiadne okno) */
+function pathFireworks() { try { if (UI.view !== 'home' || document.querySelector('.over,#sheetwrap')) return; const p = P(); if (!p || p.fwDay === today()) return; if (!pathNodes(p, ensureDay(p)).every(x => x.done)) return; p.fwDay = today(); save(); setTimeout(() => { fireworks(); hint('Hurá! Dnešná cesta je celá hotová. Si šampión! 🎆'); }, 400); } catch (e) { } }
 function todayPath(p, d) {
-  const nodes = [{ e: '🎁', n: 'Odmena', done: !drReady(p) }, { e: '🎯', n: 'Výzva', done: p.dailyDone === today() }, ...d.tasks.map((id, k) => { const T = TASKS.find(x => x.id === id); return { e: T.i, n: 'Úloha ' + (k + 1), done: d.claimed.includes(id) }; }), { e: '🏆', n: 'Truhlica', done: !!d.bonus }];
+  const nodes = pathNodes(p, d);
   const cur = nodes.findIndex(x => !x.done); const all = cur < 0; const X = k => 30 + k * 56, Y = k => (k % 2 ? 50 : 80); const doneN = nodes.filter(x => x.done).length;
   const path = nodes.map((_, k) => (k ? 'L' : 'M') + X(k) + ' ' + Y(k)).join(' ');
   const bx = all ? X(nodes.length - 1) : X(cur), by = all ? Y(nodes.length - 1) : Y(cur);

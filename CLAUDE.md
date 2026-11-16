@@ -30,7 +30,12 @@ Písanie priateľom je predvolene vypnuté (`DATA.settings.msgOk`). Úsporný re
 - Rebríček: predvolene zapnutý, rodič ho môže vypnúť (`settings.lb`; pri vypnutí sa riadky dieťaťa zmažú). Používateľ nechce, aby rodič musel všetko povoľovať – nové veci dávať predvolene zapnuté s možnosťou vypnúť. Denné kolo (`p.dy`, riadky `pid#d` s week=dátum), záložky Dnes/Týždeň/Séria, stupne víťazov `podium()`, 23 miest; kto 5 dní (`LB_IDLE`) neaktívny, nezobrazí sa; denné odmeny `LB_PRIZE` (`lbAwards`).
 - Bystríkov kútik (`bearCorner`): hlad/energia/radosť, priateľstvo `b.love`, pohladkať/tanec; spánok = západ slnka → noc a celá appka v nočnom režime (`nightOn()`, `applyTheme(true)` cez View Transition); večer/ročné obdobia v okne.
 - Obchod: nakupovať až po dnešnom učení (`learnedToday`). Truhla odmien sa otvára kľúčom 🔑 (`p.keys`, max 3, `giveKey`: denná cesta, test ≥2★), NIE za slniečka ani peniaze (loot box pre deti) – `mysteryRoll`, `openMystery`, ruleta `spinReel`, 90/7/2/1 %; po kúpe/obliekaní `celebrateWear` (3D otočenie so zadnou stranou).
-- Efekty: `fxComet` (5/10 v rade), `openChest` (truhlica za úlohy), hviezdy pri leveli; tutoriál `TOUR` má ťukacie kroky (`tap:1`), sprievodca zapnutím chatu `CHG`.
+- Efekty: `fxComet` (5/10 v rade), `openChest` (truhlica za úlohy), `fireworks()` raz za deň po celej Dnešnej ceste (`pathFireworks`, `p.fwDay`), hviezdy pri leveli; tutoriál `TOUR` má ťukacie kroky (`tap:1`), sprievodca zapnutím chatu `CHG`.
+
+- Upozornenia pre dieťa: `hint(msg)` = toast s Bystríkom + čítanie nahlas (`say`) – prváci nevedia čítať; obyčajný `toast` len pre rodiča/potvrdenia.
+- Zvuk: `audioUnlock` pri ťuknutí + `navigator.audioSession.type='playback'` (iPhone tichý režim). Deň/noc: `applyTheme(slow)` nastaví stav hneď, prechod = vrstva `#thfade` (žiadny View Transition – v Safari zlyhával); animácie kútika stoja mimo obrazovky (`bearObs`, `.offs`).
+- Pridať na plochu: `a2Guide()` (sheet podľa `a2Plat()`), rodič → Nastavenia → „Apka na ploche“ `pinstCard()` s obrázkovým návodom (`a2Mock`). Ikony `icon-*.png` = smejúci sa Bystrík na krémovom pozadí, názov „Bystrík“.
+- Chat priateľov: hotové vety a smajlíky vždy, vlastný text až po `settings.msgOk` (rodič).
 
 ## Otvorené
 - Stripe + Bystrík Plus (rodičia budúci mesiac), AI cez server, automatický týždenný e-mail.

@@ -390,7 +390,86 @@ const PRV = [
     How old are you?|Koľko máš rokov?
     Thank you!|Ďakujem!|🙏
     Please.|Prosím.
-    Goodbye!|Dovidenia!|👋`) }
+    Goodbye!|Dovidenia!|👋`) },
+  /* nové témy (11/2026) */
+  { id: 'p3-rastlina', g: 3, type: 'qa', name: 'Časti rastliny', icon: '🌱', items: lines(`
+    Ktorá časť rastliny ju drží v zemi a saje vodu?|koreň|kvet;list;plod
+    Ktorou časťou rastlina vedie vodu od koreňa k listom?|stonkou|kvetom;plodom;semenom
+    V ktorej časti rastliny vzniká potrava pomocou slnka?|v liste|v koreni;v semene;v kvete
+    Z čoho vyrastie nová rastlina?|zo semena|z listu;z kôry;z ihličia
+    Čo potrebuje rastlina, aby rástla?|vodu, svetlo a vzduch|len tmu;len piesok;len sneh
+    Ktorá časť rastliny láka včely?|kvet|koreň;stonka;kôra
+    Ako sa volá stonka stromu?|kmeň|koruna;koreň;puk
+    Čo je plodom jablone?|jablko|šiška;žaluď;gaštan
+    Ktorá zelenina je koreň, ktorý jeme?|mrkva|šalát;hrášok;karfiol
+    Z ktorej časti rastliny je šalát, ktorý jeme?|z listov|z koreňa;zo semien;z kvetov
+    Prečo sú listy zelené?|majú zelené farbivo (chlorofyl)|sú natreté;sú staré;sú mokré
+    Ktorý strom má plod žaluď?|dub|buk;lipa;smrek`) },
+  { id: 'p3-bezpecnost', g: 3, type: 'qa', name: 'Bezpečnosť a tiesňové čísla', icon: '🚑', items: lines(`
+    Ktoré číslo je jednotné tiesňové číslo v celej Európe?|112|123;100;911
+    Na ktorom čísle zavoláš záchranku?|155|150;158;111
+    Na ktorom čísle zavoláš hasičov?|150|155;158;144
+    Na ktorom čísle zavoláš políciu?|158|150;155;144
+    Čo povieš ako prvé, keď voláš záchranku?|kto som, kde som a čo sa stalo|len ahoj;nič, zložím;vtip
+    Čo urobíš, keď sa doma objaví dym?|odídem von a zavolám pomoc|schovám sa pod posteľ;otvorím skriňu;pôjdem spať
+    Komu môžeš otvoriť dvere, keď si sám doma?|nikomu cudziemu|každému;poštárovi bez opýtania;neznámemu pánovi
+    Čo urobíš, keď ťa neznámy človek volá do auta?|nejdem a poviem to rodičom|nastúpim;pôjdem s ním;dám mu adresu
+    Kde prejdeš cez cestu najbezpečnejšie?|na priechode pre chodcov|medzi autami;za zákrutou;kde chcem
+    Čo nosíš na bicykli na hlave?|prilbu|šiltovku;slúchadlá;nič
+    Čo dáš na drobnú odreninu po umytí?|náplasť|maslo;blato;lepidlo
+    Čo urobíš, keď sa stratíš v obchode?|poviem predavačke alebo pokladníčke|odídem domov sám;schovám sa;pôjdem s cudzím`) },
+  { id: 'p3-zvierata-en', g: 3, type: 'vocab', name: 'Angličtina: zvieratá', icon: '🐾', items: lines(`
+    dog|pes
+    cat|mačka
+    horse|kôň
+    cow|krava
+    pig|prasa
+    sheep|ovca
+    rabbit|zajac
+    mouse|myš
+    bird|vták
+    fish|ryba
+    bear|medveď
+    lion|lev`) },
+  { id: 'p4-luka', g: 4, type: 'qa', name: 'Lúka a pole', icon: '🌾', items: lines(`
+    Ktorá rastlina rastie na lúke?|púpava|smrek;kaktus;leknín
+    Ktorý hmyz opeľuje kvety na lúke?|včela|komár;mucha;moľa
+    Čo pestuje človek na poli?|pšenicu a kukuricu|smreky;lekná;machy
+    Z ktorej obilniny sa pečie väčšina chleba?|z pšenice a raže|z kukurice;z ryže;z ovsa
+    Ktoré zviera žije na poli v norách?|hraboš|veverička;ďateľ;pstruh
+    Ktorý vták loví myši na poli?|myšiak (káňa)|vrabec;labuť;kačica
+    Ako sa volá pokosená a usušená tráva?|seno|slama;mach;kôra
+    Čo je slama?|suché steblá obilia|usušená tráva z lúky;listy stromov;korene
+    Ktorý živočích kvaká pri vode na lúke?|žaba|zajac;sliepka;jež
+    Ktorá rastlina na poli žltne a lisuje sa z nej olej?|repka|pšenica;jačmeň;raž
+    Ako sa volá stroj, ktorý zbiera obilie?|kombajn|bager;žeriav;valec
+    Prečo sú včely pre pole dôležité?|opeľujú kvety, aby boli plody|robia hluk;jedia pôdu;kopú nory`) },
+  { id: 'p4-energia', g: 4, type: 'qa', name: 'Svetlo, teplo a elektrina', icon: '💡', items: lines(`
+    Ktorý zdroj svetla a tepla je pre Zem najdôležitejší?|Slnko|Mesiac;baterka;sviečka
+    Čo vedie elektrický prúd?|kov (medený drôt)|drevo;guma;plast
+    Čo elektrický prúd nevedie (izolant)?|guma|meď;železo;hliník
+    Prečo nesiahame do zásuvky?|môže nás zasiahnuť elektrický prúd|je studená;je špinavá;je ťažká
+    Čo urobíme so spotrebičom pri mokrých rukách?|nedotýkame sa ho|zapneme ho;umyjeme ho vo vode;dáme ho do vane
+    Ktorá energia sa vyrába z vetra?|veterná|jadrová;uhoľná;plynová
+    Čo vyrába elektrinu zo slnka?|solárny panel|komín;studňa;plot
+    Ako šetríme elektrinou?|zhasneme svetlo, keď odchádzame|necháme všetko zapnuté;otvoríme chladničku;svietime cez deň
+    V ktorom skupenstve je para?|plynné|pevné;kvapalné;žiadne
+    Čo sa stane s ľadom v teple?|roztopí sa|zamrzne;zhorí;stvrdne
+    Kedy je tieň od slnka najkratší?|na poludnie|ráno;večer;pri západe slnka
+    Čím meriame teplotu?|teplomerom|metrom;váhou;hodinami`) },
+  { id: 'p4-jedlo-en', g: 4, type: 'vocab', name: 'Angličtina: jedlo', icon: '🍎', items: lines(`
+    apple|jablko
+    bread|chlieb
+    milk|mlieko
+    water|voda
+    cheese|syr
+    egg|vajce
+    banana|banán
+    soup|polievka
+    chicken|kura
+    potato|zemiak
+    cake|koláč
+    juice|džús`) },
 ];
 
 SUBJECTS.prv = { name: 'Prehľad', short: 'Prehľad', icon: '🌍', topics: PRV };
