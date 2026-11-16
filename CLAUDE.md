@@ -37,8 +37,10 @@ Písanie priateľom je predvolene vypnuté (`DATA.settings.msgOk`). Úsporný re
 - Pridať na plochu: `a2Guide()` (sheet podľa `a2Plat()`), rodič → Nastavenia → „Apka na ploche“ `pinstCard()` s obrázkovým návodom (`a2Mock`). Ikony `icon-*.png` = smejúci sa Bystrík na krémovom pozadí, názov „Bystrík“.
 - Chat priateľov: hotové vety a smajlíky vždy, vlastný text až po `settings.msgOk` (rodič).
 
+- Bystrík Plus (`src/app/14b-plus.js`): `PLUS_CFG` = Stripe Payment Links (prázdne → „čoskoro“), `isPlus()`, `plusLoad()` číta tabuľku `plus` (SQL `supabase/2026-11-plus.sql`), zapisuje ju len Edge Function `supabase/functions/stripe-webhook` (Stripe posiela `client_reference_id` = AUTH.uid). Ceny 3,99 €/mes, 29,99 €/rok, 7 dní zadarmo, trieda 49 €/rok. Ponuka len v rodičovskom účte (Nastavenia → Bystrík Plus), dieťaťu nikdy. Hotové výhody: pracovné listy na tlač (`wsPrint`, Prehľad), až 5 detí (zadarmo 2). Čoskoro: AI bez kľúča, týždenný e-mail, čítanka s hodnotením, mesačná kolekcia, licencia pre triedu.
+
 ## Otvorené
-- Stripe + Bystrík Plus (rodičia budúci mesiac), AI cez server, automatický týždenný e-mail.
+- Plus: Stripe účet + Payment Links do `PLUS_CFG`, spustiť SQL, nasadiť stripe-webhook + tajomstvá; potom AI cez server, týždenný e-mail (Resend, treba doménu), čítanka s hodnotením, kolekcia.
 - Kontaktný e-mail do zásad súkromia (spýtať sa používateľa).
 
 ## Testovanie

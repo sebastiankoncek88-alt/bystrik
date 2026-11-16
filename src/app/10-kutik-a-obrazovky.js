@@ -1078,4 +1078,4 @@ let PTAB = 'over'; let PS = null; const PACC = {};
 let PLOCKT = null; const plockArm = () => { clearTimeout(PLOCKT); if (typeof PARENT_OK !== 'undefined' && PARENT_OK) PLOCKT = setTimeout(() => { if (PARENT_OK && ['parent', 'remote', 'teacher'].includes(UI.view)) { PARENT_OK = false; go(P() ? 'home' : 'profiles', {}, 'b'); toast('🔒 Rodičovský účet sa sám zamkol.'); } }, 180000); };
 ['pointerdown', 'keydown'].forEach(ev => document.addEventListener(ev, plockArm, true));
 document.addEventListener('visibilitychange', () => { if (document.hidden && typeof PARENT_OK !== 'undefined' && PARENT_OK && ['parent', 'remote', 'teacher'].includes(UI.view)) { PARENT_OK = false; go(P() ? 'home' : 'profiles', {}, 'b'); } });
-let PSET = null, CSET = null;
+let PSET = null, CSET = null, PSET_WANT = null;
