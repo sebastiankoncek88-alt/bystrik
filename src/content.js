@@ -167,6 +167,10 @@ function topicItems(t) {
   const raw = typeof t.items === 'function' ? t.items() : t.items.split(',').map(s => s.split('|'));
   return raw;
 }
+/* denný cyklus: každý deň iný výber otázok z témy (deterministicky podľa dátumu) */
+function dayRand(key) { return seeded((typeof today === 'function' ? today() : '') + '|' + key); }
+function dayShuffle(arr, key) { const r = dayRand(key), a = arr.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(r() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; }
+function dayItems(t) { const all = topicItems(t); if (all.length <= 8) return all; return dayShuffle(all, t.id).slice(0, Math.max(8, Math.ceil(all.length * .6))); }
 function autoEx(q) {
   const m = q.text.replace(/ /g, '').match(/^(\d+) ([+−·:]) (\d+) = \?$/);
   if (m) { const x = +m[1], y = +m[3], r = q.raw; const op = m[2];
@@ -186,19 +190,19 @@ function makeQuestion(t, mode) {
     if (!numeric && typeof g.a === 'number' && w.length < 3) w = [...new Set([...w, ...numOptions(g.a)])].filter(x => x !== g.a).slice(0, 3);
     q.options = [g.a, ...w].map(x => typeof x === 'number' ? fmt(x) : String(x));
   } else if (t.type === 'qa') {
-    const [qq, a, w, ex] = pick(topicItems(t));
+    const [qq, a, w, ex] = pick(dayItems(t));
     q = { text: qq, html: '', speak: qq, answer: a, options: [a, ...w.split(';')], ex: ex || t.ex || '' };
   } else if (t.type === 'cat') {
-    const [x, c] = pick(topicItems(t));
+    const [x, c] = pick(dayItems(t));
     const others = shuffle(t.choices.filter(y => y !== c)).slice(0, 3);
     const txt = t.prompt.replace('{x}', x);
     q = { text: txt, html: '', speak: txt, answer: c, options: [c, ...others], keep: t.choices.length <= 4 ? t.choices : null, ex: t.ex || '' };
   } else if (t.type === 'vocab') {
-    const items = topicItems(t); const [en, sk, e] = pick(items); const others = shuffle(items.filter(x => x[0] !== en)).slice(0, 3);
+    const items = topicItems(t); const [en, sk, e] = pick(dayItems(t)); const others = shuffle(items.filter(x => x[0] !== en)).slice(0, 3);
     if (Math.random() < .5) q = { text: `Čo znamená „${en}“?`, html: e ? `<div class="bigemoji">${e}</div>` : '', speak: en, speakLang: 'en-GB', answer: sk, options: [sk, ...others.map(x => x[1])], ex: `${en} = ${sk}` };
     else q = { text: `Ako sa po anglicky povie „${sk}“?`, html: '', speak: `Ako sa po anglicky povie ${sk}?`, answer: en, options: [en, ...others.map(x => x[0])], ex: `${sk} = ${en}`, sayAfter: en };
   } else if (t.type === 'fill') {
-    const [w, c, full] = pick(topicItems(t));
+    const [w, c, full] = pick(dayItems(t));
     q = { text: 'Doplň správne písmeno:', html: `<div class="bigword">${w.replace('_', '<span class="slot">_</span>')}</div>`, speak: 'Doplň správne písmeno.', answer: c, options: t.choices.slice(), keep: t.choices, ex: `Správne: ${full}. ${t.ex || ''}`, full };
   }
   if (!q.ex) q.ex = autoEx(q);
@@ -213,7 +217,7 @@ function topicCards(t) {
     for (let i = 0; i < 40 && out.length < 10; i++) { const q = makeQuestion(t); if (seen.has(q.key)) continue; seen.add(q.key); out.push({ front: q.html ? q.html + `<div class="cq">${q.text}</div>` : q.text, back: q.answer, plain: !q.html, speak: q.speak }); }
     return out;
   }
-  const items = shuffle(topicItems(t)).slice(0, 12);
+  const items = shuffle(dayItems(t)).slice(0, 12);
   if (t.type === 'qa') return items.map(([q, a]) => ({ front: q, back: a, plain: true }));
   if (t.type === 'vocab') return items.map(([en, sk, e]) => ({ front: (e ? e + ' ' : '') + en, back: sk, plain: true, speak: en, speakLang: 'en-GB' }));
   if (t.type === 'cat') return items.map(([x, c]) => ({ front: t.prompt.replace('{x}', x).replace('…', '?'), back: c, plain: true, short: x }));

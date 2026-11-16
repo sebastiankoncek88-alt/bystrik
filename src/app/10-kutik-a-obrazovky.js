@@ -342,9 +342,13 @@ Pravidlá: všetko po slovensky, jednoducho a primerane veku. summary má 3 až 
   } catch (e) { fail(e && e.code === 'ai_limit' ? AIL_MSG : e && e.code === 'rate_limited' ? 'Bystrík si musí chvíľu oddýchnuť. Skús to o pár minút.' : e && e.code === 'not_granted' ? 'Bystrík nemá povolenie. Popros rodičov.' : 'Poznámky sa nepodarilo spracovať. Skús to znova.' + noteErrInfo(e)); }
 }
 let PAREA = 'all';
+/* Témy dňa: každý deň 3 iné témy (z každého predmetu jedna), za správne odpovede dvojnásobné body */
+function dayTopics(p) { return ['mat', 'sjl', 'prv'].map(k => { const ts = (SUBJECTS[k] ? SUBJECTS[k].topics : []).filter(t => t.g === p.grade); return ts.length ? dayShuffle(ts, 'td-' + k + p.grade)[0].id : null; }).filter(Boolean); }
+const isDayTopic = (p, id) => dayTopics(p).includes(id);
+function dayTopicsCard(p) { const ids = dayTopics(p); if (!ids.length) return ''; return `<section class="card daytop"><div class="sec"><h2>🌟 Témy dňa</h2><span class="eyebrow">zajtra iné</span></div><p class="muted b" style="font-size:.84rem;margin:0 0 8px">Dnes za ne dostaneš dvojnásobné body. Každý deň sú aj nové otázky.</p><div class="dtlist">${ids.map(id => { const t = TOPIC[id]; return `<button class="card dt press" data-a="topic" data-id="${id}"><span class="ti" style="background:var(--c-${t.s}-soft)">${t.icon}</span><b>${t.name}</b><small>${SUBJECTS[t.s].name} · ×2</small></button>`; }).join('')}</div></section>`; }
 VIEWS.subject = ({ s, g }) => {
   const p = P(); g = g || p.grade; const S = SUBJECTS[s]; const m = p.mode[s] || 'quiz';
-  const ts = S.topics.filter(t => t.g === g).map(t => ({ ...t, s }));
+  const dts = dayTopics({ grade: g }); const ts = S.topics.filter(t => t.g === g).map(t => ({ ...t, s })).sort((a, b) => dts.includes(b.id) - dts.includes(a.id));
   return `${topbar('learn-back')}<main class="view"><h1 style="font-size:2rem">${S.name}</h1>
   ${s !== 'mat' ? `<button class="card readcard press" data-a="nav" data-v="reads"><span class="ic">📖</span><span><b>Čítanka</b><span class="b" style="font-size:.9rem">Prečítaj príbeh nahlas, nahraj sa a odpovedz na otázky</span></span></button>` : ''}
   <span class="eyebrow">1. Ako sa chceš učiť?</span>
@@ -353,7 +357,7 @@ VIEWS.subject = ({ s, g }) => {
   <span class="eyebrow">2. Vyber ročník a tému</span>
   <div class="chips">${[1, 2, 3, 4].map(x => `<button class="chip ${x === g ? 'on' : ''}" data-a="grade-chip" data-g="${x}" data-s="${s}">${x}. ročník</button>`).join('')}</div>
   ${s === 'prv' ? `<div class="chips">${[['all', '✨ Všetko'], ...areasFor(g).map(k => [k, AREA_DEF[k].i + ' ' + AREA_DEF[k].n])].map(([k, n]) => `<button class="chip ${PAREA === k ? 'on' : ''}" data-a="parea" data-k="${k}">${n}</button>`).join('')}</div>` : ''}
-  ${(s === 'prv' ? areasFor(g).filter(k => PAREA === 'all' || PAREA === k || !areasFor(g).includes(PAREA)).map(k => [k, ts.filter(t => areaOf(t, g) === k)]) : [[null, ts]]).filter(([, list]) => list.length).map(([k, list]) => `${k ? `<div class="areahead a-${k}"><span>${AREA_DEF[k].i}</span>${AREA_DEF[k].n}</div>` : ''}<div class="topics">${list.map((t, i) => { const st = p.topics[t.id]; const ok = modeOk(t, m); return `<button class="card topic press ${ok ? '' : 'na'}" data-a="topic" data-id="${t.id}" style="animation:popUp .4s ${i * 45}ms backwards"><span class="ti" style="background:var(--c-${s}-soft)">${t.icon}</span><span class="tn">${t.name}<small>${ok ? (st && st.total ? `${Math.round(st.correct / st.total * 100)} % správne` : 'Ešte nevyskúšané') : `${MODES[m].n} tu nie je, vyber iný spôsob`}</small></span>${starStr(st?.stars || 0)}${ok ? '<span class="go">Hrať</span>' : ''}</button>`; }).join('')}</div>`).join('')}</main>${nav('learn')}`;
+  ${(s === 'prv' ? areasFor(g).filter(k => PAREA === 'all' || PAREA === k || !areasFor(g).includes(PAREA)).map(k => [k, ts.filter(t => areaOf(t, g) === k)]) : [[null, ts]]).filter(([, list]) => list.length).map(([k, list]) => `${k ? `<div class="areahead a-${k}"><span>${AREA_DEF[k].i}</span>${AREA_DEF[k].n}</div>` : ''}<div class="topics">${list.map((t, i) => { const st = p.topics[t.id]; const ok = modeOk(t, m); return `<button class="card topic press ${ok ? '' : 'na'}" data-a="topic" data-id="${t.id}" style="animation:popUp .4s ${i * 45}ms backwards"><span class="ti" style="background:var(--c-${s}-soft)">${t.icon}</span><span class="tn">${t.name}${dts.includes(t.id) ? ' <em class="tday">🌟 dnes ×2</em>' : ''}<small>${ok ? (st && st.total ? `${Math.round(st.correct / st.total * 100)} % správne` : 'Ešte nevyskúšané') : `${MODES[m].n} tu nie je, vyber iný spôsob`}</small></span>${starStr(st?.stars || 0)}${ok ? '<span class="go">Hrať</span>' : ''}</button>`; }).join('')}</div>`).join('')}</main>${nav('learn')}`;
 };
 function startMode(id) {
   const t = TOPIC[id]; const p = P(); const m = p.mode[t.s] || 'quiz'; const back = { v: 'subject', p: { s: t.s, g: t.g } };
@@ -452,7 +456,7 @@ function answer(val, el) {
   const q = Q.cur, p = P(); const ok = q.input ? Number(val) === q.raw : val === q.answer;
   if (Q.mode === 'test') {
     const ts = topicStat(p, q.topic); ts.total++; p.stats.answered++; countDay(ok); bump(q.s);
-    if (ok) { ts.correct++; p.stats.correct++; Q.correct++; bump('correct'); Q.xp += 12; }
+    if (ok) { ts.correct++; p.stats.correct++; Q.correct++; bump('correct'); Q.xp += Q.topicIds.length === 1 && isDayTopic(p, Q.topicIds[0]) ? 24 : 12; }
     Q.tlog.push({ t: q.text, a: q.full || q.answer, g: q.input ? fmt(String(val)) : String(val), ok, ex: q.ex || '', id: q.topic }); reviewNote(p, q, ok);
     sfx('tap'); if (q.input) $('#padshow').classList.add('picked'); else { const o = $('#opts'); if (o) o.classList.add('locked'); if (el) el.classList.add('picked'); }
     TIMERS.push(setTimeout(() => { Q.i++; if (Q.i >= Q.total) return finishQuiz(); nextQ(); renderQ(); }, 450)); return;
