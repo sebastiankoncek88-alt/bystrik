@@ -95,8 +95,24 @@ function mailCard() {
   if (!AUTH) return `<h3 class="pgroup">📧 E-mail účet</h3><section class="card mailcard"><span class="pci">📧</span><div class="grow"><b>Prihlásiť e-mail</b><small>Po prihlásení sa postup ukladá online a nájdeš ho na každom zariadení.</small><button class="btn small primary" data-a="auth-login">➡️ Prihlásiť sa e-mailom</button></div></section>`;
   return `<h3 class="pgroup">📧 E-mail účet</h3><section class="card mailcard ok"><span class="pci">✅</span><div class="grow"><b>E-mail je prihlásený</b><small style="word-break:break-all;color:var(--ink);font-weight:800">${esc(AUTH.email || '')}</small><small>Postup sa ukladá online sám. Zmena e-mailu a hesla, iný alebo nový účet a odhlásenie sú v rodičovskom účte.</small><button class="btn small primary" data-a="mail-manage">⚙️ Zmeniť e-mail alebo účet</button></div></section>`;
 }
+function a2Plat() { const u = navigator.userAgent; const ios = /iphone|ipad|ipod/i.test(u) || (/Macintosh/.test(u) && navigator.maxTouchPoints > 1); if (/FBAN|FBAV|FB_IAB|Instagram|Messenger|Line\/|TikTok/i.test(u)) return 'inapp'; if (ios) return /CriOS|FxiOS|EdgiOS/.test(u) ? 'iosother' : 'ios'; if (/SamsungBrowser/.test(u)) return 'samsung'; if (/Android/i.test(u) && /Firefox/.test(u)) return 'firefox'; if (/Android/i.test(u)) return 'android'; return 'pc'; }
+function a2Guide() {
+  closeSheet(); const pl = a2Plat();
+  const G = {
+    ios: ['iPhone / iPad (Safari)', ['Ťukni na <b>Zdieľať</b> ⬆️ v spodnej lište. (V novom iOS najprv ťukni na <b>⋯</b> vpravo dole.)', 'Posuň sa nižšie a zvoľ <b>Pridať na plochu</b> ➕.', 'Vpravo hore ťukni na <b>Pridať</b>.', 'Hotovo! Bystrík je na ploche medzi apkami 🧸']],
+    iosother: ['iPhone / iPad', ['Ťukni na <b>Zdieľať</b> ⬆️ vpravo hore v adresnom riadku.', 'Zvoľ <b>Pridať na plochu</b> ➕.', 'Ťukni na <b>Pridať</b>.', 'Ak to tam nie je, otvor odkaz v <b>Safari</b> a skús to tam.']],
+    android: ['Android (Chrome)', ['Ťukni na <b>⋮</b> vpravo hore.', 'Zvoľ <b>Pridať na plochu</b> alebo <b>Inštalovať aplikáciu</b>.', 'Potvrď <b>Inštalovať</b>.', 'Hotovo! Bystrík je na ploche 🧸']],
+    samsung: ['Samsung Internet', ['Ťukni na <b>☰</b> vpravo dole.', 'Zvoľ <b>Pridať stránku do</b> → <b>Domovská obrazovka</b>.', 'Potvrď <b>Pridať</b>.', 'Hotovo! Bystrík je na ploche 🧸']],
+    firefox: ['Android (Firefox)', ['Ťukni na <b>⋮</b>.', 'Zvoľ <b>Pridať na plochu</b> alebo <b>Inštalovať</b>.', 'Potvrď <b>Pridať</b>.', 'Hotovo! Bystrík je na ploche 🧸']],
+    inapp: ['Najprv otvor v prehliadači', ['Toto je prehliadač v inej apke (Messenger, Facebook…), tu sa na plochu pridať nedá.', 'Skopíruj odkaz tlačidlom nižšie.', 'Otvor <b>Safari</b> (iPhone) alebo <b>Chrome</b> (Android) a odkaz vlož.', 'Potom znova ťukni na <b>Ako na to?</b>']],
+    pc: ['Počítač (Chrome / Edge)', ['V adresnom riadku vpravo klikni na ikonu <b>Inštalovať</b> 🖥️.', 'Alebo v ponuke <b>⋮</b> / <b>⋯</b> zvoľ <b>Inštalovať</b> (Chrome: Prenášanie, ukladanie a zdieľanie).', 'Potvrď <b>Inštalovať</b>.', 'Na mobile otvor tento odkaz v telefóne 📱']]
+  }[pl];
+  const w = document.createElement('div'); w.id = 'sheetwrap';
+  w.innerHTML = `<div class="scrim" data-a="close-sheet"></div><div class="sheet" role="dialog" aria-label="Pridať na plochu"><div class="grab"></div><h2>📲 Bystrík na plochu</h2><p class="muted b" style="font-size:.9rem;margin-bottom:10px">${G[0]}</p><div class="dsteps">${G[1].map((t, i) => `<div><span>${i + 1}</span><p>${t}</p></div>`).join('')}</div>${A2HS ? '<button class="btn primary block" style="margin-top:12px" data-a="install">📲 Pridať na plochu</button>' : ''}<button class="btn block" style="margin-top:10px" data-a="a2copy">🔗 Skopírovať odkaz</button><button class="btn block" style="margin-top:10px" data-a="close-sheet">Rozumiem</button></div>`;
+  document.body.appendChild(w);
+}
 function installCard() {
   if ((window.claude && window.claude.use) || isStandalone()) return '';
   const ios = /iphone|ipad|ipod/i.test(navigator.userAgent);
-  return `<section class="card instcard"><span class="pci">📲</span><div class="grow"><b>Pridať apku na plochu</b><small>${A2HS ? 'Bystrík bude mať vlastnú ikonku a otvorí sa na celú obrazovku ako bežná apka.' : ios ? 'V Safari ťuknite dole na Zdieľať (štvorček so šípkou) a zvoľte „Pridať na plochu“.' : 'V prehliadači otvorte ponuku ⋮ a zvoľte „Pridať na plochu“ alebo „Inštalovať aplikáciu“.'}</small>${A2HS ? '<button class="btn small primary" data-a="install">📲 Nainštalovať</button>' : ''}</div></section>`;
+  return `<section class="card instcard"><span class="pci">📲</span><div class="grow"><b>Pridať apku na plochu</b><small>Bystrík bude mať vlastnú ikonku a otvorí sa na celú obrazovku ako bežná apka.</small>${A2HS ? '<button class="btn small primary" data-a="install">📲 Nainštalovať</button>' : '<button class="btn small primary" data-a="a2guide">📲 Ako na to?</button>'}</div></section>`;
 }
