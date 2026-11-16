@@ -1254,13 +1254,13 @@ div.frrow{cursor:default}.frrow .btn.small{flex:none;min-height:40px;padding:4px
 /* kútik mimo obrazovky: pozastaviť animácie */
 .bearroom.offs,.bearroom.offs *,.bearroom.offs *::before,.bearroom.offs *::after{animation-play-state:paused!important}
 canvas.fwcv{position:fixed;inset:0;width:100vw;height:100vh;z-index:9997;pointer-events:none}
-.plcard{display:flex;flex-direction:column;gap:8px;border-color:#E8B23A}.plcard.on{background:linear-gradient(160deg,#FFF7DD,var(--card))}
+.plcard{display:flex;flex-direction:column;gap:8px;border-color:#E8B23A}.plcard.on{background:linear-gradient(160deg,#FFF7DD,var(--paper))}
 .plhead{display:flex;flex-direction:column;gap:2px}.plhead b{font-family:var(--f-display);font-size:1.15rem}.plhead small{font-weight:700;color:var(--muted);font-size:.84rem}
 .plbadge{align-self:flex-start;background:linear-gradient(135deg,#FFC94D,#FF9F43);color:#3A2400;font-weight:900;font-size:.75rem;padding:3px 10px;border-radius:99px}
 .plf{display:flex;gap:10px;align-items:flex-start}.pli{font-size:1.4rem;flex:none;width:30px;text-align:center}.plf b{display:block;font-size:.92rem}.plf small{display:block;color:var(--muted);font-weight:700;font-size:.8rem;line-height:1.3}
 .plsoon{font-style:normal;font-size:.68rem;font-weight:800;background:var(--paper2);border:1.5px solid var(--line);border-radius:99px;padding:1px 7px;margin-left:4px;color:var(--muted);vertical-align:middle}
 .plprices{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:4px}
-.plprice{position:relative;display:flex;flex-direction:column;align-items:center;gap:2px;padding:14px 8px 10px;border:2.5px solid var(--edge);border-radius:16px;background:var(--card);color:var(--ink);text-decoration:none;box-shadow:0 4px 0 var(--drop);cursor:pointer}
+.plprice{position:relative;display:flex;flex-direction:column;align-items:center;gap:2px;padding:14px 8px 10px;border:2.5px solid var(--edge);border-radius:16px;background:var(--paper);color:var(--ink);text-decoration:none;box-shadow:0 4px 0 var(--drop);cursor:pointer}
 .plprice:first-child{background:linear-gradient(160deg,#FFE7A8,#FFD16B);border-color:#C98A10}.plprice b{font-family:var(--f-display);font-size:1.35rem}.plprice small{font-weight:700;font-size:.74rem;color:#5A4520;text-align:center}
 .plprice em{position:absolute;top:-10px;font-style:normal;font-size:.68rem;font-weight:900;background:var(--accent);color:#fff;padding:2px 8px;border-radius:99px}.plprice.off{opacity:.75}
 #wsprint{display:none}
@@ -1268,17 +1268,19 @@ canvas.fwcv{position:fixed;inset:0;width:100vw;height:100vh;z-index:9997;pointer
 .wshead{display:flex;flex-direction:column;gap:2px;border-bottom:2px solid #000;padding-bottom:6px;margin-bottom:10px}.wshead b{font-size:18pt}.wshead small{font-size:10pt}
 .wslist{padding-left:22px}.wslist li{break-inside:avoid;margin:0 0 12px}.wsq svg{max-width:60mm;max-height:40mm}.wso{display:flex;flex-wrap:wrap;gap:4px 18px;margin-top:4px}.wsline{border-bottom:1px solid #000;height:22px;width:60%}
 .wskey{margin-top:14px;border-top:1px dashed #000;padding-top:6px;font-size:9pt}}
-.daytop{display:flex;flex-direction:column;gap:2px;padding:14px;background:linear-gradient(160deg,#FFF4CC,var(--card))}.dtlist{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.daytop{display:flex;flex-direction:column;gap:2px;padding:14px;background:linear-gradient(160deg,#FFF4CC,var(--paper))}.dtlist{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
 .dt{display:flex;flex-direction:column;align-items:center;gap:4px;padding:10px 6px;text-align:center}.dt .ti{width:42px;height:42px;border-radius:12px;display:grid;place-items:center;font-size:1.5rem}.dt b{font-size:.82rem;line-height:1.15}.dt small{font-weight:800;font-size:.7rem;color:var(--muted)}
 .tday{font-style:normal;font-size:.68rem;font-weight:900;background:#FFD84D;color:#3A2400;border-radius:99px;padding:1px 7px;margin-left:4px;vertical-align:middle;white-space:nowrap}
 /* ===== Bystrík sprievodca ===== */
-#buddy{position:fixed;right:max(8px,env(safe-area-inset-right,0px));bottom:calc(env(safe-area-inset-bottom,0px) + 96px);width:70px;height:70px;z-index:40;cursor:pointer;filter:drop-shadow(0 3px 4px rgba(0,0,0,.2));transition:top .35s ease,bottom .35s ease,width .3s,height .3s;-webkit-tap-highlight-color:transparent;touch-action:manipulation}
+#buddy{position:fixed;left:0;top:44%;width:76px;height:76px;z-index:40;cursor:pointer;filter:drop-shadow(0 3px 4px rgba(0,0,0,.2));transform:translateX(-115%) rotate(-20deg);transition:transform .45s cubic-bezier(.3,1.4,.5,1);-webkit-tap-highlight-color:transparent;touch-action:manipulation;pointer-events:none}
+#buddy.bd-show{transform:translateX(-6px) rotate(8deg);pointer-events:auto}
 #buddy svg{width:100%;height:100%;overflow:visible}
-html.bd-top #buddy{bottom:auto;right:auto;left:max(4px,env(safe-area-inset-left,0px));top:calc(env(safe-area-inset-top,0px) + 66px);width:50px;height:50px}
-#buddy.bd-nohit{pointer-events:none;opacity:.9}
-.bdbub{position:absolute;right:calc(100% - 4px);bottom:58%;max-width:min(62vw,240px);width:max-content;background:var(--card);border:2.5px solid var(--edge);border-radius:16px 16px 4px 16px;padding:6px 10px;font:800 .84rem/1.25 var(--f-display);color:var(--ink);box-shadow:0 3px 0 var(--drop);animation:bdbub .3s cubic-bezier(.3,1.6,.5,1);pointer-events:none}
-html.bd-top .bdbub{bottom:auto;top:30%;right:auto;left:calc(100% - 4px);border-radius:16px 16px 16px 4px}
-@keyframes bdbub{from{transform:scale(.4) translateX(20px);opacity:0}}
+#buddy.bd-pin{left:auto;top:auto;right:max(14px,env(safe-area-inset-right,0px));bottom:calc(env(safe-area-inset-bottom,0px) + 104px);width:96px;height:96px;transform:none}
+html.bd-nonav #buddy.bd-pin{bottom:18px}
+#buddy.bd-nohit{pointer-events:none!important}
+.bdbub{position:absolute;left:calc(100% - 6px);top:6%;max-width:min(66vw,260px);width:max-content;background:var(--paper);border:2.5px solid var(--edge);border-radius:16px 16px 16px 4px;padding:7px 11px;font:800 .86rem/1.3 var(--f-display);color:var(--ink);box-shadow:0 3px 0 var(--drop);animation:bdbub .3s cubic-bezier(.3,1.6,.5,1);transform:rotate(-8deg);transform-origin:left top;pointer-events:none}
+#buddy.bd-pin .bdbub{left:auto;right:calc(100% - 6px);top:auto;bottom:55%;border-radius:16px 16px 4px 16px;transform:none;max-width:300px}
+@keyframes bdbub{from{transform:scale(.4);opacity:0}}
 .bear .bx>*{opacity:0;transition:opacity .25s}.bear .bx *{transform-box:fill-box;transform-origin:center}
 /* žmurk */
 .bear.bd-wink .b-eyes>ellipse:nth-of-type(2),.bear.bd-wink .b-look>ellipse:nth-of-type(2),.bear.bd-wink .b-look>circle:nth-of-type(2){opacity:0}
@@ -4428,7 +4430,7 @@ const modeOk = (t, m) => m === 'pex' ? avail(t).pairs : m === 'match' ? avail(t)
 /* kútik: animácie bežia len keď je vidno (šetrí výkon na telefóne) */
 let BOBS = null;
 function bearObs() { try { const r = document.querySelector('.bearroom'); if (!r || !('IntersectionObserver' in window)) return; if (!BOBS) BOBS = new IntersectionObserver(es => es.forEach(e => e.target.classList.toggle('offs', !e.isIntersecting)), { rootMargin: '60px' }); BOBS.observe(r); } catch (e) { } }
-/* ===== Bystrík – sprievodca na každej obrazovke (nedá sa zavrieť, reaguje na dieťa) ===== */
+/* ===== Bystrík – sprievodca: na mobile sa vysunie z okraja (najmä v témach), na širokej obrazovke je stále vidno ===== */
 const BUDDY_MS = { wink: 1500, wave: 1900, smile: 1600, happy: 900, cheer: 2000, sad: 2300, cry: 2800, yawn: 1500, love: 2200, think: 2200, surprise: 1300, spin: 1000, dance: 2600, peek: 1300, hop: 1200, wiggle: 1300, nod: 1300, shy: 1900, laugh: 1800 };
 const BUDDY_ALIAS = { happy: 'bhappy', cheer: 'cheer', spin: 'bspin', dance: 'bdance', hop: 'bhop', wiggle: 'bwiggle', peek: 'bpeek', yawn: 'byawn' };
 const BUDDY_IDLE = ['wink', 'wave', 'smile', 'peek', 'wiggle', 'hop', 'nod', 'shy', 'think', 'love'];
@@ -4456,51 +4458,75 @@ function buddyEl() {
   b.addEventListener('click', buddyTap);
   document.body.appendChild(b); return b;
 }
-function buddyBubble(txt, ms = 2400) { const b = buddyEl(), s = b.querySelector('.bdbub'); if (!txt) return; s.textContent = txt; s.hidden = false; s.style.animation = 'none'; void s.offsetWidth; s.style.animation = ''; clearTimeout(BUDDYBT); BUDDYBT = setTimeout(() => { s.hidden = true; }, ms); try { if (typeof emoWalk === 'function') emoWalk(s); } catch (e) { } }
+const BUDDY_FACTS = [
+  'Chobotnica má tri srdcia a modrú krv.', 'Medvede vedia vyliezť na strom aj zabehnúť rýchlejšie ako človek.', 'Slimák môže spať aj tri roky.', 'Včela navštívi za deň stovky kvetov.', 'Žirafa má rovnako veľa krčných stavcov ako človek, len sú oveľa dlhšie.',
+  'Ťava má v hrbe tuk, nie vodu.', 'Mravec unesie oveľa viac, ako sám váži.', 'Delfíny spia tak, že jedna polovica mozgu odpočíva.', 'Pštros má oko väčšie ako svoj mozog.', 'Kolibrík vie letieť aj dozadu.',
+  'Slnko je hviezda a Zem okolo neho obehne za jeden rok.', 'Na Mesiaci sú stopy astronautov, lebo tam nefúka vietor.', 'Mesiac je od Zeme taký ďaleko, že by sme k nemu autom išli niekoľko mesiacov.', 'Na Venuši je deň dlhší ako rok.', 'Saturn by plával vo vode, keby bola dosť veľká vaňa, je ľahší ako voda.',
+  'Najvyšší vrch Slovenska je Gerlachovský štít.', 'Dunaj tečie cez desať krajín.', 'Na Slovensku je viac ako šesťtisíc jaskýň.', 'Bratislava leží pri hraniciach s Rakúskom aj Maďarskom.', 'Slovenská vlajka má farby bielu, modrú a červenú.',
+  'Najmenšie číslo, ktoré je párne aj prvočíslo, je dva.', 'Nula bola vymyslená oveľa neskôr ako ostatné čísla.', 'Keď sčítaš všetky čísla od jedna do desať, dostaneš päťdesiatpäť.', 'Každé číslo vynásobené nulou je nula.', 'Hodiny majú dvanásť čísel, ale deň má dvadsaťštyri hodín.',
+  'Človek má v tele viac ako dvesto kostí.', 'Srdce bije aj vtedy, keď spíš.', 'Najsilnejší sval na tele je žuvací sval.', 'Bábätká majú viac kostí ako dospelí, niektoré sa neskôr spoja.', 'Odtlačok prsta má každý človek iný.',
+  'Dúha má sedem farieb.', 'Blesk je teplejší ako povrch Slnka.', 'Voda môže byť ľad, voda aj para.', 'Najväčší oceán na Zemi je Tichý oceán.', 'Snehová vločka má šesť ramien.',
+  'Slovo „Bystrík“ znamená niekoho bystrého a šikovného, ako si ty!', 'Slovenská abeceda má viac písmen ako anglická.', 'Najdlhšie slovenské slová majú aj viac ako dvadsať písmen.', 'Anglické slovo „hello“ znamená ahoj.', 'Po anglicky medveď je „bear“.',
+  'Strom vie žiť aj stovky rokov.', 'Z jedného semienka môže vyrásť obrovský dub.', 'Rastliny potrebujú svetlo, vodu a vzduch.', 'Ihličnaté stromy sú zelené aj v zime, okrem smrekovca.', 'Huby nie sú rastliny ani zvieratá, sú samostatná skupina.',
+  'Mačky spia väčšinu dňa.', 'Psy cítia vône oveľa lepšie ako ľudia.', 'Sova vie otočiť hlavu skoro dookola.', 'Motýle ochutnávajú nohami.', 'Žaba pije vodu cez kožu.'
+];
+function buddyBubble(txt, ms) { const b = buddyEl(), s = b.querySelector('.bdbub'); if (!txt) return; ms = ms || Math.max(2400, txt.length * 70); s.textContent = txt; s.hidden = false; s.style.animation = 'none'; void s.offsetWidth; s.style.animation = ''; clearTimeout(BUDDYBT); BUDDYBT = setTimeout(() => { s.hidden = true; }, ms); try { if (typeof emoWalk === 'function') emoWalk(s); } catch (e) { } buddyShow(ms + 600); }
+const buddyWide = () => matchMedia('(min-width: 900px) and (hover: hover)').matches;
+let BUDDYHT = null;
+/* vysunutie z okraja; na širokej obrazovke ostáva */
+function buddyShow(ms = 3000) { const b = buddyEl(); b.classList.add('bd-show'); clearTimeout(BUDDYHT); if (!buddyWide()) BUDDYHT = setTimeout(() => { if (!b.matches(':hover')) b.classList.remove('bd-show'); }, ms); }
 /* nálada: wink, wave, smile, happy, cheer, sad, cry, yawn, love, think, surprise, spin, dance, peek, hop, wiggle, nod, shy, laugh */
 function buddyMood(m, txt) {
   const b = buddyEl(), svg = b.querySelector('svg'); if (!svg) return;
   const all = [...Object.keys(BUDDY_MS).map(k => 'bd-' + k), ...Object.values(BUDDY_ALIAS)]; svg.classList.remove(...all); void svg.getBoundingClientRect();
-  const cls = ['bd-' + m]; if (BUDDY_ALIAS[m]) cls.push(BUDDY_ALIAS[m]); svg.classList.add(...cls); if (txt) buddyBubble(txt);
-  clearTimeout(BUDDYT); BUDDYT = setTimeout(() => svg.classList.remove(...cls), BUDDY_MS[m] || 1500);
+  const cls = ['bd-' + m]; if (BUDDY_ALIAS[m]) cls.push(BUDDY_ALIAS[m]); setTimeout(() => svg.classList.add(...cls), 260); if (txt) buddyBubble(txt);
+  buddyShow((BUDDY_MS[m] || 1500) + 1800);
+  clearTimeout(BUDDYT); BUDDYT = setTimeout(() => svg.classList.remove(...cls), (BUDDY_MS[m] || 1500) + 260);
 }
 function buddySleep(on) { const svg = buddyEl().querySelector('svg'); BUDDYSLEEP = on; if (svg) svg.classList.toggle('bd-sleep', on); }
+function buddySayTxt(t) { if (Date.now() - BUDDYSAY < 2500) return; BUDDYSAY = Date.now(); try { say(t.replace(/\p{Extended_Pictographic}|️|‍/gu, '').trim()); } catch (er) { } }
+/* zábavný fakt: Bystrík sa vysunie, povie ho a prečíta nahlas */
+function buddyFact(speak = true) { const f = pick(BUDDY_FACTS); buddyMood('think', '💡 Vedel si? ' + f); if (speak) buddySayTxt('Vedel si? ' + f); BUDDYFACT = Date.now(); }
+let BUDDYFACT = Date.now();
 function buddyTap(e) {
   e.stopPropagation(); BUDDYLAST = Date.now();
   if (BUDDYSLEEP) { buddySleep(false); buddyMood('surprise', 'Ááá, som hore! 😳'); sfx('pop'); return; }
-  const [t, m] = pick(BUDDY_TAP); buddyMood(m, t); sfx('pop'); buzz(10);
-  if (Date.now() - BUDDYSAY > 2500) { BUDDYSAY = Date.now(); try { say(t.replace(/\p{Extended_Pictographic}|️|‍/gu, '').trim()); } catch (er) { } }
+  sfx('pop'); buzz(10);
+  if (Math.random() < .45) return buddyFact(true);
+  const [t, m] = pick(BUDDY_TAP); buddyMood(m, t); buddySayTxt(t);
 }
+let BUDDYOK = 0;
 function buddyAnswer(ok) {
   BUDDYLAST = Date.now(); if (BUDDYSLEEP) buddySleep(false);
-  if (ok) { BUDDYBAD = 0; buddyMood(pick(['happy', 'cheer', 'wink', 'spin', 'love', 'hop', 'laugh']), Math.random() < .45 ? pick(BUDDY_OK) : ''); }
-  else { BUDDYBAD++; buddyMood(BUDDYBAD >= 2 ? 'cry' : 'sad', Math.random() < .6 ? pick(BUDDY_BAD) : ''); }
+  if (ok) { BUDDYBAD = 0; BUDDYOK++; if (BUDDYOK % 3 === 0) buddyMood(pick(['dance', 'spin', 'cheer']), BUDDYOK + ' správne za sebou! 🔥'); else if (Math.random() < .5) buddyMood(pick(['happy', 'wink', 'love', 'hop', 'laugh']), Math.random() < .5 ? pick(BUDDY_OK) : ''); }
+  else { BUDDYOK = 0; BUDDYBAD++; buddyMood(BUDDYBAD >= 2 ? 'cry' : 'sad', pick(BUDDY_BAD)); }
 }
-/* po každom vykreslení: pozícia podľa obrazovky, pozdrav pri zmene obrazovky, nočný spánok */
+const BUDDY_LEARN = ['quiz', 'subject', 'learn', 'cards', 'result', 'reads', 'dict'];
+/* po každom vykreslení: na širokej obrazovke stále vidno, pozdrav v témach, nočný spánok */
 function buddySync() {
-  const b = buddyEl(); const hasNav = !!document.querySelector('nav.nav');
-  document.documentElement.classList.toggle('bd-top', !hasNav);
+  const b = buddyEl(); const wide = buddyWide(); b.classList.toggle('bd-pin', wide); if (wide) b.classList.add('bd-show');
   b.classList.toggle('bd-nohit', ['game', 'write', 'pexeso', 'match', 'sort'].includes(UI.view));
-  if (typeof nightOn === 'function' && nightOn()) { if (!BUDDYSLEEP) buddySleep(true); }
-  else if (BUDDYSLEEP && Date.now() - BUDDYLAST < 60000) buddySleep(false);
+  document.documentElement.classList.toggle('bd-nonav', !document.querySelector('nav.nav'));
+  if (typeof nightOn === 'function' && nightOn()) { if (!BUDDYSLEEP) buddySleep(true); } else if (BUDDYSLEEP && Date.now() - BUDDYLAST < 60000) buddySleep(false);
   if (UI.view !== BUDDYVIEW) {
-    const v = UI.view; BUDDYVIEW = v;
-    const greet = { shop: ['love', 'Pozri, aké pekné veci! 👕'], wardrobe: ['shy', 'Sluší ti to! ✨'], board: ['cheer', 'Poďme na stupne víťazov! 🏆'], games: ['dance', 'Hráme sa! 🎮'], learn: ['nod', 'Čo sa dnes naučíme? 📚'], rewards: ['wink', 'Pozri, čo môžeš získať! 🎁'] }[v];
-    if (greet && Math.random() < .55) setTimeout(() => buddyMood(greet[0], greet[1]), 500);
-    else if (v === 'result' && UI.params) setTimeout(() => { const s = UI.params.stars; buddyMood(s >= 3 ? 'dance' : s >= 2 ? 'cheer' : s >= 1 ? 'smile' : 'sad', s >= 3 ? 'Dokonalé! 🏆' : s >= 1 ? 'Dobrá práca! 👏' : 'Nabudúce to dáme! 💪'); }, 700);
-    else if (Math.random() < .3) setTimeout(() => buddyMood('wave'), 400);
+    const v = UI.view; BUDDYVIEW = v; if (v !== 'quiz') BUDDYOK = 0;
+    if (v === 'subject' && Math.random() < .6) setTimeout(() => buddyMood('wave', pick(['Vyber si tému, idem s tebou! 📚', 'Témy dňa majú dvojnásobné body! 🌟', 'Za zvládnutú tému je odmena! 🎁'])), 600);
+    else if (v === 'quiz') setTimeout(() => buddyMood('nod', pick(['Ideme na to! 💪', 'Verím ti! ⭐', 'Čítaj pozorne 👀'])), 500);
+    else if (v === 'result' && UI.params) setTimeout(() => { const s = UI.params.stars; buddyMood(s >= 3 ? 'dance' : s >= 2 ? 'cheer' : s >= 1 ? 'smile' : 'sad', s >= 3 ? 'Dokonalé! 🏆' : s >= 1 ? 'Dobrá práca! 👏' : 'Nabudúce to dáme! 💪'); if (s >= 1 && Math.random() < .5) setTimeout(() => buddyFact(false), 3800); }, 900);
+    else if (BUDDY_LEARN.includes(v) && Date.now() - BUDDYFACT > 60000 && Math.random() < .5) setTimeout(() => buddyFact(false), 1200);
+    else if (wide && Math.random() < .3) setTimeout(() => buddyMood('wave'), 400);
   }
 }
-/* nečinnosť: občas sa pohne, po 30 s zíva alebo premýšľa, po 90 s zaspí */
+/* občas sa sám objaví: na širokej obrazovke sa hýbe, na mobile raz za čas vykukne so zábavným faktom */
 setInterval(() => {
   if (document.hidden || !document.getElementById('buddy') || document.querySelector('.over')) return;
-  const idle = Date.now() - BUDDYLAST;
+  const idle = Date.now() - BUDDYLAST, wide = buddyWide(), quiet = ['quiz', 'game', 'write', 'reads', 'dict', 'pexeso', 'match', 'sort'].includes(UI.view);
   if (BUDDYSLEEP) return;
-  if (idle > 90000) { buddySleep(true); return; }
-  if (idle > 30000 && Math.random() < .5) { buddyMood(Math.random() < .6 ? 'yawn' : 'think'); return; }
-  if (Math.random() < (document.documentElement.classList.contains('lite') ? .25 : .55)) buddyMood(pick(BUDDY_IDLE));
-}, 7000);
-['pointerdown', 'keydown'].forEach(ev => document.addEventListener(ev, () => { BUDDYLAST = Date.now(); if (BUDDYSLEEP && !(typeof nightOn === 'function' && nightOn())) { buddySleep(false); buddyMood('surprise'); } }, { capture: true, passive: true }));
+  if (wide) { if (idle > 90000) { buddySleep(true); return; } if (idle > 30000 && Math.random() < .5) { buddyMood(Math.random() < .6 ? 'yawn' : 'think'); return; } if (Math.random() < .5) buddyMood(pick(BUDDY_IDLE)); }
+  if (!quiet && Date.now() - BUDDYFACT > 150000 && idle < 60000) { buddyFact(Date.now() - BUDDYSAY > 180000); return; }
+  if (!wide && !quiet && Math.random() < .06) buddyMood(pick(['peek', 'wave', 'wink']));
+}, 8000);
+['pointerdown', 'keydown'].forEach(ev => document.addEventListener(ev, () => { BUDDYLAST = Date.now(); if (BUDDYSLEEP && !(typeof nightOn === 'function' && nightOn())) { buddySleep(false); if (buddyWide()) buddyMood('surprise'); } }, { capture: true, passive: true }));
 /* ===== Vlastné pozadie ===== */
 const PAGE_BG = [['auto', 'Základná', '', ''], ['ruzova', 'Ružová', '#FFE4EE', '#3A1B33'], ['modra', 'Modrá', '#DFEBFF', '#152242'], ['matova', 'Mätová', '#D8F5E9', '#12302A'], ['fialova', 'Fialová', '#EAE2FF', '#2A1D4A'], ['zlta', 'Žltá', '#FFF2C7', '#30280F'], ['broskyna', 'Broskyňová', '#FFE5D4', '#33211A'], ['siva', 'Sivá', '#EEF0F5', '#1A1C25'], ['biela', 'Biela', '#FFFFFF', '#FFFFFF', 'light'], ['kremova', 'Krémová', '#FBF3E1', '#FBF3E1', 'light'], ['cierna', 'Čierna', '#000000', '#000000', 'dark'], ['tyrkys', 'Tyrkysová', '#D2F3F1', '#0F2E2E'], ['levandula', 'Levanduľová', '#E9E4F7', '#241F3A'], ['koral', 'Koralová', '#FFD9D2', '#3A1C1C'], ['limetka', 'Limetková', '#EAF7C8', '#25300F'], ['zapad', 'Západ slnka', 'linear-gradient(160deg,#FFE1B8,#FFC4DD)', 'linear-gradient(160deg,#3A2416,#3A1B33)'], ['ocean', 'Oceán', 'linear-gradient(160deg,#CFF6F1,#D5E2FF)', 'linear-gradient(160deg,#0F2E2E,#1A2148)'], ['cukrik', 'Cukrík', 'linear-gradient(160deg,#FFE0F0,#E2DEFF)', 'linear-gradient(160deg,#3A1B33,#241C4A)'], ['les', 'Les', 'linear-gradient(160deg,#EAF7C8,#CDF1E6)', 'linear-gradient(160deg,#25300F,#10302E)'], ['duha', 'Dúha', 'linear-gradient(135deg,#FFE0E6,#FFF1C7,#DDF6E6,#DCE8FF,#EDE2FF)', 'linear-gradient(135deg,#3A1B26,#33280F,#12301F,#152242,#2A1D4A)']];
 function applyPageBg() { const c = PAGE_BG.find(x => x[0] === (DATA.settings.bgc || 'auto')) || PAGE_BG[0]; const st = document.documentElement.style; if (c[0] === 'cierna') { st.setProperty('--topoc', '#fff'); st.setProperty('--topoo', '.14'); } else { st.removeProperty('--topoc'); st.removeProperty('--topoo'); } if (c[0] === 'auto') { st.removeProperty('--pg'); return; } st.setProperty('--pg', isDark() ? c[3] : c[2]); }
