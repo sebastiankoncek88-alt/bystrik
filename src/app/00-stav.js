@@ -121,7 +121,7 @@ function geminiSample(key) {
     }
     throw lastErr || { code: 'api_error', message: 'chyba' };
   };
-  call.json = async (input, opts = {}) => { const { text } = await call(input, { ...opts, asJson: true, max: 10000 }); const t = text.replace(/^```(?:json)?\s*/i, '').replace(/\s*```\s*$/, ''); const a = t.indexOf('{'), b = t.lastIndexOf('}'); try { return JSON.parse(a >= 0 && b > a ? t.slice(a, b + 1) : t); } catch (e) { throw { code: 'invalid_json', text }; } };
+  call.json = async (input, opts = {}) => { const { text } = await call(input, { ...opts, asJson: true, max: 16000 }); const t = text.replace(/^```(?:json)?\s*/i, '').replace(/\s*```\s*$/, ''); const a = t.indexOf('{'), b = t.lastIndexOf('}'); try { return JSON.parse(a >= 0 && b > a ? t.slice(a, b + 1) : t); } catch (e) { throw { code: 'invalid_json', text }; } };
   call.limits = async () => ({ images: { max: 5 } });
   return call;
 }

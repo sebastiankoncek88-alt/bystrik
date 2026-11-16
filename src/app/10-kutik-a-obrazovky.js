@@ -312,20 +312,26 @@ VIEWS.notes = () => {
   </main>${nav('learn')}`;
 };
 AFTER.notes = () => { ['notecam', 'notepick'].forEach(id => { const f = $('#' + id); if (f) f.addEventListener('change', () => { const file = f.files && f.files[0]; if (file) processNote(file); }); }); };
-async function shrinkImage(file) {
-  try { const url = URL.createObjectURL(file); const img = await new Promise((res, rej) => { const i = new Image(); i.onload = () => res(i); i.onerror = rej; i.src = url; }); const k = Math.min(1, 1600 / Math.max(img.width, img.height)); const c = document.createElement('canvas'); c.width = Math.round(img.width * k); c.height = Math.round(img.height * k); c.getContext('2d').drawImage(img, 0, 0, c.width, c.height); URL.revokeObjectURL(url); return await new Promise(r => c.toBlob(r, 'image/jpeg', .85)); } catch (e) { return file; }
+async function shrinkImage(file, max = 1600) {
+  /* fotka z iPhonu (aj HEIC) → JPEG; najprv createImageBitmap (rešpektuje otočenie), potom <img> */
+  const draw = (src, w, h) => { const k = Math.min(1, max / Math.max(w, h)); const c = document.createElement('canvas'); c.width = Math.max(1, Math.round(w * k)); c.height = Math.max(1, Math.round(h * k)); c.getContext('2d').drawImage(src, 0, 0, c.width, c.height); return new Promise(r => c.toBlob(b => r(b), 'image/jpeg', .85)); };
+  try { if (window.createImageBitmap) { const bm = await createImageBitmap(file, { imageOrientation: 'from-image' }); const b = await draw(bm, bm.width, bm.height); try { bm.close(); } catch (e) { } if (b && b.size) return b; } } catch (e) { }
+  try { const url = URL.createObjectURL(file); const img = await new Promise((res, rej) => { const i = new Image(); i.onload = () => res(i); i.onerror = rej; i.src = url; }); const b = await draw(img, img.naturalWidth || img.width, img.naturalHeight || img.height); URL.revokeObjectURL(url); if (b && b.size) return b; } catch (e) { }
+  return file;
 }
+const noteErrInfo = e => { const c = e && (e.code || e.status) ? String(e.code || e.status) : ''; const m = e && e.message ? String(e.message).slice(0, 90) : ''; return c || m ? ` (${[c, m].filter(Boolean).join(': ')})` : ''; };
 async function processNote(file) {
   const p = P(); NOTE = { busy: true, err: '', preview: '' }; try { NOTE.preview = URL.createObjectURL(file); } catch (e) { } render(null); scrollTo({ top: 0, behavior: 'smooth' });
   const fail = msg => { NOTE = { busy: false, err: msg, preview: '' }; if (UI.view === 'notes') render(null); sfx('no'); };
   const sample = await getSample(); if (!sample) return fail('Bystrík teraz nemôže čítať fotky. Funguje to v Claude alebo keď rodič zadá AI kľúč v rodičovskom účte.');
   try { const lim = await sample.limits(); if (!lim || !lim.images) return fail('Na tomto mieste sa fotky nedajú poslať Bystríkovi.'); } catch (e) { return fail('Na tomto mieste sa fotky nedajú poslať Bystríkovi.'); }
-  const blob = await shrinkImage(file);
+  let blob = await shrinkImage(file);
   const prompt = `Na fotke sú školské poznámky dieťaťa na 1. stupni ZŠ na Slovensku (${p.grade}. ročník). Prečítaj ich a odpovedz IBA jedným JSON objektom v tomto tvare:
 {"title":"krátky názov témy (max 4 slová)","summary":["bod 1","bod 2"],"questions":[{"q":"otázka","a":"správna odpoveď","w":["zlá 1","zlá 2","zlá 3"],"ex":"krátke vysvetlenie pre dieťa"}]}
 Pravidlá: všetko po slovensky, jednoducho a primerane veku. summary má 3 až 7 krátkych bodov. questions má 6 až 8 otázok, ktoré vychádzajú LEN z poznámok, odpovede sú krátke (najviac 5 slov), w obsahuje 3 rôzne nesprávne odpovede. Ak na fotke nie sú čitateľné školské poznámky, odpovedz {"error":"krátke vysvetlenie po slovensky"}.`;
   try {
-    const r = await sample.json(prompt, { images: [blob], cache: false });
+    let r; try { r = await sample.json(prompt, { images: [blob], cache: false }); }
+    catch (e1) { if (!e1 || !['invalid_json', 'api_error', 'network'].includes(e1.code)) throw e1; blob = await shrinkImage(file, 1100); r = await sample.json(prompt, { images: [blob], cache: false }); }
     if (!r || r.error) return fail(r && r.error ? String(r.error) : 'Poznámky sa nepodarilo prečítať. Skús fotku spraviť ostrejšie a pri dobrom svetle.');
     const qs = (Array.isArray(r.questions) ? r.questions : []).map(x => ({ q: String(x.q || '').trim(), a: String(x.a || '').trim(), w: [...new Set((Array.isArray(x.w) ? x.w : []).map(y => String(y).trim()).filter(y => y && y !== String(x.a || '').trim()))].slice(0, 3), ex: String(x.ex || '').trim() })).filter(x => x.q && x.a && x.w.length >= 2).slice(0, 8);
     const summary = (Array.isArray(r.summary) ? r.summary : []).map(x => String(x).trim()).filter(Boolean).slice(0, 8);
@@ -333,7 +339,7 @@ Pravidlá: všetko po slovensky, jednoducho a primerane veku. summary má 3 až 
     const n = { id: Date.now().toString(36), t: Date.now(), title: String(r.title || 'Moje poznámky').slice(0, 40), summary, qs };
     p.notes = [n, ...(p.notes || [])].slice(0, 10); noteTopic(n); p.stats.chat++; save();
     NOTE = { busy: false, err: '', preview: '' }; if (UI.view === 'notes') render(null); sfx('level'); confetti(120); say('Hotovo! Tvoje poznámky som zhrnul do bodov a pripravil som ti kvíz.');
-  } catch (e) { fail(e && e.code === 'ai_limit' ? AIL_MSG : e && e.code === 'rate_limited' ? 'Bystrík si musí chvíľu oddýchnuť. Skús to o pár minút.' : e && e.code === 'not_granted' ? 'Bystrík nemá povolenie. Popros rodičov.' : 'Poznámky sa nepodarilo spracovať. Skús to znova.'); }
+  } catch (e) { fail(e && e.code === 'ai_limit' ? AIL_MSG : e && e.code === 'rate_limited' ? 'Bystrík si musí chvíľu oddýchnuť. Skús to o pár minút.' : e && e.code === 'not_granted' ? 'Bystrík nemá povolenie. Popros rodičov.' : 'Poznámky sa nepodarilo spracovať. Skús to znova.' + noteErrInfo(e)); }
 }
 let PAREA = 'all';
 VIEWS.subject = ({ s, g }) => {
