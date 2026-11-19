@@ -939,7 +939,7 @@ function moleRule(g) {
   const rules = {
     1: [{ t: 'Ťukaj na čísla väčšie ako 10', gen: () => { const n = R(1, 20); return { x: n, good: n > 10 }; } }, { t: 'Ťukaj na samohlásky', gen: () => { const v = Math.random() < .45; return { x: v ? pick(['A', 'E', 'I', 'O', 'U', 'Y']) : pick(['B', 'K', 'M', 'S', 'T', 'L', 'P', 'R', 'V', 'Z']), good: v }; } }],
     2: [{ t: 'Ťukaj na párne čísla', gen: () => { const n = R(1, 60); return { x: n, good: n % 2 === 0 }; } }, { t: 'Ťukaj na príklady s výsledkom 10', gen: () => { const good = Math.random() < .45; const a = R(0, 10); const b = good ? 10 - a : (() => { let x; do { x = R(0, 10); } while (a + x === 10); return x; })(); return { x: `${a} + ${b}`, good }; } }],
-    3: [mult(R(3, 9)), { t: 'Ťukaj na podstatné mená', gen: nouns('s3-druhy', 'podstatné meno') }],
+    3: [mult(schoolMonth() < 2 ? R(2, 5) : R(3, 9)), { t: 'Ťukaj na podstatné mená', gen: nouns('s3-druhy', 'podstatné meno') }],
     4: [mult(R(6, 9)), { t: 'Ťukaj na zámená', gen: nouns('s4-druhy', 'zámeno') }]
   };
   return pick(rules[g] || rules[1]);

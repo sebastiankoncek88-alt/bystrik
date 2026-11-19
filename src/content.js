@@ -245,7 +245,7 @@ function makeStatement(g) {
     let a, b, op, r;
     if (g === 1) { a = R(0, 10); b = R(0, 10 - a); op = Math.random() < .5 ? '+' : '−'; if (op === '−') { const x = a + b; r = x - b; a = x; } else r = a + b; }
     else if (g === 2) { const sm = typeof schoolMonth === 'function' ? schoolMonth() : 9; if (sm < 3 || Math.random() < .5) { a = R(4, 9); b = R(11 - a, 9); op = Math.random() < .5 ? '+' : '−'; if (op === '−') { const x = a + b; r = x - b; a = x; } else r = a + b; } else { a = R(1, 8) * 10 + R(0, 4); b = R(1, 9 - Math.floor(a / 10)) * 10; op = Math.random() < .5 ? '+' : '−'; if (op === '−') { const x = a + b; r = a; a = x; } else r = a + b; } }
-    else if (g === 3) { a = R(2, 10); b = R(2, 10); op = Math.random() < .6 ? '·' : ':'; if (op === ':') { r = b; a = a * b; b = a / r; } else r = a * b; }
+    else if (g === 3) { const sm3 = typeof schoolMonth === 'function' ? schoolMonth() : 9; a = R(2, sm3 < 2 ? 5 : 10); b = R(2, 10); op = Math.random() < .6 ? '·' : ':'; if (op === ':') { r = b; a = a * b; b = a / r; } else r = a * b; }
     else { a = R(12, 99); b = R(2, 9); op = '·'; r = a * b; }
     const truth = Math.random() < .5; const shown = truth ? r : r + pick([-2, -1, 1, 2, 10]);
     return { text: `${a} ${op} ${b} = ${shown}`, truth: truth || shown === r, ex: `${a} ${op} ${b} = ${r}` };
@@ -259,7 +259,7 @@ function balloonTarget(g) { const sm = typeof schoolMonth === 'function' ? schoo
 function balloonExpr(g, target, good) {
   const t = good ? target : target + pick([-3, -2, -1, 1, 2, 3, 10]);
   if (t < 0) return balloonExpr(g, target, true);
-  if (g >= 3 && Math.random() < .5) { const ds = []; for (let d = 2; d <= 10; d++) if (t % d === 0 && t / d <= (g === 3 ? 10 : 99) && t / d >= 2) ds.push(d); if (ds.length) { const d = pick(ds); return { text: `${d} · ${t / d}`, good: t === target }; } }
+  if (g >= 3 && Math.random() < .5) { const ds = []; const dmax = g === 3 && typeof schoolMonth === 'function' && schoolMonth() < 2 ? 5 : 10; for (let d = 2; d <= dmax; d++) if (t % d === 0 && t / d <= (g === 3 ? 10 : 99) && t / d >= 2) ds.push(d); if (ds.length) { const d = pick(ds); return { text: `${d} · ${t / d}`, good: t === target }; } }
   if (Math.random() < .55) { const a = R(0, t); return { text: `${a} + ${t - a}`, good: t === target }; }
   const b = R(1, Math.max(2, Math.floor(t / 2) + 5)); return { text: `${t + b} − ${b}`, good: t === target };
 }

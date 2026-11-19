@@ -71,6 +71,10 @@ Písanie priateľom je predvolene vypnuté (`DATA.settings.msgOk`). Úsporný re
 - AI Bystrík: odpovede max 2–3 krátke vety (`tutorIntro`), chat `max: 400` (v artefakte sa max/effort nepošlú).
 - Animácia pri posúvaní je jemná (18 px, 1,1 s ease-out, bez vnorených prvkov).
 - Výber učiva podľa toho, čo dieťa vie: `knownTopics(p, s)` = témy s úspešnosťou ≥60 % + témy, ktoré sa už v škole prebrali (`CURR[id]` = mesiac školského roka 0=sep…9=jún, `schoolMonth()`), sezónne len v sezóne (`SEASONAL`), príliš ťažké (<45 % po 5+) vynechá, téma zo školy má prednosť. Používajú ho Témy dňa (`dayTopics`), Pokračuj (`goPlan`), Denná výzva (`dailySeq`) a hry (`frogQ`). Hry podľa ročníka aj mesiaca (`schoolMonth`): Pravda či nie (`makeStatement`, 2. roč. bez násobenia), Balóny (`balloonTarget`), Slovný dážď (`rainSetup`, y/i v 2. roč. až od januára), Zoraď čísla (`orderNext`). Násobenie/delenie a dvojnásobok sú v 3. ročníku (malá násobilka je v SK až v 3. ročníku), nie v 2.
+- Prihlásenie si pamätá: `bystrik.auth` v localStorage, obnova tokenu len raz naraz (`REFRESHING` v `supaToken`), odhlási len pri neplatnom refresh tokene (nie pri chybe siete/servera), obnova aj po návrate do appky; posledný e-mail `bystrik.lastEmail` sa predvyplní.
+- Rebríček: na stupňoch víťazov len hráči s výsledkom > 0, ostatní (aj s 0) sú v zozname pod nimi (`top`/`others` vo `VIEWS.board`).
+- Zásady súkromia (verzia 19. 11. 2026) spomínajú nahrávky čítania v súkromnom úložisku rodiča.
+- Test `tests/smoke.js` prechádza aj všetky predmety × ročníky, domček a výber učiva/hier pre 1.–4. ročník. Kontrola učiva: každá téma vygeneruje otázky so správnou odpoveďou práve raz medzi možnosťami (skript vo scratchpade, val.js).
 - Adventný kalendár: zatiaľ len návrh (nenasadený), https://claude.ai/artifact/MHiMhrvs9GHu1qT7msTNZx
 
 ## Otvorené
