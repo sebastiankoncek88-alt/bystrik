@@ -28,7 +28,7 @@ Artefakt má capabilities: sample (images), db, user, downloads – pri publikov
 - AI (Gemini/Claude) – kľúč len v zariadení (`bystrik.apikey`), limit tokenov `aiGuard`. NIKDY kľúče do kódu, nikdy nežiadať tajomstvá do chatu.
 
 ## Hlavné časti appky
-Menu: Domov (▶ Pokračuj = mix učenia), Učenie, Hry, Šatník (+Obchod), Ja (pokrok %, priatelia, rebríček, trieda).
+Menu (4 záložky): Dnes (`heroScene` scéna s postavičkou a Bystríkom, „Dnešný batôžtek“ `homeBag` = 3 veci, jedno hlavné tlačidlo, čipy, kútik, rozbaľovacie „Dnešná cesta a úlohy“ `.hmore`), Učenie (prepínač `segTabs` Predmety | Hry; Hry = view `games`), Šatník (+Obchod), Ja (séria, polica, pokrok %, priatelia, rebríček, trieda).
 Rodič (PIN): Prehľad, Zadať úlohu (+téma zo školy), Čítanka, Nastavenia (pravidlá, správy dieťaťa + história, režim učiteľa, GDPR/zmazanie účtu).
 Písanie priateľom je predvolene vypnuté (`DATA.settings.msgOk`). Úsporný režim `settings.lite` (trieda `html.lite`, bez obrysu postavičky a ťažkých animácií).
 - Rebríček: predvolene zapnutý, rodič ho môže vypnúť (`settings.lb`; pri vypnutí sa riadky dieťaťa zmažú). Používateľ nechce, aby rodič musel všetko povoľovať – nové veci dávať predvolene zapnuté s možnosťou vypnúť. Denné kolo (`p.dy`, riadky `pid#d` s week=dátum), záložky Dnes/Týždeň/Séria, stupne víťazov `podium()`, 23 miest; kto 5 dní (`LB_IDLE`) neaktívny, nezobrazí sa; denné odmeny `LB_PRIZE` (`lbAwards`).
