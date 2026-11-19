@@ -63,7 +63,8 @@ Písanie priateľom je predvolene vypnuté (`DATA.settings.msgOk`). Úsporný re
 - Rodič → Zadať úlohu 2.0: `ptTasksHTML(p)` + stav `PTF` (prepínač Úloha s odmenou | Učivo zo školy, predmet → mriežka tém → cieľ → odmena → súhrn), akcie `pt-mode/pt-subj/pt-pick/pt-stars/pt-coins`, `sc-save`, `sc-clear`. Vstup do rodičovského účtu aj tlačidlom „Rodič“ v hlavičke Ja (`.japar`, akcia parent-open).
 - Úľ 2.0: riadky 3 + 2, veľké plásty (`--w:min(31vw,128px)`), karta s medvedíkom nad úľom, ďalšia téma `.next` s „🐝 Tu!“.
 - 1. ročník: v pomôckach namiesto kalkulačky počítacia os 0–20 so žabkou (`HELP_TABS1`, `NL`, `nlHTML`, `nlDraw`, akcie nl-set/nl-step/nl-reset).
-- Adventný kalendár: zatiaľ len návrh (nenasadený).
+- Odmeny za level: najviac 3 na level (`spreadLvls()` v 04-levely posúva prebytok na ďalší level, `it.lvl0` + `p.lvMig` = kto už mal pôvodný level, o nič nepríde); okno darčeka `showRewardOverlay` zobrazí max 3, `.over .box` sa zmestí aj na iPhone SE.
+- Adventný kalendár: zatiaľ len návrh (nenasadený), https://claude.ai/artifact/MHiMhrvs9GHu1qT7msTNZx
 
 ## Otvorené
 - Plus: Stripe účet + Payment Links do `PLUS_CFG`, spustiť SQL, nasadiť stripe-webhook + tajomstvá; potom AI cez server, týždenný e-mail (Resend, treba doménu), čítanka s hodnotením, kolekcia.

@@ -23,6 +23,7 @@ function migrate(p) {
   if (!has('bg', p.av.bg)) p.av.bg = d.bg; if (!has('bgp', p.av.bgp)) p.av.bgp = 'bodky';
   p.av.col = Object.assign({}, d.col, p.av.col || {});
   p.log = p.log || []; p.days = p.days || {}; p.best = p.best || {}; p.mode = p.mode || { mat: 'quiz', sjl: 'quiz' };
+  if (p.lvMig == null) { try { p.lvMig = levelInfo(p.xp || 0).L; } catch (e) { p.lvMig = 0; } }
   p.dailyReward = p.dailyReward || { last: '', day: 0 }; p.streak = Object.assign({ last: '', count: 0, best: 0 }, p.streak || {});
   p.stats = Object.assign({ correct: 0, answered: 0, quizzes: 0, perfect: 0, cards: 0, pexeso: 0, bestTime: 0, style: 0, daily: 0, games: 0, match: 0, chat: 0, tasks: 0 }, p.stats || {});
   p.topics = p.topics || {}; p.badges = p.badges || [];
