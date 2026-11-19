@@ -11,7 +11,7 @@ function spreadLvls() {
   for (const it of items) { const gs = it.g ? [it.g] : ['d', 'c']; let L = it.lvl; while (gs.some(g => (cnt[g][L] || 0) >= 3)) L++; it.lvl0 = it.lvl; it.lvl = L; gs.forEach(g => cnt[g][L] = (cnt[g][L] || 0) + 1); }
 }
 const unlocked = (it, p) => (spreadLvls(), !it.lvl || levelInfo(p.xp).L >= it.lvl || (it.lvl0 && (p.lvMig || 0) >= it.lvl0)) && (!it.streak || (p.streak.best || 0) >= it.streak) && (!it.price || (p.owned || []).includes(it.sid)) && (!it.lb || (p.owned || []).includes('lb:' + it.id)) && (!it.chest || (p.owned || []).includes(it.sid));
-const lockLabel = it => (spreadLvls(), 0) || it.chest ? '🎁 Len zo záhadnej truhly' : it.lb ? `Rebríček: ${it.lb}. miesto` : it.price ? `Obchod 🪙 ${it.price}` : it.lvl ? `Level ${it.lvl}` : `Séria ${it.streak} dní`;
+const lockLabel = it => (spreadLvls(), 0) || it.lb ? `Rebríček: ${it.lb}. miesto` : it.price ? `Obchod 🪙 ${it.price}` : it.lvl ? `Level ${it.lvl}` : `Séria ${it.streak} dní`;
 const REW_CATS = ['hair', 'top', 'bottom', 'shoes', 'acc', 'eyes', 'mouth'];
 function allRewardItems(g) {
   spreadLvls();

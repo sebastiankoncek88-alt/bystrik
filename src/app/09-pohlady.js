@@ -50,10 +50,10 @@ VIEWS.shop = () => {
   return `${topbar('back-me')}<main class="view sh2">${wsTabs('s')}
   ${dealHero(p, prem[0])}
   ${learnedToday(p) ? '' : (shopLockSay(), `<button class="sh2lock press" data-a="go-start"><span>📚</span><b>Kupovať môžeš po dnešnom učení</b><em>Učiť sa ▶</em></button>`)}
-  <div class="sh2bar"><div class="sh2wallet"><span class="sh2coin">${COIN}</span><b>${p.coins || 0}</b><small>slniečok</small></div><div class="sh2wallet k"><span>🔑</span><b>${keys}</b><small>${plural(keys, 'kľúč', 'kľúče', 'kľúčov')}</small></div><div class="sh2timer"><small>Nová ponuka o</small><b id="shopcd2">${shopHMS()}</b></div></div>
+  <div class="sh2bar"><div class="sh2wallet"><span class="sh2coin">${COIN}</span><b>${p.coins || 0}</b><small>slniečok</small></div><div class="sh2timer"><small>Nová ponuka o</small><b id="shopcd2">${shopHMS()}</b></div></div>
   <div class="sh2cats">${SHOPCATS.map(([k, n]) => `<button class="${SHOPCAT === k ? 'on' : ''}" data-a="shopcat" data-c="${k}">${n}</button>`).join('')}</div>
   <div class="sh2grid">${items.length ? items.map(card).join('') : '<p class="b muted">V tejto kategórii dnes nič nie je. Pozri sa zajtra!</p>'}</div>
-  <button class="sh2chest press ${keys ? 'has' : ''}" data-a="mystery" aria-label="Truhla odmien"><span class="sh2box" aria-hidden="true"><i class="lid"></i><i class="body"></i><i class="lock">${keys ? '🔑' : '?'}</i></span><span class="grow"><b>Truhla odmien</b><small>${keys ? `Máš ${keys} ${plural(keys, 'kľúč', 'kľúče', 'kľúčov')} – otvor ju!` : 'Kľúč dostaneš za celú Dnešnú cestu alebo test na 2★. Za peniaze sa otvoriť nedá.'}</small><span class="sh2odds">${Object.values(RARE).map(r => `<i style="--rc:${r.c}">${r.p} %</i>`).join('')}</span></span><em>${keys ? 'Otvoriť' : '🔒'}</em></button>
+
   <p class="sh2tip">👀 Ťukni na vec a vyskúšaš si ju v kabínke ešte pred kúpou.</p>${sheet}</main>${nav('shop')}`;
 };
 

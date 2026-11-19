@@ -388,7 +388,9 @@ function themeBg(id, dark) { const t = themeOf(id); const c = dark && !t.dark ? 
 function roomHTML(r, sel = null, dark = false) { const t = themeOf(r.theme), fc = shade(t.c[Math.min(1, t.c.length - 1)], dark && !t.dark ? -.7 : t.dark ? -.25 : -.1); return `<div class="roombg" style="background:${themeBg(r.theme, dark)};--floor:${fc}"><div class="pat pat-${r.pat}${t.dark ? ' onDark' : ''}"></div><div class="rscene int-${r.int || 'izba'}" aria-hidden="true"><i class="rlight"></i><i class="rwin"></i><i class="rfloor"></i><i class="rrug"></i><i class="rdust"></i></div>${r.stickers.map((s, i) => `<span class="stk ${sel === i ? 'sel' : ''}" data-i="${i}" style="left:${s.x}%;top:${s.y}%;--s:${s.s};--r:${s.r}deg">${s.e}</span>`).join('')}</div>`; }
 const petName = av => av.petName || itemOf('pet', av.pet).n;
 
+/* truhla odmien je zrušená: jej legendárne veci sa dajú kúpiť v obchode */
+for (const list of Object.values(CATALOG)) for (const it of list) if (it.chest) { it.price = it.price || 900; it.legend = 1; delete it.chest; }
 for (const [cat, list] of Object.entries(CATALOG)) for (const it of list) if (it.price || it.chest) it.sid = cat + ':' + it.id;
 /* rarity: bežná 90 %, vzácna 7 %, epická 2 %, legendárna 1 % (záhadná truhla) */
 const RARE = { common: { n: 'Bežná', c: '#7FBF7F', p: 90 }, rare: { n: 'Vzácna', c: '#4C9BFF', p: 7 }, epic: { n: 'Epická', c: '#A66BFF', p: 2 }, leg: { n: 'Legendárna', c: '#FFB300', p: 1 } };
-const rarity = it => it.chest || it.price >= 380 ? 'leg' : it.price >= 200 ? 'epic' : it.price >= 120 ? 'rare' : 'common';
+const rarity = it => it.legend || it.price >= 380 ? 'leg' : it.price >= 200 ? 'epic' : it.price >= 120 ? 'rare' : 'common';

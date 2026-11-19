@@ -33,7 +33,7 @@ Rodič (PIN): Prehľad, Zadať úlohu (+téma zo školy), Čítanka, Nastavenia 
 Písanie priateľom je predvolene vypnuté (`DATA.settings.msgOk`). Úsporný režim `settings.lite` (trieda `html.lite`, bez obrysu postavičky a ťažkých animácií).
 - Rebríček: predvolene zapnutý, rodič ho môže vypnúť (`settings.lb`; pri vypnutí sa riadky dieťaťa zmažú). Používateľ nechce, aby rodič musel všetko povoľovať – nové veci dávať predvolene zapnuté s možnosťou vypnúť. Denné kolo (`p.dy`, riadky `pid#d` s week=dátum), záložky Dnes/Týždeň/Séria, stupne víťazov `podium()`, 23 miest; kto 5 dní (`LB_IDLE`) neaktívny, nezobrazí sa; denné odmeny `LB_PRIZE` (`lbAwards`).
 - Bystríkov kútik (`bearCorner`): hlad/energia/radosť, priateľstvo `b.love`, pohladkať/tanec; spánok = západ slnka → noc a celá appka v nočnom režime (`nightOn()`, `applyTheme(true)` cez View Transition); večer/ročné obdobia v okne.
-- Obchod: nakupovať až po dnešnom učení (`learnedToday`). Truhla odmien sa otvára kľúčom 🔑 (`p.keys`, max 3, `giveKey`: denná cesta, test ≥2★), NIE za slniečka ani peniaze (loot box pre deti) – `mysteryRoll`, `openMystery`, ruleta `spinReel`, 90/7/2/1 %; po kúpe/obliekaní `celebrateWear` (3D otočenie so zadnou stranou).
+- Obchod: nakupovať až po dnešnom učení (`learnedToday`). Truhla odmien a kľúče sú ZRUŠENÉ (používateľ nechce lotériu pre deti): namiesto kľúčov slniečka (odmena za tému 30, test 20, denná odmena 3. deň 20); bývalé truhlicové veci sú v obchode za 900 (`it.legend`). Funkcie `mysteryRoll/openMystery/spinReel` ostali v kóde nepoužité. Po kúpe/obliekaní `celebrateWear` (3D otočenie so zadnou stranou).
 - Efekty: `fxComet` (5/10 v rade), `openChest` (truhlica za úlohy), `fireworks()` raz za deň po celej Dnešnej ceste (`pathFireworks`, `p.fwDay`), hviezdy pri leveli; tutoriál `TOUR` má ťukacie kroky (`tap:1`), sprievodca zapnutím chatu `CHG`.
 
 - Upozornenia pre dieťa: `hint(msg)` = toast s Bystríkom + čítanie nahlas (`say`) – prváci nevedia čítať; obyčajný `toast` len pre rodiča/potvrdenia.
@@ -75,6 +75,9 @@ Písanie priateľom je predvolene vypnuté (`DATA.settings.msgOk`). Úsporný re
 - Rebríček: na stupňoch víťazov len hráči s výsledkom > 0, ostatní (aj s 0) sú v zozname pod nimi (`top`/`others` vo `VIEWS.board`).
 - Zásady súkromia (verzia 19. 11. 2026) spomínajú nahrávky čítania v súkromnom úložisku rodiča.
 - Test `tests/smoke.js` prechádza aj všetky predmety × ročníky, domček a výber učiva/hier pre 1.–4. ročník. Kontrola učiva: každá téma vygeneruje otázky so správnou odpoveďou práve raz medzi možnosťami (skript vo scratchpade, val.js).
+- Vlastné pozadie je zrušené: v šatníku nie je kategória Pozadie, v nastaveniach farba pozadia, úprava profilu končí účesom (krok 5 z 5, `ob-to-room` = uloženie); `DATA.settings.bgc` sa vynuluje.
+- V artefakte je na Dnes karta `webCard()` s odkazom na plnú verziu na webe (`WEB_URL`). Web je hlavná verzia.
+- Plus (kým nie sú platby, `plusFree()` → všetko zadarmo): podrobný prehľad pre rodiča (`T_detail`, inak `plusLockCard`), nahrávky do cloudu (`recUpload` len s `hasPlus()`), Moje poznámky, pracovné listy, až 5 detí. Nahrávky sa mažú po 60 dňoch (`recCleanup`, `REC_KEEP_DAYS`).
 - Adventný kalendár: zatiaľ len návrh (nenasadený), https://claude.ai/artifact/MHiMhrvs9GHu1qT7msTNZx
 
 ## Otvorené

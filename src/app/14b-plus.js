@@ -15,7 +15,7 @@ async function plusLoad() {
 function plusLink(k) { const u = PLUS_CFG[k]; if (!u) return ''; const q = new URLSearchParams(); if (AUTH && AUTH.uid) q.set('client_reference_id', AUTH.uid); if (AUTH && AUTH.email) q.set('prefilled_email', AUTH.email); return u + (u.includes('?') ? '&' : '?') + q.toString(); }
 const PLUS_FEAT = [
   ['🧸', 'AI Bystrík bez kľúča', 'Vysvetlí chybu, odpovie na otázku a dá sa s ním rozprávať hlasom.', 'soon'],
-  ['📧', 'Týždenný e-mail a podrobný prehľad', 'Slabé témy, čas učenia a odporúčanie, čo precvičiť.', 'soon'],
+  ['📧', 'Týždenný e-mail', 'Každý týždeň súhrn: čo dieťa robilo a čo precvičiť.', 'soon'],
   ['🖨️', 'Pracovné listy na tlač', 'Vygenerované zo slabých tém dieťaťa, s kľúčom správnych odpovedí.', 'ws'],
   ['📖', 'Čítanka s hodnotením', 'Bystrík vypočuje čítanie a ukáže plynulosť a chyby.', 'soon'],
   ['👨‍👩‍👧‍👦', `Až ${PLUS_KIDS} detí v jednom účte`, `Zadarmo ${FREE_KIDS} deti. Synchronizácia na všetkých zariadeniach rodiny.`, 'kids'],
@@ -23,7 +23,9 @@ const PLUS_FEAT = [
   ['🎮', 'Nové hry v lunaparku', 'Raketa, Rybárik, Pekáreň a ďalšie hry s učivom každý mesiac.', 'soon'],
   ['📚', 'Viac učiva', 'Logika, angličtina navyše a príprava na previerky pre 1.–4. ročník.', 'soon'],
   ['🏝️', 'Nové svety izby a doplnky pre Bystríka', 'Vesmír, more, hrad, čiapky a pelech pre medvedíka.', 'soon'],
-  ['🎧', 'Nahrávky čítania pre rodiča', 'Vypočujte si, ako dieťa číta, a sledujte pokrok.', 'soon'],
+  ['🎧', 'Nahrávky čítania na každom zariadení', 'Dieťa pošle nahrávku a vy si ju vypočujete aj na svojom telefóne.', 'rec'],
+  ['📊', 'Podrobný prehľad', 'Grafy, silné a slabé témy, pokrok v predmetoch a história učenia.', 'stats'],
+  ['📸', 'Moje poznámky', 'Dieťa odfotí zošit a Bystrík z neho spraví kvíz.', 'notes'],
   ['⏰', 'Rozvrh a pripomienky', 'Nastavte čas na učenie, Bystrík sa sám pripomenie.', 'soon'],
   ['🏫', 'Licencia pre triedu', 'Pre učiteľov: celá trieda a export výsledkov žiakov.', 'soon']
 ];
@@ -41,6 +43,8 @@ function plusCard() {
 }
 /* otvorí Plus kartu v rodičovských nastaveniach (len z rodičovskej časti) */
 function plusOpen() { if (UI.view !== 'parent') return; PTAB = 'set'; PSET_WANT = 'Bystrík Plus'; render(null); scrollTo({ top: 0 }); }
+function plusLockCard(what, desc) { return `<section class="card pcard plock"><span class="plk">⭐</span><div class="grow"><b>${what}</b><small>${desc}</small></div><button class="btn small primary" data-a="plus-need" data-w="${what}">Bystrík Plus</button></section>`; }
+ACT['plus-need'] = d => plusNeed(d.w || 'Táto funkcia');
 function plusNeed(what) { toast(`⭐ ${what} je v Bystrík Plus`); plusOpen(); }
 
 /* ---- pracovné listy na tlač ---- */
