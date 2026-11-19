@@ -918,7 +918,7 @@ function unlockAnim(k) {
 }
 const gameLocked = (p, k) => !!(GAMES[k] && GAMES[k].cost) && !(p.gown || []).includes(k);
 /* Zoraď čísla */
-function orderNext() { const g = GM.g; const n = g <= 1 ? 6 : g === 2 ? 8 : 9; const max = g <= 1 ? 20 : g === 2 ? 100 : g === 3 ? 1000 : 10000; const st = new Set(); while (st.size < n) st.add(R(g >= 3 ? 10 : 1, max)); const v = [...st]; GM.o = { vals: shuffle(v.slice()), sorted: v.slice().sort((a, b) => a - b), pos: 0 }; }
+function orderNext() { const g = GM.g; const sm = schoolMonth(); const n = g <= 1 ? 6 : g === 2 ? 8 : 9; const max = g <= 1 ? (sm < 4 ? 10 : 20) : g === 2 ? (sm < 2 ? 20 : 100) : g === 3 ? 1000 : 10000; const st = new Set(); while (st.size < n) st.add(R(g >= 3 ? 10 : 1, max)); const v = [...st]; GM.o = { vals: shuffle(v.slice()), sorted: v.slice().sort((a, b) => a - b), pos: 0 }; }
 function orderHTML() { const o = GM.o; return `<div class="target">Ťukaj od <b>najmenšieho</b> po <b>najväčšie</b></div><div class="ordgrid" id="ordgrid">${o.vals.map(v => `<button class="ordt press" data-a="ord" data-v="${v}">${fmt(v)}</button>`).join('')}</div><p class="deckinfo" id="ordinfo">Začni najmenším číslom.</p>`; }
 function orderOut() { if (!GM || GM.ended || GM.busy) return; GM.busy = true; gHit(false, $('#ordgrid')); const e = $('#ordinfo'); if (e) e.textContent = '⏰ Čas vypršal! Správne: ' + GM.o.sorted.map(x => fmt(x)).join(' < '); setTimeout(() => { if (!GM || GM.ended) return; GM.busy = false; orderNext(); const b = $('#ordwrap'); if (b) b.innerHTML = orderHTML(); qTimer(orderOut, 3); }, 1600); }
 /* Pamätaj si */

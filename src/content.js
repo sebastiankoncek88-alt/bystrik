@@ -244,7 +244,7 @@ function makeStatement(g) {
   if (t < .6) {
     let a, b, op, r;
     if (g === 1) { a = R(0, 10); b = R(0, 10 - a); op = Math.random() < .5 ? '+' : '−'; if (op === '−') { const x = a + b; r = x - b; a = x; } else r = a + b; }
-    else if (g === 2) { if (Math.random() < .5) { a = R(2, 5); b = R(1, 10); op = '·'; r = a * b; } else { a = R(10, 60); b = R(1, 39); op = '+'; r = a + b; } }
+    else if (g === 2) { const sm = typeof schoolMonth === 'function' ? schoolMonth() : 9; if (sm < 3 || Math.random() < .5) { a = R(4, 9); b = R(11 - a, 9); op = Math.random() < .5 ? '+' : '−'; if (op === '−') { const x = a + b; r = x - b; a = x; } else r = a + b; } else { a = R(1, 8) * 10 + R(0, 4); b = R(1, 9 - Math.floor(a / 10)) * 10; op = Math.random() < .5 ? '+' : '−'; if (op === '−') { const x = a + b; r = a; a = x; } else r = a + b; } }
     else if (g === 3) { a = R(2, 10); b = R(2, 10); op = Math.random() < .6 ? '·' : ':'; if (op === ':') { r = b; a = a * b; b = a / r; } else r = a * b; }
     else { a = R(12, 99); b = R(2, 9); op = '·'; r = a * b; }
     const truth = Math.random() < .5; const shown = truth ? r : r + pick([-2, -1, 1, 2, 10]);
@@ -255,7 +255,7 @@ function makeStatement(g) {
   return { text: `Správne sa píše: „${shown}“`, truth, ex: `Správne: ${w}` };
 }
 /* ===== Minihry – dáta ===== */
-function balloonTarget(g) { const max = [0, 20, 100, 100, 1000][g]; return g <= 2 ? R(6, g === 1 ? 18 : 60) : R(12, g === 3 ? 90 : 400); }
+function balloonTarget(g) { const sm = typeof schoolMonth === 'function' ? schoolMonth() : 9; return g === 1 ? R(4, sm < 4 ? 10 : 18) : g === 2 ? R(8, sm < 3 ? 20 : 60) : R(12, g === 3 ? 90 : 400); }
 function balloonExpr(g, target, good) {
   const t = good ? target : target + pick([-3, -2, -1, 1, 2, 3, 10]);
   if (t < 0) return balloonExpr(g, target, true);
@@ -264,7 +264,7 @@ function balloonExpr(g, target, good) {
   const b = R(1, Math.max(2, Math.floor(t / 2) + 5)); return { text: `${t + b} − ${b}`, good: t === target };
 }
 function rainSetup(g) {
-  if (g === 1) return { title: 'Ťukaj len na samohlásky', hint: 'a, e, i, o, u, y', item: () => { const v = Math.random() < .45; return { text: v ? pick(['A', 'E', 'I', 'O', 'U', 'Y', 'Á', 'Í']) : pick(['B', 'K', 'M', 'S', 'T', 'L', 'P', 'R', 'V', 'Z', 'D', 'N']), good: v }; } };
+  if (g === 1 || (g === 2 && (typeof schoolMonth === 'function' ? schoolMonth() : 9) < 4)) return { title: 'Ťukaj len na samohlásky', hint: 'a, e, i, o, u, y', item: () => { const v = Math.random() < .45; return { text: v ? pick(['A', 'E', 'I', 'O', 'U', 'Y', 'Á', 'Í']) : pick(['B', 'K', 'M', 'S', 'T', 'L', 'P', 'R', 'V', 'Z', 'D', 'N']), good: v }; } };
   const src = g === 2 ? SJL.find(t => t.id === 's2-yi').items.split(',').map(x => x.split('|')) : allVyb();
   return { title: 'Ťukaj len na slová napísané správne', hint: g === 2 ? 'Po tvrdých y, po mäkkých i' : 'Pozor na vybrané slová', item: () => { const [, , w] = pick(src); const v = Math.random() < .5; return { text: v ? w : pick(spellVariants(w).filter(x => x !== w)), good: v }; } };
 }
