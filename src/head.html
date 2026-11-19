@@ -16,14 +16,14 @@
   --r:24px; --nav-h:70px; --peb:26px 22px 28px 20px / 24px 28px 22px 26px;
 }
 @media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
-  --bg:#2B1B30; --g1:#2B1B30; --g2:#2F1D36; --g3:#33203A; --b1:#5A2E5E; --b2:#26457A; --b3:#1F5048; --b4:#5A4A22; --b5:#3E2F72;
-  --paper:#3B2744; --paper2:#321F3A; --ink:#FBF1E4; --muted:#C9B5CB; --line:#553C5F; --edge:#170C1B; --drop:rgba(0,0,0,.42); --topoc:#000; --topoo:.4;
+  --bg:#1C1640; --g1:#1C1640; --g2:#211A4A; --g3:#261E55; --b1:#4A2E6E; --b2:#26457A; --b3:#1F5048; --b4:#5A4A22; --b5:#3E2F72;
+  --paper:#2C2458; --paper2:#251E4C; --ink:#F3EEFF; --muted:#B9AEDB; --line:#3B3270; --edge:#3B3270; --drop:rgba(0,0,0,.35); --topoc:#000; --topoo:.12;
   --accent:#FF8A55; --accent-ink:#2B0F1C; --accent-d:#C9561F; --sun-d:#B98400; --sun:#FFC857; --sun-soft:#4E3F1E;
   --good:#45D893; --good-soft:#1A4637; --bad:#FF7086; --bad-soft:#4E2032;
   --c-mat:#7EA6FF; --c-mat-soft:#2A3C78; --c-sjl:#FF7FA6; --c-sjl-soft:#5A2848; --c-prv:#52D79A; --c-prv-soft:#1D4A3A; --lilac:#B9A0FF; --lilac-soft:#3A2F6E; --mint-soft:#1D4A40; --peach-soft:#4E3028; color-scheme:dark}}
 :root[data-theme="dark"]{
-  --bg:#2B1B30; --g1:#2B1B30; --g2:#2F1D36; --g3:#33203A; --b1:#5A2E5E; --b2:#26457A; --b3:#1F5048; --b4:#5A4A22; --b5:#3E2F72;
-  --paper:#3B2744; --paper2:#321F3A; --ink:#FBF1E4; --muted:#C9B5CB; --line:#553C5F; --edge:#170C1B; --drop:rgba(0,0,0,.42); --topoc:#000; --topoo:.4;
+  --bg:#1C1640; --g1:#1C1640; --g2:#211A4A; --g3:#261E55; --b1:#4A2E6E; --b2:#26457A; --b3:#1F5048; --b4:#5A4A22; --b5:#3E2F72;
+  --paper:#2C2458; --paper2:#251E4C; --ink:#F3EEFF; --muted:#B9AEDB; --line:#3B3270; --edge:#3B3270; --drop:rgba(0,0,0,.35); --topoc:#000; --topoo:.12;
   --accent:#FF8A55; --accent-ink:#2B0F1C; --accent-d:#C9561F; --sun-d:#B98400; --sun:#FFC857; --sun-soft:#4E3F1E;
   --good:#45D893; --good-soft:#1A4637; --bad:#FF7086; --bad-soft:#4E2032;
   --c-mat:#7EA6FF; --c-mat-soft:#2A3C78; --c-sjl:#FF7FA6; --c-sjl-soft:#5A2848; --c-prv:#52D79A; --c-prv-soft:#1D4A3A; --lilac:#B9A0FF; --lilac-soft:#3A2F6E; --mint-soft:#1D4A40; --peach-soft:#4E3028; color-scheme:dark}
@@ -75,8 +75,8 @@ p{margin:0}
 .sec h2{font-size:1.35rem}
 
 :root.fdark{
-  --bg:#2B1B30; --g1:#2B1B30; --g2:#2F1D36; --g3:#33203A; --b1:#5A2E5E; --b2:#26457A; --b3:#1F5048; --b4:#5A4A22; --b5:#3E2F72;
-  --paper:#3B2744; --paper2:#321F3A; --ink:#FBF1E4; --muted:#C9B5CB; --line:#553C5F; --edge:#170C1B; --drop:rgba(0,0,0,.42); --topoc:#000; --topoo:.4;
+  --bg:#1C1640; --g1:#1C1640; --g2:#211A4A; --g3:#261E55; --b1:#4A2E6E; --b2:#26457A; --b3:#1F5048; --b4:#5A4A22; --b5:#3E2F72;
+  --paper:#2C2458; --paper2:#251E4C; --ink:#F3EEFF; --muted:#B9AEDB; --line:#3B3270; --edge:#3B3270; --drop:rgba(0,0,0,.35); --topoc:#000; --topoo:.12;
   --accent:#FF8A55; --accent-ink:#2B0F1C; --accent-d:#C9561F; --sun-d:#B98400; --sun:#FFC857; --sun-soft:#4E3F1E;
   --good:#45D893; --good-soft:#1A4637; --bad:#FF7086; --bad-soft:#4E2032;
   --c-mat:#7EA6FF; --c-mat-soft:#2A3C78; --c-sjl:#FF7FA6; --c-sjl-soft:#5A2848; --c-prv:#52D79A; --c-prv-soft:#1D4A3A; --lilac:#B9A0FF; --lilac-soft:#3A2F6E; --mint-soft:#1D4A40; --peach-soft:#4E3028; color-scheme:dark}
@@ -1880,6 +1880,46 @@ input,select,textarea{border-radius:16px}
 @keyframes skinShine{0%,70%{left:-60%}100%{left:130%}}
 html.lite .btn.primary::after,html.lite .stage::after,html.lite .lunahead .lights i,html.lite .lunahead .wheel,html.lite .gcard .gi,html.lite .shelf .row button,html.lite .stage .fig{animation:none!important}
 @media (prefers-reduced-motion: reduce){.view>*,.btn.primary::after,.stage .fig,.gcard .gi,.shelf .row button{animation:none!important}}
+
+/* Medový úľ */
+.hivetog{display:flex;align-self:flex-start;background:var(--paper2);border-radius:999px;padding:3px;gap:2px}
+.hivetog button{border:0;background:none;font:800 .9rem var(--f-display);color:var(--muted);padding:6px 14px;border-radius:999px;cursor:pointer;transition:background .2s,color .2s}
+.hivetog button.on{background:var(--paper);color:var(--ink);box-shadow:0 2px 6px color-mix(in srgb,var(--ink) 15%,transparent)}
+.hive{position:relative;padding:14px 0 10px;border-radius:28px;background:radial-gradient(circle at 50% 0,color-mix(in srgb,var(--sun) 22%,transparent),transparent 70%)}
+.hrow{display:flex;justify-content:center;gap:5px}
+.hrow+.hrow{margin-top:-20px}
+.hcell{--w:80px;width:var(--w);height:calc(var(--w)*1.155);flex:none;border:0;padding:0;cursor:pointer;background:#E9B54A;clip-path:polygon(50% 0,100% 25%,100% 75%,50% 100%,0 75%,0 25%);position:relative;animation:hivePop .5s backwards cubic-bezier(.3,1.6,.5,1);filter:drop-shadow(0 3px 0 rgba(150,90,0,.25))}
+.hcell .hin{position:absolute;inset:4px;clip-path:polygon(50% 0,100% 25%,100% 75%,50% 100%,0 75%,0 25%);background:linear-gradient(180deg,#FFF6DC,#FCE7B0);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;padding:10px 6px 8px;overflow:hidden}
+:root.fdark .hcell .hin,:root[data-theme="dark"] .hcell .hin{background:linear-gradient(180deg,#3E3366,#33295C)}
+.hcell .honey{position:absolute;left:-10%;right:-10%;bottom:0;height:var(--h);background:linear-gradient(180deg,#FFD24D,#F29E00);transition:height .8s cubic-bezier(.3,1.4,.5,1)}
+.hcell .honey::before{content:"";position:absolute;left:0;right:0;top:-6px;height:12px;background:radial-gradient(circle at 10px 12px,#FFD24D 9px,transparent 10px) 0 0/20px 12px repeat-x;animation:hiveWave 2.4s linear infinite}
+@keyframes hiveWave{to{background-position:20px 0}}
+.hcell .hi,.hcell .hn,.hcell .hs{position:relative}
+.hcell .hi{font-size:1.45rem;line-height:1}
+.hcell .hi img{width:28px;height:28px}
+.hcell .hn{font:800 .62rem/1.1 var(--f-body);color:#5A3A00;text-align:center;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;max-width:64px}
+:root.fdark .hcell .hn,:root[data-theme="dark"] .hcell .hn{color:#F3EEFF}
+.hcell .hs{font-size:.6rem;color:#C98200;letter-spacing:1px}
+.hcell.full{background:#F29E00}
+.hcell.full .hn{color:#5A3A00}.hcell.full .hs{color:#fff}
+.hcell.full::after{content:"";position:absolute;inset:0;background:linear-gradient(115deg,transparent 30%,rgba(255,255,255,.55) 45%,transparent 60%);background-size:250% 100%;animation:hiveShine 3s ease-in-out infinite}
+@keyframes hiveShine{0%,60%{background-position:150% 0}100%{background-position:-60% 0}}
+.hcell.na{opacity:.45}
+.hcell.day{background:#FF7A3D}
+.hcell .hday{position:absolute;top:10px;right:14px;font:800 .6rem var(--f-display);background:#FF7A3D;color:#fff;border-radius:999px;padding:0 4px}
+@keyframes hivePop{0%{opacity:0;transform:scale(.3) rotate(-20deg)}100%{opacity:1;transform:none}}
+.hive .bee{position:absolute;font-size:1.2rem;z-index:2;pointer-events:none}
+.hive .b1{top:-4px;left:6%;animation:beeA 9s ease-in-out infinite}
+.hive .b2{bottom:0;right:4%;animation:beeB 11s ease-in-out infinite}
+@keyframes beeA{0%,100%{transform:translate(0,0) scaleX(1)}25%{transform:translate(120px,30px) scaleX(1)}50%{transform:translate(260px,-6px) scaleX(-1)}75%{transform:translate(120px,50px) scaleX(-1)}}
+@keyframes beeB{0%,100%{transform:translate(0,0) scaleX(-1)}30%{transform:translate(-160px,-40px) scaleX(-1)}60%{transform:translate(-260px,-10px) scaleX(1)}80%{transform:translate(-100px,-70px) scaleX(1)}}
+.hivebear{display:flex;align-items:center;gap:12px;padding:10px 14px;background:linear-gradient(120deg,#FFF2C7,var(--paper) 70%)}
+:root.fdark .hivebear,:root[data-theme="dark"] .hivebear{background:linear-gradient(120deg,#4A3A1E,var(--paper) 70%)}
+.hivebear .hbb{flex:none;width:72px;height:72px;animation:skinBob 2.8s ease-in-out infinite}.hivebear .hbb svg{width:100%;height:100%}
+.hivebear .grow{flex:1;min-width:0;display:flex;flex-direction:column;gap:4px}.hivebear b{font-family:var(--f-display);font-size:1.1rem}.hivebear small{font-weight:700;color:var(--muted);font-size:.82rem;line-height:1.3}
+.hivebear .pbar{height:10px;border-radius:999px;background:color-mix(in srgb,var(--sun) 25%,transparent);overflow:hidden}.hivebear .pbar i{display:block;height:100%;border-radius:999px;background:linear-gradient(90deg,#FFD24D,#F29E00)}
+html.lite .hcell .honey::before,html.lite .hcell.full::after,html.lite .hive .bee,html.lite .hivebear .hbb{animation:none!important}
+@media (min-width:600px){.hcell{--w:96px}.hcell .hn{font-size:.72rem;max-width:78px}}
 </style>
 <svg width="0" height="0" style="position:absolute\" aria-hidden="true"><defs><radialGradient id="bfur" cx="34%" cy="24%" r="92%"><stop offset="0" stop-color="#E9B67C"/><stop offset=".38" stop-color="#C98949"/><stop offset=".78" stop-color="#975924"/><stop offset="1" stop-color="#673513"/></radialGradient><radialGradient id="bfur2" cx="36%" cy="26%" r="88%"><stop offset="0" stop-color="#E0A465"/><stop offset=".6" stop-color="#A86A33"/><stop offset="1" stop-color="#6A3A18"/></radialGradient><linearGradient id="b3shade" x1="0" y1="0" x2="0" y2="1"><stop offset=".45" stop-color="#3A1E08" stop-opacity="0"/><stop offset="1" stop-color="#3A1E08" stop-opacity=".38"/></linearGradient><radialGradient id="b3gloss" cx="33%" cy="17%" r="30%"><stop offset="0" stop-color="#fff" stop-opacity=".42"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></radialGradient><radialGradient id="b3rim" cx="50%" cy="45%" r="55%"><stop offset=".82" stop-color="#FFD9A8" stop-opacity="0"/><stop offset="1" stop-color="#FFD9A8" stop-opacity=".28"/></radialGradient><radialGradient id="bbelly" cx="50%" cy="28%" r="80%"><stop offset="0" stop-color="#FFF2DC"/><stop offset="1" stop-color="#D9AE80"/></radialGradient><radialGradient id="beye" cx="40%" cy="30%" r="80%"><stop offset="0" stop-color="#6B4028"/><stop offset=".55" stop-color="#2E1A14"/><stop offset="1" stop-color="#1A0E0A"/></radialGradient><radialGradient id="bear" cx="50%" cy="40%" r="70%"><stop offset="0" stop-color="#F7D6B4"/><stop offset="1" stop-color="#E3AE86"/></radialGradient><radialGradient id="bsnout" cx="42%" cy="30%" r="78%"><stop offset="0" stop-color="#FFF6E6"/><stop offset=".6" stop-color="#F1D4AB"/><stop offset="1" stop-color="#D2A878"/></radialGradient><radialGradient id="bcheek" cx="50%" cy="50%" r="50%"><stop offset="0" stop-color="#FF7F9A" stop-opacity=".8"/><stop offset="1" stop-color="#FF7F9A" stop-opacity="0"/></radialGradient><linearGradient id="bbow" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#4FD3A5"/><stop offset="1" stop-color="#1F9D78"/></linearGradient><radialGradient id="cg" cx="35%" cy="30%" r="75%"><stop offset="0" stop-color="#FFF4B0"/><stop offset=".45" stop-color="#FFD23F"/><stop offset="1" stop-color="#E09A00"/></radialGradient><linearGradient id="cg2" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#FFE77A"/><stop offset="1" stop-color="#C77F00"/></linearGradient></defs><symbol id="coin" viewBox="0 0 40 40"><circle cx="20" cy="20" r="19" fill="url(#cg2)"/><circle cx="20" cy="20" r="15.5" fill="url(#cg)" stroke="#B87400" stroke-width="1.2"/><g stroke="#C98200" stroke-width="2" stroke-linecap="round"><path d="M20 7.5v3.5M20 29v3.5M7.5 20h3.5M29 20h3.5M11.2 11.2l2.4 2.4M26.4 26.4l2.4 2.4M28.8 11.2l-2.4 2.4M13.6 26.4l-2.4 2.4"/></g><circle cx="20" cy="20" r="5.5" fill="#FFB800" stroke="#C98200" stroke-width="1.5"/><path d="M12 12.5a11 11 0 0 1 9-4.5" stroke="#FFFBE0" stroke-width="2" fill="none" stroke-linecap="round" opacity=".9"/></symbol></svg>
 <div class="blobs" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div>

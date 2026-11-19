@@ -49,6 +49,10 @@ Písanie priateľom je predvolene vypnuté (`DATA.settings.msgOk`). Úsporný re
 
 - Bystrík Plus (`src/app/14b-plus.js`): `PLUS_CFG` = Stripe Payment Links (prázdne → „čoskoro“), `isPlus()`, `plusLoad()` číta tabuľku `plus` (SQL `supabase/2026-11-plus.sql`), zapisuje ju len Edge Function `supabase/functions/stripe-webhook` (Stripe posiela `client_reference_id` = AUTH.uid). Ceny 3,99 €/mes, 29,99 €/rok, 7 dní zadarmo, trieda 49 €/rok. Ponuka len v rodičovskom účte (Nastavenia → Bystrík Plus), dieťaťu nikdy. Hotové výhody: pracovné listy na tlač (`wsPrint`, Prehľad), až 5 detí (zadarmo 2). Čoskoro: AI bez kľúča, týždenný e-mail, čítanka s hodnotením, mesačná kolekcia, licencia pre triedu.
 
+- Vzhľad 2.0 („kamienkový“, blok `Bystrík 2.0` na konci CSS v head.html): krémová #FFF6E8, oranžová akcia #FF7A3D (`--accent-d` tieň), Baloo 2 + Nunito, karty bez obrysov s mäkkým tieňom, `--peb` tvar tlačidiel; noc = tmavomodrá #1C1640. Hry = „Bystríkov lunapark“ (`.lunahead`), Ja = `meWeek` + polica úspechov `meShelf` (ACH). Zvuky navyše: nav, back, purr, yum, chest, mic (`TAPSND` v 14-akcie).
+- Učenie v predmete: Medový úľ (`hiveHTML`, `hiveBear`, prepínač `p.hive`, 0 = zoznam) – témy ako plásty, hviezdy = med. Strom NIE (kamarát používateľa má strom).
+- Návrh redizajnu: https://claude.ai/artifact/G2NpfEMXPSAHaUposn7xR9 (zatiaľ nepresunuté: nová postavička dieťaťa – treba spolu so šatníkom, Čítanie s rozsvecovaním slov, detailný Domček).
+
 ## Otvorené
 - Plus: Stripe účet + Payment Links do `PLUS_CFG`, spustiť SQL, nasadiť stripe-webhook + tajomstvá; potom AI cez server, týždenný e-mail (Resend, treba doménu), čítanka s hodnotením, kolekcia.
 - Kontaktný e-mail do zásad súkromia (spýtať sa používateľa).
