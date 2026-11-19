@@ -13,10 +13,11 @@ function meWeek(p) {
   return `<section class="meweek"><div class="r1"><b>🔥 ${p.streak.count} ${plural(p.streak.count, 'deň', 'dni', 'dní')} v rade${p.streak.count ? '!' : ''}</b><small>rekord ${p.streak.best || 0}</small></div><div class="days">${days}</div></section>`;
 }
 function meShelf(p) {
-  const got = ACH.map(a => { const v = a.m(p); const lv = a.t.filter(x => v >= x).length; return { a, lv }; });
-  const show = got.filter(x => x.lv).sort((x, y) => y.lv - x.lv).slice(0, 4).concat(got.filter(x => !x.lv).slice(0, 5)).slice(0, 5);
+  const got = ACH.map(a => { const v = a.m(p) || 0; const lv = a.t.filter(x => v >= x).length; const nx = a.t[lv]; const pv = lv ? a.t[lv - 1] : 0; return { a, v, lv, pct: nx ? Math.max(4, Math.min(100, (v - pv) / (nx - pv) * 100)) : 100, nx }; });
   const n = got.filter(x => x.lv).length;
-  return `<section class="shelf"><div class="r1"><b>Moja polica úspechov</b><small>${n} z ${ACH.length}</small></div><div class="row">${show.map(x => `<button class="${x.lv ? '' : 'off'}" data-a="shelf-tip" data-t="${esc(x.a.n + (x.lv ? ' – ' + ['', 'bronz', 'striebro', 'zlato'][x.lv] + '!' : ' – ' + x.a.d.toLowerCase() + ': ' + x.a.t[0]))}" aria-label="${esc(x.a.n)}">${x.a.i}</button>`).join('')}</div><div class="board"></div><div class="tip" id="shelftip">Ťukni na trofej</div></section>`;
+  const show = got.slice().sort((x, y) => (y.lv - x.lv) || (y.pct - x.pct)).slice(0, 6);
+  const TN = ['Ešte nie', 'Bronz', 'Striebro', 'Zlato'];
+  return `<section class="shelf2"><div class="r1"><b>Moje úspechy</b><small>${n} z ${ACH.length}</small></div><div class="sgrid">${show.map(x => `<button class="sb t${x.lv}" style="--p:${x.pct}" data-a="shelf-tip" data-t="${esc(x.a.n + ': ' + (x.lv >= 3 ? 'zlato! Máš všetko.' : x.a.d.toLowerCase() + ' ' + x.v + ' z ' + x.nx))}" aria-label="${esc(x.a.n)}, ${TN[x.lv]}"><span class="ring"><span class="ic">${x.a.i}</span>${x.lv ? `<em>${['', '🥉', '🥈', '🥇'][x.lv]}</em>` : ''}</span><b>${esc(x.a.n)}</b><small>${x.lv >= 3 ? 'Zlato' : x.v + ' / ' + x.nx}</small></button>`).join('')}</div><div class="tip" id="shelftip">Ťukni na odznak a dozvieš sa viac</div></section>`;
 }
 VIEWS.me = () => {
   const p = P(); const li = levelInfo(p.xp); const acc = p.stats.answered ? Math.round(p.stats.correct / p.stats.answered * 100) : 0; const g = meGrade(acc); const ms = meStats(p);

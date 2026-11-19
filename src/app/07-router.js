@@ -33,9 +33,9 @@ let RVO = null;
 function scrollReveal() {
   try {
     if (RVO) RVO.disconnect(); if (!('IntersectionObserver' in window) || matchMedia('(prefers-reduced-motion: reduce)').matches || document.documentElement.classList.contains('lite')) return;
-    RVO = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { e.target.classList.add('rv-in'); RVO.unobserve(e.target); } }), { rootMargin: '0px 0px -4% 0px', threshold: .06 });
+    RVO = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { e.target.classList.add('rv-in'); RVO.unobserve(e.target); } }), { rootMargin: '0px 0px 8% 0px', threshold: 0 });
     const H = innerHeight; let n = 0;
-    document.querySelectorAll('#app .view > *:not(.sh2sheet):not(.sh2scrim):not(.jabody), #app .jabody > *, #app .sh2item, #app .lsubj, #app .hrow, #app .luat, #app .frrow, #app .b2row, #app .task, #app .merow, #app .item, #app .gcard').forEach(el => { const r = el.getBoundingClientRect(); if (r.top > H * .9 && r.height > 0) { el.classList.add('rv'); el.style.setProperty('--rvd', ((n++ % 3) * 70) + 'ms'); RVO.observe(el); } });
+    document.querySelectorAll('#app .view > *:not(.sh2sheet):not(.sh2scrim):not(.jabody), #app .jabody > *, #app .sh2item, #app .lsubj, #app .hrow, #app .luat, #app .frrow, #app .b2row, #app .task, #app .merow, #app .item, #app .gcard').forEach(el => { const r = el.getBoundingClientRect(); if (r.top > H * .9 && r.height > 0 && !(el.parentElement && el.parentElement.closest('.rv'))) { el.classList.add('rv'); el.style.setProperty('--rvd', ((n++ % 2) * 60) + 'ms'); RVO.observe(el); } });
   } catch (e) { }
 }
 function render(dir) {

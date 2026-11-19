@@ -82,14 +82,79 @@ const bearLove = b => { const l = b.love || 0; return { lv: 1 + Math.floor(l / 1
 function bearCorner(p) {
   const b = bearInit(p); const m = bearMood(p); const h = b.honey || 0; const st = bearStats(b); const lo = bearLove(b);
   const bar = (i, n, v, c) => `<div class="brst"><span>${i}</span><div><small>${n}</small><div class="brbar"><i style="width:${v}%;background:${c}"></i></div></div></div>`;
-  return `<section class="card bearroom bm-${m}" id="bearcorner"><div class="brhead"><b>🧸 Bystríkov kútik</b><span class="brlove" title="Priateľstvo">💖 Lv ${lo.lv}<i><b style="width:${lo.pr * 10}%"></b></i></span></div>
-  <div class="brscene ${b.asleep ? 'night' : bearEve() ? 'dusk' : ''} ssn-${season()}" id="brscene"><i class="brwin"><b class="brskyd"></b><b class="brskyn"></b><b class="brsun"></b><b class="brmoon"></b><b class="brwstars"></b><b class="brfall">${'<s></s>'.repeat(7)}</b></i>${['spring', 'summer'].includes(season()) ? '<span class="brfly2">🦋</span>' : ''}<i class="brpaper"></i><i class="brshelf"><span>📚</span><span>🍯</span><span>🏆</span></i><i class="brframe"><b></b></i><i class="brlamp"><b></b></i><i class="brrug"></i><i class="brtoy">🧸</i><i class="brfloor"></i><i class="brdusk"></i><i class="brdark"></i><i class="brstars"></i><i class="brplinth"></i><i class="brbed"></i>
-  <button class="bcfig press" data-a="bear-tap" aria-label="Ťukni na Bystríka">${bearSvg(!b.asleep && (m === 'sick' || m === 'tired') ? 'comfort' : '')}</button><span class="bzz" aria-hidden="true">💤</span>${m === 'sick' ? '<span class="bzz sick" aria-hidden="true">🤧</span>' : ''}
+  return `<section class="card bearroom bm-${m}" id="bearcorner"><div class="brhead"><b>🏠 Bystríkov domček</b><span class="brlove" title="Priateľstvo">💖 Lv ${lo.lv}<i><b style="width:${lo.pr * 10}%"></b></i></span></div>
+  <div class="brscene v2 ${b.asleep ? 'night' : bearEve() ? 'dusk' : ''} ssn-${season()} ${ROOMST.curt ? 'curt' : ''} ${ROOMST.lamp ? 'lampon' : ''}" id="brscene">${roomSvg(b)}<button class="bcfig press" data-a="bear-tap" aria-label="Ťukni na Bystríka">${bearSvg(!b.asleep && (m === 'sick' || m === 'tired') ? 'comfort' : '')}</button><span class="bzz" aria-hidden="true">💤</span>${m === 'sick' ? '<span class="bzz sick" aria-hidden="true">🤧</span>' : ''}
   <div class="brbub" id="brbub">${m === 'happy' && bearEve() ? 'Je večer 🌅 Keď skončíš s učením, ulož ma spať.' : BEAR_TXT[m]}</div><span class="brhoney">🍯 ${h}</span></div>
   <div class="brstats">${bar('🍯', 'Hlad', st.food, 'linear-gradient(90deg,#FFB13C,#FFD45C)')}${bar('⚡', 'Energia', st.energy, 'linear-gradient(90deg,#4C86F7,#7EC8FF)')}${bar('😊', 'Radosť', st.joy, 'linear-gradient(90deg,#F25C8B,#FF9FBF)')}</div>
   <div class="bract"><button class="brb press" data-a="bear-feed" ${h ? '' : 'aria-disabled="true"'}><span>🍯</span>Nakŕmiť</button><button class="brb press" data-a="bear-pet"><span>🤗</span>Pohladkať</button><button class="brb press" data-a="bear-dance"><span>💃</span>Tanec</button><button class="brb press" data-a="bear-sleep"><span>${b.asleep ? '☀️' : '🌙'}</span>${b.asleep ? 'Zobudiť' : 'Spať'}</button><button class="brb press" data-a="bear-rec" aria-label="Podrž a povedz niečo, Bystrík to zopakuje"><span>🎤</span>Zopakuj</button></div>
-  <small class="bchint">🍯 Med dostaneš za každé dokončené učenie alebo hru. Za starostlivosť rastie priateľstvo 💖.</small></section>`;
+  <small class="bchint">👆 Ťukaj na veci v izbe: hodiny, lampu, rádio, kvetinu, knihy aj záclony. 🍯 Med dostaneš za každé učenie alebo hru.</small></section>`;
 }
+
+/* ===== Detailná izba Bystríka (SVG, ťukacie veci) ===== */
+let ROOMST = { curt: 0, lamp: 0 };
+function roomSvg(b) {
+  const now = new Date(), hr = (now.getHours() % 12) * 30 + now.getMinutes() / 2, mn = now.getMinutes() * 6;
+  const plant = Math.min(5, b.plant || 0), books = ['#E25C5C', '#4C86F7', '#FFC233', '#5FB86C', '#B07CF0', '#FF8F5C', '#3FB7C9', '#F27EC0'];
+  const shelfBooks = (y, off) => { let x = 276, o = ''; for (let i = 0; i < 6; i++) { const w = 7 + ((i + off) % 3) * 2, h = 26 + ((i * 7 + off) % 9); o += `<rect x="${x}" y="${y - h}" width="${w}" height="${h}" rx="1.5" fill="${books[(i + off) % books.length]}"/><rect x="${x + 1.5}" y="${y - h + 5}" width="${w - 3}" height="2" fill="rgba(255,255,255,.55)"/>`; x += w + 1.5; } return o; };
+  const leaves = Array.from({ length: 3 + plant * 2 }, (_, i) => { const a = -80 + (i % 2 ? 1 : -1) * (14 + i * 9), l = 18 + Math.min(i, 6) * 3; return `<ellipse cx="0" cy="${-l / 2}" rx="${5 + (i % 3)}" ry="${l / 2}" fill="${i % 2 ? '#4FA85B' : '#68C175'}" transform="rotate(${a + 80})"/>`; }).join('');
+  return `<svg class="room" viewBox="0 0 360 440" preserveAspectRatio="xMidYMax slice" aria-hidden="false" role="img" aria-label="Bystríkova izba">
+  <defs>
+    <pattern id="rmwp" width="28" height="28" patternUnits="userSpaceOnUse"><rect width="28" height="28" fill="#FFE6C4"/><path d="M14 9c-2-3-6-1-5 2 1 2 5 5 5 5s4-3 5-5c1-3-3-5-5-2z" fill="#FBCF9C" opacity=".8"/><circle cx="0" cy="0" r="1.6" fill="#F7BE85"/><circle cx="28" cy="28" r="1.6" fill="#F7BE85"/></pattern>
+    <linearGradient id="rmfl" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#C98A4E"/><stop offset="1" stop-color="#A86A34"/></linearGradient>
+    <linearGradient id="rmsky" x1="0" y1="0" x2="0" y2="1"><stop class="sk1" offset="0" stop-color="#7EC8FF"/><stop class="sk2" offset="1" stop-color="#CFEAFF"/></linearGradient>
+    <radialGradient id="rmglow"><stop offset="0" stop-color="#FFE27A" stop-opacity=".85"/><stop offset=".5" stop-color="#FFD25C" stop-opacity=".3"/><stop offset="1" stop-color="#FFD25C" stop-opacity="0"/></radialGradient>
+    <linearGradient id="rmchair" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FF8A6B"/><stop offset="1" stop-color="#E2573B"/></linearGradient>
+  </defs>
+  <rect width="360" height="300" fill="url(#rmwp)"/>
+  <rect y="226" width="360" height="74" fill="#EBC08F"/><rect y="222" width="360" height="8" fill="#C98A5A"/><rect y="294" width="360" height="8" fill="#B07444"/>
+  ${Array.from({ length: 9 }, (_, i) => `<rect x="${8 + i * 40}" y="238" width="30" height="48" rx="3" fill="none" stroke="#D9A574" stroke-width="2"/>`).join('')}
+  <path d="M0 302 H360 V440 H0Z" fill="url(#rmfl)"/>
+  ${Array.from({ length: 10 }, (_, i) => { const x = -60 + i * 52; return `<path d="M${180 + (x - 180) * .55} 302 L${x} 440" stroke="#9A5F2C" stroke-width="2" opacity=".55"/>`; }).join('')}
+  <path d="M0 340 H360 M0 388 H360" stroke="#9A5F2C" stroke-width="1.5" opacity=".35"/>
+  <g class="rmwin" data-a="room-curtain" role="button" aria-label="Záclony">
+    <rect x="22" y="40" width="112" height="120" rx="8" fill="#fff"/>
+    <rect x="30" y="48" width="96" height="104" rx="4" fill="url(#rmsky)"/>
+    <g class="rmsun"><circle cx="100" cy="74" r="13" fill="#FFD447"/><circle cx="100" cy="74" r="19" fill="#FFD447" opacity=".3"/></g>
+    <g class="rmmoon"><circle cx="100" cy="72" r="11" fill="#FFF3C4"/><circle cx="105" cy="68" r="10" fill="#26306E"/></g>
+    <g class="rmstars" fill="#fff"><circle cx="46" cy="62" r="1.6"/><circle cx="70" cy="84" r="1.2"/><circle cx="58" cy="110" r="1.4"/><circle cx="114" cy="104" r="1.2"/><circle cx="84" cy="58" r="1"/></g>
+    <g class="rmcloud" fill="#fff"><ellipse cx="56" cy="96" rx="16" ry="7"/><ellipse cx="66" cy="91" rx="10" ry="7"/></g>
+    <path d="M30 128 Q60 112 90 124 T126 120 V152 H30Z" fill="#8FD18A"/><path d="M30 138 Q70 126 126 136 V152 H30Z" fill="#6CBF6A"/>
+    <rect x="76" y="48" width="4" height="104" fill="#fff"/><rect x="30" y="98" width="96" height="4" fill="#fff"/>
+    <rect x="16" y="158" width="124" height="8" rx="3" fill="#E9D3B6"/>
+    <rect x="14" y="30" width="128" height="6" rx="3" fill="#B07444"/>
+    <path class="crL" d="M18 34 Q40 34 52 34 Q44 90 52 160 Q30 150 18 160Z" fill="#FF8FA3"/><path class="crR" d="M138 34 Q116 34 104 34 Q112 90 104 160 Q126 150 138 160Z" fill="#FF8FA3"/>
+    <path class="crL" d="M24 40 V156 M34 40 V154" stroke="#F0718A" stroke-width="2" opacity=".6"/><path class="crR" d="M132 40 V156 M122 40 V154" stroke="#F0718A" stroke-width="2" opacity=".6"/>
+  </g>
+  <g class="rmclock" data-a="room-clock" role="button" aria-label="Hodiny">
+    <circle cx="196" cy="66" r="27" fill="#B07444"/><circle cx="196" cy="66" r="22" fill="#FFFDF6"/>
+    ${Array.from({ length: 12 }, (_, i) => `<rect x="195" y="${i % 3 ? 47 : 46}" width="2" height="${i % 3 ? 3 : 5}" fill="#5A3A1E" transform="rotate(${i * 30} 196 66)"/>`).join('')}
+    <rect id="rmhh" x="194.5" y="54" width="3" height="13" rx="1.5" fill="#33203A" transform="rotate(${hr} 196 66)"/>
+    <rect id="rmmh" x="195.2" y="48" width="1.8" height="19" rx="1" fill="#E2573B" transform="rotate(${mn} 196 66)"/>
+    <circle cx="196" cy="66" r="2.4" fill="#33203A"/>
+  </g>
+  <g><rect x="232" y="44" width="48" height="38" rx="3" fill="#C98A4E"/><rect x="236" y="48" width="40" height="30" fill="#CFEAFF"/><circle cx="246" cy="57" r="4" fill="#FFC233"/><path d="M236 78 L250 64 L260 72 L268 62 L276 70 V78Z" fill="#6CBF6A"/><text x="262" y="76" font-size="9">🐝</text></g>
+  <g class="rmshelf">
+    <rect x="268" y="104" width="84" height="196" rx="4" fill="#A86A34"/><rect x="272" y="108" width="76" height="188" fill="#7E4A22"/>
+    ${[160, 216, 270].map(y => `<rect x="270" y="${y}" width="80" height="6" fill="#C98A4E"/>`).join('')}
+    <g data-a="room-book" role="button" aria-label="Knihy">${shelfBooks(160, 0)}</g>
+    <g data-a="room-radio" role="button" aria-label="Rádio"><rect x="278" y="190" width="44" height="26" rx="5" fill="#4FC9D9"/><circle cx="291" cy="203" r="8" fill="#2A8FA0"/><circle cx="291" cy="203" r="4" fill="#1C6672"/><rect x="304" y="196" width="13" height="3" rx="1" fill="#fff"/><rect x="304" y="202" width="13" height="3" rx="1" fill="#fff" opacity=".7"/><rect x="304" y="208" width="9" height="3" rx="1" fill="#fff" opacity=".5"/><path d="M300 190 L310 176" stroke="#33203A" stroke-width="2"/><g class="rmnotes" fill="#7E4AF0" font-size="11"><text x="318" y="186">♪</text><text x="330" y="178">♫</text></g></g>
+    <text x="326" y="214" font-size="20">🏆</text>
+    <g data-a="room-honey" role="button" aria-label="Med">${Array.from({ length: Math.min(3, Math.max(1, b.honey || 0)) }, (_, i) => `<g transform="translate(${282 + i * 20} 248)"><rect x="0" y="0" width="16" height="20" rx="4" fill="${(b.honey || 0) ? '#FFB020' : '#E8D8C0'}"/><rect x="-1" y="-4" width="18" height="6" rx="2" fill="#E2573B"/><rect x="3" y="6" width="10" height="7" rx="2" fill="#FFF3C4" opacity=".8"/></g>`).join('')}</g>
+  </g>
+  <g class="rmlampg"><circle cx="150" cy="226" r="92" fill="url(#rmglow)" class="rmglow"/></g>
+  <g><rect x="122" y="268" width="56" height="8" rx="3" fill="#B07444"/><rect x="128" y="276" width="5" height="40" fill="#9A5F2C"/><rect x="167" y="276" width="5" height="40" fill="#9A5F2C"/>
+    <g data-a="room-lamp" role="button" aria-label="Lampa"><rect x="147" y="232" width="5" height="36" fill="#7E4A22"/><ellipse cx="150" cy="268" rx="12" ry="3" fill="#7E4A22"/><path d="M134 234 L140 208 H160 L166 234Z" fill="#FFB86B"/><path class="rmshade" d="M134 234 L140 208 H160 L166 234Z" fill="#FFE9A8" opacity="0"/></g>
+    <g transform="translate(166 254)"><rect x="0" y="2" width="11" height="12" rx="2" fill="#fff"/><path d="M11 5 q5 1 0 7" stroke="#fff" stroke-width="2" fill="none"/><path class="rmsteam" d="M3 0 q-2 -4 1 -8 M7 0 q-2 -4 1 -8" stroke="#fff" stroke-width="1.4" fill="none" opacity=".8"/></g>
+  </g>
+  <g class="rmchair"><rect x="8" y="250" width="100" height="58" rx="22" fill="url(#rmchair)"/><rect x="0" y="270" width="24" height="56" rx="12" fill="#E2573B"/><rect x="92" y="270" width="24" height="56" rx="12" fill="#E2573B"/><rect x="18" y="294" width="80" height="26" rx="10" fill="#FF8A6B"/><rect x="14" y="320" width="7" height="12" rx="2" fill="#7E4A22"/><rect x="95" y="320" width="7" height="12" rx="2" fill="#7E4A22"/><rect x="30" y="262" width="34" height="26" rx="10" fill="#FFC233" transform="rotate(-8 47 275)"/><circle cx="47" cy="275" r="5" fill="#FFF3C4" opacity=".7"/></g>
+  <ellipse cx="180" cy="392" rx="138" ry="30" fill="#5FB0E8"/><ellipse cx="180" cy="392" rx="118" ry="24" fill="#86C9F2"/><ellipse cx="180" cy="392" rx="96" ry="18" fill="#5FB0E8"/><ellipse cx="180" cy="392" rx="74" ry="13" fill="#B5E0FA"/>
+  <g class="rmplant" data-a="room-plant" role="button" aria-label="Kvetina" transform="translate(326 356) scale(1.3)"><g transform="translate(0 -26)">${leaves}${plant >= 4 ? '<circle cx="0" cy="-34" r="6" fill="#FF8FB0"/><circle cx="0" cy="-34" r="2.5" fill="#FFC233"/>' : ''}</g><path d="M-16 -26 H16 L12 6 H-12Z" fill="#E2804B"/><rect x="-18" y="-30" width="36" height="7" rx="3" fill="#C9683A"/><g class="rmdrops" fill="#5FB0E8"><circle cx="-6" cy="-60" r="2.4"/><circle cx="4" cy="-70" r="2"/><circle cx="10" cy="-56" r="2.2"/></g></g>
+  <g><rect x="22" y="352" width="54" height="40" rx="6" fill="#B07CF0"/><rect x="18" y="346" width="62" height="12" rx="5" fill="#9259E0"/><text x="30" y="384" font-size="16">🧸</text><text x="50" y="384" font-size="14">⚽</text></g>
+  <rect class="rmnight" width="360" height="440" fill="#0C0A2A"/>
+  <circle class="rmnightglow" cx="150" cy="226" r="110" fill="url(#rmglow)"/>
+</svg>`;
+}
+function roomClockTick() { const now = new Date(), h = $('#rmhh'), m = $('#rmmh'); if (!h) return false; h.setAttribute('transform', `rotate(${(now.getHours() % 12) * 30 + now.getMinutes() / 2} 196 66)`); m.setAttribute('transform', `rotate(${now.getMinutes() * 6} 196 66)`); return true; }
 let BEARIV = null; const BEAR_IDLE = ['bhappy', 'bwiggle', 'bpeek', 'bhop'];
 function bearIdleStart() { clearInterval(BEARIV); BEARIV = setInterval(() => { const fig = $('.bearroom .bcfig svg'), room = $('#bearcorner'); if (!fig || !room) { clearInterval(BEARIV); return; } if (document.hidden || room.classList.contains('offs') || room.classList.contains('busy') || $('#brscene.night') || fig.classList.contains('bdance')) return; const c = pick(BEAR_IDLE); fig.classList.add(c); setTimeout(() => fig.classList.remove(c), 1400); }, 6500); }
 function bearSay(t) { const el = $('#brbub'); if (el) { el.textContent = t; el.classList.remove('pop'); void el.offsetWidth; el.classList.add('pop'); } }
@@ -191,7 +256,7 @@ async function recStart() {
     if (mr) { REC = { mr, chunks: [], stream, t0: Date.now() }; mr.ondataavailable = e => { if (e.data && e.data.size) REC.chunks.push(e.data); }; mr.onstop = () => { const blob = new Blob(REC.chunks, { type: mr.mimeType || 'audio/webm' }); if (!blob.size && !own) { toast('Nahrávka je prázdna. Skús to ešte raz a hovor hlasnejšie.'); } done(blob); }; try { mr.start(250); } catch (e) { mr = null; } }
     if (!mr) { own = true; const wr = wavRecorder(stream); REC = { mr: wr, chunks: [], stream, t0: Date.now() }; wr.onstop = () => done(wr.blob); }
     MIC_BLOCKED = false; RD.recording = true; render(null); sfx('pop');
-    TIMERS.push(setInterval(() => { const e = $('#rectime'); if (e && REC) e.textContent = Math.round((Date.now() - REC.t0) / 1000) + ' s'; }, 500));
+    TIMERS.push(setInterval(() => { const e = $('#rectime'); if (e && REC) e.textContent = fmtDur((Date.now() - REC.t0) / 1000); }, 250)); recViz(stream);
   } catch (e) {
     MICERR = String((e && e.name) || '') + (e && e.message ? ': ' + String(e.message).slice(0, 60) : '');
     MIC_BLOCKED = true; render(null);
@@ -224,13 +289,32 @@ function openDiktafon() {
   <button class="btn primary block" style="margin-top:12px" data-a="rec-pick">📂 Pridať nahrávku</button><button class="btn block" style="margin-top:10px" data-a="close-sheet">Idem čítať</button></div>`;
   document.body.appendChild(w); say('Otvor v telefóne diktafón, zapni nahrávanie, vráť sa sem a prečítaj text nahlas. Potom nahrávku ulož a pridaj ju sem.');
 }
-function gotRecording(blob) { RD.recording = false; RD.blob = blob; if (RD.blobUrl) URL.revokeObjectURL(RD.blobUrl); RD.blobUrl = URL.createObjectURL(blob); RD.saved = false; render(null); sfx('ok'); }
+const fmtDur = s => { s = Math.max(0, Math.round(s || 0)); return Math.floor(s / 60) + ':' + String(s % 60).padStart(2, '0'); };
+/* živá vlna hlasu počas nahrávania */
+function recViz(stream) {
+  try {
+    const a = ac(); if (!a) return; const src = a.createMediaStreamSource(stream), an = a.createAnalyser(); an.fftSize = 64; src.connect(an); const buf = new Uint8Array(an.frequencyBinCount);
+    const draw = () => { const c = $('#recviz'); if (!c || !REC) { try { src.disconnect(); } catch (e) { } return; } const w = c.clientWidth, h = c.clientHeight, dpr = Math.min(2, devicePixelRatio || 1); if (c.width !== w * dpr) { c.width = w * dpr; c.height = h * dpr; } const x = c.getContext('2d'); x.setTransform(dpr, 0, 0, dpr, 0, 0); x.clearRect(0, 0, w, h); an.getByteFrequencyData(buf); const n = 24, bw = w / n; for (let i = 0; i < n; i++) { const v = buf[Math.min(buf.length - 1, i + 1)] / 255; const bh = Math.max(6, v * h * .95); x.fillStyle = `hsl(${12 + i * 2},100%,${62 - v * 12}%)`; const r = Math.min(bw * .3, 5); const xx = i * bw + bw * .2, yy = (h - bh) / 2, ww = bw * .6; x.beginPath(); x.roundRect ? x.roundRect(xx, yy, ww, bh, r) : x.rect(xx, yy, ww, bh); x.fill(); } requestAnimationFrame(draw); };
+    requestAnimationFrame(draw);
+  } catch (e) { }
+}
+/* nahrávky v cloude (Supabase Storage, súkromný priečinok rodiča) */
+const REC_BUCKET = 'readings';
+async function recUpload(id, blob) {
+  if (!(typeof SUPA_ON === 'function' && SUPA_ON() && AUTH)) return null;
+  const ext = /mp4|m4a|aac/.test(blob.type) ? 'm4a' : /wav/.test(blob.type) ? 'wav' : /ogg/.test(blob.type) ? 'ogg' : 'webm'; const path = AUTH.uid + '/' + id + '.' + ext;
+  const tk = await supaToken(); const r = await fetch(SUPA.url + '/storage/v1/object/' + REC_BUCKET + '/' + path, { method: 'POST', headers: { apikey: SUPA.key, Authorization: 'Bearer ' + tk, 'content-type': blob.type || 'audio/webm', 'x-upsert': 'true' }, body: blob });
+  if (!r.ok) throw { status: r.status }; return path;
+}
+async function recDownload(path) { const tk = await supaToken(); const r = await fetch(SUPA.url + '/storage/v1/object/authenticated/' + REC_BUCKET + '/' + path, { headers: { apikey: SUPA.key, Authorization: 'Bearer ' + tk } }); if (!r.ok) throw { status: r.status }; return r.blob(); }
+async function recRemove(paths) { if (!paths.length || !(typeof SUPA_ON === 'function' && SUPA_ON() && AUTH)) return; try { const tk = await supaToken(); await fetch(SUPA.url + '/storage/v1/object/' + REC_BUCKET, { method: 'DELETE', headers: { apikey: SUPA.key, Authorization: 'Bearer ' + tk, 'content-type': 'application/json' }, body: JSON.stringify({ prefixes: paths }) }); } catch (e) { } }
+function gotRecording(blob) { RD.dur = REC ? (Date.now() - REC.t0) / 1000 : 0; RD.recording = false; RD.blob = blob; if (RD.blobUrl) URL.revokeObjectURL(RD.blobUrl); RD.blobUrl = URL.createObjectURL(blob); RD.saved = false; render(null); sfx('ok'); }
 function idb() { return new Promise((res, rej) => { try { const r = indexedDB.open('bystrik-audio', 1); r.onupgradeneeded = () => r.result.createObjectStore('rec', { keyPath: 'id' }); r.onsuccess = () => res(r.result); r.onerror = () => rej(r.error); } catch (e) { rej(e); } }); }
 async function idbOp(mode, fn) { const db = await idb(); return new Promise((res, rej) => { const tx = db.transaction('rec', mode); const st = tx.objectStore('rec'); const q = fn(st); tx.oncomplete = () => res(q && q.result); tx.onerror = () => rej(tx.error); }); }
 
 VIEWS.room = roomView;
-VIEWS.kutik = () => `${topbar('back-home')}<main class="view kutikv"><h1 style="font-size:2rem">Bystríkov domček</h1>${bearCorner(P())}</main>${nav('home')}`;
-AFTER.kutik = () => { try { bearIdleStart(); } catch (e) { } };
+VIEWS.kutik = () => `${topbar('back-home')}<main class="view kutikv">${bearCorner(P())}</main>${nav('home')}`;
+AFTER.kutik = () => { try { bearIdleStart(); } catch (e) { } const iv = setInterval(() => { if (!roomClockTick()) clearInterval(iv); }, 20000); };
 
 /* --- úvod --- */
 let OB = null;
@@ -1009,7 +1093,7 @@ function openDailyReward() {
 }
 
 /* --- chat s Bystríkom --- */
-const tutorIntro = p => `Si Bystrík, milý a múdry plyšový medvedík a trpezlivý učiteľ pre dieťa na 1. stupni základnej školy na Slovensku (${p.grade}. ročník). Odpovedaj VŽDY po slovensky, krátko (najviac 5 viet), jednoduchými slovami primeranými veku, láskavo a povzbudivo. Vysvetľuj na príkladoch zo života (jablká, cukríky, hračky). Pri úlohe najprv krátko vysvetli postup, až potom povedz výsledok. Rozprávaj sa len o učení (matematika, slovenčina, príroda, vlastiveda, angličtina a svet okolo nás). Ak sa dieťa pýta na niečo nevhodné alebo mimo učenia, láskavo ho vráť k učeniu. Nikdy sa nepýtaj na osobné údaje (adresa, škola, telefón, heslá). Nepoužívaj nadpisy, tabuľky ani Markdown; emoji môžeš použiť.`;
+const tutorIntro = p => `Si Bystrík, milý a múdry plyšový medvedík a trpezlivý učiteľ pre dieťa na 1. stupni základnej školy na Slovensku (${p.grade}. ročník). Odpovedaj VŽDY po slovensky a VEĽMI krátko: najviac 2 až 3 krátke vety (spolu do 40 slov), ako keď hovoríš s malým dieťaťom. Žiadne dlhé vysvetľovanie ani zoznamy. Píš jednoduchými slovami primeranými veku, láskavo a povzbudivo. Vysvetľuj na príkladoch zo života (jablká, cukríky, hračky). Pri úlohe najprv krátko vysvetli postup, až potom povedz výsledok. Rozprávaj sa len o učení (matematika, slovenčina, príroda, vlastiveda, angličtina a svet okolo nás). Ak sa dieťa pýta na niečo nevhodné alebo mimo učenia, láskavo ho vráť k učeniu. Nikdy sa nepýtaj na osobné údaje (adresa, škola, telefón, heslá). Nepoužívaj nadpisy, tabuľky ani Markdown; emoji môžeš použiť.`;
 let CHAT = { msgs: [], busy: false };
 const SUGG_PRV = { 1: 'Prečo máme ročné obdobia?', 2: 'Ako sa povie po anglicky pes a mačka?', 3: 'Čo sú obojživelníky?', 4: 'Prečo sa strieda deň a noc?' };
 const SUGG = {
@@ -1034,7 +1118,7 @@ async function askBot(q) {
   const hist = CHAT.msgs.slice(0, -1).slice(-9);
   const msgs = [{ role: 'user', content: tutorIntro(p) + '\n\nZačni rozhovor.' }, { role: 'assistant', content: `Ahoj ${p.name}! Som Bystrík. Na čo sa chceš opýtať?` }];
   hist.forEach(m => { if (m.t) msgs.push({ role: m.r === 'me' ? 'user' : 'assistant', content: m.t }); });
-  try { p.stats.chat++; checkBadges(p); save(); const res = await sample(msgs, { cache: false, onText: ({ text }) => { CHAT.msgs[CHAT.msgs.length - 1].t = text; const e = $('#lastbot'); if (e) e.textContent = text; } }); finish(res.text); }
+  try { p.stats.chat++; checkBadges(p); save(); const res = await sample(msgs, { cache: false, max: 400, effort: "low", onText: ({ text }) => { CHAT.msgs[CHAT.msgs.length - 1].t = text; const e = $('#lastbot'); if (e) e.textContent = text; } }); finish(res.text); }
   catch (e) { finish(e && e.code === 'ai_limit' ? AIL_MSG : e && e.code === 'rate_limited' ? 'Musím si chvíľu oddýchnuť. Skús to o pár minút. 🧸' : e && e.code === 'not_granted' ? 'Chat nie je povolený. Popros rodičov, nech ho povolia.' : (e && e.text) || 'Niečo sa pokazilo. Skús to znova.'); }
 }
 
@@ -1113,9 +1197,9 @@ function pinKey(k) {
   else { if (PIN.val === DATA.parent.pin) { PARENT_OK = true; sfx('ok'); go('parent', {}, 'f'); if (!DATA.parent.tour) setTimeout(() => { if (UI.view === 'parent' && !GUIDE) showGuide(PTOUR, 0, endPTour); }, 700); } else bad('Nesprávny PIN'); }
 }
 function parentReads(p) {
-  if (!p.readings.length) return `<section class="card pcard"><span class="eyebrow">📖 Čítanie – text a nahrávky</span><p class="muted b" style="padding:8px 0">Zatiaľ žiadne nahrávky. Dieťa ich nahrá v Čítanke. Nahrávky sa ukladajú len v tomto zariadení.</p></section>`;
+  if (!p.readings.length) return `<section class="card pcard"><span class="eyebrow">📖 Čítanie – text a nahrávky</span><p class="muted b" style="padding:8px 0">Zatiaľ žiadne nahrávky. Dieťa ich nahrá v Čítanke a pošle vám ich sem. Keď ste prihlásení, uvidíte ich na každom svojom zariadení.</p></section>`;
   const ids = []; p.readings.forEach(x => { if (!ids.includes(x.r)) ids.push(x.r); });
-  return `<section class="card pcard"><span class="eyebrow">📖 Čítanie – text a nahrávky</span><p class="muted b" style="font-size:.85rem;padding:4px 0">Pri každom texte vidíte presne to, čo dieťa čítalo, a pod tým jeho čítania a nahrávky. Vypočujte si ich, ohodnoťte a za pekné čítanie dieťa odmeňte (+5 bodov za každé čítanie, slniečka sa takto nedávajú). Dieťa uvidí hodnotenie v Čítanke.</p>${ids.map(rid => { const r = READ[rid]; const recs = p.readings.filter(x => x.r === rid); return `<div class="ptext"><b style="font-family:var(--f-display);font-size:1.1rem">${r ? r.icon + ' ' + r.title : 'Text'} <span class="muted" style="font-size:.85rem">${r ? r.g + '. ročník' : ''}</span></b><div class="ptextbody">${r ? esc(r.text) : ''}</div>${recs.map((x, i) => `<div class="prec"><span class="b">${x.noAudio ? '✅ Prečítal(a) nahlas, bez nahrávky' : '🎙️ Nahrávka'} · ${fmtTime(x.t)}</span>${x.noAudio ? '' : `<div id="aud-${x.id}"><button class="btn small" data-a="play-rec" data-id="${x.id}">▶️ Vypočuť</button></div>`}<div class="chips" style="padding:0">${[3, 2, 1].map(k => `<button class="chip ${x.rating === k ? 'on' : ''}" data-a="rate-rec" data-id="${x.id}" data-r="${k}">${RATE[k]}</button>`).join('')}<button class="chip" data-a="del-rec" data-id="${x.id}" aria-label="Vymazať nahrávku">🗑️</button></div>${x.rewarded ? '<span class="b" style="color:var(--good);font-size:.85rem">🎁 Odmenené +5 bodov</span>' : `<button class="btn small primary" data-a="reward-rec" data-id="${x.id}">🎁 Odmeniť za čítanie (+5 bodov)</button>`}</div>`).join('')}</div>`; }).join('')}</section>`;
+  return `<section class="card pcard"><span class="eyebrow">📖 Čítanie – text a nahrávky</span><p class="muted b" style="font-size:.85rem;padding:4px 0">Pri každom texte vidíte presne to, čo dieťa čítalo, a pod tým jeho čítania a nahrávky. Vypočujte si ich, ohodnoťte a za pekné čítanie dieťa odmeňte (+5 bodov za každé čítanie, slniečka sa takto nedávajú). Dieťa uvidí hodnotenie v Čítanke.</p>${ids.map(rid => { const r = READ[rid]; const recs = p.readings.filter(x => x.r === rid); return `<div class="ptext"><b style="font-family:var(--f-display);font-size:1.1rem">${r ? r.icon + ' ' + r.title : 'Text'} <span class="muted" style="font-size:.85rem">${r ? r.g + '. ročník' : ''}</span></b><div class="ptextbody">${r ? esc(r.text) : ''}</div>${recs.map((x, i) => `<div class="prec"><span class="b">${x.noAudio ? '✅ Prečítal(a) nahlas, bez nahrávky' : '🎙️ Nahrávka' + (x.cloud ? ' ☁️' : '')}${x.rating ? '' : ' <em class="pnew">nové</em>'} · ${fmtTime(x.t)}</span>${x.noAudio ? '' : `<div id="aud-${x.id}"><button class="btn small" data-a="play-rec" data-id="${x.id}">▶️ Vypočuť</button></div>`}<div class="chips" style="padding:0">${[3, 2, 1].map(k => `<button class="chip ${x.rating === k ? 'on' : ''}" data-a="rate-rec" data-id="${x.id}" data-r="${k}">${RATE[k]}</button>`).join('')}<button class="chip" data-a="del-rec" data-id="${x.id}" aria-label="Vymazať nahrávku">🗑️</button></div>${x.rewarded ? '<span class="b" style="color:var(--good);font-size:.85rem">🎁 Odmenené +5 bodov</span>' : `<button class="btn small primary" data-a="reward-rec" data-id="${x.id}">🎁 Odmeniť za čítanie (+5 bodov)</button>`}</div>`).join('')}</div>`; }).join('')}</section>`;
 }
 function checkPTasks(p, id, stars) {
   (p.ptasks || []).forEach(t => { if (!t.done && t.topic === id && stars >= t.stars) { t.done = Date.now(); p.coins = (p.coins || 0) + t.coins; p.log.unshift({ t: Date.now(), k: 'ptask', id, c: t.coins, n: t.stars }); setTimeout(() => achPop({ i: '📋', n: 'Úloha od rodiča splnená!', d: TOPIC[id].name, t: [t.coins] }, 0, t.coins), 1200); } });

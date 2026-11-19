@@ -2417,8 +2417,8 @@ html.lite .sh2rays,html.lite .sh2item.r-leg::after,html.lite .sh2chest::before{a
 .calcshow{flex:none!important;min-height:74px;display:flex!important;flex-direction:column;align-items:flex-end;justify-content:center}
 
 /* animácia pri posúvaní */
-.rv{opacity:0;transform:translateY(34px) scale(.96)}
-.rv.rv-in{opacity:1;transform:none;transition:opacity .5s ease var(--rvd,0ms),transform .65s cubic-bezier(.18,1.25,.32,1) var(--rvd,0ms)}
+.rv{opacity:0;transform:translate3d(0,18px,0)}
+.rv.rv-in{opacity:1;transform:none;transition:opacity .9s cubic-bezier(.25,.1,.25,1) var(--rvd,0ms),transform 1.1s cubic-bezier(.16,1,.3,1) var(--rvd,0ms)}
 html.lite .rv{opacity:1;transform:none}
 
 /* ===== Rodič: Zadať úlohu 2.0 ===== */
@@ -2517,6 +2517,121 @@ html.lite .hcell.next{animation:none}
 .over .rewards .rew .th{max-width:100%}
 .over .rewards .rew .th svg,.over .rewards .rew .th img{max-height:72px}
 @media (max-height:700px){.over .box .num{font-size:3.2rem!important}.over .box .lvwrap{transform:scale(.8);margin:-10px 0}}
+
+/* ===== Moje úspechy (polica 2.0) ===== */
+.shelf2{border-radius:24px;padding:14px 14px 10px;background:var(--paper);box-shadow:0 8px 22px -14px rgba(35,22,58,.35)}
+.shelf2 .r1{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:10px}
+.shelf2 .r1 b{font:800 1.12rem var(--f-display)}
+.shelf2 .r1 small{font:900 .8rem var(--f-body);color:#fff;background:var(--accent);border-radius:999px;padding:2px 9px}
+.sgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px 8px}
+.sb{border:0;background:none;padding:0;display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer;color:var(--ink);min-width:0}
+.sb .ring{--c:#D9D2E3;position:relative;width:66px;height:66px;border-radius:50%;display:grid;place-items:center;background:conic-gradient(var(--c) calc(var(--p)*1%),color-mix(in srgb,var(--ink) 9%,transparent) 0);transition:transform .2s cubic-bezier(.3,1.6,.5,1)}
+.sb .ring::before{content:"";position:absolute;inset:6px;border-radius:50%;background:var(--paper2,#FFF6E8)}
+.sb .ic{position:relative;font-size:1.75rem;line-height:1}.sb .ic img{width:34px;height:34px}
+.sb.t0 .ic{filter:grayscale(1);opacity:.45}
+.sb.t1 .ring{--c:#D08A4E}.sb.t2 .ring{--c:#A9B4C6}.sb.t3 .ring{--c:#FFC233;box-shadow:0 0 16px -2px rgba(255,194,51,.8)}
+.sb.t1 .ring::before{background:#FFF1E2}.sb.t2 .ring::before{background:#F1F4F9}.sb.t3 .ring::before{background:#FFF6D6}
+.sb em{position:absolute;right:-4px;bottom:-2px;font-style:normal;font-size:1.05rem}
+.sb b{font:800 .74rem/1.15 var(--f-body);text-align:center;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;max-width:100%}
+.sb small{font:800 .68rem var(--f-body);color:var(--muted)}
+.sb:active .ring{transform:scale(.92)}
+.shelf2 .tip{font-size:.8rem;font-weight:800;text-align:center;margin-top:10px;color:var(--muted);min-height:1.1em}
+
+/* prepínač Úľ | Zoznam – viditeľný */
+.hivetog{background:color-mix(in srgb,var(--accent) 14%,var(--paper))!important;box-shadow:inset 0 2px 5px color-mix(in srgb,var(--ink) 12%,transparent)!important;gap:4px!important}
+.hivetog button{color:color-mix(in srgb,var(--ink) 72%,transparent)!important;font-weight:800!important}
+.hivetog button.on{background:var(--accent)!important;color:#fff!important;box-shadow:0 4px 0 var(--accent-d),0 8px 14px -8px var(--accent-d)!important}
+/* Dnes: postavička ďalej od Bystríka */
+.hero2 .h2kid{left:auto!important;right:24%!important}
+/* hlavička: celá hlavička postavičky v krúžku */
+.top2 .headbub{background:radial-gradient(circle at 50% 40%,#FFF1E6,#FFD9C2)!important;box-shadow:0 0 0 3px #fff,0 6px 14px -6px rgba(35,22,58,.4)!important}
+
+/* rebríček: včerajší víťazi + obnoviť */
+.lbstage{position:relative}
+.lbref{position:absolute;top:10px;right:10px;width:38px;height:38px;border-radius:50%;border:0;background:var(--paper2,#FFF1E2);color:var(--ink);display:grid;place-items:center;cursor:pointer;box-shadow:0 3px 0 color-mix(in srgb,var(--ink) 15%,transparent)}
+.lbref.spin svg{animation:lbspin .8s linear infinite}
+@keyframes lbspin{to{transform:rotate(360deg)}}
+.lbyest{padding:12px 14px!important;background:linear-gradient(120deg,#FFF3CF,var(--paper) 70%)!important}
+.lbyest .lyh{font:800 .95rem var(--f-display)}
+.lyrow{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:8px}
+.ly{display:flex;flex-direction:column;align-items:center;gap:1px;background:var(--paper);border-radius:14px;padding:8px 4px;min-width:0}
+.ly em{font-style:normal;font-size:1.4rem}.ly b{font:800 .85rem var(--f-display);max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.ly small{font-weight:700;color:var(--muted);font-size:.7rem}
+:root[data-theme="dark"] .lbyest,:root.fdark .lbyest{background:linear-gradient(120deg,#4A3A1E,var(--paper) 70%)!important}
+
+/* ===== Bystríkov diktafón ===== */
+.dk{display:flex;flex-direction:column;align-items:center;gap:10px;padding:16px 12px 14px;border-radius:24px;background:linear-gradient(170deg,#2A2160,#4B3DB8);color:#fff;position:relative;overflow:hidden}
+.dk::before{content:"";position:absolute;inset:0;background:radial-gradient(circle at 50% 0,rgba(255,255,255,.18),transparent 60%);pointer-events:none}
+.dkhead{display:flex;align-items:center;gap:6px;font:800 1rem var(--f-display);align-self:flex-start}
+.dkhint{font-weight:700;font-size:.82rem;color:rgba(255,255,255,.85);text-align:center;line-height:1.35}
+.dkrec{position:relative;width:86px;height:86px;border-radius:50%;border:0;cursor:pointer;background:#fff;display:grid;place-items:center;box-shadow:0 6px 0 rgba(0,0,0,.25),0 0 0 8px rgba(255,255,255,.12)}
+.dkrec .dot{width:48px;height:48px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#FF8A8A,#E5283F);box-shadow:inset 0 -4px 0 rgba(0,0,0,.18);transition:transform .2s}
+.dkrec:active .dot{transform:scale(.88)}
+.dk:not(.on):not(.done) .dkrec{animation:dkInvite 2.2s ease-in-out infinite}
+@keyframes dkInvite{0%,100%{box-shadow:0 6px 0 rgba(0,0,0,.25),0 0 0 8px rgba(255,255,255,.12)}50%{box-shadow:0 6px 0 rgba(0,0,0,.25),0 0 0 16px rgba(255,255,255,.06)}}
+.dkrec.stop{background:#E5283F;animation:dkPulse 1.4s ease-out infinite}
+.dkrec.stop .sq{width:30px;height:30px;border-radius:8px;background:#fff}
+@keyframes dkPulse{0%{box-shadow:0 6px 0 #A51F33,0 0 0 0 rgba(229,40,63,.6)}100%{box-shadow:0 6px 0 #A51F33,0 0 0 22px rgba(229,40,63,0)}}
+.dklive{width:10px;height:10px;border-radius:50%;background:#FF4B5E;box-shadow:0 0 0 3px rgba(255,75,94,.35);animation:blinkDot 1s steps(2) infinite}
+@keyframes blinkDot{50%{opacity:.25}}
+.dktime{font:800 2.4rem/1 var(--f-display);letter-spacing:.04em;font-variant-numeric:tabular-nums;text-shadow:0 0 18px rgba(255,255,255,.35)}
+.dkviz{width:100%;height:64px;display:block}
+.dk.done{align-items:stretch}
+.dkplay{display:flex;align-items:center;gap:10px;background:rgba(255,255,255,.14);border-radius:999px;padding:6px 14px 6px 6px}
+.dkpb{flex:none;width:46px;height:46px;border-radius:50%;border:0;background:#fff;color:#4B3DB8;display:grid;place-items:center;cursor:pointer;box-shadow:0 3px 0 rgba(0,0,0,.2)}
+.dkbar{flex:1;height:8px;border-radius:8px;background:rgba(255,255,255,.25);overflow:hidden}
+.dkbar i{display:block;height:100%;width:0;border-radius:8px;background:linear-gradient(90deg,#7BF2C4,#FFC233);transition:width .2s linear}
+#dkdur{font:800 .9rem var(--f-body);font-variant-numeric:tabular-nums;min-width:34px;text-align:right}
+.dk .rowbtns .btn:not(.good){background:rgba(255,255,255,.16)!important;color:#fff!important;box-shadow:none!important}
+.dksent{display:grid;grid-template-columns:auto 1fr;column-gap:10px;align-items:center;background:rgba(123,242,196,.16);border-radius:18px;padding:10px 12px;animation:popUp .4s cubic-bezier(.3,1.6,.5,1)}
+.dksent span{grid-row:1/3;font-size:1.8rem}.dksent b{font:800 .98rem var(--f-display)}.dksent small{font-weight:700;font-size:.78rem;color:rgba(255,255,255,.85)}
+.pnew{font-style:normal;background:#FF7A3D;color:#fff;border-radius:999px;padding:0 7px;font-size:.72rem;margin-left:4px}
+html.lite .dkrec,html.lite .dklive{animation:none!important}
+
+/* ===== Domček 2.0 – detailná izba ===== */
+.kutikv{padding-top:4px}
+.kutikv .bearroom{padding:12px 10px 12px}
+.brscene.v2{height:min(64vh,520px)!important;background:#FFE6C4!important;border-radius:26px!important;perspective:none}
+.brscene.v2 svg.room{position:absolute;inset:0;width:100%;height:100%;display:block}
+.brscene.v2 svg.room [data-a]{cursor:pointer;transition:filter .2s}
+.brscene.v2 svg.room [data-a]:active{filter:brightness(1.12)}
+.brscene.v2 .bcfig{position:absolute!important;left:52%!important;bottom:7%!important;top:auto!important;right:auto!important;width:48%!important;height:auto!important;aspect-ratio:1;transform:translateX(-50%);z-index:2;margin:0!important}
+.brscene.v2 .brbub{bottom:auto!important;top:42%!important;left:10px!important;right:auto!important;border-radius:16px 16px 16px 4px!important;max-width:38%!important;z-index:3;border:0!important;box-shadow:0 6px 16px -6px rgba(35,22,58,.4)!important}
+.brscene.v2 .brhoney{z-index:3;border:0!important;box-shadow:0 3px 0 #C98A00}
+.brscene.v2 .bzz{left:58%;top:34%;right:auto;z-index:3;font-size:1.6rem}
+.brscene.v2 .crL,.brscene.v2 .crR{transition:transform .7s cubic-bezier(.3,1.2,.5,1)}
+.brscene.v2 .crL{transform-origin:18px 34px;transform:scaleX(.55)}
+.brscene.v2 .crR{transform-origin:138px 34px;transform:scaleX(.55)}
+.brscene.v2.curt .crL,.brscene.v2.curt .crR{transform:scaleX(1.7)}
+.brscene.v2 .rmmoon,.brscene.v2 .rmstars{opacity:0;transition:opacity 1s}
+.brscene.v2 .rmsun,.brscene.v2 .rmcloud{transition:opacity 1s}
+.brscene.v2 .rmcloud{animation:rmCloud 14s ease-in-out infinite alternate}
+@keyframes rmCloud{to{transform:translateX(40px)}}
+.brscene.v2.dusk .sk1{stop-color:#FF9F6B}.brscene.v2.dusk .sk2{stop-color:#FFD6A0}
+.brscene.v2.night .sk1{stop-color:#141036}.brscene.v2.night .sk2{stop-color:#3A2C8A}
+.brscene.v2.night .rmsun,.brscene.v2.night .rmcloud{opacity:0}
+.brscene.v2.night .rmmoon,.brscene.v2.night .rmstars{opacity:1}
+.brscene.v2 .rmstars circle{animation:blinkDot 2.4s ease-in-out infinite}
+.brscene.v2 .rmstars circle:nth-child(2n){animation-delay:1.1s}
+.brscene.v2 .rmnight{opacity:0;pointer-events:none;transition:opacity 1.6s}
+.brscene.v2.night .rmnight{opacity:.55}.brscene.v2.dusk .rmnight{opacity:.12}
+.brscene.v2 .rmglow,.brscene.v2 .rmnightglow{opacity:0;transition:opacity .6s;pointer-events:none}
+.brscene.v2.lampon .rmglow,.brscene.v2.night .rmnightglow,.brscene.v2.dusk .rmglow{opacity:1}
+.brscene.v2.lampon .rmshade,.brscene.v2.night .rmshade,.brscene.v2.dusk .rmshade{opacity:1}
+.brscene.v2 .rmsteam{animation:rmSteam 2.6s ease-in-out infinite}
+@keyframes rmSteam{0%{opacity:0;transform:translateY(2px)}40%{opacity:.8}100%{opacity:0;transform:translateY(-6px)}}
+.brscene.v2 .rmclock.wig{animation:rmWig .6s ease-in-out;transform-origin:196px 40px;transform-box:view-box}
+@keyframes rmWig{25%{transform:rotate(-6deg)}75%{transform:rotate(6deg)}}
+.brscene.v2 .rmnotes{opacity:0}
+.brscene.v2 .rmshelf.playing .rmnotes{animation:rmNotes 1.2s ease-out infinite}
+@keyframes rmNotes{0%{opacity:0;transform:translateY(6px)}30%{opacity:1}100%{opacity:0;transform:translate(6px,-14px)}}
+.brscene.v2 .rmdrops{opacity:0}
+.brscene.v2 .rmplant.water .rmdrops{animation:rmDrop 1.1s ease-in 2}
+@keyframes rmDrop{0%{opacity:1;transform:translateY(-6px)}100%{opacity:0;transform:translateY(26px)}}
+.brscene.v2 .rmplant g:first-child{transform-box:fill-box}
+.brscene.v2 .rmplant.water>g:first-child{animation:rmSway 1.2s ease-in-out 2}
+@keyframes rmSway{25%{transform:translate(0,-26px) rotate(-4deg)}75%{transform:translate(0,-26px) rotate(4deg)}}
+.kutikv .bract{grid-template-columns:repeat(5,1fr)}
+html.lite .brscene.v2 *{animation:none!important}
 </style>
 <svg width="0" height="0" style="position:absolute\" aria-hidden="true"><defs><radialGradient id="bfur" cx="34%" cy="24%" r="92%"><stop offset="0" stop-color="#E9B67C"/><stop offset=".38" stop-color="#C98949"/><stop offset=".78" stop-color="#975924"/><stop offset="1" stop-color="#673513"/></radialGradient><radialGradient id="bfur2" cx="36%" cy="26%" r="88%"><stop offset="0" stop-color="#E0A465"/><stop offset=".6" stop-color="#A86A33"/><stop offset="1" stop-color="#6A3A18"/></radialGradient><linearGradient id="b3shade" x1="0" y1="0" x2="0" y2="1"><stop offset=".45" stop-color="#3A1E08" stop-opacity="0"/><stop offset="1" stop-color="#3A1E08" stop-opacity=".38"/></linearGradient><radialGradient id="b3gloss" cx="33%" cy="17%" r="30%"><stop offset="0" stop-color="#fff" stop-opacity=".42"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></radialGradient><radialGradient id="b3rim" cx="50%" cy="45%" r="55%"><stop offset=".82" stop-color="#FFD9A8" stop-opacity="0"/><stop offset="1" stop-color="#FFD9A8" stop-opacity=".28"/></radialGradient><radialGradient id="bbelly" cx="50%" cy="28%" r="80%"><stop offset="0" stop-color="#FFF2DC"/><stop offset="1" stop-color="#D9AE80"/></radialGradient><radialGradient id="beye" cx="40%" cy="30%" r="80%"><stop offset="0" stop-color="#6B4028"/><stop offset=".55" stop-color="#2E1A14"/><stop offset="1" stop-color="#1A0E0A"/></radialGradient><radialGradient id="bear" cx="50%" cy="40%" r="70%"><stop offset="0" stop-color="#F7D6B4"/><stop offset="1" stop-color="#E3AE86"/></radialGradient><radialGradient id="bsnout" cx="42%" cy="30%" r="78%"><stop offset="0" stop-color="#FFF6E6"/><stop offset=".6" stop-color="#F1D4AB"/><stop offset="1" stop-color="#D2A878"/></radialGradient><radialGradient id="bcheek" cx="50%" cy="50%" r="50%"><stop offset="0" stop-color="#FF7F9A" stop-opacity=".8"/><stop offset="1" stop-color="#FF7F9A" stop-opacity="0"/></radialGradient><linearGradient id="bbow" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#4FD3A5"/><stop offset="1" stop-color="#1F9D78"/></linearGradient><radialGradient id="cg" cx="35%" cy="30%" r="75%"><stop offset="0" stop-color="#FFF4B0"/><stop offset=".45" stop-color="#FFD23F"/><stop offset="1" stop-color="#E09A00"/></radialGradient><linearGradient id="cg2" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#FFE77A"/><stop offset="1" stop-color="#C77F00"/></linearGradient></defs><symbol id="coin" viewBox="0 0 40 40"><circle cx="20" cy="20" r="19" fill="url(#cg2)"/><circle cx="20" cy="20" r="15.5" fill="url(#cg)" stroke="#B87400" stroke-width="1.2"/><g stroke="#C98200" stroke-width="2" stroke-linecap="round"><path d="M20 7.5v3.5M20 29v3.5M7.5 20h3.5M29 20h3.5M11.2 11.2l2.4 2.4M26.4 26.4l2.4 2.4M28.8 11.2l-2.4 2.4M13.6 26.4l-2.4 2.4"/></g><circle cx="20" cy="20" r="5.5" fill="#FFB800" stroke="#C98200" stroke-width="1.5"/><path d="M12 12.5a11 11 0 0 1 9-4.5" stroke="#FFFBE0" stroke-width="2" fill="none" stroke-linecap="round" opacity=".9"/></symbol></svg>
 <div class="blobs" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div>

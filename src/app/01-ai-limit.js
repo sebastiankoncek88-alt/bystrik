@@ -10,7 +10,7 @@ const AIL_MSG = 'Na dnes som už minul všetky svoje AI sily 🧸. Zajtra ti zas
 function aiGuard(raw) {
   if (!raw) return null;
   const pre = (input, opts) => { const need = aiEst(input) + 200 + ((opts && opts.images && opts.images.length) || 0) * 1300; if (aiUsed() + need > aiLimit()) throw { code: 'ai_limit', message: AIL_MSG }; return need; };
-  const w = async (input, opts = {}) => { const need = pre(input, opts); LAST_USAGE = null; const r = await raw(input, opts); aiAdd(LAST_USAGE || need + aiEst(r && r.text)); return r; };
+  const w = async (input, opts = {}) => { const need = pre(input, opts); LAST_USAGE = null; const o = (window.claude && window.claude.use) ? (({ max, effort, ...rest }) => rest)(opts) : opts; const r = await raw(input, o); aiAdd(LAST_USAGE || need + aiEst(r && r.text)); return r; };
   w.json = async (input, opts = {}) => { const need = pre(input, opts); LAST_USAGE = null; const r = await raw.json(input, opts); aiAdd(LAST_USAGE || need + aiEst(r)); return r; };
   w.limits = raw.limits ? (...a) => raw.limits(...a) : async () => null;
   return w;

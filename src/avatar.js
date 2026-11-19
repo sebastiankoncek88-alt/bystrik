@@ -148,7 +148,7 @@ function avatarSvg(av, opts = {}) {
   const pet = itemOf('pet', av.pet);
   if (false && pet.e && !opts.crop && !opts.noPet) s += `<g class="pet"><ellipse cx="166" cy="296" rx="20" ry="5" fill="#000" opacity=".12"/><text x="166" y="291" font-size="38" text-anchor="middle">${pet.e}</text></g>`;
 
-  const vb = { head: ['kral', 'astronaut'].includes(av.top) || ['sampion', 'vavrin', 'bronz', 'korunka', 'diamant', 'carodej', 'cylinder', 'pirklobuk', 'kuchciapka', 'vrtulka', 'svatoziara', 'usi', 'kovboj', 'siltovka', 'cepicka'].includes(av.acc) ? '28 -14 144 144' : '36 30 128 128', acc: '22 -16 156 156', top: '35 132 130 130', bottom: '45 196 110 110', shoes: '62 262 76 34' }[opts.crop] || '0 0 200 310';
+  const vb = { head: ['kral', 'astronaut'].includes(av.top) || ['sampion', 'vavrin', 'bronz', 'korunka', 'diamant', 'carodej', 'cylinder', 'pirklobuk', 'kuchciapka', 'vrtulka', 'svatoziara', 'usi', 'kovboj', 'siltovka', 'cepicka'].includes(av.acc) ? '22 -6 156 156' : '30 22 140 140', acc: '22 -16 156 156', top: '35 132 130 130', bottom: '45 196 110 110', shoes: '62 262 76 34' }[opts.crop] || '0 0 200 310';
   return `<svg class="avatar ${opts.cls || ''}" viewBox="${vb}" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="avatar">${s}</svg>`;
 }
 

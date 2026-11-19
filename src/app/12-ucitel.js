@@ -42,6 +42,7 @@ function myClsCard(p) {
 async function deleteAccount() {
   const online = typeof SUPA_ON === 'function' && SUPA_ON() && AUTH;
   if (online) {
+    try { await recRemove(DATA.profiles.flatMap(p => (p.readings || []).map(x => x.cloud)).filter(Boolean)); } catch (e) { }
     let full = false; try { await sb('POST', 'rpc/delete_me', {}); full = true; } catch (e) { }
     if (!full) { const codes = DATA.profiles.map(p => p.fc).filter(Boolean); const uid = AUTH.uid; const tryDel = async q => { try { await sb('DELETE', q); } catch (e) { } };
       if (codes.length) { const c = codes.join(','); await tryDel('messages?from_code=in.(' + c + ')'); await tryDel('friends?my_code=in.(' + c + ')'); }
