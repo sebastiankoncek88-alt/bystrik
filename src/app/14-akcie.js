@@ -36,7 +36,7 @@ const ACT = {
   next: () => nextStep(), explain: () => explainQ(), speak: () => say(Q.cur.speak, Q.cur.speakLang),
   calc: () => openCalc(), ck: d => calcKey(d.k),
   'nl-set': d => { NL.from = NL.at = +d.n; sfx('pop'); nlDraw(true); try { say(String(NL.at)); } catch (e) { } },
-  'nl-step': d => { const n = NL.at + +d.d; if (n < 0 || n > 20) { sfx('no'); return; } NL.at = n; sfx('tap'); nlDraw(true); try { say(String(n)); } catch (e) { } },
+  'nl-step': d => { const n = NL.at + +d.d; if (n < 0 || n > nlMax()) { sfx('no'); return; } NL.at = n; sfx('tap'); nlDraw(true); try { say(String(n)); } catch (e) { } },
   'nl-reset': () => { NL = { from: 0, at: 0 }; sfx('whoosh'); nlDraw(true); },
   'help-tab': d => { HELPTAB[d.s] = d.t; sfx('tap'); $$('.htabs .chip').forEach(c => c.classList.toggle('on', c.dataset.t === d.t)); const b = $('#hbody'); if (b) b.innerHTML = helpBody(d.s, d.t); },
   quit: () => { const b = Q.back; Q = null; go(b.v, b.p, 'b'); },
