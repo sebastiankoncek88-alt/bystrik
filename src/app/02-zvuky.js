@@ -2,7 +2,11 @@
 let AC = null;
 function ac() { if (!AC) { try { AC = new (window.AudioContext || window.webkitAudioContext)(); } catch (e) { } } if (AC && AC.state !== 'running') { try { AC.resume(); } catch (e) { } } return AC; }
 /* iPhone: zvuk musí odomknúť ťuknutie (synchronne) a bez „playback“ ho stlmí prepínač tichého režimu */
+let SAYQ = [], TTSOK = false;
+/* iPhone: reč sa odomkne len prvým ťuknutím – prázdna tichá veta */
+function ttsUnlock() { if (TTSOK || !('speechSynthesis' in window)) return; TTSOK = true; try { const u = new SpeechSynthesisUtterance(' '); u.volume = 0; speechSynthesis.speak(u); } catch (e) { } }
 function audioUnlock() {
+  ttsUnlock();
   try { if (navigator.audioSession) navigator.audioSession.type = 'playback'; } catch (e) { }
   const a = ac(); if (!a) return;
   try { const b = a.createBuffer(1, 1, 22050), s = a.createBufferSource(); s.buffer = b; s.connect(a.destination); s.start(0); } catch (e) { }
@@ -48,7 +52,7 @@ const slovakVoice = () => { loadVoices(); const v = pickVoice('sk-SK'); return v
 function say(text, lang = 'sk-SK') {
   if (!DATA.settings.voice || !('speechSynthesis' in window)) return;
   try {
-    speechSynthesis.cancel(); if (!VOICES.length) loadVoices();
+    const busy = speechSynthesis.speaking || speechSynthesis.pending; if (busy) speechSynthesis.cancel(); if (!VOICES.length) loadVoices();
     let t = text;
     if (lang === 'sk-SK') t = t.replace(/ · /g, ' krát ').replace(/ : /g, ' delené ').replace(/ − /g, ' mínus ').replace(/ \+ /g, ' plus ').replace(/ = \?/g, ' sa rovná koľko?').replace(/_/g, ' ').replace(/[„“"]/g, '');
     const v = pickVoice(lang);
@@ -57,7 +61,9 @@ function say(text, lang = 'sk-SK') {
     parts.forEach(seg => { const x = seg.trim(); if (!x) return; const u = new SpeechSynthesisUtterance(x); if (v) { u.voice = v; u.lang = v.lang; } else u.lang = lang; u.rate = lang === 'sk-SK' ? .85 : .8; u.pitch = 1.05; us.push(u); });
     const talk = on => document.querySelectorAll('.obbear,.tutbear,.herobear').forEach(e => e.classList.toggle('talking', on));
     if (us.length) { us[0].onstart = () => talk(true); const last = us[us.length - 1]; last.onend = last.onerror = () => talk(false); }
-    us.forEach(u => speechSynthesis.speak(u));
+    /* iPhone: drž odkazy (inak sa reč preruší) a po cancel() chvíľu počkaj, inak Safari vetu zahodí */
+    SAYQ = us; const run = () => { try { if (speechSynthesis.paused) speechSynthesis.resume(); } catch (e) { } us.forEach(u => speechSynthesis.speak(u)); };
+    if (busy) setTimeout(run, 140); else run();
   } catch (e) { }
 }
 function sayOld(text, lang = 'sk-SK') {
