@@ -229,6 +229,8 @@ function idb() { return new Promise((res, rej) => { try { const r = indexedDB.op
 async function idbOp(mode, fn) { const db = await idb(); return new Promise((res, rej) => { const tx = db.transaction('rec', mode); const st = tx.objectStore('rec'); const q = fn(st); tx.oncomplete = () => res(q && q.result); tx.onerror = () => rej(tx.error); }); }
 
 VIEWS.room = roomView;
+VIEWS.kutik = () => `${topbar('back-home')}<main class="view kutikv"><h1 style="font-size:2rem">Bystríkov domček</h1>${bearCorner(P())}</main>${nav('home')}`;
+AFTER.kutik = () => { try { bearIdleStart(); } catch (e) { } };
 
 /* --- úvod --- */
 let OB = null;
@@ -258,7 +260,7 @@ function heroScene(p, bag) {
   const msg = left === 0 ? 'Batôžtek je vybalený! Si šikovná hlávka. 🎉' : left === bag.length ? `Zbalil som ti batôžtek! Sú v ňom ${bag.length} veci.` : `Ešte ${left} ${plural(left, 'vec', 'veci', 'vecí')} v batôžtku. Poďme!`;
   return `<section class="hero2 ${night ? 'night' : ''}"><i class="h2sun" aria-hidden="true"></i><i class="h2cloud c1" aria-hidden="true"></i><i class="h2cloud c2" aria-hidden="true"></i><i class="h2stars" aria-hidden="true"></i><i class="h2hill h1" aria-hidden="true"></i><i class="h2hill h2" aria-hidden="true"></i>
   <button class="h2kid press" data-a="nav" data-v="wardrobe" aria-label="Moja postavička">${avatarSvg(p.av, { cls: 'idle', noBg: true })}</button>
-  <button class="h2bear press" data-a="hero-bear" aria-label="Bystrík">${bearSvg('')}</button>
+  <button class="h2bear press" data-a="hero-bear" aria-label="Bystríkov domček">${bearSvg('')}</button>
   <div class="h2bub"><b>${msg}</b></div></section>`;
 }
 function homeBag(p, d) {
@@ -283,8 +285,9 @@ VIEWS.home = () => {
   const bagCard = `<section class="card bag2"><div class="b2head"><span class="b2ic" aria-hidden="true">🎒</span><h2>Dnešný batôžtek</h2><span class="b2n">${bagN} z ${bag.length}</span></div>${bag.map((x, k) => `<button class="b2row press ${x.done ? 'done' : ''} ${x === nextB ? 'now' : ''}" data-a="${x.a}" style="--c:${x.c};animation-delay:${.1 + k * .07}s"><span class="b2i">${x.i}</span><span class="grow"><b>${esc(x.n)}</b><small>${esc(x.s)}</small></span>${x.done ? '<span class="b2ok" aria-label="Hotovo">✓</span>' : x === nextB ? '<span class="b2now">TERAZ</span>' : '<span class="b2dot"></span>'}</button>`).join('')}<div class="b2foot">🎁 ${bagN === bag.length ? 'Batôžtek je vybalený, zajtra bude nový!' : 'Po vybalení všetkého čaká ohňostroj a odmena v Dnešnej ceste.'}</div></section>`;
   const mainBtn = nextB ? `<button class="btn primary block bigplay press" data-a="${nextB.a}"><span class="bpi">▶</span>${nextB.a === 'go-start' ? 'Pokračuj v učení' : esc(nextB.n)}</button>` : `<button class="btn primary block bigplay press" data-a="go-start"><span class="bpi">▶</span>Ešte jedno kolo?</button>`;
   const chips = `<div class="hchips"><button class="hchip press" data-a="rtab-go" data-t="streak"><span>🔥</span>${p.streak.count} ${plural(p.streak.count, 'deň', 'dni', 'dní')}</button><button class="hchip press" data-a="nav" data-v="rewards"><span>🏆</span>Odmeny</button><button class="hchip press" data-a="nav" data-v="board"><span>🥇</span>Rebríček</button>${claimable || drReady(p) ? '<button class="hchip hot press" data-a="home-tasks"><span>🎁</span>Vyzdvihni</button>' : ''}</div>`;
-  return `${topbar()}<main class="view home2">${heroScene(p, bag)}${bagCard}${mainBtn}${drReady(p) ? drCard(p) : ''}${chips}${parentNeedCard()}${a2hsCard()}${ptaskCard(p)}
-  ${bearCorner(p)}
+  const b = bearInit(p), bm = bearMood(p), lb = (typeof LBME !== 'undefined' && LBME) ? LBME : null;
+  const chips2 = `<div class="hchips2"><button class="hc2 press" data-a="nav" data-v="kutik"><span>${b.asleep ? '💤' : bm === 'hungry' ? '🍯' : '🧸'}</span>${b.asleep ? 'Bystrík spinká' : bm === 'hungry' ? 'Bystrík je hladný' : 'Bystríkov domček'}</button><button class="hc2 press" data-a="nav" data-v="board"><span>🏆</span>Rebríček</button></div>`;
+  return `${topbar()}<main class="view home2">${heroScene(p, bag)}${bagCard}${mainBtn}${drReady(p) ? drCard(p) : ''}${chips2}${ptaskCard(p)}
   <details class="card hmore" ${claimable ? 'open' : ''}><summary><span>🗺️</span><b>Dnešná cesta a úlohy</b><small>${pathNodes(p, d).filter(x => x.done).length}/${pathNodes(p, d).length}</small></summary><div class="hmorein">${todayPath(p, d)}${taskCard}${drReady(p) ? '' : drCard(p)}</div></details>
   ${nextL ? `<button class="card next press" data-a="nav" data-v="rewards"><span class="thumb">${itemThumb(nr[0][0], nr[0][1], p.av)}</span><span style="min-width:0"><span class="eyebrow">Ďalšia odmena · level ${nextL}</span><b style="display:block;font-family:var(--f-display);font-size:1.1rem;line-height:1.15">${nr.map(x => rewardName(...x)).join(', ')}</b><span class="muted b" style="font-size:.88rem">Chýba ti ešte ${toNext} bodov</span></span></button>` : ''}
   </main>${nav('home')}`;

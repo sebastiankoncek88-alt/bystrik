@@ -50,7 +50,8 @@ function inboxMsg(ev, pl) {
 let FTAB = 'chats';
 VIEWS.friends = () => {
   const p = P(); const st = FR || { loading: true, list: [] };
-  const wrap = (body, tabs = '') => `${topbar('nav-me')}<main class="view pop-in"><div><h1 style="font-size:2rem">🤝 Priatelia</h1></div>${tabs}${body}</main>${nav('friends')}`;
+  const fl = st.list || [];
+  const wrap = (body, tabs = '') => `${topbar('nav-me')}<main class="view pop-in frview"><section class="frhero"><i class="frconf" aria-hidden="true"></i><div class="frht"><span>Priatelia</span><h1>Moji kamaráti</h1><small>${fl.length ? `${fl.length} ${plural(fl.length, 'kamarát', 'kamaráti', 'kamarátov')}` : 'Pridaj si prvého kamaráta'}${p.fc ? ` · môj kód <b>${esc(p.fc)}</b>` : ''}</small></div><div class="frbub">${fl.slice(0, 4).map((f, i) => `<button class="frb press" data-a="fr-open" data-c="${f.code}" style="animation-delay:${i * .25}s" aria-label="${esc(f.name)}">${frAv(f.av)}</button>`).join('')}<button class="frb add press" data-a="ftab" data-t="add" aria-label="Pridať kamaráta">+</button></div></section>${tabs}${body}</main>${nav('friends')}`;
   if (st.err === 'off') return wrap(`<section class="card duelbox">${bearSvg('')}<h2>Najprv sa prihlás</h2><p class="muted b">Priatelia fungujú len na webe po prihlásení e-mailom rodiča.</p></section>`);
   if (st.err === 'disabled') return wrap(`<section class="card duelbox">${bearSvg('comfort')}<h2>Priatelia sú vypnutí</h2><p class="muted b">Zapnúť ich môže rodič v rodičovskom účte.</p></section>`);
   if (st.err === 'missing') return wrap(`<section class="card duelbox">${bearSvg('')}<h2>Už čoskoro</h2><p class="muted b">Priatelia ešte nie sú v apke zapnutí.</p></section>`);
