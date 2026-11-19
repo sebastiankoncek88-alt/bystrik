@@ -31,7 +31,7 @@ function ghostOut(dir) {
 function render(dir) {
   const app = $('#app');
   if (dir) { const a = NAV_ORDER.indexOf(LASTVIEW), b = NAV_ORDER.indexOf(UI.view); if (a >= 0 && b >= 0 && a !== b) dir = b > a ? 'r' : 'l'; ghostOut(dir); LASTVIEW = UI.view; }
-  app.innerHTML = VIEWS[UI.view](UI.params);
+  app.innerHTML = VIEWS[UI.view](UI.params); document.documentElement.classList.toggle('adult', ['parent', 'pin', 'psetup', 'teacher', 'remote'].includes(UI.view));
   const v = app.querySelector('.view'); if (v && dir) v.classList.add('enter-' + dir);
   AFTER[UI.view] && AFTER[UI.view]();
   applyRoom(); navPill(); if (CHG) setTimeout(chgStep, 260); if (nightOn() !== LASTNIGHT) applyTheme(true); bearObs(); pathFireworks(); try { buddySync(); } catch (e) { }
@@ -51,7 +51,7 @@ const NAVIC = {
 function nav(on) {
   const p = P(); const d = ensureDay(p); const claimable = d.tasks.some(id => { const T = TASKS.find(x => x.id === id); return !d.claimed.includes(id) && (d.cnt[T.k] || 0) >= T.t; }) || drReady(p);
   const fresh = (p.seenRewards || 1) < levelInfo(p.xp).L;
-  if (['shop', 'wardrobe', 'friends', 'board', 'rewards', 'settings', 'room'].includes(on)) on = 'me'; if (on === 'games') on = 'learn';
+  if (['shop', 'wardrobe', 'friends', 'board', 'rewards', 'settings', 'room'].includes(on)) on = 'me'; if (['games', 'chat', 'notes', 'reads', 'read', 'dict', 'write', 'subject'].includes(on)) on = 'learn';
   const b = (v, n, dot) => `<button class="${on === v ? 'on' : ''}" data-a="nav" data-v="${v}" aria-label="${n}"><span class="ni">${NAVIC[v]}</span><span class="nl">${n}</span>${dot ? '<span class="dot"></span>' : ''}</button>`;
   return `<nav class="nav nav3"><div class="in">${b('home', 'Dnes', claimable && on !== 'home')}${b('learn', 'Učenie')}${b('me', 'Ja', (fresh || needBackup() || !!(FR && FR.total > 0)) && on !== 'me')}</div></nav>`;
 }

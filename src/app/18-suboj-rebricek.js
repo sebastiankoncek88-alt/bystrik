@@ -114,7 +114,7 @@ VIEWS.board = () => {
   <section class="card lbstage">${first ? '' : podium(rows, LBTAB)}</section>
   <section class="card lb">${list}</section>
   <section class="card lbprizes"><div class="sec"><h2>🎁 Denné odmeny</h2><span class="eyebrow">nové kolo o ${untilMidnight()}</span></div><p class="muted b" style="font-size:.86rem">Kto je o polnoci v rebríčku <b>Dnes</b> na 1. až 3. mieste, dostane ráno vzácny doplnok (v obchode sa kúpiť nedá) a slniečka.</p><div class="lbpz">${LB_PRIZE.map(([id, c], i) => { const it = itemOf('acc', id); return `<div class="pz p${i + 1}"><span class="pth">${itemThumb('acc', it, p.av)}</span><b>${lbMedal(i)} ${it.n}</b><small>+${c} slniečok</small></div>`; }).join('')}</div></section>
-  <p class="muted b" style="font-size:.8rem">V rebríčku je len meno, ročník a výsledky. Rodič ho vie vypnúť v rodičovskom účte.</p></main>${nav('')}`;
+  <p class="muted b" style="font-size:.8rem">V rebríčku je len meno, ročník a výsledky. Rodič ho vie vypnúť v rodičovskom účte.</p></main>${nav('me')}`;
 };
 AFTER.board = () => lbFresh();
 AFTER.duel = () => { if (FR_ON()) frFresh(20000); };
