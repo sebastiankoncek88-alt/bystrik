@@ -53,6 +53,8 @@ Písanie priateľom je predvolene vypnuté (`DATA.settings.msgOk`). Úsporný re
 - Učenie v predmete: Medový úľ (`hiveHTML`, `hiveBear`, prepínač `p.hive`, 0 = zoznam) – témy ako plásty, hviezdy = med. Strom NIE (kamarát používateľa má strom).
 - Rodič 2.0: trieda `html.adult` (render) = pokojný vzhľad (#F7F5F2, tmavé tlačidlá, Nunito), `pTop` (týždeň vetou + graf, Ide jej / Potrénovať). Hry: `html.luna` = večerná obloha. Kvíz: kamienky `pebHTML`. Šatník/Obchod majú späť do Ja (`back-me`), Obchod `dealHero` (ponuka dňa). Čítanie: zvýrazňovanie slov `.rw` + vlna `.recwave` počas nahrávania. Domček: tapeta, obraz, lampa (v noci svieti), koberec. Nastavenia dieťaťa: dlaždice `.kstile` + výber Deň/Noc/Podľa času.
 - Domov presne podľa návrhu: scéna, batôžtek, tlačidlo, 2 čipy (`.hchips2`: domček, rebríček), úlohy rozbaľovacie. Bystríkov domček je samostatná obrazovka `kutik` (ťuk na Bystríka alebo čip), späť `back-home`. Priatelia: hlavička `.frhero` s bublinkami kamarátov. Pozadie stránky je čisté (bez vzoru `body::after`, v noci hviezdy ostávajú).
+- Postavička v proporciách návrhu (chibi): v `avatarSvg` sa telo kreslí cez `BODYT` (zmenšené, posunuté) a hlava cez `HEADT` (väčšia); orezy `crop` upravené. Oči lesklé (EYa/EYb).
+- Predmet: farebná hlavička `.subhead`, výber režimu zmizol – ťuk na tému otvorí list `topicSheet` (Hrať kvíz + iné spôsoby, akcia `tmode`). Hry: veľká karta `lunaStage` + okrúhle atrakcie (`LUNASEL`, akcia `luna-sel`).
 - Návrh redizajnu: https://claude.ai/artifact/G2NpfEMXPSAHaUposn7xR9 (zatiaľ nepresunuté: nová postavička dieťaťa – treba spolu so šatníkom, Čítanie s rozsvecovaním slov, detailný Domček).
 
 ## Otvorené

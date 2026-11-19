@@ -94,12 +94,14 @@ function avatarSvg(av, opts = {}) {
   if (!opts.noBg) s += bgLayer(av, id);
   if (aura && !opts.crop) s += `<g class="aura"><radialGradient id="AU${id}"><stop offset="0" stop-color="#FFE680" stop-opacity=".85"/><stop offset=".6" stop-color="#FFB3E6" stop-opacity=".35"/><stop offset="1" stop-color="#9CC9FF" stop-opacity="0"/></radialGradient><ellipse cx="100" cy="165" rx="98" ry="150" fill="url(#AU${id})"/>${[[28, 80], [172, 70], [20, 200], [180, 210], [100, 14], [40, 280], [160, 290]].map(([x, y], i) => `<text x="${x}" y="${y}" font-size="${12 + (i % 3) * 4}" fill="#FFD23F" text-anchor="middle" class="auras" style="animation-delay:${i * .3}s">✦</text>`).join('')}</g>`;
   const bgEnd = s.length;
+  const BODYT = 'translate(0 20) translate(100 142) scale(.95 .82) translate(-100 -142)', HEADT = 'translate(100 95) scale(1.12) translate(-100 -90.75)';
+  s += `<g transform="${BODYT}">`;
 
   if (top === 'kral') s += `<path d="M66 144 L36 276 Q100 294 164 276 L134 144 Z" fill="${tc}"/><path d="M36 276 Q100 294 164 276" stroke="#fff" stroke-width="8" fill="none"/>`;
   if (av.acc === 'kridla') s += `<g class="wings"><path d="M84 156 C40 120 6 140 14 186 C30 176 46 182 60 196 C66 180 76 170 88 168Z" fill="#fff" stroke="${ac}" stroke-width="3"/><path d="M116 156 C160 120 194 140 186 186 C170 176 154 182 140 196 C134 180 124 170 112 168Z" fill="#fff" stroke="${ac}" stroke-width="3"/><path d="M30 160 Q50 160 70 176 M170 160 Q150 160 130 176" stroke="${a2}" stroke-width="3" fill="none"/></g>`;
   if (top === 'super') s += `<path d="M70 144 L44 268 Q100 284 156 268 L130 144 Z" fill="${t2}"/>`;
   if (top === 'kuzelnik') s += `<path d="M68 144 L40 272 Q100 290 160 272 L132 144 Z" fill="${tcD}"/>${[[62, 230], [140, 250], [120, 268], [80, 262]].map(([x, y]) => `<text x="${x}" y="${y}" font-size="10" fill="${t2}">★</text>`).join('')}`;
-  s += `<g transform="translate(12 3) scale(.88)">${hairLayer(hairBack, hairB)}</g>`;
+  s += `</g><g transform="${HEADT}">${hairLayer(hairBack, hairB)}</g><g transform="${BODYT}">`;
 
   s += `<rect x="80" y="200" width="18" height="84" rx="8" fill="${skin}"/><rect x="102" y="200" width="18" height="84" rx="8" fill="${skin}"/>`;
   if (top === 'astronaut') s += `<path d="M76 196 H124 L124 284 H102 L100 214 L98 284 H76 Z" fill="#EEF1F8"/><rect x="76" y="250" width="22" height="6" fill="${t2}"/><rect x="102" y="250" width="22" height="6" fill="${t2}"/>`;
@@ -126,7 +128,7 @@ function avatarSvg(av, opts = {}) {
   if (top === 'mikina') s += `<path d="M76 140 Q100 126 124 140 L118 150 Q100 140 82 150 Z" fill="${t2}"/>`;
   if (top === 'bunda') s += `<path d="M80 138 L100 150 L120 138 L124 146 L100 160 L76 146Z" fill="${tcD}"/>`;
 
-  s += `<g transform="translate(12 3) scale(.88)" class="head">`;
+  s += `</g><g transform="${HEADT}" class="head">`;
   if (av.acc === 'usi') s += `<path d="M56 60 L62 18 L90 44 Z M144 60 L138 18 L110 44 Z" fill="${ac}"/><path d="M64 50 L66 30 L80 44Z M136 50 L134 30 L120 44Z" fill="${a2}"/>`;
   s += `<circle cx="51" cy="96" r="11" fill="${skin}"/><circle cx="149" cy="96" r="11" fill="${skin}"/><path d="M47 92 q5 4 2 10 M153 92 q-5 4 -2 10" stroke="${skinD}" stroke-width="2.2" fill="none" stroke-linecap="round"/>`;
   s += `<path d="M50 86 C50 52 72 38 100 38 C128 38 150 52 150 86 C150 116 131 143.5 100 143.5 C69 143.5 50 116 50 86Z" fill="url(#SK${id})"/>`;
@@ -146,7 +148,7 @@ function avatarSvg(av, opts = {}) {
   const pet = itemOf('pet', av.pet);
   if (false && pet.e && !opts.crop && !opts.noPet) s += `<g class="pet"><ellipse cx="166" cy="296" rx="20" ry="5" fill="#000" opacity=".12"/><text x="166" y="291" font-size="38" text-anchor="middle">${pet.e}</text></g>`;
 
-  const vb = { head: ['kral', 'astronaut'].includes(av.top) || ['sampion', 'vavrin', 'bronz', 'korunka', 'diamant', 'carodej', 'cylinder', 'pirklobuk', 'kuchciapka', 'vrtulka', 'svatoziara', 'usi', 'kovboj', 'siltovka', 'cepicka'].includes(av.acc) ? '33 -8 134 134' : '43 15 114 114', acc: '28 -16 144 144', top: '30 110 140 140', bottom: '40 175 120 120', shoes: '62 264 76 42' }[opts.crop] || '0 0 200 310';
+  const vb = { head: ['kral', 'astronaut'].includes(av.top) || ['sampion', 'vavrin', 'bronz', 'korunka', 'diamant', 'carodej', 'cylinder', 'pirklobuk', 'kuchciapka', 'vrtulka', 'svatoziara', 'usi', 'kovboj', 'siltovka', 'cepicka'].includes(av.acc) ? '28 -14 144 144' : '36 30 128 128', acc: '22 -16 156 156', top: '35 132 130 130', bottom: '45 196 110 110', shoes: '62 262 76 34' }[opts.crop] || '0 0 200 310';
   return `<svg class="avatar ${opts.cls || ''}" viewBox="${vb}" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="avatar">${s}</svg>`;
 }
 
@@ -233,7 +235,7 @@ function eyesSvg(e, ink, g) {
     case 'mrk': return `<circle cx="82" cy="96" r="6.5" fill="${ink}"/><circle cx="84" cy="94" r="2" fill="#fff"/><path d="M110 97 Q118 102 127 97" stroke="${ink}" stroke-width="4.5" fill="none" stroke-linecap="round"/>${lash}`;
     case 'hviezdy': { const st = (cx, cy) => { let p = ''; for (let i = 0; i < 10; i++) { const r = i % 2 ? 4.5 : 11, a = -Math.PI / 2 + i * Math.PI / 5; p += `${(cx + r * Math.cos(a)).toFixed(1)},${(cy + r * Math.sin(a)).toFixed(1)} `; } return `<polygon points="${p}" fill="#FFC23C" stroke="${ink}" stroke-width="2" stroke-linejoin="round"/>`; }; return st(82, 96) + st(118, 96); }
     case 'srdce': { const h = (x, y) => `<path d="M${x} ${y + 9} C${x - 14} ${y} ${x - 8} ${y - 10} ${x} ${y - 3} C${x + 8} ${y - 10} ${x + 14} ${y} ${x} ${y + 9}Z" fill="#F0475A" stroke="${ink}" stroke-width="2"/>`; return h(82, 96) + h(118, 96); }
-    default: { const E = x => `<ellipse cx="${x}" cy="97" rx="6.6" ry="8" fill="${ink}"/><ellipse cx="${x}" cy="99.5" rx="4.4" ry="4.6" fill="url(#IRa${AVID})" opacity=".9"/><ellipse cx="${x + 2.2}" cy="93.6" rx="2.6" ry="2.9" fill="#fff"/><circle cx="${x - 2.2}" cy="101.4" r="1.2" fill="#fff" opacity=".85"/>`; return E(82) + E(118) + lash; }
+    default: { const E = x => `<ellipse cx="${x}" cy="97" rx="8.2" ry="9.8" fill="url(#EYb${AVID})"/><ellipse cx="${x + 2.8}" cy="92.8" rx="3.2" ry="3.6" fill="#fff"/><circle cx="${x - 2.6}" cy="101.6" r="1.6" fill="#fff" opacity=".9"/>`; return `<defs><radialGradient id="EYb${AVID}" cx="38%" cy="30%" r="80%"><stop offset="0" stop-color="#7A4A2E"/><stop offset=".55" stop-color="#2A1810"/><stop offset="1" stop-color="#150B06"/></radialGradient></defs>` + E(82) + E(118) + lash; }
   }
 }
 function mouthSvg(m, ink) {

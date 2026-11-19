@@ -21,7 +21,8 @@ const ACT = {
   subject: d => { sfx('tap'); go('subject', { s: d.s }, 'f'); },
   mode: d => { P().mode[d.s] = d.m; save(); sfx('pop'); render(null); },
   'grade-chip': d => { sfx('tap'); UI.params.g = +d.g; render(null); },
-  topic: d => { sfx('tap'); startMode(d.id); },
+  topic: d => { if (UI.view === 'subject') return topicSheet(d.id); sfx('tap'); startMode(d.id); },
+  tmode: d => { const t = TOPIC[d.id]; if (!t) return; const p = P(); p.mode[t.s] = d.m; save(); closeSheet(); sfx('tap'); startMode(d.id); },
   'close-sheet': () => closeSheet(),
   'go-start': () => { const p = P(); sfx('tap'); const g = goPlan(p); if (g.kind === 'rev') { p.goRev = today(); save(); return startReview(); } startQuiz([...new Set(g.seq)], 'go', { v: 'home', p: {} }, { seq: g.seq }); },
   daily: () => { const p = P(); sfx('tap'); const seq = dailySeq(p); startQuiz([...new Set(seq)], 'daily', { v: 'home', p: {} }, { seq }); },
@@ -162,6 +163,7 @@ const ACT = {
   'bear-tap': () => { const p = P(); const b = bearInit(p); const fig = $('.bcfig svg'); if (b.asleep) { bearSay('Psst… Bystrík spí 💤'); return; } BTAP = (BTAP || 0) + 1; const trick = BTAP % 4 === 0 ? 'bflip' : BTAP % 4 === 2 ? 'bspin' : ''; if (trick && fig && !fig.classList.contains('bdance')) { fig.classList.remove('bflip', 'bspin'); void fig.getBoundingClientRect(); fig.classList.add(trick); setTimeout(() => fig.classList.remove(trick), 1100); sfx('level'); if (trick === 'bflip') setTimeout(() => { bearSay('Salto! 🤸'); try { burst(fig, 20); } catch (e) { } }, 600); } else { try { bearJoy(fig); } catch (e) { } } const last = (p.lastEx && Date.now() - p.lastEx.t < 6 * HRS) ? 'Pamätáš? ' + p.lastEx.x : pick(BEAR_PEP); say(last); if ($('#brbub')) bearSay(last); else toast('🧸 ' + last); },
   'bear-feed': (d, el) => { const p = P(); const b = bearInit(p); if (!b.honey) { bearSay('Med zatiaľ nemáš. Dokonči nejaké učenie a dostaneš 🍯'); sfx('no'); return; } b.honey--; sfx('yum'); b.fed = Date.now(); b.asleep = false; if (LASTNIGHT) applyTheme(true); const fig = $('.bcfig svg'); if (fig && el) { const a = el.getBoundingClientRect(), t = fig.getBoundingClientRect(); const j = document.createElement('span'); j.className = 'brfly'; j.textContent = '🍯'; j.style.left = a.left + a.width / 2 + 'px'; j.style.top = a.top + 'px'; j.style.setProperty('--dx', (t.left + t.width / 2 - a.left - a.width / 2) + 'px'); j.style.setProperty('--dy', (t.top + t.height * .55 - a.top) + 'px'); document.body.appendChild(j); setTimeout(() => j.remove(), 800); }
     sfx('pop'); setTimeout(() => { try { bearJoy($('.bcfig svg')); } catch (e) { } bearSay('Mňam, mňam! Ďakujem 🍯'); bearLoveUp(p, 2); setTimeout(() => { if (UI.view === 'home') { const c = $('#bearcorner'); if (c) c.outerHTML = bearCorner(P()); } }, 1500); }, 700); },
+  'luna-sel': d => { if (LUNASEL === d.k) return; LUNASEL = d.k; sfx('pop'); render(null); },
   'back-me': () => go('me', {}, 'l'),
   'hero-bear': () => { const f = $('.h2bear'); if (f) { f.classList.remove('jump'); void f.offsetWidth; f.classList.add('jump'); } sfx('purr'); setTimeout(() => go('kutik', {}, 'f'), 420); },
   'back-home': () => go('home', {}, 'l'),
