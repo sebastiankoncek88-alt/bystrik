@@ -458,7 +458,36 @@ Pravidlá: všetko po slovensky, jednoducho a primerane veku. summary má 3 až 
 }
 let PAREA = 'all';
 /* Témy dňa: každý deň 3 iné témy (z každého predmetu jedna), za správne odpovede dvojnásobné body */
-function dayTopics(p) { return ['mat', 'sjl', 'prv'].map(k => { const ts = (SUBJECTS[k] ? SUBJECTS[k].topics : []).filter(t => t.g === p.grade); return ts.length ? dayShuffle(ts, 'td-' + k + p.grade)[0].id : null; }).filter(Boolean); }
+/* Čo už dieťa pozná: témy, ktoré mu idú (≥60 %), témy z obdobia školského roka (podľa poradia v osnove) a učivo z nižšieho ročníka.
+   Príliš ťažké témy (pod 45 % po 5+ odpovediach) sa do bežného výberu nedávajú. */
+/* mesiac školského roka, kedy sa téma zvyčajne preberá (0 = september … 9 = jún) */
+const CURR = {
+  'm1-pocet': 0, 'm1-porov': 1, 'm1-utvary': 1, 'm1-poradie': 1, 'm1-najv': 2, 'm1-do10': 2, 'm1-rozklad': 2, 'm1-doplnanie': 3, 'm1-susedia': 3, 'm1-rad': 3, 'm1-viac': 4, 'm1-tri': 4, 'm1-do20': 5, 'm1-dj': 5, 'm1-slniečka': 6, 'm1-parne': 6, 'm1-slovne': 6, 'm1-hodiny': 7,
+  's1-pismeno': 0, 's1-rymy': 0, 's1-nepatri': 0, 's1-hlasky': 1, 's1-slabiky': 1, 's1-spoj': 2, 's1-pocetslabik': 2, 's1-dopln': 3, 's1-pary': 3, 's1-dlhe': 3, 's1-makcen': 4, 's1-slova': 5, 's1-velke': 5, 's1-abeceda': 6, 's1-veta': 6,
+  'm2-prechod': 0, 'm2-dj': 1, 'm2-rady': 1, 'm2-desat': 2, 'm2-porov': 2, 'm2-do100': 3, 'm2-parne': 3, 'm2-slovne': 3, 'm2-neznamy': 4, 'm2-retaz': 4, 'm2-peniaze': 4, 'm2-utvary': 4, 'm2-zaokr': 5, 'm2-dlzka': 5, 'm2-hodiny': 7, 'm2-cas': 7,
+  's2-hlasky': 0, 's2-abc': 0, 's2-slabiky': 1, 's2-dvojhlasky': 1, 's2-koniec': 1, 's2-o': 2, 's2-vety': 2, 's2-opak': 2, 's2-zdrob': 3, 's2-spoluhlasky': 3, 's2-tvrde': 4, 's2-makke': 4, 's2-dtnl': 5, 's2-yi': 5, 's2-vlastne': 6,
+  'm2-nasob': 0, 'm3-nasobilka': 1, 'm2-dvoj': 2, 'm3-delenie': 1, 'm3-porov': 2, 'm3-do1000': 2, 'm3-trvanie': 3, 'm3-slovne': 3, 'm3-nasob10': 4, 'm3-poradie': 4, 'm3-zaokr': 5, 'm3-dlzka': 5, 'm3-geometria': 6, 'm3-rad': 7,
+  's3-spodob': 0, 's3-vybrane-bm': 1, 's3-pribuzne': 2, 's3-podobne': 2, 's3-nadradene': 2, 's3-vybrane-rs': 3, 's3-spravne': 4, 's3-druhy': 5, 's3-rod': 6,
+  'm4-velke': 0, 'm4-zaokr': 1, 'm4-pisomne': 2, 'm4-neznama': 2, 'm4-slovne': 2, 'm4-delenie': 3, 'm4-zvysok': 3, 'm4-dvakroky': 4, 'm4-jednotky': 4, 'm4-rimske': 5, 'm4-casti': 6, 'm4-obvod': 6, 'm4-obsah': 7,
+  's4-vybrane-l': 0, 's4-vybrane-mix': 1, 's4-spravne': 1, 's4-druhy': 2, 's4-vlastne': 2, 's4-a': 3, 's4-rytmicky': 3, 's4-cas': 5, 's4-osoba': 5,
+  'n1-mikulas': 3, 'n2-velkanoc': 7
+};
+const SEASONAL = { 'n1-mikulas': [11, 0], 'n2-velkanoc': [2, 3] };
+function schoolMonth() { const m = new Date().getMonth(); return m >= 8 ? m - 8 : m <= 5 ? m + 4 : 9; }
+const inSeason = id => { const s = SEASONAL[id]; if (!s) return true; const m = new Date().getMonth(); return s[0] <= s[1] ? m >= s[0] && m <= s[1] : m >= s[0] || m <= s[1]; };
+function knownTopics(p, s) {
+  const st = id => p.topics[id] || {}, acc = id => st(id).total ? st(id).correct / st(id).total : null;
+  const subs = s ? [s] : ['mat', 'sjl', 'prv']; const out = [];
+  subs.forEach(k => { const all = SUBJECTS[k] ? SUBJECTS[k].topics : []; const g = all.filter(t => t.g === p.grade && inSeason(t.id)); const sm = schoolMonth(); const win = g.filter(t => (CURR[t.id] == null ? (k === 'prv' ? 0 : 3) : CURR[t.id]) <= sm);
+    const ok = t => { const a = acc(t.id); return !(st(t.id).total >= 5 && a < .45); };
+    const good = g.filter(t => st(t.id).total >= 3 && acc(t.id) >= .6);
+    let pool = [...new Set([...good, ...win.filter(ok)])];
+    if (p.school && TOPIC[p.school] && TOPIC[p.school].s === k && !pool.some(t => t.id === p.school)) pool.unshift(TOPIC[p.school]);
+    if (pool.length < 2 && p.grade > 1) pool = pool.concat(all.filter(t => t.g === p.grade - 1 && ok(t)));
+    out.push(...pool.map(t => t.id)); });
+  return [...new Set(out)];
+}
+function dayTopics(p) { return ['mat', 'sjl', 'prv'].map(k => { const ids = knownTopics(p, k); const ts = ids.map(id => TOPIC[id]).filter(Boolean); return ts.length ? dayShuffle(ts, 'td-' + k + p.grade)[0].id : null; }).filter(Boolean); }
 const isDayTopic = (p, id) => dayTopics(p).includes(id);
 function dayTopicsCard(p) { const ids = dayTopics(p); if (!ids.length) return ''; return `<section class="card daytop"><div class="sec"><h2>🌟 Témy dňa</h2><span class="eyebrow">zajtra iné</span></div><p class="muted b" style="font-size:.84rem;margin:0 0 8px">Dnes za ne dostaneš dvojnásobné body. Každý deň sú aj nové otázky.</p><div class="dtlist">${ids.map(id => { const t = TOPIC[id]; return `<button class="card dt press" data-a="topic" data-id="${id}"><span class="ti" style="background:var(--c-${t.s}-soft)">${t.icon}</span><b>${t.name}</b><small>${SUBJECTS[t.s].name} · ×2</small></button>`; }).join('')}</div></section>`; }
 /* Medový úľ: témy ako plásty, hviezdy = med */
@@ -532,10 +561,10 @@ function goPlan(p) {
   const pt = (p.ptasks || []).find(x => !x.done && TOPIC[x.topic]); const ptT = pt ? pt.topic : null;
   const weak = g.filter(t => st(t.id).total >= 3 && st(t.id).correct / st(t.id).total < .7).map(t => t.id);
   const recent = []; for (const l of p.log) { if (l.id && TOPIC[l.id] && TOPIC[l.id].g === p.grade && !recent.includes(l.id)) recent.push(l.id); if (recent.length >= 2) break; }
-  const fresh = g.filter(t => !st(t.id).total).map(t => t.id); const newT = fresh.length ? fresh[0] : null;
+  const known = knownTopics(p); const fresh = known.filter(id => TOPIC[id].g === p.grade && !st(id).total); const newT = fresh.length ? fresh[0] : null;
   const seq = []; const add = (id, n) => { if (id) for (let i = 0; i < n; i++) seq.push(id); };
   add(school, 3); add(ptT, 2); weak.slice(0, 2).forEach(id => add(id, 2)); recent.forEach(id => add(id, 1)); add(newT, 2);
-  const pool = g.map(t => t.id); while (seq.length < 10) seq.push(pick(pool)); seq.length = 10;
+  const pool = known.length ? known : g.map(t => t.id); while (seq.length < 10) seq.push(pick(pool)); seq.length = 10;
   const main = TOPIC[school || ptT || weak[0] || newT || seq[0]];
   const parts = [school && '📌 téma zo školy', ptT && '📋 úloha od rodiča', weak.length && '🔁 slabšie témy', newT && '✨ niečo nové'].filter(Boolean);
   return { kind: 'mix', seq: shuffle(seq), t: school ? 'Precvič, čo preberáte v škole' : 'Tvoje dnešné učenie', d: parts.length ? parts.slice(0, 3).join(' · ') : `${main.icon} ${main.name} a ďalšie`, e: main.icon };
@@ -899,7 +928,7 @@ function simonPlay() { if (!GM || GM.ended) return; GM.lockIn = true; GM.in = 0;
 /* Počtové preteky */
 function raceDraw(full) { if (full) { const q = $('#raceq'); if (q) q.innerHTML = `<div class="target">${esc(GM.rq.text)}</div><div class="opts" style="grid-template-columns:repeat(3,1fr)">${GM.rq.opts.map((o, i) => `<button class="card opt press" data-a="race-ans" data-i="${i}">${esc(o)}</button>`).join('')}</div>`; } const a = $('#carme'), b = $('#carbot'); if (a) a.style.left = (GM.pos * 8.4) + '%'; if (b) b.style.left = (GM.bot * 8.4) + '%'; }
 function frogQ(g) {
-  const ts = ALL_TOPICS.filter(t => t.g === g && t.s === 'mat' && t.gen); const ts2 = ts.length ? ts : ALL_TOPICS.filter(t => t.g <= g && t.s === 'mat' && t.gen);
+  const kn = P() ? knownTopics(P(), 'mat').map(id => TOPIC[id]).filter(t => t && t.gen) : []; const ts = kn.length ? kn : ALL_TOPICS.filter(t => t.g === g && t.s === 'mat' && t.gen); const ts2 = ts.length ? ts : ALL_TOPICS.filter(t => t.g <= g && t.s === 'mat' && t.gen);
   for (let k = 0; k < 30; k++) { try { const q = makeQuestion(pick(ts2)); if (q.html || !q.options || q.options.length < 3 || q.text.length > 60 || q.options.some(o => String(o).length > 9)) continue; const w = shuffle(q.options.filter(o => o !== q.answer)).slice(0, 2); return { text: q.text, answer: q.answer, opts: shuffle([q.answer, ...w]) }; } catch (e) { } }
   const a = R(2, 9), b = R(2, 9); return { text: `${a} + ${b} = ?`, answer: String(a + b), opts: shuffle([a + b, a + b + 1, a + b - 2].map(String)) };
 }
@@ -1261,7 +1290,7 @@ function dailySeq(p) {
   const since = Date.now() - 4 * DAYMS; const recent = [];
   for (const l of p.log) { if (l.t < since) break; if (l.id && TOPIC[l.id] && TOPIC[l.id].g > 0 && !recent.includes(l.id)) recent.push(l.id); if (recent.length >= 3) break; }
   const grade = ALL_TOPICS.filter(t => t.g === p.grade).map(t => t.id);
-  const base = recent.length ? recent : shuffle(grade).slice(0, 3);
+  const kn = knownTopics(p); const base = recent.length ? recent : shuffle(kn.length ? kn : grade).slice(0, 3);
   const seq = [];
   for (let i = 0; i < 5; i++) seq.push(base[i % base.length]);
   for (let i = 0; i < 3; i++) seq.push('gk');
