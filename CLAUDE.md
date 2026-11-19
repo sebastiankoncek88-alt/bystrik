@@ -55,7 +55,7 @@ Písanie priateľom je predvolene vypnuté (`DATA.settings.msgOk`). Úsporný re
 - Domov presne podľa návrhu: scéna, batôžtek, tlačidlo, 2 čipy (`.hchips2`: domček, rebríček), úlohy rozbaľovacie. Bystríkov domček je samostatná obrazovka `kutik` (ťuk na Bystríka alebo čip), späť `back-home`. Priatelia: hlavička `.frhero` s bublinkami kamarátov. Pozadie stránky je čisté (bez vzoru `body::after`, v noci hviezdy ostávajú).
 - Postavička v proporciách návrhu (chibi): v `avatarSvg` sa telo kreslí cez `BODYT` (zmenšené, posunuté) a hlava cez `HEADT` (väčšia); orezy `crop` upravené. Oči lesklé (EYa/EYb).
 - Predmet: farebná hlavička `.subhead`, výber režimu zmizol – ťuk na tému otvorí list `topicSheet` (Hrať kvíz + iné spôsoby, akcia `tmode`). Hry: veľká karta `lunaStage` + okrúhle atrakcie (`LUNASEL`, akcia `luna-sel`).
-- Úvod pre nové dieťa = `onboard2` (4 kroky podľa návrhu: meno, ročník kamienky, postavička z 4 `OB2_LOOKS`, takto to funguje; `OB.step2`, akcie ob2-*). Úprava profilu (`OB.edit`) ostáva po starom.
+- Úvod pre nové dieťa = `onboard2` (4 kroky podľa návrhu: meno, ročník kamienky, dievča alebo chlapec (`ob2-gen`, `OB.g2`) + 4 účesy `OB2_LOOKS[g]`, takto to funguje; `OB.step2`, akcie ob2-*). Úprava profilu (`OB.edit`) ostáva po starom.
 - Návrh redizajnu: https://claude.ai/artifact/G2NpfEMXPSAHaUposn7xR9 (zatiaľ nepresunuté: nová postavička dieťaťa – treba spolu so šatníkom, Čítanie s rozsvecovaním slov, detailný Domček).
 
 ## Otvorené

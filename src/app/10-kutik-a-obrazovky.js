@@ -237,21 +237,21 @@ let OB = null;
 const OB_T = ['', 'Ahoj! Ako sa voláš?', 'Si dievča alebo chlapec?', 'Do ktorej triedy chodíš?', 'Vyber si zvieratko! Bude tvojím kamarátom.', 'Aký účes sa ti páči?', 'Teraz si navrhni pozadie!'];
 const OB_HELLO = 'Ahoj! Ja som medvedík Bystrík. Spolu sa budeme učiť matiku, slovinu aj veci zo sveta. Za učenie dostaneš body, slniečka a nové oblečenie. Poďme na to!';
 /* ===== Úvod 2.0 podľa návrhu: 4 kroky s Bystríkom ===== */
-const OB2_T = ['Ahoj! Ja som Bystrík. Budem sa s tebou učiť. Ako sa voláš?', 'Do ktorej triedy chodíš?', 'Aký chceš byť? Vyber si postavičku.', 'Takto to funguje. Poďme na to!'];
-const OB2_LOOKS = [['d', 'dlhe', 'Dlhé vlasy'], ['d', 'vrkoce', 'Copíky'], ['c', 'kratke', 'Krátke'], ['c', 'afro', 'Kučery']];
+const OB2_T = ['Ahoj! Ja som Bystrík. Budem sa s tebou učiť. Ako sa voláš?', 'Do ktorej triedy chodíš?', 'Si dievča alebo chlapec? Ťukni na postavičku.', 'Takto to funguje. Poďme na to!'];
+const OB2_LOOKS = { d: [['dlhe', 'Dlhé vlasy'], ['vrkoce', 'Copíky'], ['chvost', 'Chvost'], ['pixie', 'Krátke']], c: [['kratke', 'Krátke'], ['strapate', 'Strapaté'], ['afro', 'Kučery'], ['patka', 'S patkou']] };
 function onboard2() {
   const s = OB.step2 || 0;
   const dots = `<div class="ob2dots">${[0, 1, 2, 3].map(i => `<i class="${i === s ? 'on' : i < s ? 'done' : ''}"></i>`).join('')}</div>`;
   let body = '';
   if (s === 0) body = `<label class="ob2lbl" for="ob-name">Tvoje meno alebo prezývka</label><input class="field ob2in" id="ob-name" maxlength="16" autocomplete="off" placeholder="napríklad Viki" value="${esc(OB.name || '')}"><p class="ob2hint">🔊 Bystrík otázku prečíta nahlas · meno môže napísať aj rodič</p>`;
   if (s === 1) body = `<div class="ob2grades">${[1, 2, 3, 4].map(g => `<button class="ob2g press g${g} ${OB.grade === g ? 'on' : ''}" data-a="ob2-grade" data-g="${g}"><b>${g}.</b><span>ročník</span></button>`).join('')}</div><p class="ob2hint">Ročník sa dá neskôr zmeniť v nastaveniach.</p>`;
-  if (s === 2) body = `<div class="ob2looks">${OB2_LOOKS.map(([g, h, n], i) => { const av = { ...defaultAvatar(g), hair: h }; const on = OB.look === i; return `<button class="ob2look press ${on ? 'on' : ''}" data-a="ob2-look" data-i="${i}" aria-label="${n}"><span class="ob2av">${avatarSvg(av, { crop: 'head' })}</span>${n}</button>`; }).join('')}</div><p class="ob2hint">Všetko ostatné si zmeníš neskôr v šatníku.</p>`;
+  if (s === 2) { const g = OB.g2 || null; body = `<div class="ob2gen" role="radiogroup" aria-label="Dievča alebo chlapec">${[['d', 'Dievča'], ['c', 'Chlapec']].map(([k, n]) => `<button class="ob2gb press ${g === k ? 'on' : ''}" data-a="ob2-gen" data-g="${k}" role="radio" aria-checked="${g === k}"><span class="ob2gf">${avatarSvg({ ...defaultAvatar(k) }, { noBg: true, noPet: true })}</span>${n}</button>`).join('')}</div>${g ? `<span class="ob2lbl">Vyber si účes</span><div class="ob2looks">${OB2_LOOKS[g].map(([h, n], i) => { const av = { ...defaultAvatar(g), hair: h }; const on = OB.look === i; return `<button class="ob2look press ${on ? 'on' : ''}" data-a="ob2-look" data-i="${i}" aria-label="${n}"><span class="ob2av">${avatarSvg(av, { crop: 'head' })}</span>${n}</button>`; }).join('')}</div>` : ''}<p class="ob2hint">Všetko ostatné si zmeníš neskôr v šatníku.</p>`; }
   if (s === 3) body = `<div class="ob2how">${[['🎒', 'Každý deň ti zbalím batôžtek', 'tri veci: tému, hru a opakovanie'], ['⭐', 'Za učenie dostaneš odmeny', 'hviezdy, slniečka a nové oblečenie'], ['🧸', 'Staraj sa o mňa v domčeku', 'nakŕm ma medom a pohladkaj']].map(([e, b, sm], i) => `<div style="animation-delay:${i * .12}s"><span>${e}</span><p><b>${b}</b><small>${sm}</small></p></div>`).join('')}</div>`;
   const can = s === 1 ? !!OB.grade : s === 2 ? OB.look != null : true;
   const btn = s === 3 ? `<button class="btn primary block bigplay" data-a="ob-done">Začíname!</button>` : `<button class="btn primary block bigplay ${can ? '' : 'off'}" data-a="ob2-next" ${can ? '' : 'aria-disabled="true"'}>Ďalej</button>`;
   return `<main class="view nonav ob2"><div class="ob2top">${s > 0 ? '<button class="iconbtn press" data-a="ob2-back" aria-label="Späť">←</button>' : '<span></span>'}${dots}<span></span></div>
   <section class="ob2hero"><i class="ob2c c1"></i><i class="ob2c c2"></i><button class="ob2bear" data-a="ob-say" aria-label="Bystrík – prečítať znova">${bearSvg(s === 3 ? 'cheer' : '')}</button></section>
-  <h1 class="ob2title">${['Ahoj! Ja som Bystrík.', 'Do ktorej triedy chodíš?', 'Aký chceš byť?', 'Takto to funguje'][s]}</h1><p class="ob2sub">${['Budem sa s tebou učiť. Ako sa voláš?', 'Ťukni na svoj ročník.', 'Vyber si postavičku.', 'Tri veci, ktoré treba vedieť.'][s]}</p>
+  <h1 class="ob2title">${['Ahoj! Ja som Bystrík.', 'Do ktorej triedy chodíš?', 'Aký chceš byť?', 'Takto to funguje'][s]}</h1><p class="ob2sub">${['Budem sa s tebou učiť. Ako sa voláš?', 'Ťukni na svoj ročník.', 'Si dievča alebo chlapec?', 'Tri veci, ktoré treba vedieť.'][s]}</p>
   ${body}<div class="ob2foot">${btn}${s === 0 && DATA.profiles.length ? '<button class="linkbtn" data-a="nav" data-v="profiles">Už mám hráča</button>' : ''}</div></main>`;
 }
 VIEWS.onboard = () => {
