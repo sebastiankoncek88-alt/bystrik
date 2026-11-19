@@ -81,7 +81,7 @@ function avatarSvg(av, opts = {}) {
   if (opts.mood === 'sad') mouth = 'o';
 
   let s = `<defs><linearGradient id="G${id}" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#FF6A8A"/><stop offset=".33" stop-color="#FFC23C"/><stop offset=".66" stop-color="#2FC08A"/><stop offset="1" stop-color="#6B7BFF"/></linearGradient><clipPath id="T${id}"><path d="M66 142 Q100 128 134 142 L139 209 Q100 218 61 209 Z"/></clipPath><clipPath id="L${id}"><path d="M76 196 H124 L124 282 H102 L100 214 L98 282 H76 Z"/></clipPath>${bgPatternDef(av, id)}
-<radialGradient id="IR${id}" cx="50%" cy="70%" r="60%"><stop offset="0" stop-color="#B07A4A"/><stop offset="1" stop-color="#5A3420"/></radialGradient><radialGradient id="BL${id}"><stop offset="0" stop-color="#FF6F8F" stop-opacity=".65"/><stop offset="1" stop-color="#FF6F8F" stop-opacity="0"/></radialGradient><filter id="O${id}" x="-10%" y="-10%" width="120%" height="120%"><feMorphology in="SourceAlpha" operator="dilate" radius="1.7" result="d"/><feFlood flood-color="#3A2A48" flood-opacity=".85"/><feComposite in2="d" operator="in" result="o"/><feMerge><feMergeNode in="o"/><feMergeNode in="SourceGraphic"/></feMerge></filter><radialGradient id="SK${id}" cx="42%" cy="34%" r="75%"><stop offset="0" stop-color="${shade(skin, .12)}"/><stop offset=".6" stop-color="${skin}"/><stop offset="1" stop-color="${shade(skin, -.1)}"/></radialGradient>
+<radialGradient id="IR${id}" cx="50%" cy="70%" r="60%"><stop offset="0" stop-color="#B07A4A"/><stop offset="1" stop-color="#5A3420"/></radialGradient><radialGradient id="BL${id}"><stop offset="0" stop-color="#FF6F8F" stop-opacity=".65"/><stop offset="1" stop-color="#FF6F8F" stop-opacity="0"/></radialGradient><filter id="O${id}" x="-10%" y="-10%" width="120%" height="120%"><feMorphology in="SourceAlpha" operator="dilate" radius="1.7" result="d"/><feFlood flood-color="#3A2A48" flood-opacity=".85"/><feComposite in2="d" operator="in" result="o"/><feMerge><feMergeNode in="o"/><feMergeNode in="SourceGraphic"/></feMerge></filter><radialGradient id="KH${id}" cx="40%" cy="18%" r="95%"><stop offset="0" stop-color="${hc.startsWith('url') ? '#B98CFF' : shade(hc, .22)}"/><stop offset="1" stop-color="${hc.startsWith('url') ? '#6B4FD6' : hc}"/></radialGradient><radialGradient id="KG${id}" cx="34%" cy="20%" r="45%"><stop offset="0" stop-color="#fff" stop-opacity=".38"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></radialGradient><linearGradient id="KS${id}" x1="0" y1="0" x2="0" y2="1"><stop offset=".45" stop-color="#2A1206" stop-opacity="0"/><stop offset="1" stop-color="#2A1206" stop-opacity=".22"/></linearGradient><linearGradient id="KL${id}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff" stop-opacity=".22"/><stop offset=".35" stop-color="#fff" stop-opacity="0"/></linearGradient><radialGradient id="SK${id}" cx="42%" cy="34%" r="75%"><stop offset="0" stop-color="${shade(skin, .12)}"/><stop offset=".6" stop-color="${skin}"/><stop offset="1" stop-color="${shade(skin, -.1)}"/></radialGradient>
 <pattern id="HT${id}" width="22" height="60" patternUnits="userSpaceOnUse" patternTransform="rotate(8)"><path d="M4 0 q6 15 0 30 t0 30" stroke="#000" stroke-opacity=".15" stroke-width="1.8" fill="none"/><path d="M12 0 q-5 15 0 30 t0 30" stroke="#fff" stroke-opacity=".22" stroke-width="1.5" fill="none"/><path d="M18 0 q4 15 0 30 t0 30" stroke="#000" stroke-opacity=".09" stroke-width="1.1" fill="none"/></pattern>
 <pattern id="HC${id}" width="20" height="20" patternUnits="userSpaceOnUse"><path d="M3 8 a5 5 0 1 1 8 4" stroke="#000" stroke-opacity=".16" stroke-width="1.8" fill="none" stroke-linecap="round"/><path d="M12 16 a4 4 0 1 1 6 -3" stroke="#fff" stroke-opacity=".22" stroke-width="1.5" fill="none" stroke-linecap="round"/></pattern>
 <linearGradient id="HG${id}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff" stop-opacity=".3"/><stop offset=".4" stop-color="#fff" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity=".2"/></linearGradient>
@@ -89,8 +89,8 @@ function avatarSvg(av, opts = {}) {
 <linearGradient id="CV${id}" gradientUnits="userSpaceOnUse" x1="0" y1="140" x2="0" y2="212"><stop offset="0" stop-color="#fff" stop-opacity=".1"/><stop offset=".6" stop-color="#000" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity=".14"/></linearGradient>
 <linearGradient id="LG${id}" gradientUnits="userSpaceOnUse" x1="76" y1="0" x2="124" y2="0"><stop offset="0" stop-color="#000" stop-opacity=".2"/><stop offset=".22" stop-color="#000" stop-opacity="0"/><stop offset=".47" stop-color="#000" stop-opacity=".14"/><stop offset=".53" stop-color="#000" stop-opacity=".14"/><stop offset=".78" stop-color="#000" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity=".2"/></linearGradient></defs>`;
   const curly = ['afro', 'kucery', 'kuceryd', 'vlny', 'vlnkyk'].includes(av.hair); const HTX = `url(#${curly ? 'HC' : 'HT'}${id})`, HGL = `url(#HG${id})`;
-  const hairB = hairBack(av.hair, hc, hcD), hairF = hairFront(av.hair, hc, hcD);
-  const hairLayer = (fn, base) => base ? base + `<g class="htex" pointer-events="none">${fn(av.hair, HTX, 'none')}${fn(av.hair, HGL, 'none')}</g>` : '';
+  const hcK = hc.startsWith('url') ? hc : `url(#KH${id})`; const hairB = hairBack(av.hair, hcK, hcD), hairF = hairFront(av.hair, hcK, hcD);
+  const hairLayer = (fn, base) => base ? base + `<g class="htex" pointer-events="none">${fn(av.hair, `url(#KG${id})`, 'none')}</g>` : '';
   if (!opts.noBg) s += bgLayer(av, id);
   if (aura && !opts.crop) s += `<g class="aura"><radialGradient id="AU${id}"><stop offset="0" stop-color="#FFE680" stop-opacity=".85"/><stop offset=".6" stop-color="#FFB3E6" stop-opacity=".35"/><stop offset="1" stop-color="#9CC9FF" stop-opacity="0"/></radialGradient><ellipse cx="100" cy="165" rx="98" ry="150" fill="url(#AU${id})"/>${[[28, 80], [172, 70], [20, 200], [180, 210], [100, 14], [40, 280], [160, 290]].map(([x, y], i) => `<text x="${x}" y="${y}" font-size="${12 + (i % 3) * 4}" fill="#FFD23F" text-anchor="middle" class="auras" style="animation-delay:${i * .3}s">✦</text>`).join('')}</g>`;
   const bgEnd = s.length;
@@ -103,24 +103,24 @@ function avatarSvg(av, opts = {}) {
   if (top === 'kuzelnik') s += `<path d="M68 144 L40 272 Q100 290 160 272 L132 144 Z" fill="${tcD}"/>${[[62, 230], [140, 250], [120, 268], [80, 262]].map(([x, y]) => `<text x="${x}" y="${y}" font-size="10" fill="${t2}">★</text>`).join('')}`;
   s += `</g><g transform="${HEADT}">${hairLayer(hairBack, hairB)}</g><g transform="${BODYT}">`;
 
-  s += `<rect x="80" y="200" width="18" height="84" rx="8" fill="${skin}"/><rect x="102" y="200" width="18" height="84" rx="8" fill="${skin}"/>`;
+  s += `<rect x="80" y="200" width="18" height="84" rx="9" fill="url(#SK${id})"/><rect x="102" y="200" width="18" height="84" rx="9" fill="url(#SK${id})"/>`;
   if (top === 'astronaut') s += `<path d="M76 196 H124 L124 284 H102 L100 214 L98 284 H76 Z" fill="#EEF1F8"/><rect x="76" y="250" width="22" height="6" fill="${t2}"/><rect x="102" y="250" width="22" height="6" fill="${t2}"/>`;
   else if (!dress) s += bottomSvg(av.bottom, bc, b2, bcD, id);
   else if (top === 'saty') s += `<path d="M70 196 H130 L144 250 Q100 260 56 250 Z" fill="${tc}"/><path d="M58 244 Q100 256 142 244" stroke="${t2}" stroke-width="5" fill="none"/>`;
   else s += `<path d="M72 192 H128 L156 270 Q100 286 44 270 Z" fill="${tc}"/><path d="M60 258 Q100 272 140 258" stroke="${t2}" stroke-width="4" fill="none"/><g fill="#fff" class="spark"><circle cx="80" cy="230" r="2.5"/><circle cx="118" cy="246" r="2"/><circle cx="100" cy="218" r="2"/><circle cx="132" cy="226" r="2.5"/><circle cx="70" cy="256" r="2"/></g>`;
-  s += `<rect x="70" y="196" width="60" height="90" fill="url(#LG${id})" clip-path="url(#L${id})"/>`;
+  s += `<rect x="70" y="196" width="60" height="90" fill="url(#KS${id})" clip-path="url(#L${id})" opacity=".7"/>`;
   s += shoesSvg(top === 'astronaut' ? 'astro' : av.shoes, sc, s2);
 
   const torsoFill = top === 'vesta' ? t2 : FIXTOP[top] ? FIXTOP[top] : top === 'astronaut' ? '#EEF1F8' : top === 'rytier' ? '#C9CED9' : top === 'ninja' ? '#2A2A35' : tc;
   s += `<path d="M66 142 Q100 128 134 142 L139 209 Q100 218 61 209 Z" fill="${torsoFill}"/>`;
   if (!opts.back) s += topDetail(top, tc, t2, tcD, id);
-  s += `<path d="M66 142 Q100 128 134 142 L139 209 Q100 218 61 209 Z" fill="url(#CS${id})"/><path d="M66 142 Q100 128 134 142 L139 209 Q100 218 61 209 Z" fill="url(#CV${id})"/><path d="M73 158 q5 16 1 34 M127 158 q-5 16 -1 34" stroke="#000" stroke-opacity=".1" stroke-width="2.2" fill="none" stroke-linecap="round"/>`;
-  if (['tricko', 'pruhy', 'dres', 'tdino', 'tsrdce', 'tfutbal', 'traketa', 'tjednorozec', 'overal', 'tbystrik', 'tplaneta', 'tdelfin', 'tsova', 'tmotyl', 'tufo'].includes(top)) s += `<path d="M85 137.5 Q100 151 115 137.5" stroke="${tcD}" stroke-width="4.5" fill="none" stroke-linecap="round"/>`;
-  if (!dress && top !== 'astronaut' && top !== 'sveter') s += `<path d="M62 204 Q100 213 138 204" stroke="#000" stroke-opacity=".14" stroke-width="2.4" fill="none"/><path d="M64 199 Q100 207 136 199" stroke="#fff" stroke-opacity=".12" stroke-width="2" fill="none"/>`;
+  s += `<path d="M66 142 Q100 128 134 142 L139 209 Q100 218 61 209 Z" fill="url(#KS${id})"/><path d="M66 142 Q100 128 134 142 L139 209 Q100 218 61 209 Z" fill="url(#KL${id})"/>`;
+  if (['tricko', 'pruhy', 'dres', 'tdino', 'tsrdce', 'tfutbal', 'traketa', 'tjednorozec', 'overal', 'tbystrik', 'tplaneta', 'tdelfin', 'tsova', 'tmotyl', 'tufo'].includes(top)) s += `<path d="M85 137.5 Q100 151 115 137.5" stroke="#fff" stroke-opacity=".85" stroke-width="4.5" fill="none" stroke-linecap="round"/>`;
+  
   const sleeve = top === 'vesta' ? t2 : FIXTOP[top] ? FIXTOP[top] : top === 'astronaut' ? '#EEF1F8' : top === 'rytier' ? '#AEB4C2' : top === 'ninja' ? '#2A2A35' : (top === 'dres' ? t2 : tc);
   const arm = side => {
-    const x1 = side < 0 ? 70 : 130, x2 = side < 0 ? 51 : 149;
-    return `<g${side > 0 ? ' class="wave"' : ''}><path d="M${x1} 148 L${x2} 204" stroke="${skin}" stroke-width="15" stroke-linecap="round"/><path d="M${x1 - side * 4} 152 L${x2 - side * 4} 204" stroke="#000" stroke-opacity=".1" stroke-width="5" stroke-linecap="round"/><path d="M${x1} 148 L${longSleeve ? x2 + (side < 0 ? 1 : -1) : (x1 + x2) / 2} ${longSleeve ? 196 : 172}" stroke="${sleeve}" stroke-width="18" stroke-linecap="round"/><path d="M${x1 - side * 5} 153 L${(longSleeve ? x2 + (side < 0 ? 1 : -1) : (x1 + x2) / 2) - side * 5} ${longSleeve ? 196 : 172}" stroke="#000" stroke-opacity=".13" stroke-width="5" stroke-linecap="round"/><path d="M${x1 + side * 4} 150 L${(longSleeve ? x2 + (side < 0 ? 1 : -1) : (x1 + x2) / 2) + side * 4} ${longSleeve ? 194 : 170}" stroke="#fff" stroke-opacity=".14" stroke-width="3" stroke-linecap="round"/>${top === 'tricko' ? `<path d="M${(x1 + x2) / 2 - 8} ${174} l16 -2" stroke="${t2}" stroke-width="4" stroke-linecap="round"/>` : ''}${longSleeve && top !== 'astronaut' ? `<path d="M${x2 + side * 1.6} 191 L${x2 + side * .3} 197" stroke="${dk(sleeve.startsWith('#') ? sleeve : '#888888', -.22)}" stroke-width="17" stroke-linecap="butt" opacity=".55"/>` : ''}${top === 'astronaut' ? `<circle cx="${x2}" cy="208" r="9" fill="#EEF1F8"/>` : `<g><ellipse cx="${x2 - side * .5}" cy="209" rx="7.6" ry="9" fill="${skin}"/><ellipse cx="${x2 - side * 5.6}" cy="206" rx="3.2" ry="4.6" fill="${skin}" transform="rotate(${-side * 28} ${x2 - side * 5.6} 206)"/><path d="M${x2 - side * 4} 213 q${side * 3} 2.6 ${side * 6} 0" stroke="${skinD}" stroke-width="1.6" fill="none" stroke-linecap="round"/><ellipse cx="${x2 - side * 2.4}" cy="205.4" rx="2.4" ry="1.6" fill="#fff" opacity=".35"/></g>`}</g>`;
+    const x1 = side < 0 ? 70 : 130, x2 = side < 0 ? 51 : 149, sx = longSleeve ? x2 + (side < 0 ? 1 : -1) : (x1 + x2) / 2, sy = longSleeve ? 198 : 172;
+    return `<g${side > 0 ? ' class="wave"' : ''}><path d="M${x1} 148 L${x2} 204" stroke="${skin}" stroke-width="15" stroke-linecap="round"/><path d="M${x1} 148 L${sx} ${sy}" stroke="${sleeve}" stroke-width="19" stroke-linecap="round"/><path d="M${x1} 148 L${sx} ${sy}" stroke="url(#KL${id})" stroke-width="19" stroke-linecap="round"/>${top === 'tricko' ? `<path d="M${(x1 + x2) / 2 - 8} ${174} l16 -2" stroke="#fff" stroke-opacity=".8" stroke-width="4" stroke-linecap="round"/>` : ''}${top === 'astronaut' ? `<circle cx="${x2}" cy="208" r="9.5" fill="#EEF1F8"/>` : `<circle cx="${x2 - side * .5}" cy="208.5" r="9.6" fill="url(#SK${id})"/>`}</g>`;
   };
   s += arm(-1) + arm(1);
   s += `<rect x="91" y="118" width="18" height="22" rx="7" fill="${skinD}"/><ellipse cx="100" cy="130" rx="10" ry="4.5" fill="#000" opacity=".14"/>`;
@@ -130,12 +130,12 @@ function avatarSvg(av, opts = {}) {
 
   s += `</g><g transform="${HEADT}" class="head">`;
   if (av.acc === 'usi') s += `<path d="M56 60 L62 18 L90 44 Z M144 60 L138 18 L110 44 Z" fill="${ac}"/><path d="M64 50 L66 30 L80 44Z M136 50 L134 30 L120 44Z" fill="${a2}"/>`;
-  s += `<circle cx="51" cy="96" r="11" fill="${skin}"/><circle cx="149" cy="96" r="11" fill="${skin}"/><path d="M47 92 q5 4 2 10 M153 92 q-5 4 -2 10" stroke="${skinD}" stroke-width="2.2" fill="none" stroke-linecap="round"/>`;
+  s += `<ellipse cx="50" cy="98" rx="8.4" ry="11" fill="url(#SK${id})"/><ellipse cx="150" cy="98" rx="8.4" ry="11" fill="url(#SK${id})"/>`;
   s += `<path d="M50 86 C50 52 72 38 100 38 C128 38 150 52 150 86 C150 116 131 143.5 100 143.5 C69 143.5 50 116 50 86Z" fill="url(#SK${id})"/>`;
   if (!opts.back) {
   s += `<path d="M71 81 Q81 75.5 91 80 M109 80 Q119 75.5 129 81" stroke="${hcD.startsWith('url') ? '#6B4FD6' : shade(hcD.startsWith('#') ? hcD : '#5A3B2A', -.15)}" stroke-width="3.2" fill="none" stroke-linecap="round" opacity=".75"/>`;
-  s += `<ellipse cx="69" cy="113" rx="12" ry="7.5" fill="url(#BL${id})"/><ellipse cx="131" cy="113" rx="12" ry="7.5" fill="url(#BL${id})"/><path d="M64 110 l3 -1.6 M70 110.6 l3 -1.6 M127 109 l3 1.6 M133 109.6 l3 1.6" stroke="#fff" stroke-width="1.6" stroke-linecap="round" opacity=".6"/>`;
-  s += `<ellipse cx="100" cy="106" rx="4.6" ry="3.4" fill="${shade(skin, -.18)}" opacity=".55"/><ellipse cx="98.6" cy="104.8" rx="1.6" ry="1" fill="#fff" opacity=".7"/>`;
+  s += `<ellipse cx="68" cy="111" rx="9" ry="5.4" fill="#FF8E9E" opacity=".45"/><ellipse cx="132" cy="111" rx="9" ry="5.4" fill="#FF8E9E" opacity=".45"/>`;
+  s += `<path d="M98 104 q2 2.8 4 0" stroke="${shade(skin, -.18)}" stroke-width="2.4" fill="none" stroke-linecap="round"/>`;
   s += `<g class="eyes">${eyesSvg(eyes, ink, av.gender)}</g>`;
   s += mouthSvg(mouth, ink);
   s += hairLayer(hairFront, hairF);
@@ -144,7 +144,7 @@ function avatarSvg(av, opts = {}) {
   else if (!(opts.back && ['okuliare', 'slnecne', 'maska'].includes(av.acc))) s += accSvg(av.acc, ac, a2, ink);
   s += `</g>`;
 
-  if (!(typeof document !== 'undefined' && document.documentElement.classList.contains('lite'))) s = s.slice(0, bgEnd) + `<g filter="url(#O${id})">` + s.slice(bgEnd) + '</g>';
+  s = s.slice(0, bgEnd) + `<g style="filter:drop-shadow(0 3px 2.5px rgba(60,30,10,.16))">` + s.slice(bgEnd) + '</g>';
   const pet = itemOf('pet', av.pet);
   if (false && pet.e && !opts.crop && !opts.noPet) s += `<g class="pet"><ellipse cx="166" cy="296" rx="20" ry="5" fill="#000" opacity=".12"/><text x="166" y="291" font-size="38" text-anchor="middle">${pet.e}</text></g>`;
 
@@ -240,11 +240,11 @@ function eyesSvg(e, ink, g) {
 }
 function mouthSvg(m, ink) {
   switch (m) {
-    case 'smiech': return `<path d="M84 114 Q100 138 116 114 Z" fill="#8A2A3E"/><path d="M92 126 Q100 121 108 126 Q100 134 92 126Z" fill="#FF8FA6"/>`;
+    case 'smiech': return `<path d="M88 114 Q100 113 112 114 Q110 130 100 130 Q90 130 88 114Z" fill="#8A2A3A"/><path d="M92 124 Q100 120 108 124 Q105 129 100 129 Q95 129 92 124Z" fill="#FF8FA6"/>`;
     case 'o': return `<ellipse cx="100" cy="121" rx="6.5" ry="8" fill="#8A2A3E"/>`;
     case 'jazyk': return `<path d="M87 116 Q100 127 113 116" stroke="${ink}" stroke-width="4" fill="none" stroke-linecap="round"/><path d="M95 121 Q100 134 107 121 Z" fill="#FF7A93"/>`;
     case 'zuby': return `<path d="M85 114 Q100 132 115 114 Z" fill="#8A2A3E"/><rect x="93" y="114" width="6.5" height="7" rx="1.5" fill="#fff"/><rect x="100.5" y="114" width="6.5" height="7" rx="1.5" fill="#fff"/>`;
-    default: return `<path d="M87 114 Q100 131 113 114 Q100 118 87 114Z" fill="#8A2A3E" stroke="${ink}" stroke-width="2.6" stroke-linejoin="round"/><path d="M90.5 115.2 Q100 118.4 109.5 115.2 L108.4 118 Q100 120.4 91.6 118Z" fill="#fff"/><path d="M94 124.4 Q100 120.6 106 124.4 Q100 128.6 94 124.4Z" fill="#FF8FA6"/><path d="M84.6 112.4 q2.4 .4 3.4 2.2 M115.4 112.4 q-2.4 .4 -3.4 2.2" stroke="${ink}" stroke-width="2.2" fill="none" stroke-linecap="round"/>`;
+    default: return `<path d="M88 115 Q100 127 112 115" stroke="#5A2A22" stroke-width="3.4" fill="none" stroke-linecap="round"/>`;
   }
 }
 function accSvg(a, c, c2, ink) {

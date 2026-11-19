@@ -278,7 +278,7 @@ function heroScene(p, bag) {
   const night = nightOn(), left = bag.filter(x => !x.done).length;
   const msg = left === 0 ? 'Batôžtek je vybalený! Si šikovná hlávka. 🎉' : left === bag.length ? `Zbalil som ti batôžtek! Sú v ňom ${bag.length} veci.` : `Ešte ${left} ${plural(left, 'vec', 'veci', 'vecí')} v batôžtku. Poďme!`;
   return `<section class="hero2 ${night ? 'night' : ''}"><i class="h2sun" aria-hidden="true"></i><i class="h2cloud c1" aria-hidden="true"></i><i class="h2cloud c2" aria-hidden="true"></i><i class="h2stars" aria-hidden="true"></i><i class="h2hill h1" aria-hidden="true"></i><i class="h2hill h2" aria-hidden="true"></i>
-  <button class="h2kid press" data-a="nav" data-v="wardrobe" aria-label="Moja postavička">${avatarSvg(p.av, { cls: 'idle', noBg: true })}</button>
+  <button class="h2kid press" data-a="nav" data-v="wardrobe" aria-label="Moja postavička">${avatarSvg(p.av, { cls: 'idle', noBg: true, mood: 'happy' })}</button>
   <button class="h2bear press" data-a="hero-bear" aria-label="Bystríkov domček">${bearSvg('')}</button>
   <div class="h2bub"><b>${msg}</b></div></section>`;
 }
