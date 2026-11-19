@@ -51,6 +51,7 @@ Písanie priateľom je predvolene vypnuté (`DATA.settings.msgOk`). Úsporný re
 
 - Vzhľad 2.0 („kamienkový“, blok `Bystrík 2.0` na konci CSS v head.html): krémová #FFF6E8, oranžová akcia #FF7A3D (`--accent-d` tieň), Baloo 2 + Nunito, karty bez obrysov s mäkkým tieňom, `--peb` tvar tlačidiel; noc = tmavomodrá #1C1640. Hry = „Bystríkov lunapark“ (`.lunahead`), Ja = `meWeek` + polica úspechov `meShelf` (ACH). Zvuky navyše: nav, back, purr, yum, chest, mic (`TAPSND` v 14-akcie).
 - Učenie v predmete: Medový úľ (`hiveHTML`, `hiveBear`, prepínač `p.hive`, 0 = zoznam) – témy ako plásty, hviezdy = med. Strom NIE (kamarát používateľa má strom).
+- Rodič 2.0: trieda `html.adult` (render) = pokojný vzhľad (#F7F5F2, tmavé tlačidlá, Nunito), `pTop` (týždeň vetou + graf, Ide jej / Potrénovať). Hry: `html.luna` = večerná obloha. Kvíz: kamienky `pebHTML`. Šatník/Obchod majú späť do Ja (`back-me`), Obchod `dealHero` (ponuka dňa). Čítanie: zvýrazňovanie slov `.rw` + vlna `.recwave` počas nahrávania. Domček: tapeta, obraz, lampa (v noci svieti), koberec. Nastavenia dieťaťa: dlaždice `.kstile` + výber Deň/Noc/Podľa času.
 - Návrh redizajnu: https://claude.ai/artifact/G2NpfEMXPSAHaUposn7xR9 (zatiaľ nepresunuté: nová postavička dieťaťa – treba spolu so šatníkom, Čítanie s rozsvecovaním slov, detailný Domček).
 
 ## Otvorené

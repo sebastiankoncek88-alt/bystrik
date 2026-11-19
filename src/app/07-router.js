@@ -31,7 +31,7 @@ function ghostOut(dir) {
 function render(dir) {
   const app = $('#app');
   if (dir) { const a = NAV_ORDER.indexOf(LASTVIEW), b = NAV_ORDER.indexOf(UI.view); if (a >= 0 && b >= 0 && a !== b) dir = b > a ? 'r' : 'l'; ghostOut(dir); LASTVIEW = UI.view; }
-  app.innerHTML = VIEWS[UI.view](UI.params); document.documentElement.classList.toggle('adult', ['parent', 'pin', 'psetup', 'teacher', 'remote'].includes(UI.view));
+  app.innerHTML = VIEWS[UI.view](UI.params); document.documentElement.classList.toggle('adult', ['parent', 'pin', 'psetup', 'teacher', 'remote'].includes(UI.view)); document.documentElement.classList.toggle('luna', UI.view === 'games');
   const v = app.querySelector('.view'); if (v && dir) v.classList.add('enter-' + dir);
   AFTER[UI.view] && AFTER[UI.view]();
   applyRoom(); navPill(); if (CHG) setTimeout(chgStep, 260); if (nightOn() !== LASTNIGHT) applyTheme(true); bearObs(); pathFireworks(); try { buddySync(); } catch (e) { }
