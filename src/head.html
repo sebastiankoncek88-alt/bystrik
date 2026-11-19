@@ -2287,6 +2287,32 @@ html:not(.luna) .luat{color:var(--ink);text-shadow:none}
 .ob2gb .ob2gf{width:96px;height:130px}.ob2gb .ob2gf svg{width:100%;height:100%}
 .ob2gb.on{border-color:var(--accent);transform:translateY(-3px);background:color-mix(in srgb,var(--accent) 8%,var(--paper))}
 .ob2:has(.ob2gen) .ob2hero{height:120px}.ob2:has(.ob2gen) .ob2bear{width:110px;height:110px}.ob2:has(.ob2gen) .ob2c.c1{width:120px;height:120px}
+
+/* Učenie – pokračuj a rýchle ikonky */
+.lqh{display:block;font:900 .78rem var(--f-body);letter-spacing:.07em;text-transform:uppercase;color:var(--muted);margin:2px 4px 8px}
+.lcrow{display:flex;align-items:center;gap:12px;width:100%;border:0;background:var(--paper);border-radius:22px;padding:10px 12px;font-family:inherit;color:var(--ink);text-align:left;cursor:pointer;box-shadow:0 2px 0 color-mix(in srgb,var(--ink) 5%,transparent),0 10px 20px -12px color-mix(in srgb,var(--ink) 28%,transparent)}
+.lci{flex:none;width:46px;height:46px;border-radius:15px 12px 16px 11px;display:grid;place-items:center;font-size:1.4rem}
+.lcrow .grow{flex:1;min-width:0;display:flex;flex-direction:column}.lcrow b{font:800 1.05rem/1.15 var(--f-display)}.lcrow small{font-weight:800;font-size:.78rem;color:var(--muted)}
+.lcgo{flex:none;width:40px;height:40px;border-radius:50%;background:var(--accent);color:#fff;display:grid;place-items:center;font-size:.9rem;box-shadow:0 3px 0 var(--accent-d)}
+.lqrow{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.lq{border:0;background:var(--paper);border-radius:20px;padding:10px 4px;display:flex;flex-direction:column;align-items:center;gap:6px;font:800 .8rem var(--f-display);color:var(--ink);cursor:pointer;box-shadow:0 2px 0 color-mix(in srgb,var(--ink) 5%,transparent),0 8px 16px -10px color-mix(in srgb,var(--ink) 28%,transparent)}
+.lq span{width:44px;height:44px;border-radius:14px 11px 15px 10px;display:grid;place-items:center;font-size:1.35rem}
+
+/* ===== Prechody 2.1 – plynulé, s jemným pružením ===== */
+@keyframes tIn{from{opacity:0;transform:translateX(var(--tx,0)) translateY(var(--ty,0)) scale(var(--ts,1))}to{opacity:1;transform:none}}
+@keyframes tOut{to{opacity:0;transform:translateX(var(--ox,0)) translateY(var(--oy,0)) scale(var(--os,1))}}
+.enter-r{--tx:44px;animation:tIn .38s cubic-bezier(.22,1,.36,1.06)!important}
+.enter-l{--tx:-44px;animation:tIn .38s cubic-bezier(.22,1,.36,1.06)!important}
+.enter-f{--tx:56px;--ts:.985;animation:tIn .4s cubic-bezier(.22,1,.36,1.04)!important}
+.enter-b{--tx:-56px;--ts:.985;animation:tIn .4s cubic-bezier(.22,1,.36,1.04)!important}
+.enter-u{--ty:46px;--ts:.94;animation:tIn .44s cubic-bezier(.2,1.1,.3,1.08)!important}
+.vghost{animation-name:tOut!important;animation-duration:.24s!important;animation-timing-function:cubic-bezier(.4,0,.6,1)!important;animation-fill-mode:forwards!important}
+.vghost.out-r,.vghost.out-f{--ox:-38px;--os:.98}
+.vghost.out-l,.vghost.out-b{--ox:38px;--os:.98}
+.vghost.out-u{--oy:-18px;--os:.94}
+.enter-f>*,.enter-b>*,.enter-u>*{animation:none!important}
+@media (prefers-reduced-motion: reduce){.enter-r,.enter-l,.enter-f,.enter-b,.enter-u{animation:none!important}.vghost{display:none!important}}
+.kutikv .brhead>b{display:none}.kutikv .brhead{justify-content:flex-end}
 </style>
 <svg width="0" height="0" style="position:absolute\" aria-hidden="true"><defs><radialGradient id="bfur" cx="34%" cy="24%" r="92%"><stop offset="0" stop-color="#E9B67C"/><stop offset=".38" stop-color="#C98949"/><stop offset=".78" stop-color="#975924"/><stop offset="1" stop-color="#673513"/></radialGradient><radialGradient id="bfur2" cx="36%" cy="26%" r="88%"><stop offset="0" stop-color="#E0A465"/><stop offset=".6" stop-color="#A86A33"/><stop offset="1" stop-color="#6A3A18"/></radialGradient><linearGradient id="b3shade" x1="0" y1="0" x2="0" y2="1"><stop offset=".45" stop-color="#3A1E08" stop-opacity="0"/><stop offset="1" stop-color="#3A1E08" stop-opacity=".38"/></linearGradient><radialGradient id="b3gloss" cx="33%" cy="17%" r="30%"><stop offset="0" stop-color="#fff" stop-opacity=".42"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></radialGradient><radialGradient id="b3rim" cx="50%" cy="45%" r="55%"><stop offset=".82" stop-color="#FFD9A8" stop-opacity="0"/><stop offset="1" stop-color="#FFD9A8" stop-opacity=".28"/></radialGradient><radialGradient id="bbelly" cx="50%" cy="28%" r="80%"><stop offset="0" stop-color="#FFF2DC"/><stop offset="1" stop-color="#D9AE80"/></radialGradient><radialGradient id="beye" cx="40%" cy="30%" r="80%"><stop offset="0" stop-color="#6B4028"/><stop offset=".55" stop-color="#2E1A14"/><stop offset="1" stop-color="#1A0E0A"/></radialGradient><radialGradient id="bear" cx="50%" cy="40%" r="70%"><stop offset="0" stop-color="#F7D6B4"/><stop offset="1" stop-color="#E3AE86"/></radialGradient><radialGradient id="bsnout" cx="42%" cy="30%" r="78%"><stop offset="0" stop-color="#FFF6E6"/><stop offset=".6" stop-color="#F1D4AB"/><stop offset="1" stop-color="#D2A878"/></radialGradient><radialGradient id="bcheek" cx="50%" cy="50%" r="50%"><stop offset="0" stop-color="#FF7F9A" stop-opacity=".8"/><stop offset="1" stop-color="#FF7F9A" stop-opacity="0"/></radialGradient><linearGradient id="bbow" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#4FD3A5"/><stop offset="1" stop-color="#1F9D78"/></linearGradient><radialGradient id="cg" cx="35%" cy="30%" r="75%"><stop offset="0" stop-color="#FFF4B0"/><stop offset=".45" stop-color="#FFD23F"/><stop offset="1" stop-color="#E09A00"/></radialGradient><linearGradient id="cg2" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#FFE77A"/><stop offset="1" stop-color="#C77F00"/></linearGradient></defs><symbol id="coin" viewBox="0 0 40 40"><circle cx="20" cy="20" r="19" fill="url(#cg2)"/><circle cx="20" cy="20" r="15.5" fill="url(#cg)" stroke="#B87400" stroke-width="1.2"/><g stroke="#C98200" stroke-width="2" stroke-linecap="round"><path d="M20 7.5v3.5M20 29v3.5M7.5 20h3.5M29 20h3.5M11.2 11.2l2.4 2.4M26.4 26.4l2.4 2.4M28.8 11.2l-2.4 2.4M13.6 26.4l-2.4 2.4"/></g><circle cx="20" cy="20" r="5.5" fill="#FFB800" stroke="#C98200" stroke-width="1.5"/><path d="M12 12.5a11 11 0 0 1 9-4.5" stroke="#FFFBE0" stroke-width="2" fill="none" stroke-linecap="round" opacity=".9"/></symbol></svg>
 <div class="blobs" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div>
