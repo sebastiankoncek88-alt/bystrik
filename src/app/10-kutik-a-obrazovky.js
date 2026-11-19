@@ -476,7 +476,7 @@ const SEASONAL = { 'n1-mikulas': [11, 0], 'n2-velkanoc': [2, 3] };
 function schoolMonth() { const m = new Date().getMonth(); return m >= 8 ? m - 8 : m <= 5 ? m + 4 : 9; }
 const inSeason = id => { const s = SEASONAL[id]; if (!s) return true; const m = new Date().getMonth(); return s[0] <= s[1] ? m >= s[0] && m <= s[1] : m >= s[0] || m <= s[1]; };
 function knownTopics(p, s) {
-  const st = id => p.topics[id] || {}, acc = id => st(id).total ? st(id).correct / st(id).total : null;
+  const TP = (p && p.topics) || {}; const st = id => TP[id] || {}, acc = id => st(id).total ? st(id).correct / st(id).total : null;
   const subs = s ? [s] : ['mat', 'sjl', 'prv']; const out = [];
   subs.forEach(k => { const all = SUBJECTS[k] ? SUBJECTS[k].topics : []; const g = all.filter(t => t.g === p.grade && inSeason(t.id)); const sm = schoolMonth(); const win = g.filter(t => (CURR[t.id] == null ? (k === 'prv' ? 0 : 3) : CURR[t.id]) <= sm);
     const ok = t => { const a = acc(t.id); return !(st(t.id).total >= 5 && a < .45); };
@@ -504,7 +504,7 @@ function hiveBear(p, ts) {
 }
 VIEWS.subject = ({ s, g }) => {
   const p = P(); g = g || p.grade; const S = SUBJECTS[s]; const m = p.mode[s] || 'quiz';
-  const dts = dayTopics({ grade: g }); const ts = S.topics.filter(t => t.g === g).map(t => ({ ...t, s })).sort((a, b) => dts.includes(b.id) - dts.includes(a.id));
+  const dts = dayTopics({ ...P(), grade: g }); const ts = S.topics.filter(t => t.g === g).map(t => ({ ...t, s })).sort((a, b) => dts.includes(b.id) - dts.includes(a.id));
   return `${topbar('learn-back')}<main class="view"><section class="subhead s-${s}"><span class="shbig" aria-hidden="true">${s === 'mat' ? '1+2' : s === 'sjl' ? 'Aa' : '🌍'}</span><h1>${S.name}</h1><div class="shst"><span><b>${ts.filter(t => (p.topics[t.id] || {}).stars >= 3).length}</b> zvládnutých</span><span><b>${ts.reduce((a, t) => a + ((p.topics[t.id] || {}).stars || 0), 0)}</b> hviezd</span><span>${g}. ročník</span></div></section>
   ${s !== 'mat' ? `<button class="card readcard press" data-a="nav" data-v="reads"><span class="ic">📖</span><span><b>Čítanka</b><span class="b" style="font-size:.9rem">Prečítaj príbeh nahlas, nahraj sa a odpovedz na otázky</span></span></button>` : ''}
   <span class="eyebrow">Vyber tému</span><p class="muted b" style="font-size:.82rem;margin:-4px 0 0">🎁 Keď tému prvýkrát zvládneš na plný počet, dostaneš odmenu: oblečenie, kľúč alebo ×2 slniečka.</p>

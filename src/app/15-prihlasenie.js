@@ -6,7 +6,8 @@ let LOGIN = { mode: 'in', busy: false, msg: '' };
 let RECOVER = null, MAGIC = null;
 try { if (SUPA_ON() && /access_token=/.test(location.hash) && !/type=recovery/.test(location.hash)) { const q = new URLSearchParams(location.hash.slice(1)); MAGIC = { at: q.get('access_token'), rt: q.get('refresh_token'), exp: Date.now() + (+q.get('expires_in') || 3600) * 1000 }; history.replaceState(null, '', location.pathname + location.search); } } catch (e) { }
 try { if (SUPA_ON() && /type=recovery/.test(location.hash) && /access_token=/.test(location.hash)) { const q = new URLSearchParams(location.hash.slice(1)); RECOVER = { at: q.get('access_token'), rt: q.get('refresh_token'), exp: Date.now() + (+q.get('expires_in') || 3600) * 1000 }; history.replaceState(null, '', location.pathname + location.search); } else if (SUPA_ON() && /error_code=/.test(location.hash)) { LOGIN.msg = 'Odkaz na obnovu hesla už neplatí. Požiadajte o nový.'; history.replaceState(null, '', location.pathname + location.search); } } catch (e) { }
-function setAuth(a) { AUTH = a; try { if (a) localStorage.setItem('bystrik.auth', JSON.stringify(a)); else localStorage.removeItem('bystrik.auth'); } catch (e) { } }
+try { LOGIN.email = localStorage.getItem('bystrik.lastEmail') || ''; } catch (e) { }
+function setAuth(a) { AUTH = a; try { if (a && a.email) localStorage.setItem('bystrik.lastEmail', a.email); if (a) localStorage.setItem('bystrik.auth', JSON.stringify(a)); else localStorage.removeItem('bystrik.auth'); } catch (e) { } }
 async function supaAuth(path, body) {
   let r; try { r = await fetch(SUPA.url + '/auth/v1/' + path, { method: 'POST', headers: { apikey: SUPA.key, 'content-type': 'application/json' }, body: JSON.stringify(body) }); } catch (e) { throw { net: true, message: 'Bez pripojenia na internet.' }; }
   let j = {}; try { j = await r.json(); } catch (e) { }
@@ -14,11 +15,24 @@ async function supaAuth(path, body) {
   return j;
 }
 const authFrom = j => ({ at: j.access_token, rt: j.refresh_token, exp: Date.now() + (j.expires_in || 3600) * 1000, uid: j.user.id, email: j.user.email });
+/* obnova prihlásenia: len jedna naraz (inak Supabase označí refresh token za použitý a odhlási), pri chybe servera sa neodhlasuje */
+let REFRESHING = null;
 async function supaToken() {
   if (!AUTH) throw { message: 'no auth' };
-  if (AUTH.exp < Date.now() + 60000) { try { setAuth(authFrom(await supaAuth('token?grant_type=refresh_token', { refresh_token: AUTH.rt }))); } catch (e) { if (!e.net) { setAuth(null); DBREF = null; go('login', {}, 'u'); } throw e; } }
-  return AUTH.at;
+  if (AUTH.exp > Date.now() + 60000) return AUTH.at;
+  if (!REFRESHING) REFRESHING = (async () => {
+    try { setAuth(authFrom(await supaAuth('token?grant_type=refresh_token', { refresh_token: AUTH.rt }))); }
+    catch (e) {
+      let saved = null; try { saved = JSON.parse(localStorage.getItem('bystrik.auth') || 'null'); } catch (x) { }
+      if (saved && saved.rt && saved.rt !== AUTH.rt) { AUTH = saved; if (AUTH.exp > Date.now() + 60000) return; }
+      const dead = !e.net && (e.status === 400 || e.status === 401 || e.status === 403) && /refresh|grant|token|session|not.?found/i.test((e.message || '') + ' ' + (e.code || ''));
+      if (dead) { setAuth(null); DBREF = null; go('login', {}, 'u'); }
+      throw e;
+    } finally { setTimeout(() => { REFRESHING = null; }, 0); }
+  })();
+  await REFRESHING; if (!AUTH) throw { message: 'no auth' }; return AUTH.at;
 }
+document.addEventListener('visibilitychange', () => { if (!document.hidden && AUTH && typeof SUPA_ON === 'function' && SUPA_ON()) supaToken().catch(() => { }); });
 const SUPADB = {
   async get() { const t = await supaToken(); const r = await fetch(SUPA.url + '/rest/v1/saves?select=data&user_id=eq.' + AUTH.uid, { headers: { apikey: SUPA.key, Authorization: 'Bearer ' + t } }); if (!r.ok) throw { message: 'HTTP ' + r.status }; const a = await r.json(); return { exists: !!a.length, data: () => a[0].data }; },
   async set(v, keep) { const t = await supaToken(); const r = await fetch(SUPA.url + '/rest/v1/saves?on_conflict=user_id', { method: 'POST', keepalive: !!keep, headers: { apikey: SUPA.key, Authorization: 'Bearer ' + t, 'content-type': 'application/json', Prefer: 'resolution=merge-duplicates,return=minimal' }, body: JSON.stringify({ user_id: AUTH.uid, data: v, updated_at: new Date().toISOString() }) }); if (!r.ok) throw { message: 'HTTP ' + r.status }; }
