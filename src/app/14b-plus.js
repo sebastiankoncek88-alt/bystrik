@@ -20,6 +20,11 @@ const PLUS_FEAT = [
   ['📖', 'Čítanka s hodnotením', 'Bystrík vypočuje čítanie a ukáže plynulosť a chyby.', 'soon'],
   ['👨‍👩‍👧‍👦', `Až ${PLUS_KIDS} detí v jednom účte`, `Zadarmo ${FREE_KIDS} deti. Synchronizácia na všetkých zariadeniach rodiny.`, 'kids'],
   ['👕', 'Mesačná kolekcia oblečenia', 'Nové veci pre postavičku aj Bystríka. Len vzhľad, bez výhody v rebríčku.', 'soon'],
+  ['🎮', 'Nové hry v lunaparku', 'Raketa, Rybárik, Pekáreň a ďalšie hry s učivom každý mesiac.', 'soon'],
+  ['📚', 'Viac učiva', 'Logika, angličtina navyše a príprava na previerky pre 1.–4. ročník.', 'soon'],
+  ['🏝️', 'Nové svety izby a doplnky pre Bystríka', 'Vesmír, more, hrad, čiapky a pelech pre medvedíka.', 'soon'],
+  ['🎧', 'Nahrávky čítania pre rodiča', 'Vypočujte si, ako dieťa číta, a sledujte pokrok.', 'soon'],
+  ['⏰', 'Rozvrh a pripomienky', 'Nastavte čas na učenie, Bystrík sa sám pripomenie.', 'soon'],
   ['🏫', 'Licencia pre triedu', 'Pre učiteľov: celá trieda a export výsledkov žiakov.', 'soon']
 ];
 /* karta v rodičovskom účte */

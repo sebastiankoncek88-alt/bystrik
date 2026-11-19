@@ -7,6 +7,17 @@ function meStats(p) {
   return { rows, ok, bad, mid };
 }
 const meGrade = pct => pct >= 90 ? ['Výborný', '🌟', 'var(--good)'] : pct >= 75 ? ['Chválitebný', '😊', 'var(--good)'] : pct >= 60 ? ['Dobrý', '🙂', 'var(--sun)'] : pct >= 40 ? ['Ešte trénuj', '💪', 'var(--accent)'] : ['Začíname', '🌱', 'var(--muted)'];
+function meWeek(p) {
+  const wk = ['Po', 'Ut', 'St', 'Št', 'Pi', 'So', 'Ne']; const now = new Date(); const dow = (now.getDay() + 6) % 7;
+  const days = wk.map((n, i) => { const dd = new Date(); dd.setDate(now.getDate() - dow + i); const on = !!p.days[dkey(dd)]; return `<span><i class="${on ? 'on' : ''} ${i === dow ? 'today' : ''}" style="animation-delay:${i * 60}ms">${on ? '🔥' : i === dow ? '⭐' : ''}</i>${n}</span>`; }).join('');
+  return `<section class="meweek"><div class="r1"><b>🔥 ${p.streak.count} ${plural(p.streak.count, 'deň', 'dni', 'dní')} v rade${p.streak.count ? '!' : ''}</b><small>rekord ${p.streak.best || 0}</small></div><div class="days">${days}</div></section>`;
+}
+function meShelf(p) {
+  const got = ACH.map(a => { const v = a.m(p); const lv = a.t.filter(x => v >= x).length; return { a, lv }; });
+  const show = got.filter(x => x.lv).sort((x, y) => y.lv - x.lv).slice(0, 4).concat(got.filter(x => !x.lv).slice(0, 5)).slice(0, 5);
+  const n = got.filter(x => x.lv).length;
+  return `<section class="shelf"><div class="r1"><b>Moja polica úspechov</b><small>${n} z ${ACH.length}</small></div><div class="row">${show.map(x => `<button class="${x.lv ? '' : 'off'}" data-a="shelf-tip" data-t="${esc(x.a.n + (x.lv ? ' – ' + ['', 'bronz', 'striebro', 'zlato'][x.lv] + '!' : ' – ' + x.a.d.toLowerCase() + ': ' + x.a.t[0]))}" aria-label="${esc(x.a.n)}">${x.a.i}</button>`).join('')}</div><div class="board"></div><div class="tip" id="shelftip">Ťukni na trofej</div></section>`;
+}
 VIEWS.me = () => {
   const p = P(); const li = levelInfo(p.xp); const acc = p.stats.answered ? Math.round(p.stats.correct / p.stats.answered * 100) : 0; const g = meGrade(acc); const ms = meStats(p);
   const due = typeof reviewDue === 'function' ? reviewDue(p).length : 0; const days = Object.keys(p.days || {}).length;
@@ -14,6 +25,7 @@ VIEWS.me = () => {
   const line = (r, kind) => `<button class="merow press" data-a="topic" data-id="${r.t.id}"><span class="mti">${r.t.icon}</span><span class="grow"><b>${esc(r.t.name)}</b><small>${SUBJECTS[r.t.s].short || SUBJECTS[r.t.s].name} · ${r.t.g}. ročník · ${r.n} ${plural(r.n, 'odpoveď', 'odpovede', 'odpovedí')}</small><span class="mbar"><i style="width:${r.pct}%;background:${kind === 'ok' ? 'var(--good)' : kind === 'bad' ? 'var(--bad)' : 'var(--sun)'}"></i></span></span><em class="mpct ${kind}">${r.pct} %</em></button>`;
   return `${topbar()}<main class="view pop-in mev">
   <section class="card mehead"><span class="meav">${avatarSvg(p.av, { crop: 'head' })}</span><div class="grow"><span class="eyebrow">Ja</span><b>${esc(p.name)}</b><small>${p.grade}. ročník · Level ${li.L} · ${title(li.L)}</small></div><div class="megrade" style="--gc:${g[2]}"><span>${g[1]}</span><b>${acc} %</b><small>${g[0]}</small></div></section>
+  ${meWeek(p)}${meShelf(p)}
   <div class="mequick"><button class="card mefr mfr press" data-a="nav" data-v="friends"><span class="mqi">🤝</span><b>Priatelia</b><small>${FR && FR.total ? `<em>${FR.total} nové</em>` : 'chaty a súboje'}</small></button><button class="card mefr mlb press" data-a="nav" data-v="board"><span class="mqi">🏆</span><b>Rebríček</b><small>dnešné kolo</small></button></div>
   <div class="mestats"><div class="card"><b>${p.stats.correct}</b><small>správnych odpovedí</small></div><div class="card"><b>${p.stats.answered}</b><small>všetkých odpovedí</small></div><div class="card"><b>🔥 ${p.streak.best || 0}</b><small>najdlhšia séria</small></div><div class="card"><b>${days}</b><small>${plural(days, 'deň', 'dni', 'dní')} s učením</small></div></div>
   <section class="card vizcard"><div class="sec"><h2>📊 Úspešnosť v predmetoch</h2></div><div class="vrings">${['mat', 'sjl', 'prv'].map(k => { const v = subj(k); return vizRing(v == null ? 0 : v, `var(--c-${k})`, SUBJECTS[k].short || SUBJECTS[k].name, v == null ? 'ešte nič' : 'správne'); }).join('')}</div></section>
