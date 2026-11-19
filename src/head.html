@@ -2337,6 +2337,89 @@ html:not(.luna) .luat{color:var(--ink);text-shadow:none}
 .luswipe{text-align:center;color:rgba(255,255,255,.8);font-weight:800;font-size:.8rem;margin:2px 0 0;animation:luHint 2.4s ease-in-out infinite}
 @keyframes luHint{0%,100%{transform:translateX(0)}30%{transform:translateX(-8px)}60%{transform:translateX(8px)}}
 html:not(.luna) .ludots i{background:var(--line)}html:not(.luna) .ludots i.on{background:var(--accent)}html:not(.luna) .luswipe{color:var(--muted)}
+
+/* ===== Obchod 3.0 ===== */
+.sh2{gap:14px}
+.sh2lock{display:flex;align-items:center;gap:10px;width:100%;border:0;background:#EAF2FF;color:#23163A;border-radius:18px;padding:10px 12px;font-family:inherit;text-align:left;cursor:pointer}
+.sh2lock span{font-size:1.3rem}.sh2lock b{flex:1;font:800 .92rem/1.2 var(--f-display)}.sh2lock em{font-style:normal;font-weight:900;font-size:.82rem;background:var(--accent);color:#fff;border-radius:999px;padding:5px 10px}
+.sh2bar{display:grid;grid-template-columns:auto auto 1fr;gap:8px}
+.sh2wallet{display:flex;align-items:center;gap:6px;background:var(--paper);border-radius:18px;padding:8px 12px;box-shadow:0 2px 0 color-mix(in srgb,var(--ink) 5%,transparent)}
+.sh2wallet b{font:800 1.25rem/1 var(--f-display)}.sh2wallet small{font-weight:800;font-size:.7rem;color:var(--muted)}
+.sh2wallet .sh2coin{font-size:1.2rem;animation:luFloat 3s ease-in-out infinite}
+.sh2timer{display:flex;flex-direction:column;justify-content:center;align-items:flex-end;background:var(--paper);border-radius:18px;padding:6px 12px;box-shadow:0 2px 0 color-mix(in srgb,var(--ink) 5%,transparent)}
+.sh2timer small{font-weight:800;font-size:.66rem;color:var(--muted)}.sh2timer b{font:800 .95rem var(--f-display);display:flex;gap:3px}
+.sh2timer .cdb{display:inline-flex;align-items:baseline;gap:1px}.sh2timer .cdb small{display:none}.sh2timer .cdb:first-child{display:none}.sh2timer .cdb+.cdb::before{content:":";opacity:.5;margin-right:2px}.sh2timer .cdb:nth-child(2)::before{content:none}
+.sh2cats{display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;padding:2px}
+.sh2cats button{flex:none;border:0;background:var(--paper);border-radius:999px;padding:9px 15px;font:800 .92rem var(--f-display);color:var(--ink);cursor:pointer;box-shadow:0 2px 0 color-mix(in srgb,var(--ink) 6%,transparent);transition:background .2s,color .2s}
+.sh2cats button.on{background:var(--ink);color:var(--paper)}
+.sh2grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.sh2item{position:relative;border:2.5px solid transparent;background:var(--paper);border-radius:22px;padding:22px 6px 8px;display:flex;flex-direction:column;align-items:center;gap:3px;font-family:inherit;color:var(--ink);cursor:pointer;box-shadow:0 2px 0 color-mix(in srgb,var(--ink) 5%,transparent),0 10px 20px -12px color-mix(in srgb,var(--ink) 30%,transparent);animation:sh2In .45s backwards cubic-bezier(.2,1.2,.3,1);overflow:hidden}
+@keyframes sh2In{from{opacity:0;transform:translateY(16px) scale(.9)}to{opacity:1;transform:none}}
+.sh2item .sh2tag{position:absolute;left:6px;top:6px;font:900 .56rem var(--f-body);letter-spacing:.05em;color:#fff;background:var(--rc);border-radius:999px;padding:2px 7px}
+.sh2item .sh2worn{position:absolute;right:6px;top:5px;width:20px;height:20px;border-radius:50%;background:var(--good);color:#fff;display:grid;place-items:center;font-size:.7rem;font-weight:900}
+.sh2item .sh2th{width:78px;height:70px;display:grid;place-items:center}.sh2item .sh2th svg{width:100%;height:100%}.sh2item .sh2th span{font-size:2rem}
+.sh2item b{font:800 .74rem/1.15 var(--f-body);text-align:center;min-height:2.3em;display:flex;align-items:center}
+.sh2item .sh2price{font:800 .82rem var(--f-display);border-radius:999px;padding:3px 9px;background:var(--paper2);color:var(--muted)}
+.sh2item.st-can .sh2price{background:var(--sun);color:#3A2400;box-shadow:0 2px 0 var(--sun-d)}
+.sh2item.st-own .sh2price{background:var(--good-soft);color:var(--good)}
+.sh2item.st-lock{opacity:.85}.sh2item.st-lock .sh2th{filter:saturate(.75)}
+.sh2item.r-epic,.sh2item.r-leg{border-color:var(--rc)}
+.sh2item.r-leg::after{content:"";position:absolute;inset:0;background:linear-gradient(115deg,transparent 35%,rgba(255,255,255,.6) 48%,transparent 60%);background-size:250% 100%;animation:hiveShine 3.2s ease-in-out infinite;pointer-events:none}
+.sh2item.sel{transform:translateY(-3px);box-shadow:0 0 0 3px var(--accent),0 12px 22px -10px var(--accent)}
+.sh2chest{display:flex;align-items:center;gap:12px;width:100%;border:0;border-radius:26px;padding:14px;color:#fff;text-align:left;font-family:inherit;cursor:pointer;background:radial-gradient(circle at 20% 30%,#5B4BD6,#2A2140 70%);box-shadow:0 6px 0 #15102A,0 16px 30px -12px rgba(42,33,64,.6);position:relative;overflow:hidden}
+.sh2chest::before{content:"";position:absolute;left:-30px;top:-30px;width:140px;height:140px;border-radius:50%;background:radial-gradient(circle,rgba(255,224,122,.35),transparent 65%);animation:pulse 2.4s infinite}
+.sh2box{position:relative;flex:none;width:64px;height:58px}
+.sh2box .body{position:absolute;left:4px;right:4px;bottom:2px;height:30px;border-radius:7px;background:#C9772B;box-shadow:inset 0 -5px 0 rgba(0,0,0,.18)}
+.sh2box .lid{position:absolute;left:2px;right:2px;top:6px;height:24px;border-radius:24px 24px 6px 6px;background:#E8964A;border-bottom:5px solid #FFC233;transform-origin:50% 100%;transition:transform .4s}
+.sh2box .lock{position:absolute;left:50%;top:24px;transform:translateX(-50%);width:22px;height:22px;border-radius:7px;background:#FFE07A;display:grid;place-items:center;font-style:normal;font-size:.75rem;color:#7A4A00;font-weight:900}
+.sh2chest.has .lid{animation:sh2Wob 2.2s ease-in-out infinite}
+@keyframes sh2Wob{0%,70%,100%{transform:none}80%{transform:rotate(-6deg) translateY(-3px)}90%{transform:rotate(5deg) translateY(-2px)}}
+.sh2chest .grow{flex:1;min-width:0;display:flex;flex-direction:column;gap:3px;position:relative}.sh2chest b{font:800 1.15rem var(--f-display)}.sh2chest small{font-weight:700;font-size:.78rem;opacity:.85;line-height:1.3}
+.sh2odds{display:flex;gap:4px}.sh2odds i{font-style:normal;font-size:.62rem;font-weight:900;background:color-mix(in srgb,var(--rc) 35%,transparent);border-radius:999px;padding:1px 6px}
+.sh2chest em{position:relative;font-style:normal;background:#FFC233;color:#2A2140;border-radius:999px;padding:7px 12px;font-weight:900;font-size:.85rem;box-shadow:0 3px 0 #C98A00}
+.sh2tip{text-align:center;font-size:.8rem;font-weight:800;color:var(--muted);margin:0}
+.sh2scrim{position:fixed;inset:0;z-index:40;background:rgba(35,22,58,.45);animation:sh2Fade .25s}
+.sh2scrim.out{animation:sh2FadeO .22s forwards}
+@keyframes sh2Fade{from{opacity:0}}@keyframes sh2FadeO{to{opacity:0}}
+.sh2sheet{position:fixed;left:0;right:0;bottom:0;z-index:41;max-width:560px;margin:0 auto;background:var(--paper);border-radius:30px 30px 0 0;padding:8px 18px calc(18px + env(safe-area-inset-bottom,0px));display:flex;flex-direction:column;align-items:center;gap:6px;box-shadow:0 -10px 30px rgba(35,22,58,.25);animation:sh2Up .38s cubic-bezier(.2,1.1,.3,1)}
+.sh2sheet.out{animation:sh2Down .22s forwards ease-in}
+@keyframes sh2Up{from{transform:translateY(100%)}}@keyframes sh2Down{to{transform:translateY(100%)}}
+.sh2stage{position:relative;width:100%;height:230px;border-radius:24px;overflow:hidden;background:radial-gradient(circle at 50% 70%,color-mix(in srgb,var(--rc) 35%,#FFF6E8),#FFF1DE 70%);display:grid;place-items:end center}
+.sh2rays{position:absolute;left:50%;top:50%;width:520px;height:520px;margin:-260px 0 0 -260px;background:repeating-conic-gradient(from 0deg,rgba(255,255,255,.55) 0 10deg,transparent 10deg 24deg);animation:luSpin 16s linear infinite;opacity:.7}
+.sh2stage .spfig{position:relative;width:140px;height:210px;margin-bottom:6px;animation:skinBob 2.6s ease-in-out infinite}.sh2stage .spfig svg{width:100%;height:100%}
+.sh2rar{position:absolute;left:12px;top:12px;font:900 .7rem var(--f-body);color:#fff;background:var(--rc);border-radius:999px;padding:3px 10px}
+.sh2name{font:800 1.4rem var(--f-display);margin-top:4px}
+.sh2say{margin:0;font-weight:800;color:var(--muted);font-size:.9rem;text-align:center}
+.sh2btns{width:100%;display:flex;flex-direction:column;gap:8px;margin-top:6px}
+html.lite .sh2rays,html.lite .sh2item.r-leg::after,html.lite .sh2chest::before{animation:none}
+.sh2timer .cdb{background:none!important;border:0!important;padding:0!important;min-width:0!important;box-shadow:none!important;width:auto!important;height:auto!important}.sh2timer .cdb b{font:800 1rem var(--f-display)!important;background:none!important;padding:0!important;box-shadow:none!important;border:0!important;min-width:0!important}.sh2timer b#shopcd{flex-direction:row;align-items:baseline}
+
+/* ===== Pomôcky / kalkulačka 2.0 – hračka od Bystríka ===== */
+.helpdock,.calcdock{background:linear-gradient(170deg,#4B3DB8 0%,#6152E8 55%,#8B7CFF 100%)!important;border:0!important;border-radius:30px 30px 0 0!important;box-shadow:0 -12px 34px rgba(42,33,100,.4)!important;animation:sh2Up .38s cubic-bezier(.2,1.1,.3,1)}
+.helpdock .calchead,.calcdock .calchead{color:#fff}
+.helpdock .calchead .hb span{color:#fff;font-family:var(--f-display);font-size:1.1rem}
+.helpdock .calchead .iconbtn,.calcdock .calchead .iconbtn{background:rgba(255,255,255,.18)!important;color:#fff;box-shadow:none!important}
+.helpdock .htabs .chip{background:rgba(255,255,255,.16)!important;color:#fff!important;border:0!important;font-family:var(--f-display);font-weight:800}
+.helpdock .htabs .chip.on{background:#fff!important;color:#4B3DB8!important}
+.calcshow{background:linear-gradient(180deg,#1C1640,#2A2160)!important;border:0!important;border-radius:22px!important;box-shadow:inset 0 3px 10px rgba(0,0,0,.45),0 2px 0 rgba(255,255,255,.15)!important;padding:10px 16px!important;position:relative;overflow:hidden}
+.calcshow::after{content:"";position:absolute;left:0;right:0;top:0;height:45%;background:linear-gradient(180deg,rgba(255,255,255,.08),transparent);pointer-events:none}
+#calccur{font-family:var(--f-display)!important;font-weight:800!important;font-size:2.6rem!important;color:#7BF2C4!important;text-shadow:0 0 14px rgba(123,242,196,.55);letter-spacing:.02em}
+#calchist{color:rgba(123,242,196,.65)!important;font-weight:800!important}
+.ckeys{gap:7px!important}
+.ckeys .key{border:0!important;border-radius:20px 16px 22px 15px!important;background:#fff!important;color:#23163A!important;font:800 1.35rem var(--f-display)!important;min-height:44px;box-shadow:0 5px 0 rgba(30,20,90,.35),inset 0 2px 0 rgba(255,255,255,.6)!important;transition:transform .1s cubic-bezier(.3,1.6,.5,1)}
+.ckeys .key:active{transform:translateY(4px) scale(.96);box-shadow:0 1px 0 rgba(30,20,90,.35)!important}
+.ckeys .key.op{background:#FFC233!important;color:#3A2400!important;box-shadow:0 5px 0 #C98A00!important}
+.ckeys .key.eq{background:#FF7A3D!important;color:#fff!important;box-shadow:0 5px 0 #D9541C!important}
+.ckeys .key.del{background:#FF8FB0!important;color:#5A0F2A!important;box-shadow:0 5px 0 #D9547A!important}
+.helpdock .card,.helpdock table{color:var(--ink)}
+.helpdock .helpbody,.helpdock .mtab{background:rgba(255,255,255,.95);border-radius:20px;color:var(--ink)}
+.calcpop{animation:popUp .3s cubic-bezier(.3,1.6,.5,1)}
+.calcshow{flex:none!important;min-height:74px;display:flex!important;flex-direction:column;align-items:flex-end;justify-content:center}
+
+/* animácia pri posúvaní */
+.rv{opacity:0;transform:translateY(34px) scale(.96)}
+.rv.rv-in{opacity:1;transform:none;transition:opacity .5s ease var(--rvd,0ms),transform .65s cubic-bezier(.18,1.25,.32,1) var(--rvd,0ms)}
+html.lite .rv{opacity:1;transform:none}
 </style>
 <svg width="0" height="0" style="position:absolute\" aria-hidden="true"><defs><radialGradient id="bfur" cx="34%" cy="24%" r="92%"><stop offset="0" stop-color="#E9B67C"/><stop offset=".38" stop-color="#C98949"/><stop offset=".78" stop-color="#975924"/><stop offset="1" stop-color="#673513"/></radialGradient><radialGradient id="bfur2" cx="36%" cy="26%" r="88%"><stop offset="0" stop-color="#E0A465"/><stop offset=".6" stop-color="#A86A33"/><stop offset="1" stop-color="#6A3A18"/></radialGradient><linearGradient id="b3shade" x1="0" y1="0" x2="0" y2="1"><stop offset=".45" stop-color="#3A1E08" stop-opacity="0"/><stop offset="1" stop-color="#3A1E08" stop-opacity=".38"/></linearGradient><radialGradient id="b3gloss" cx="33%" cy="17%" r="30%"><stop offset="0" stop-color="#fff" stop-opacity=".42"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></radialGradient><radialGradient id="b3rim" cx="50%" cy="45%" r="55%"><stop offset=".82" stop-color="#FFD9A8" stop-opacity="0"/><stop offset="1" stop-color="#FFD9A8" stop-opacity=".28"/></radialGradient><radialGradient id="bbelly" cx="50%" cy="28%" r="80%"><stop offset="0" stop-color="#FFF2DC"/><stop offset="1" stop-color="#D9AE80"/></radialGradient><radialGradient id="beye" cx="40%" cy="30%" r="80%"><stop offset="0" stop-color="#6B4028"/><stop offset=".55" stop-color="#2E1A14"/><stop offset="1" stop-color="#1A0E0A"/></radialGradient><radialGradient id="bear" cx="50%" cy="40%" r="70%"><stop offset="0" stop-color="#F7D6B4"/><stop offset="1" stop-color="#E3AE86"/></radialGradient><radialGradient id="bsnout" cx="42%" cy="30%" r="78%"><stop offset="0" stop-color="#FFF6E6"/><stop offset=".6" stop-color="#F1D4AB"/><stop offset="1" stop-color="#D2A878"/></radialGradient><radialGradient id="bcheek" cx="50%" cy="50%" r="50%"><stop offset="0" stop-color="#FF7F9A" stop-opacity=".8"/><stop offset="1" stop-color="#FF7F9A" stop-opacity="0"/></radialGradient><linearGradient id="bbow" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#4FD3A5"/><stop offset="1" stop-color="#1F9D78"/></linearGradient><radialGradient id="cg" cx="35%" cy="30%" r="75%"><stop offset="0" stop-color="#FFF4B0"/><stop offset=".45" stop-color="#FFD23F"/><stop offset="1" stop-color="#E09A00"/></radialGradient><linearGradient id="cg2" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#FFE77A"/><stop offset="1" stop-color="#C77F00"/></linearGradient></defs><symbol id="coin" viewBox="0 0 40 40"><circle cx="20" cy="20" r="19" fill="url(#cg2)"/><circle cx="20" cy="20" r="15.5" fill="url(#cg)" stroke="#B87400" stroke-width="1.2"/><g stroke="#C98200" stroke-width="2" stroke-linecap="round"><path d="M20 7.5v3.5M20 29v3.5M7.5 20h3.5M29 20h3.5M11.2 11.2l2.4 2.4M26.4 26.4l2.4 2.4M28.8 11.2l-2.4 2.4M13.6 26.4l-2.4 2.4"/></g><circle cx="20" cy="20" r="5.5" fill="#FFB800" stroke="#C98200" stroke-width="1.5"/><path d="M12 12.5a11 11 0 0 1 9-4.5" stroke="#FFFBE0" stroke-width="2" fill="none" stroke-linecap="round" opacity=".9"/></symbol></svg>
 <div class="blobs" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div>

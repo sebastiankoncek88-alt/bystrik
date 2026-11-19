@@ -59,6 +59,8 @@ Písanie priateľom je predvolene vypnuté (`DATA.settings.msgOk`). Úsporný re
 - Kalkulačka: tip „ťukni na mňa“ len pri prvých 2 kvízoch (`DATA.calcHints`). Učenie: `lastTopicRow` (Pokračuj, kde si skončil), rýchle ikonky `.lqrow`, bez rebríčka. Prechody 2.1: `tIn`/`tOut` s premennými --tx/--ty/--ts.
 - Návrh redizajnu: https://claude.ai/artifact/G2NpfEMXPSAHaUposn7xR9 (zatiaľ nepresunuté: nová postavička dieťaťa – treba spolu so šatníkom, Čítanie s rozsvecovaním slov, detailný Domček).
 
+- Obchod 3.0 (`sh2*` v head.html, `VIEWS.shop`): peňaženka + časovač `shopHMS()` (#shopcd2), kategórie, mriežka `.sh2item` so štítkom vzácnosti, truhla `.sh2chest`, skúšanie v spodnom liste `.sh2sheet` (SHOPSEL, akcie `shop-prev`/`shop-prev-x`). Kalkulačka 2.0 = fialová hračka s LCD (#calccur mätový), farebné kamienkové klávesy. Zvuky 2.0 v 02-zvuky.js: `mar` = kalimba, `bub` bublinky, `air` šum. Animácia pri posúvaní: `scrollReveal()` v 07-router (triedy `.rv`/`.rv-in`, IntersectionObserver, nie v lite).
+
 ## Otvorené
 - Plus: Stripe účet + Payment Links do `PLUS_CFG`, spustiť SQL, nasadiť stripe-webhook + tajomstvá; potom AI cez server, týždenný e-mail (Resend, treba doménu), čítanka s hodnotením, kolekcia.
 - Kontaktný e-mail do zásad súkromia (spýtať sa používateľa).

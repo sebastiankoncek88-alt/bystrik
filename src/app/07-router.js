@@ -28,13 +28,23 @@ function ghostOut(dir) {
     document.body.appendChild(g); setTimeout(() => g.remove(), 340);
   } catch (e) { }
 }
+/* animácia pri posúvaní: karty pod okrajom obrazovky sa vysunú, keď k nim dieťa doscroluje */
+let RVO = null;
+function scrollReveal() {
+  try {
+    if (RVO) RVO.disconnect(); if (!('IntersectionObserver' in window) || matchMedia('(prefers-reduced-motion: reduce)').matches || document.documentElement.classList.contains('lite')) return;
+    RVO = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { e.target.classList.add('rv-in'); RVO.unobserve(e.target); } }), { rootMargin: '0px 0px -4% 0px', threshold: .06 });
+    const H = innerHeight; let n = 0;
+    document.querySelectorAll('#app .view > *:not(.sh2sheet):not(.sh2scrim):not(.jabody), #app .jabody > *, #app .sh2item, #app .lsubj, #app .hrow, #app .luat, #app .frrow, #app .b2row, #app .task, #app .merow, #app .item, #app .gcard').forEach(el => { const r = el.getBoundingClientRect(); if (r.top > H * .9 && r.height > 0) { el.classList.add('rv'); el.style.setProperty('--rvd', ((n++ % 3) * 70) + 'ms'); RVO.observe(el); } });
+  } catch (e) { }
+}
 function render(dir) {
   const app = $('#app');
   if (dir) { const a = NAV_ORDER.indexOf(LASTVIEW), b = NAV_ORDER.indexOf(UI.view); if (a >= 0 && b >= 0 && a !== b) dir = b > a ? 'r' : 'l'; ghostOut(dir); LASTVIEW = UI.view; }
   app.innerHTML = VIEWS[UI.view](UI.params); document.documentElement.classList.toggle('adult', ['parent', 'pin', 'psetup', 'teacher', 'remote'].includes(UI.view)); document.documentElement.classList.toggle('luna', UI.view === 'games');
   const v = app.querySelector('.view'); if (v && dir) v.classList.add('enter-' + dir);
   AFTER[UI.view] && AFTER[UI.view]();
-  applyRoom(); navPill(); if (CHG) setTimeout(chgStep, 260); if (nightOn() !== LASTNIGHT) applyTheme(true); bearObs(); pathFireworks(); try { buddySync(); } catch (e) { }
+  applyRoom(); navPill(); setTimeout(scrollReveal, 80); if (CHG) setTimeout(chgStep, 260); if (nightOn() !== LASTNIGHT) applyTheme(true); bearObs(); pathFireworks(); try { buddySync(); } catch (e) { }
   if (!['quiz', 'cards', 'pexeso', 'match', 'sort', 'game', 'result', 'onboard'].includes(UI.view)) setTimeout(flushPending, 350);
 }
 let LASTCOINS = -1;

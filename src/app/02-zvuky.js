@@ -21,25 +21,35 @@ function tone(f, d, type = 'sine', vol = .14, when = 0, slide) {
   o.connect(g).connect(a.destination); o.start(t); o.stop(t + d + .03);
 }
 /* Vlastný zvuk Bystríka: mäkké „drevené“ tóny (marimba) a zvučka */
-function mar(f, when = 0, vol = .15, d = .45) { tone(f, d, 'sine', vol, when); tone(f * 4, d * .16, 'sine', vol * .3, when); tone(f * 2.01, d * .38, 'triangle', vol * .1, when); }
-const JINGLE = [[392, 0], [659, .13], [587, .26], [784, .46]];
+/* Zvuk Bystríka 2.0: kalimba / zvonček (mäkký úder + jasný alikvót) a bublinky */
+function mar(f, when = 0, vol = .15, d = .45) { tone(f, d, 'sine', vol, when, f * .985); tone(f * 3.98, d * .22, 'sine', vol * .22, when); tone(f * 2.76, d * .3, 'sine', vol * .12, when); }
+function bub(f1, f2, when = 0, vol = .08, d = .12) { tone(f1, d, 'sine', vol, when, f2); }
+function air(d = .3, vol = .05, when = 0, f1 = 600, f2 = 2400) {
+  const a = ac(); if (!a || a.state !== 'running') return; const t = a.currentTime + when;
+  try { const n = Math.floor(a.sampleRate * d), buf = a.createBuffer(1, n, a.sampleRate), ch = buf.getChannelData(0); for (let i = 0; i < n; i++) ch[i] = (Math.random() * 2 - 1) * (1 - i / n);
+    const s = a.createBufferSource(), bp = a.createBiquadFilter(), g = a.createGain(); s.buffer = buf; bp.type = 'bandpass'; bp.Q.value = 1.4; bp.frequency.setValueAtTime(f1, t); bp.frequency.exponentialRampToValueAtTime(f2, t + d);
+    g.gain.setValueAtTime(.0001, t); g.gain.exponentialRampToValueAtTime(vol, t + d * .3); g.gain.exponentialRampToValueAtTime(.0001, t + d); s.connect(bp).connect(g).connect(a.destination); s.start(t); s.stop(t + d + .02); } catch (e) { }
+}
+const JINGLE = [[523, 0], [659, .11], [784, .22], [1047, .36]];
 const SFX = {
-  tap: () => mar(880, 0, .05, .08), pop: () => mar(587, 0, .1, .16),
-  ok: () => { mar(659, 0, .14, .3); mar(784, .09, .14, .42); },
-  no: () => { mar(220, 0, .12, .32); mar(196, .12, .12, .45); }, flip: () => mar(523, 0, .08, .14),
-  match: () => [587, 659, 784].forEach((f, i) => mar(f, i * .08, .12, .3)),
-  jingle: () => { JINGLE.forEach(([f, t]) => mar(f, t, .15, .5)); [523, 659, 784].forEach(f => mar(f, .72, .09, .9)); tone(131, .7, 'sine', .1, .72); },
-  level: () => { JINGLE.forEach(([f, t]) => mar(f, t, .15, .5)); [1046, 1318, 1568].forEach((f, i) => mar(f, .66 + i * .1, .11, .6)); tone(131, .9, 'sine', .1, .66); },
-  star: i => mar([659, 784, 988][i] || 659 + i * 150, 0, .13, .35), tick: () => tone(1200, .03, 'sine', .03),
-  whoosh: () => tone(200, .25, 'sine', .06, 0, 1200), gift: () => [392, 523, 659, 784, 1046].forEach((f, i) => mar(f, i * .07, .12, .35)),
-  nav: () => { mar(784, 0, .06, .12); mar(1047, .05, .05, .16); tone(500, .16, 'sine', .025, 0, 900); },
-  back: () => { mar(784, 0, .05, .1); mar(587, .05, .05, .14); },
-  purr: () => { tone(95, .55, 'sawtooth', .025, 0, 80); tone(105, .5, 'triangle', .03, .05, 90); mar(784, .12, .07, .3); mar(988, .24, .06, .3); },
-  yum: () => { mar(523, 0, .1, .14); mar(659, .12, .1, .14); mar(784, .24, .12, .3); },
-  chest: () => { tone(160, .45, 'sawtooth', .03, 0, 700); [1047, 1319, 1568, 2093].forEach((f, i) => mar(f, .4 + i * .07, .1, .4)); },
-  mic: () => { mar(880, 0, .08, .12); mar(1175, .08, .08, .2); },
-  balloon: () => { mar(988, 0, .08, .1); tone(700, .07, 'sine', .05, 0, 240); }, coin: () => { mar(1175, 0, .07, .15); mar(1568, .07, .07, .32); }
+  tap: () => bub(520, 980, 0, .07, .07), pop: () => { bub(420, 1100, 0, .1, .11); mar(1319, .05, .04, .18); },
+  ok: () => { mar(1047, 0, .13, .35); mar(1319, .07, .12, .4); mar(1568, .14, .12, .55); },
+  no: () => { tone(330, .18, 'triangle', .09, 0, 300); tone(262, .26, 'triangle', .09, .14, 230); },
+  flip: () => { air(.12, .05, 0, 1200, 3000); bub(600, 900, 0, .04, .06); },
+  match: () => [784, 988, 1175, 1568].forEach((f, i) => mar(f, i * .07, .11, .35)),
+  jingle: () => { JINGLE.forEach(([f, t]) => mar(f, t, .14, .55)); [1047, 1319, 1568].forEach(f => mar(f, .56, .07, 1)); tone(131, .8, 'sine', .08, .56); },
+  level: () => { [523, 659, 784, 1047, 1319, 1568].forEach((f, i) => mar(f, i * .07, .13, .5)); air(.6, .04, .3, 2000, 6000); tone(131, 1, 'sine', .08, .45); },
+  star: i => { mar([1047, 1319, 1568][i] || 1047 + i * 200, 0, .13, .45); air(.25, .03, 0, 3000, 7000); }, tick: () => tone(1500, .025, 'sine', .03),
+  whoosh: () => air(.32, .06, 0, 500, 3200), gift: () => { [784, 988, 1175, 1568, 2093].forEach((f, i) => mar(f, i * .06, .1, .4)); air(.5, .04, .1, 1500, 6000); },
+  nav: () => { bub(380, 760, 0, .06, .09); bub(560, 1120, .06, .05, .09); },
+  back: () => { bub(760, 380, 0, .05, .1); },
+  purr: () => { tone(90, .6, 'sawtooth', .02, 0, 76); tone(100, .55, 'triangle', .03, .05, 86); mar(1175, .15, .05, .35); mar(1568, .28, .04, .35); },
+  yum: () => { bub(300, 700, 0, .1, .1); bub(340, 820, .14, .1, .1); mar(1319, .28, .08, .3); },
+  chest: () => { air(.5, .05, 0, 300, 2400); [1047, 1319, 1568, 2093, 2637].forEach((f, i) => mar(f, .38 + i * .06, .09, .5)); },
+  mic: () => { mar(1175, 0, .07, .15); mar(1568, .07, .07, .22); },
+  balloon: () => { air(.09, .09, 0, 2500, 800); bub(900, 300, 0, .06, .08); }, coin: () => { mar(1568, 0, .07, .18); mar(2093, .06, .07, .35); }
 };
+
 let JINGLED = false;
 document.addEventListener('pointerdown', () => { if (JINGLED) return; JINGLED = true; setTimeout(() => sfx('jingle'), 60); }, true);
 function sfx(n, a) { if (!DATA.settings.sound) return; try { SFX[n](a); } catch (e) { } }
