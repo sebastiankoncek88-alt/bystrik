@@ -23,9 +23,13 @@ VIEWS.me = () => {
   const due = typeof reviewDue === 'function' ? reviewDue(p).length : 0; const days = Object.keys(p.days || {}).length;
   const subj = k => { const r = ms.rows.filter(x => x.t.s === k); const n = r.reduce((a, x) => a + x.n, 0); const c = r.reduce((a, x) => a + Math.round(x.pct * x.n / 100), 0); return n ? Math.round(c / n * 100) : null; };
   const line = (r, kind) => `<button class="merow press" data-a="topic" data-id="${r.t.id}"><span class="mti">${r.t.icon}</span><span class="grow"><b>${esc(r.t.name)}</b><small>${SUBJECTS[r.t.s].short || SUBJECTS[r.t.s].name} · ${r.t.g}. ročník · ${r.n} ${plural(r.n, 'odpoveď', 'odpovede', 'odpovedí')}</small><span class="mbar"><i style="width:${r.pct}%;background:${kind === 'ok' ? 'var(--good)' : kind === 'bad' ? 'var(--bad)' : 'var(--sun)'}"></i></span></span><em class="mpct ${kind}">${r.pct} %</em></button>`;
-  return `${topbar()}<main class="view pop-in mev">
-  <section class="card mehead"><span class="meav">${avatarSvg(p.av, { crop: 'head' })}</span><div class="grow"><span class="eyebrow">Ja</span><b>${esc(p.name)}</b><small>${p.grade}. ročník · Level ${li.L} · ${title(li.L)}</small></div><div class="megrade" style="--gc:${g[2]}"><span>${g[1]}</span><b>${acc} %</b><small>${g[0]}</small></div></section>
-  ${meWeek(p)}${meShelf(p)}
+  return `<main class="view mev nopad">
+  <section class="jahero"><i class="jastars" aria-hidden="true"></i><div class="jatop"><span class="jat">Ja</span><button class="jagear press" data-a="nav" data-v="settings" aria-label="Nastavenia">⚙️${needBackup() ? '<span class="blinkdot" style="position:absolute;top:-2px;right:-2px;margin:0"></span>' : ''}</button></div>
+  <button class="jakid press" data-a="nav" data-v="wardrobe" aria-label="Môj šatník">${avatarSvg(p.av, { cls: 'idle', noBg: true })}</button><i class="jafloor" aria-hidden="true"></i>
+  <button class="jab jaroom press" data-a="nav" data-v="room">🏠 Izba</button><button class="jab jaobl press" data-a="nav" data-v="wardrobe">👕 Šatník</button></section>
+  <div class="janame"><b>${esc(p.name)}</b><div class="jalv"><span>Lv ${li.L}</span><i><b style="width:${li.pct}%"></b></i><small>${li.pct} %</small></div><small class="jattl">${title(li.L)} · ${p.grade}. ročník</small></div>
+  <div class="jabody">
+  ${meWeek(p)}${meShelf(p)}<section class="card jagrade"><div class="megrade" style="--gc:${g[2]}"><span>${g[1]}</span><b>${acc} %</b><small>${g[0]}</small></div><div class="grow"><b>Moja úspešnosť</b><small>Zo všetkých odpovedí v kvízoch a testoch</small></div></section>
   <div class="mequick"><button class="card mefr mfr press" data-a="nav" data-v="friends"><span class="mqi">🤝</span><b>Priatelia</b><small>${FR && FR.total ? `<em>${FR.total} nové</em>` : 'chaty a súboje'}</small></button><button class="card mefr mlb press" data-a="nav" data-v="board"><span class="mqi">🏆</span><b>Rebríček</b><small>dnešné kolo</small></button></div>
   <div class="mestats"><div class="card"><b>${p.stats.correct}</b><small>správnych odpovedí</small></div><div class="card"><b>${p.stats.answered}</b><small>všetkých odpovedí</small></div><div class="card"><b>🔥 ${p.streak.best || 0}</b><small>najdlhšia séria</small></div><div class="card"><b>${days}</b><small>${plural(days, 'deň', 'dni', 'dní')} s učením</small></div></div>
   <section class="card vizcard"><div class="sec"><h2>📊 Úspešnosť v predmetoch</h2></div><div class="vrings">${['mat', 'sjl', 'prv'].map(k => { const v = subj(k); return vizRing(v == null ? 0 : v, `var(--c-${k})`, SUBJECTS[k].short || SUBJECTS[k].name, v == null ? 'ešte nič' : 'správne'); }).join('')}</div></section>
@@ -33,7 +37,7 @@ VIEWS.me = () => {
   <div class="sec"><h2>🔁 Toto si zopakuj</h2><span class="eyebrow">${ms.bad.length}</span></div>${ms.bad.length ? `<section class="card melist">${ms.bad.map(r => line(r, 'bad')).join('')}</section>` : `<p class="muted b">${ms.rows.length ? 'Nič nutné. Ide ti to výborne! 🌟' : 'Keď sa začneš učiť, uvidíš tu, čo treba zopakovať.'}</p>`}
   <div class="sec"><h2>✅ Toto už vieš</h2><span class="eyebrow">${ms.ok.length}</span></div>${ms.ok.length ? `<section class="card melist">${ms.ok.map(r => line(r, 'ok')).join('')}</section>` : '<p class="muted b">Témy, kde máš 3 hviezdy alebo nad 85 %, sa ukážu tu.</p>'}
   ${ms.mid.length ? `<div class="sec"><h2>📚 Rozpracované</h2><span class="eyebrow">${ms.mid.length}</span></div><section class="card melist">${ms.mid.sort((a, b) => b.pct - a.pct).map(r => line(r, 'mid')).join('')}</section>` : ''}
-  ${myClsCard(p)}<p class="muted b" style="font-size:.78rem;text-align:center">Hodnotenie je z tvojich odpovedí v kvízoch a testoch. Ťukni na tému a môžeš ju hneď precvičiť.</p></main>${nav('')}`;
+  ${myClsCard(p)}<p class="muted b" style="font-size:.78rem;text-align:center">Hodnotenie je z tvojich odpovedí v kvízoch a testoch. Ťukni na tému a môžeš ju hneď precvičiť.</p></div></main>${nav('me')}`;
 };
 function csetView(html) {
   const pre = html.slice(0, html.indexOf('<h3 class="pgroup">')); let rest = html.slice(pre.length);

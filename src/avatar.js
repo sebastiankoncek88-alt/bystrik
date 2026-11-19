@@ -142,7 +142,7 @@ function avatarSvg(av, opts = {}) {
   else if (!(opts.back && ['okuliare', 'slnecne', 'maska'].includes(av.acc))) s += accSvg(av.acc, ac, a2, ink);
   s += `</g>`;
 
-  if (!(typeof document !== 'undefined' && document.documentElement.classList.contains('lite'))) s = s.slice(0, bgEnd) + `<g filter="url(#O${id})">` + s.slice(bgEnd) + '</g>';
+  /* 2.0: bez hrubého obrysu, mäkký tieň */ s = s.slice(0, bgEnd) + `<g style="filter:drop-shadow(0 3px 2px rgba(35,22,58,.14))">` + s.slice(bgEnd) + '</g>';
   const pet = itemOf('pet', av.pet);
   if (false && pet.e && !opts.crop && !opts.noPet) s += `<g class="pet"><ellipse cx="166" cy="296" rx="20" ry="5" fill="#000" opacity=".12"/><text x="166" y="291" font-size="38" text-anchor="middle">${pet.e}</text></g>`;
 
@@ -228,7 +228,7 @@ function hairFront(h, c, d) {
 function eyesSvg(e, ink, g) {
   const lash = g === 'd' ? `<path d="M70 88 L66 84 M74 86 L72 81 M130 88 L134 84 M126 86 L128 81" stroke="${ink}" stroke-width="2.5" stroke-linecap="round"/>` : '';
   switch (e) {
-    case 'velke': { const E = x => `<g><ellipse cx="${x}" cy="96" rx="11.5" ry="13" fill="#fff" stroke="${ink}" stroke-width="2.2"/><circle cx="${x + 1}" cy="98" r="8.2" fill="url(#IRa${AVID})"/><circle cx="${x + 1}" cy="98" r="4.4" fill="${ink}"/><ellipse cx="${x + 4.2}" cy="93.6" rx="3" ry="3.4" fill="#fff"/><circle cx="${x - 2.4}" cy="102" r="1.5" fill="#fff" opacity=".85"/><path d="M${x - 12} 92 Q${x} 79 ${x + 12} 92" stroke="${ink}" stroke-width="3.6" fill="none" stroke-linecap="round"/></g>`; return E(82) + E(118) + lash; }
+    case 'velke': { const E = x => `<ellipse cx="${x}" cy="97" rx="9.6" ry="11.6" fill="url(#EYa${AVID})"/><ellipse cx="${x + 3.4}" cy="92" rx="3.8" ry="4.2" fill="#fff"/><circle cx="${x - 3.2}" cy="102.4" r="1.9" fill="#fff" opacity=".9"/>`; return `<defs><radialGradient id="EYa${AVID}" cx="38%" cy="30%" r="80%"><stop offset="0" stop-color="#7A4A2E"/><stop offset=".55" stop-color="#2A1810"/><stop offset="1" stop-color="#150B06"/></radialGradient></defs>` + E(82) + E(118) + (g === 'd' ? `<path d="M72 90 l-5 -3.4 M128 90 l5 -3.4 M74.5 87 l-2.6 -4.2 M125.5 87 l2.6 -4.2" stroke="${ink}" stroke-width="2.4" stroke-linecap="round"/>` : ''); }
     case 'stastne': return `<path d="M73 99 Q82 88 91 99 M109 99 Q118 88 127 99" stroke="${ink}" stroke-width="4.5" fill="none" stroke-linecap="round"/>${lash}`;
     case 'mrk': return `<circle cx="82" cy="96" r="6.5" fill="${ink}"/><circle cx="84" cy="94" r="2" fill="#fff"/><path d="M110 97 Q118 102 127 97" stroke="${ink}" stroke-width="4.5" fill="none" stroke-linecap="round"/>${lash}`;
     case 'hviezdy': { const st = (cx, cy) => { let p = ''; for (let i = 0; i < 10; i++) { const r = i % 2 ? 4.5 : 11, a = -Math.PI / 2 + i * Math.PI / 5; p += `${(cx + r * Math.cos(a)).toFixed(1)},${(cy + r * Math.sin(a)).toFixed(1)} `; } return `<polygon points="${p}" fill="#FFC23C" stroke="${ink}" stroke-width="2" stroke-linejoin="round"/>`; }; return st(82, 96) + st(118, 96); }
