@@ -2239,7 +2239,7 @@ html:not(.luna) .luat{color:var(--ink);text-shadow:none}
 /* zladenie s návrhom */
 .hero2 .h2bear{left:6px!important;bottom:2px!important;width:168px!important;height:168px!important}
 .hero2 .h2kid{left:158px!important;bottom:8px!important;width:84px!important;height:130px!important}
-.hero2 .h2bub{top:24px!important;max-width:146px!important}
+.hero2 .h2bub{top:12px!important;max-width:146px!important}
 .lsubj{display:flex!important;align-items:center;gap:14px;min-height:0!important;padding:12px 14px!important;border-radius:26px!important}
 .lsubj .big{flex:none;width:60px!important;height:60px!important;font-size:1.55rem!important;display:grid!important;place-items:center}
 .lsubj .lt{flex:1;min-width:0;display:flex!important;flex-direction:column;gap:6px}
@@ -2542,7 +2542,8 @@ html.lite .hcell.next{animation:none}
 .hivetog button{color:color-mix(in srgb,var(--ink) 72%,transparent)!important;font-weight:800!important}
 .hivetog button.on{background:var(--accent)!important;color:#fff!important;box-shadow:0 4px 0 var(--accent-d),0 8px 14px -8px var(--accent-d)!important}
 /* Dnes: postavička ďalej od Bystríka */
-.hero2 .h2kid{left:auto!important;right:24%!important}
+.hero2 .h2kid{left:auto!important;right:max(4%,calc(100% - 290px))!important}
+@media (max-width:360px){.hero2 .h2bub{max-width:118px!important;top:12px!important;font-size:.76rem!important;padding:7px 10px!important}.hero2 .h2kid{height:116px!important;width:76px!important}}
 /* hlavička: celá hlavička postavičky v krúžku */
 .top2 .headbub{background:radial-gradient(circle at 50% 40%,#FFF1E6,#FFD9C2)!important;box-shadow:0 0 0 3px #fff,0 6px 14px -6px rgba(35,22,58,.4)!important}
 
