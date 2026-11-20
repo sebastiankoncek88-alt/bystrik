@@ -31,6 +31,22 @@ function air(d = .3, vol = .05, when = 0, f1 = 600, f2 = 2400) {
     g.gain.setValueAtTime(.0001, t); g.gain.exponentialRampToValueAtTime(vol, t + d * .3); g.gain.exponentialRampToValueAtTime(.0001, t + d); s.connect(bp).connect(g).connect(a.destination); s.start(t); s.stop(t + d + .02); } catch (e) { }
 }
 const JINGLE = [[523, 0], [659, .11], [784, .22], [1047, .36]];
+/* Bystríkove pesničky (vlastné jednoduché melódie): [tón, dĺžka v dobách], 0 = pauza */
+const TN = { C4: 262, D4: 294, E4: 330, F4: 349, G4: 392, A4: 440, B4: 494, C5: 523, D5: 587, E5: 659, F5: 698, G5: 784, A5: 880 };
+const TUNES = [
+  { bpm: 150, bass: ['C4', 'G4', 'A4', 'F4'], n: 'C5 1 E5 1 G5 2 E5 1 G5 1 A5 2 G5 1 E5 1 C5 1 D5 1 E5 4 F5 1 E5 1 D5 2 G5 1 F5 1 E5 2 D5 1 C5 1 D5 1 E5 1 C5 4' },
+  { bpm: 132, bass: ['F4', 'C4', 'G4', 'C4'], n: 'A4 1 C5 1 F5 2 E5 1 D5 1 C5 2 D5 1 E5 1 F5 1 G5 1 A5 4 G5 1 F5 1 E5 2 D5 1 E5 1 F5 2 C5 2 A4 2 F4 4' },
+  { bpm: 168, bass: ['G4', 'D4', 'E4', 'C4'], n: 'G4 1 G4 1 D5 1 D5 1 E5 1 E5 1 D5 2 C5 1 C5 1 B4 1 B4 1 A4 1 A4 1 G4 2 D5 1 D5 1 C5 1 C5 1 B4 1 B4 1 A4 2 G4 4' }
+];
+let TUNE_I = 0, TUNE_UNTIL = 0;
+function playTune(i) {
+  if (Date.now() < TUNE_UNTIL) return; const tu = TUNES[i == null ? (TUNE_I++ % TUNES.length) : i]; const beat = 60 / tu.bpm; const parts = tu.n.split(' '); let t = .05;
+  try {
+    for (let k = 0; k < parts.length; k += 2) { const f = TN[parts[k]], d = +parts[k + 1] * beat; if (f) mar(f, t, .11, Math.max(.25, d * 1.4)); t += d; }
+    for (let b = 0, bt = .05; bt < t; b++, bt += beat * 2) { const f = TN[tu.bass[Math.floor(b / 2) % tu.bass.length]] / 2; tone(f, beat * 1.6, 'triangle', .07, bt); if (b % 2) tone(1800, .03, 'square', .012, bt + beat); }
+  } catch (e) { }
+  TUNE_UNTIL = Date.now() + t * 1000;
+}
 const SFX = {
   tap: () => bub(520, 980, 0, .07, .07), pop: () => { bub(420, 1100, 0, .1, .11); mar(1319, .05, .04, .18); },
   ok: () => { mar(1047, 0, .13, .35); mar(1319, .07, .12, .4); mar(1568, .14, .12, .55); },

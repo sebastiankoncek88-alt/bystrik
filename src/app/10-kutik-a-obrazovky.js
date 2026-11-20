@@ -78,7 +78,7 @@ function fxComet(n) {
 }
 const BEAR_PET = ['Hihi, to šteklí! 🤭', 'Mám ťa rád! 💛', 'Si môj najlepší kamarát!', 'Ešte, ešte! 😊', 'Mňau… teda, chcel som povedať mrmr 🐻'];
 function bearStats(b) { const now = Date.now(), cl = v => Math.max(0, Math.min(100, Math.round(v))); return { food: cl(100 - (now - (b.fed || 0)) / (20 * HRS) * 100), energy: b.asleep ? 100 : cl(100 - (now - (b.slept || 0)) / (26 * HRS) * 100), joy: cl(100 - (now - (b.care || 0)) / (48 * HRS) * 100) }; }
-const bearLove = b => { const l = b.love || 0; return { lv: 1 + Math.floor(l / 10), pr: l % 10 }; };
+const bearLove = b => { let l = b.love || 0, lv = 1, nd = 10; while (l >= nd) { l -= nd; lv++; nd = 10 + (lv - 1) * 5; } return { lv, pr: l / nd * 10 }; };
 function bearCorner(p) {
   const b = bearInit(p); const m = bearMood(p); const h = b.honey || 0; const st = bearStats(b); const lo = bearLove(b);
   const bar = (i, n, v, c) => `<div class="brst"><span>${i}</span><div><small>${n}</small><div class="brbar"><i style="width:${v}%;background:${c}"></i></div></div></div>`;
@@ -158,7 +158,7 @@ function roomClockTick() { const now = new Date(), h = $('#rmhh'), m = $('#rmmh'
 let BEARIV = null; const BEAR_IDLE = ['bhappy', 'bwiggle', 'bpeek', 'bhop'];
 function bearIdleStart() { clearInterval(BEARIV); BEARIV = setInterval(() => { const fig = $('.bearroom .bcfig svg'), room = $('#bearcorner'); if (!fig || !room) { clearInterval(BEARIV); return; } if (document.hidden || room.classList.contains('offs') || room.classList.contains('busy') || $('#brscene.night') || fig.classList.contains('bdance')) return; const c = pick(BEAR_IDLE); fig.classList.add(c); setTimeout(() => fig.classList.remove(c), 1400); }, 6500); }
 function bearSay(t) { const el = $('#brbub'); if (el) { el.textContent = t; el.classList.remove('pop'); void el.offsetWidth; el.classList.add('pop'); } }
-function bearLoveUp(p, n) { const b = bearInit(p); const before = bearLove(b).lv; b.love = (b.love || 0) + n; const after = bearLove(b).lv; bearCare(p); const el = $('.brlove'); if (el) el.innerHTML = `💖 Lv ${after}<i><b style="width:${bearLove(b).pr * 10}%"></b></i>`; if (after > before) { toast(`💖 Priateľstvo s Bystríkom: level ${after}!`); sfx('level'); try { confetti(80, .4); } catch (e) { } } }
+function bearLoveUp(p, n, tap) { const b = bearInit(p); if (tap) { const now = Date.now(), d = new Date().toDateString(); if (b.tapD !== d) { b.tapD = d; b.tapN = 0; } if (now - (b.tapT || 0) < 5000 || b.tapN >= 6) return; b.tapT = now; b.tapN++; } const before = bearLove(b).lv; b.love = (b.love || 0) + n; const after = bearLove(b).lv; bearCare(p); const el = $('.brlove'); if (el) el.innerHTML = `💖 Lv ${after}<i><b style="width:${bearLove(b).pr * 10}%"></b></i>`; if (after > before) { toast(`💖 Priateľstvo s Bystríkom: level ${after}!`); sfx('level'); try { confetti(80, .4); } catch (e) { } } }
 let BREC = null;
 function bearCare(p) { const b = bearInit(p); b.care = Date.now(); save(); }
 function parentNeedCard() { if (DATA.parent && DATA.parent.pin) return ''; return `<button class="card pneed press" data-a="pguide"><span class="ic">👨‍👩‍👧</span><span><b>Rodičia: vytvorte si účet</b><span class="b" style="font-size:.9rem">Trvá to minútu. Ťuknite a prevediem vás.</span></span><em>!</em></button>`; }
@@ -398,12 +398,38 @@ VIEWS.profiles = () => `<main class="view nonav" style="justify-content:center">
 
 /* --- lobby --- */
 /* ===== Domov 2.0: scéna, batôžtek dňa, jedno hlavné tlačidlo ===== */
+/* Scéna 3.0 na Dnes: krajina s horami, lesom, domčekom a lúkou (deň/noc) */
+function heroBg(night) {
+  const N = night;
+  const sky = N ? ['#151040', '#2A2270', '#4A3C8C'] : ['#8FD3FF', '#C9ECFF', '#FFE9C9'];
+  const trees = [[18, 166, 1], [44, 160, 1.2], [70, 168, .9], [228, 166, 1], [256, 160, 1.25], [282, 168, .95], [356, 164, 1.1]].map(([x, y, s]) => `<g transform="translate(${x} ${y}) scale(${s})"><path d="M0 -34 L13 -6 L7 -6 L16 8 L-16 8 L-7 -6 L-13 -6Z" fill="${N ? '#1F3D4A' : '#3E9E5C'}"/><path d="M0 -34 L13 -6 L7 -6 L16 8 L0 8Z" fill="${N ? '#18323D' : '#2F8A4E'}"/><rect x="-2" y="8" width="4" height="6" fill="${N ? '#2A2030' : '#7A4A22'}"/></g>`).join('');
+  const flowers = [[30, 232, '#FF6F91'], [62, 240, '#FFC233'], [120, 236, '#fff'], [200, 242, '#FF6F91'], [236, 234, '#B36BFF'], [300, 240, '#FFC233'], [330, 232, '#fff'], [176, 230, '#FFC233']].map(([x, y, c], i) => `<g class="hfl" style="animation-delay:${i * .4}s;transform-origin:${x}px ${y + 8}px"><path d="M${x} ${y + 8} q-1 -5 0 -9" stroke="${N ? '#2F5A4A' : '#3E9E5C'}" stroke-width="1.6" fill="none"/><circle cx="${x}" cy="${y - 2}" r="3.2" fill="${N ? '#7C7AA8' : c}"/><circle cx="${x}" cy="${y - 2}" r="1.2" fill="${N ? '#B9B4D8' : '#FFE07A'}"/></g>`).join('');
+  const stars = N ? Array.from({ length: 22 }, (_, i) => `<circle class="htw" cx="${(i * 53) % 360}" cy="${8 + (i * 37) % 92}" r="${i % 3 ? 1 : 1.6}" fill="#fff" style="animation-delay:${(i % 7) * .45}s"/>`).join('') : '';
+  const flies = N ? [[110, 190], [250, 200], [300, 180], [70, 205]].map(([x, y], i) => `<circle class="hff" cx="${x}" cy="${y}" r="2" fill="#FFF2A0" style="animation-delay:${i * 1.1}s"/>`).join('') : '';
+  return `<svg class="h3bg" viewBox="0 0 360 250" preserveAspectRatio="xMidYMax slice" aria-hidden="true"><defs><linearGradient id="h3sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${sky[0]}"/><stop offset=".6" stop-color="${sky[1]}"/><stop offset="1" stop-color="${sky[2]}"/></linearGradient><radialGradient id="h3sun"><stop offset="0" stop-color="${N ? '#FFF8D8' : '#FFF3B0'}"/><stop offset=".55" stop-color="${N ? '#FFF1C0' : '#FFD24A'}"/><stop offset="1" stop-color="${N ? '#FFF1C0' : '#FFB020'}" stop-opacity="0"/></radialGradient></defs>
+  <rect width="360" height="250" fill="url(#h3sky)"/>${stars}
+  ${N ? '<g transform="translate(196 40)"><circle r="26" fill="#FFF1C0" opacity=".14"/><circle r="17" fill="#FFF6D8"/><circle cx="6" cy="-4" r="15" fill="#2A2270"/></g>' : '<g class="h3sun" transform="translate(196 40)"><g class="h3rays">' + Array.from({ length: 12 }, (_, i) => `<rect x="-2" y="-40" width="4" height="12" rx="2" fill="#FFD24A" opacity=".7" transform="rotate(${i * 30})"/>`).join('') + '</g><circle r="30" fill="url(#h3sun)"/><circle r="17" fill="#FFE27A"/></g>'}
+  <g class="h3cl c1" opacity="${N ? .15 : .95}"><ellipse cx="60" cy="40" rx="30" ry="11" fill="#fff"/><ellipse cx="78" cy="34" rx="18" ry="12" fill="#fff"/><ellipse cx="46" cy="36" rx="14" ry="9" fill="#fff"/></g>
+  <g class="h3cl c2" opacity="${N ? .12 : .85}"><ellipse cx="200" cy="62" rx="24" ry="8" fill="#fff"/><ellipse cx="214" cy="57" rx="14" ry="9" fill="#fff"/></g>
+  ${N ? '' : '<path class="h3bird" d="M0 0 q5 -5 10 0 q5 -5 10 0" stroke="#4A3C6E" stroke-width="1.8" fill="none" stroke-linecap="round"/>'}
+  <path d="M0 150 L50 104 L86 132 L132 86 L186 140 L232 100 L282 138 L326 96 L360 124 L360 250 L0 250Z" fill="${N ? '#2E2A6A' : '#A9C6EE'}"/>
+  <path d="M120 98 L132 86 L144 98 L138 96 L132 100 L126 96Z M314 108 L326 96 L338 108 L332 106 L326 110 L320 106Z" fill="${N ? '#4E4A8A' : '#fff'}"/>
+  <path d="M0 176 Q60 140 130 162 T260 156 T360 150 L360 250 L0 250Z" fill="${N ? '#25415A' : '#8FD08A'}"/>
+  ${trees}
+  <g transform="translate(322 152)"><rect x="-22" y="-4" width="44" height="30" rx="3" fill="${N ? '#5A4060' : '#E8B27A'}"/><path d="M-28 -2 L0 -26 L28 -2Z" fill="${N ? '#7A3A4A' : '#D9534F'}"/><rect x="-6" y="10" width="12" height="16" rx="5" fill="${N ? '#3A2430' : '#8A4F2A'}"/><rect x="8" y="2" width="9" height="9" rx="2" fill="${N ? '#FFD86B' : '#BFE6FF'}"/><rect x="12" y="-24" width="6" height="12" fill="${N ? '#4A3040' : '#A0463F'}"/>${N ? '<rect x="8" y="2" width="9" height="9" rx="2" fill="#FFD86B" class="h3win"/>' : ''}<g class="h3smoke"><circle cx="15" cy="-30" r="4" fill="#fff" opacity=".7"/><circle cx="18" cy="-38" r="5" fill="#fff" opacity=".5"/><circle cx="14" cy="-47" r="6" fill="#fff" opacity=".3"/></g></g>
+  <path d="M0 206 Q90 186 180 200 T360 196 L360 250 L0 250Z" fill="${N ? '#2F5A4A' : '#7CC86E'}"/>
+  <path d="M0 226 Q100 208 200 222 T360 218 L360 250 L0 250Z" fill="${N ? '#28503F' : '#5FB85A'}"/>
+  <path d="M170 250 Q200 228 250 216 Q300 206 322 180" stroke="${N ? '#4A6A5A' : '#F2D9A8'}" stroke-width="10" fill="none" stroke-linecap="round" opacity=".8"/>
+  ${flowers}${flies}
+  ${N ? '' : '<g class="h3bfly b1"><path d="M0 0 q-6 -7 -9 -1 q3 5 9 1 q6 -7 9 -1 q-3 5 -9 1" fill="#FF8AB3"/></g><g class="h3bfly b2"><path d="M0 0 q-6 -7 -9 -1 q3 5 9 1 q6 -7 9 -1 q-3 5 -9 1" fill="#FFC233"/></g>'}
+  </svg>`;
+}
 function heroScene(p, bag) {
   const night = nightOn(), left = bag.filter(x => !x.done).length;
   const msg = left === 0 ? 'Batôžtek je vybalený! Si šikovná hlávka. 🎉' : left === bag.length ? `Zbalil som ti batôžtek! Sú v ňom ${bag.length} veci.` : `Ešte ${left} ${plural(left, 'vec', 'veci', 'vecí')} v batôžtku. Poďme!`;
-  return `<section class="hero2 ${night ? 'night' : ''}"><i class="h2sun" aria-hidden="true"></i><i class="h2cloud c1" aria-hidden="true"></i><i class="h2cloud c2" aria-hidden="true"></i><i class="h2stars" aria-hidden="true"></i><i class="h2hill h1" aria-hidden="true"></i><i class="h2hill h2" aria-hidden="true"></i>
+  return `<section class="hero2 h3 ${night ? 'night' : ''}">${heroBg(night)}
   <button class="h2kid press" data-a="nav" data-v="wardrobe" aria-label="Moja postavička">${avatarSvg(p.av, { cls: 'idle', noBg: true, mood: 'happy' })}</button>
-  <button class="h2bear press" data-a="hero-bear" aria-label="Bystríkov domček">${bearSvg('')}</button>
+  <button class="h2bear press" data-a="hero-bear" aria-label="Bystríkov domček">${bearSvg('hidle')}</button>
   <div class="h2bub"><b>${msg}</b></div></section>`;
 }
 function homeBag(p, d) {
@@ -657,6 +683,21 @@ AFTER.quiz = () => { syncPeek(); if (Q.mode !== 'time' && P().grade === 1 && Q.i
 const PRAISE = ['Výborne!', 'Super!', 'Bravo!', 'Paráda!', 'Si jednotka!', 'Presne tak!', 'Skvelé!', 'Wau!'];
 const COMFORT = ['Nevadí!', 'Skoro!', 'Nabudúce to dáš!', 'Nevzdávaj sa!'];
 function setMood(m) { const mini = $('#mini'); if (!mini) return; mini.innerHTML = avatarSvg(P().av, { crop: 'head', mood: m }); mini.querySelector('svg').classList.add(m === 'happy' ? 'jump' : 'shake'); }
+/* Bystrík hovorí: veľa rôznych viet pri dobrej a zlej odpovedi */
+const SAY_OK = f => [`Super, si ${f ? 'šikovná' : 'šikovný'}!`, 'Výborne, ide ti to!', 'Presne tak, len tak ďalej!', `Bravo, ${f ? 'zvládla' : 'zvládol'} si to!`, 'Paráda! To bolo rýchle!', 'Áno! Trafil si klinec po hlavičke!'.replace('Trafil', f ? 'Trafila' : 'Trafil'), 'Wow, to je správne!', `Si ${f ? 'naša hviezdička' : 'náš hviezdičkár'}!`, 'Hurá! Med pre teba! 🍯', 'Správne! Mám radosť!', 'Jupí, ďalší bod!', `Si ${f ? 'múdra hlávka' : 'múdra hlávka'}!`, 'Perfektné! Takto sa to robí!', 'To bolo ľahučké, však?', 'Bystrík tlieska! 👏', 'Úžasné! Si na dobrej ceste!', 'Super! Mozog pracuje na plné obrátky!', `Áno! ${f ? 'Bola si' : 'Bol si'} pozorn${f ? 'á' : 'ý'}!`, 'Výborne! Ideme ďalej!', 'Správne! Si ako raketa! 🚀'];
+const SAY_COMBO = (n, f) => [`${n} správne za sebou! Si nezastaviteľn${f ? 'á' : 'ý'}! 🔥`, `Séria ${n}! Bystrík od radosti skáče!`, `${n} v rade! To je rekord dňa!`, `Už ${n} správne! Si v ohni! 🔥`][n % 4];
+const SAY_BAD = f => ['Nevadí, skús to znova!', 'Nič sa nedeje, nabudúce to dáš!', 'Nevadí, chybami sa učíme!', 'Skoro! Skúsime ďalšiu.', 'Hmm, tentoraz nie. Ale nevzdávame sa!', 'To nič! Aj Bystrík sa niekedy pomýli.', 'Ups! Pozri sa na správnu odpoveď.', `Neboj sa, ${f ? 'zvládneš' : 'zvládneš'} to!`, 'Takmer! Bolo to blízko.', 'Nevadí! Mozog sa práve niečo nové naučil.', 'Žiadny problém, ideme ďalej spolu!', 'Aj chyba je krok dopredu! 💪', 'Nabudúce už budeš vedieť!', 'Dýchni a pokračujeme! 🧸'];
+function sayOk(f, combo) { return combo >= 3 && combo % 3 === 0 ? SAY_COMBO(combo, f) : pick(SAY_OK(f)); }
+function sayBad(f) { return pick(SAY_BAD(f)); }
+/* efekty pri odpovedi */
+function fxAnswer(ok, el) {
+  if (document.documentElement.classList.contains('lite')) return;
+  const fl = document.createElement('div'); fl.className = 'fxflash ' + (ok ? 'ok' : 'no'); document.body.appendChild(fl); setTimeout(() => fl.remove(), 700);
+  const st = document.createElement('div'); st.className = 'fxstamp ' + (ok ? 'ok' : 'no'); st.innerHTML = ok ? '<svg viewBox="0 0 48 48" aria-hidden="true"><circle cx="24" cy="24" r="22"/><path d="M14 25 l7 7 l13 -15"/></svg>' : '<svg viewBox="0 0 48 48" aria-hidden="true"><circle cx="24" cy="24" r="22"/><path d="M17 17 l14 14 M31 17 l-14 14"/></svg>';
+  const r = el ? el.getBoundingClientRect() : { left: innerWidth / 2, top: innerHeight / 2, width: 0, height: 0 }; st.style.left = (r.left + r.width / 2) + 'px'; st.style.top = (r.top + r.height / 2) + 'px'; document.body.appendChild(st); setTimeout(() => st.remove(), 900);
+  if (ok && el && document.body.animate) { const em = ['⭐', '✨', '🌟', '💛']; for (let i = 0; i < 10; i++) { const s = document.createElement('span'); s.className = 'fxstar'; s.textContent = em[i % 4]; s.style.left = (r.left + r.width / 2) + 'px'; s.style.top = (r.top + r.height / 2) + 'px'; document.body.appendChild(s); const a = -Math.PI / 2 + (Math.random() - .5) * Math.PI * 1.4, d = 60 + Math.random() * 90; s.animate([{ transform: 'translate(-50%,-50%) scale(.3)', opacity: 1 }, { transform: `translate(calc(-50% + ${Math.cos(a) * d}px), calc(-50% + ${Math.sin(a) * d}px)) scale(1.1) rotate(${(Math.random() - .5) * 120}deg)`, opacity: 0 }], { duration: 700 + Math.random() * 300, easing: 'cubic-bezier(.2,.8,.3,1)' }).onfinish = () => s.remove(); } }
+  if (!ok) { const card = $('.qcard') || $('#opts'); if (card) { card.classList.remove('fxshake'); void card.offsetWidth; card.classList.add('fxshake'); } }
+}
 function answer(val, el) {
   if (Q.answered) return; Q.answered = true;
   const q = Q.cur, p = P(); const ok = q.input ? Number(val) === q.raw : val === q.answer; try { buddyAnswer(ok); } catch (e) { }
@@ -670,8 +711,8 @@ function answer(val, el) {
   const ts = topicStat(p, q.topic); ts.total++; p.stats.answered++; countDay(ok); bump(q.s);
   if (Q.mode !== 'time') reviewNote(p, q, ok);
   if (Q.mode !== 'time') Q.tlog.push({ t: q.text, a: q.full || q.answer, g: q.input ? fmt(String(val)) : String(val), ok, ex: q.ex || '', id: q.topic });
-  if (ok) { ts.correct++; p.stats.correct++; Q.correct++; Q.combo++; bump('correct'); let g = (Q.mode === 'time' ? 8 : 10) + (Q.combo >= 3 ? 2 : 0); if (q.calcUsed) g = Math.max(1, Math.round(g / 2)); Q.xp += g; sfx('ok'); buzz(15); floatXp(el, '+' + g + (q.calcUsed ? ' 🧮' : '')); burst(el); okWave(el); setMood('happy'); const pk = $('.peek'); if (pk) { pk.classList.remove('happy'); void pk.offsetWidth; pk.classList.add('happy'); if (Math.random() < .5) peekSay(pick(PRAISE)); } if (Q.combo >= 3 && Q.combo % 3 === 0) confetti(40, .55); }
-  else { Q.combo = 0; sfx('no'); buzz([30, 40, 30]); setMood('sad'); }
+  if (ok) { ts.correct++; p.stats.correct++; Q.correct++; Q.combo++; bump('correct'); let g = (Q.mode === 'time' ? 8 : 10) + (Q.combo >= 3 ? 2 : 0); if (q.calcUsed) g = Math.max(1, Math.round(g / 2)); Q.xp += g; sfx('ok'); buzz(15); floatXp(el, '+' + g + (q.calcUsed ? ' 🧮' : '')); burst(el); okWave(el); fxAnswer(true, el); setMood('happy'); const pk = $('.peek'); if (pk) { pk.classList.remove('happy'); void pk.offsetWidth; pk.classList.add('happy'); if (Math.random() < .5) peekSay(pick(PRAISE)); } if (Q.combo >= 3 && Q.combo % 3 === 0) confetti(40, .55); }
+  else { Q.combo = 0; sfx('no'); buzz([30, 40, 30]); setMood('sad'); fxAnswer(false, el); }
   if (ok && Q.combo >= 5 && Q.combo % 5 === 0) fxComet(Q.combo); const cb = $('#combo'); if (cb) { cb.textContent = Q.combo >= 2 ? '🔥' + Q.combo : ''; if (ok && Q.combo >= 2) { cb.classList.remove('pop'); void cb.offsetWidth; cb.classList.add('pop'); } }
   if (q.sayAfter || q.speakLang) setTimeout(() => say(q.sayAfter || q.speak, 'en-GB'), 350);
   if (q.input) $('#padshow').classList.add(ok ? 'right' : 'wrong');
@@ -679,7 +720,7 @@ function answer(val, el) {
   if (Q.mode === 'time') { TIMERS.push(setTimeout(() => { if (!Q || Q.left <= 0 || UI.view !== 'quiz') return; Q.i++; nextQ(); renderQ(); }, ok ? 450 : 1100)); return; }
   const fb = document.createElement('div'); fb.className = 'fb ' + (ok ? 'ok' : 'no'); fb.id = 'fb';
   if (q.ex) p.lastEx = { x: String(q.ex).slice(0, 160), t: Date.now() };
-  const fem = p.av && p.av.gender === 'd'; const bsay = ok ? pick([`Super, si ${fem ? 'šikovná' : 'šikovný'}!`, 'Výborne, ide ti to!', `Paráda, si ${fem ? 'jednotka' : 'jednotka'}!`, 'Presne tak, len tak ďalej!', `Bravo, ${fem ? 'zvládla' : 'zvládol'} si to!`]) : pick(['Nevadí, skús to znova!', 'Nič sa nedeje, nabudúce to dáš!', 'Nevadí, chybami sa učíme!', 'Skoro! Skúsime to ešte raz.']);
+  const fem = p.av && p.av.gender === 'd'; const bsay = ok ? sayOk(fem, Q.combo) : sayBad(fem);
   if (!(q.sayAfter || q.speakLang)) setTimeout(() => say(bsay), 200);
   fb.innerHTML = `<div class="in"><div class="fbtop"><span class="fbbear">${bearSvg(ok ? 'cheer' : 'comfort')}</span><div class="fbbub"><h3>${ok ? '✓' : '✗'} ${bsay}</h3></div></div>${ok && q.calcUsed ? '<p class="muted">🧮 Použil(a) si kalkulačku, preto len polovica bodov.</p>' : ''}${!ok && !q.ex ? `<p class="muted">💡 Zapamätaj si správnu odpoveď. Nabudúce to už budeš vedieť!</p>` : ''}${!ok ? `<p>Správna odpoveď: <b>${esc(q.full || q.answer)}</b></p>` : ''}${q.ex && (!ok || q.full) ? `<p class="muted">${esc(q.ex)}</p>` : ''}<div id="explain"></div><div class="rowbtns" style="grid-template-columns:${!ok && CHAT_ON() ? '1fr 1fr' : '1fr'}">${!ok && CHAT_ON() ? '<button class="btn lilac" data-a="explain">🧸 Vysvetli mi to</button>' : ''}<button class="btn ${ok ? 'good' : 'primary'}" data-a="next">${Q.i + 1 >= Q.total ? 'Výsledok' : 'Ďalej'}</button></div></div>`;
   document.body.appendChild(fb);
@@ -1335,7 +1376,14 @@ VIEWS.settings = () => {
 let PIN = { mode: 'enter', val: '', first: '' }, PSEL = null, PDEL = false, PARENT_OK = false;
 VIEWS.pin = () => {
   const t = { enter: 'Zadajte rodičovský PIN', create: 'Vytvorte si 4-miestny PIN', confirm: 'Zopakujte PIN pre kontrolu' }[PIN.mode];
-  return `<main class="view nonav" style="justify-content:center;gap:22px"><button class="iconbtn press" data-a="pin-back" aria-label="Späť" style="align-self:flex-start">←</button><div class="pinlock"><svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg></div><h1 style="font-size:1.7rem;text-align:center">${t}</h1><p class="muted b" style="text-align:center;font-size:.9rem">${PIN.mode === 'enter' ? 'Táto časť je len pre rodičov.' : 'PIN chráni prehľad a nastavenia pred deťmi. Zapamätajte si ho.'}</p><div class="pindots" id="pindots">${[0, 1, 2, 3].map(i => `<i class="${i < PIN.val.length ? 'on' : ''}"></i>`).join('')}</div><div class="keys" style="max-width:320px;margin:0 auto;width:100%">${[1, 2, 3, 4, 5, 6, 7, 8, 9].map(n => `<button class="key" data-a="pk" data-k="${n}">${n}</button>`).join('')}<button class="key del" data-a="pk" data-k="del" aria-label="Zmazať">⌫</button><button class="key" data-a="pk" data-k="0">0</button><span></span></div></main>`;
+  const sub = PIN.mode === 'enter' ? 'Táto časť je len pre rodičov.' : 'PIN chráni prehľad a nastavenia pred deťmi. Zapamätajte si ho.';
+  const L = { 2: 'ABC', 3: 'DEF', 4: 'GHI', 5: 'JKL', 6: 'MNO', 7: 'PQRS', 8: 'TUV', 9: 'WXYZ' };
+  const key = n => `<button class="pk2" data-a="pk" data-k="${n}" aria-label="${n}"><b>${n}</b><small>${L[n] || ''}</small></button>`;
+  return `<main class="view nonav pin2v"><button class="iconbtn press" data-a="pin-back" aria-label="Späť" style="align-self:flex-start">←</button>
+  <section class="pin2"><div class="pin2lock"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg></div>
+  <h1>${t}</h1><p>${sub}</p>
+  <div class="pindots pin2dots" id="pindots">${[0, 1, 2, 3].map(i => `<i class="${i < PIN.val.length ? 'on' : ''}"></i>`).join('')}</div>
+  <div class="pin2keys">${[1, 2, 3, 4, 5, 6, 7, 8, 9].map(key).join('')}<span></span>${key(0)}<button class="pk2 del" data-a="pk" data-k="del" aria-label="Zmazať"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 5H9l-6 7 6 7h12a1 1 0 0 0 1-1V6a1 1 0 0 0-1-1z"/><path d="M17 9l-6 6M11 9l6 6"/></svg></button></div></section></main>`;
 };
 function pinKey(k) {
   sfx('tap'); if (k === 'del') PIN.val = PIN.val.slice(0, -1); else if (PIN.val.length < 4) PIN.val += k;

@@ -4,12 +4,14 @@ const PLUS_CFG = { month: '', year: '', teacher: '', portal: '' };
 const PLUS_PRICE = { month: '3,99 €', year: '29,99 €', teacher: '49 €', trial: 7 };
 const FREE_KIDS = 2, PLUS_KIDS = 5;
 let PLUS = null; try { PLUS = JSON.parse(localStorage.getItem('bystrik.plus') || 'null'); } catch (e) { }
-const isPlus = () => !!(PLUS && ['active', 'trialing'].includes(PLUS.status) && (!PLUS.until || new Date(PLUS.until).getTime() > Date.now()));
+let ADMIN = false; try { ADMIN = localStorage.getItem('bystrik.admin') === '1'; } catch (e) { }
+const isPlus = () => ADMIN || !!(PLUS && ['active', 'trialing'].includes(PLUS.status) && (!PLUS.until || new Date(PLUS.until).getTime() > Date.now()));
 /* kým nie sú spustené platby, Plus výhody sú pre všetkých zadarmo (nič sa nezamkne) */
 const plusFree = () => !PLUS_CFG.month && !PLUS_CFG.year;
 const hasPlus = () => isPlus() || plusFree();
 async function plusLoad() {
   if (!SUPA_ON() || !AUTH || !AUTH.uid) return;
+  try { const a = await sb('POST', 'rpc/am_admin', {}); ADMIN = a === true; try { localStorage.setItem('bystrik.admin', ADMIN ? '1' : '0'); } catch (e) { } } catch (e) { /* funkcia ešte nie je */ }
   try { const r = await sb('GET', 'plus?select=status,plan,current_period_end&user_id=eq.' + AUTH.uid); const x = r && r[0]; PLUS = x ? { status: x.status, plan: x.plan, until: x.current_period_end, at: Date.now() } : null; try { localStorage.setItem('bystrik.plus', JSON.stringify(PLUS)); } catch (e) { } } catch (e) { /* tabuľka ešte neexistuje alebo offline */ }
 }
 function plusLink(k) { const u = PLUS_CFG[k]; if (!u) return ''; const q = new URLSearchParams(); if (AUTH && AUTH.uid) q.set('client_reference_id', AUTH.uid); if (AUTH && AUTH.email) q.set('prefilled_email', AUTH.email); return u + (u.includes('?') ? '&' : '?') + q.toString(); }
@@ -39,6 +41,7 @@ function plusCard() {
   if (window.claude && window.claude.use) return `<section class="card pcard"><p class="b" style="margin:4px 0">Bystrík Plus sa dá aktivovať vo webovej verzii apky.</p></section>`;
   const on = isPlus(), any = PLUS_CFG.month || PLUS_CFG.year;
   const feats = PLUS_FEAT.map(([i, n, d, k]) => `<div class="plf"><span class="pli">${i}</span><span class="grow"><b>${n}${k === 'soon' ? ' <em class="plsoon">čoskoro</em>' : ''}</b><small>${d}</small></span></div>`).join('');
+  if (on && (ADMIN || !PLUS)) return `<section class="card pcard plcard on"><div class="plhead"><span class="plbadge">⭐ Plus</span><b>Bystrík Plus je aktívny</b><small>Moderátorský účet · všetko zadarmo</small></div>${feats}</section>`;
   if (on) return `<section class="card pcard plcard on"><div class="plhead"><span class="plbadge">⭐ Plus</span><b>Bystrík Plus je aktívny</b><small>${PLUS.status === 'trialing' ? 'Skúšobné obdobie' : PLUS.plan === 'year' ? 'Ročné predplatné' : 'Mesačné predplatné'}${PLUS.until ? ' · do ' + new Date(PLUS.until).toLocaleDateString('sk-SK') : ''}</small></div>${feats}<div class="rowbtns">${PLUS_CFG.portal ? `<a class="btn small" href="${PLUS_CFG.portal}" target="_blank" rel="noopener" style="text-decoration:none">⚙️ Spravovať predplatné</a>` : ''}<button class="btn small" data-a="plus-refresh">🔄 Obnoviť stav</button></div></section>`;
   return `<section class="card pcard plcard"><div class="plhead"><span class="plbadge">⭐ Plus</span><b>Bystrík Plus</b><small>Celé učenie ostáva zadarmo. Plus pridáva veci pre rodičov a podporuje ďalší vývoj Bystríka.</small></div>${feats}
   <div class="plprices"><a class="plprice ${PLUS_CFG.year ? '' : 'off'}" ${PLUS_CFG.year ? `href="${plusLink('year')}" target="_blank" rel="noopener"` : 'data-a="plus-soon"'}><em>výhodnejšie</em><b>${PLUS_PRICE.year}</b><small>ročne · ${(29.99 / 12).toFixed(2).replace('.', ',')} € mesačne</small></a><a class="plprice ${PLUS_CFG.month ? '' : 'off'}" ${PLUS_CFG.month ? `href="${plusLink('month')}" target="_blank" rel="noopener"` : 'data-a="plus-soon"'}><b>${PLUS_PRICE.month}</b><small>mesačne</small></a></div>
@@ -48,6 +51,24 @@ function plusCard() {
 }
 /* otvorí Plus kartu v rodičovských nastaveniach (len z rodičovskej časti) */
 function plusOpen() { if (UI.view !== 'parent') return; PTAB = 'set'; PSET_WANT = 'Bystrík Plus'; render(null); scrollTo({ top: 0 }); }
+/* ---- Moderátor: darovanie Plus ---- */
+let MOD = { list: null, busy: false, msg: '' };
+function modCard() {
+  if (!ADMIN) return ''; if (MOD.list == null && !MOD.loading) { MOD.loading = 1; setTimeout(() => modLoad().finally(() => { MOD.loading = 0; }), 0); }
+  const rows = MOD.list == null ? '<p class="muted b" style="margin:0">Načítavam…</p>' : MOD.list.length ? MOD.list.map(g => `<div class="modrow"><span class="grow"><b>${esc(g.email)}</b><small>${g.status === 'active' ? 'do ' + new Date(g.until).toLocaleDateString('sk-SK') : 'zrušené'}</small></span>${g.status === 'active' ? `<button class="btn small" data-a="mod-revoke" data-e="${esc(g.email)}">Zrušiť</button>` : ''}</div>`).join('') : '<p class="muted b" style="margin:0">Zatiaľ si nikomu Plus nedaroval.</p>';
+  return `<section class="card pcard modcard"><span class="eyebrow">🛡️ Moderátor · máš všetko zadarmo</span><p class="b" style="margin:4px 0 8px">Daruj Bystrík Plus inému rodičovi. Napíš e-mail, ktorým sa prihlasuje v Bystríkovi.</p>
+  <input class="field" id="modmail" type="email" inputmode="email" autocapitalize="off" autocomplete="off" placeholder="rodic@email.sk" style="width:100%;box-sizing:border-box">
+  <div class="moddays" role="group" aria-label="Na ako dlho">${[[30, '1 mesiac'], [365, '1 rok'], [36500, 'Navždy']].map(([d, n], i) => `<button class="${(MOD.days || 365) === d ? 'on' : ''}" data-a="mod-days" data-d="${d}">${n}</button>`).join('')}</div>
+  <button class="btn primary block" data-a="mod-grant" ${MOD.busy ? 'disabled' : ''}>🎁 Darovať Plus</button>${MOD.msg ? `<p class="b" style="margin:6px 0 0">${esc(MOD.msg)}</p>` : ''}
+  <span class="eyebrow" style="margin-top:12px">Darované</span><div class="modlist">${rows}</div></section>`;
+}
+async function modLoad() { if (!ADMIN) return; try { MOD.list = await sb('POST', 'rpc/list_gifts', {}) || []; } catch (e) { MOD.list = []; MOD.msg = 'Zoznam sa nepodarilo načítať. Spustili ste SQL pre moderátora?'; } if (UI.view === 'parent') render(null); }
+ACT['mod-days'] = d => { MOD.days = +d.d; render(null); };
+ACT['mod-grant'] = async () => { const e = ($('#modmail') || {}).value || ''; if (!/^\S+@\S+\.\S+$/.test(e.trim())) { toast('Napíšte platný e-mail'); return; } MOD.busy = true; MOD.msg = ''; render(null);
+  try { const r = await sb('POST', 'rpc/grant_plus', { target_email: e.trim(), days: MOD.days || 365 }); MOD.msg = r === 'ok' ? `✓ Plus darovaný pre ${e.trim()}.` : 'Taký účet v Bystríkovi nie je. Rodič sa musí najprv prihlásiť e-mailom.'; } catch (x) { MOD.msg = 'Nepodarilo sa. Skontrolujte pripojenie alebo SQL pre moderátora.'; }
+  MOD.busy = false; MOD.list = null; render(null); modLoad(); };
+ACT['mod-revoke'] = async d => { try { await sb('POST', 'rpc/revoke_plus', { target_email: d.e }); toast('Plus zrušený'); } catch (x) { toast('Nepodarilo sa zrušiť'); } MOD.list = null; render(null); modLoad(); };
+
 /* viditeľná ponuka Plus */
 const PLUS_SHOW = () => !isPlus() && !(window.claude && window.claude.use);
 function plusBanner() { if (!PLUS_SHOW()) return ''; return `<button class="plban press" data-a="plus-open"><i class="lurays" aria-hidden="true"></i><span class="plbi">⭐</span><span class="grow"><b>Bystrík Plus</b><small>${PLUS_CFG.month || PLUS_CFG.year ? `${PLUS_PRICE.trial} dní zadarmo · od ${(29.99 / 12).toFixed(2).replace('.', ',')} € mesačne` : 'Čítanka, úlohy, súboj, diktát a ďalšie'}</small></span><em>Pozrieť ›</em></button>`; }

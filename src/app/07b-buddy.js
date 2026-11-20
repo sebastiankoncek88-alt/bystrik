@@ -3,8 +3,8 @@ const BUDDY_MS = { wink: 1500, wave: 1900, smile: 1600, happy: 900, cheer: 2000,
 const BUDDY_ALIAS = { happy: 'bhappy', cheer: 'cheer', spin: 'bspin', dance: 'bdance', hop: 'bhop', wiggle: 'bwiggle', peek: 'bpeek', yawn: 'byawn' };
 const BUDDY_IDLE = ['wink', 'wave', 'smile', 'peek', 'wiggle', 'hop', 'nod', 'shy', 'think', 'love'];
 const BUDDY_TAP = [['Ahoj! 👋', 'wave'], ['Poď sa učiť! 📚', 'hop'], ['Si šikovný! ⭐', 'wink'], ['Hihi, to šteklí! 😄', 'laugh'], ['Ja som Bystrík! 🧸', 'smile'], ['Dáme kvíz? 🎯', 'nod'], ['Mám ťa rád! 💛', 'love'], ['Ešte jednu úlohu? 💪', 'cheer'], ['Juchú! 🎉', 'spin'], ['Hmm, čo sa naučíme? 🤔', 'think'], ['Tancujeme! 🎶', 'dance'], ['Ojoj, šteklíš ma! 🙈', 'shy']];
-const BUDDY_OK = ['Super! ⭐', 'Výborne! 🎉', 'Paráda! 👏', 'Si hviezda! 🌟', 'Presne tak! ✅', 'Wow! 😮'];
-const BUDDY_BAD = ['Nevadí, skúsime ďalšiu 💪', 'To nič, učíme sa 🧸', 'Skoro! Nabudúce to dáš 🙂'];
+const BUDDY_OK = ['Super! ⭐', 'Výborne! 🎉', 'Paráda! 👏', 'Si hviezda! 🌟', 'Presne tak! ✅', 'Wow! 😮', 'Jupí! 🎈', 'Bravo! 🙌', 'Hurá! 🍯', 'To je ono! 💪', 'Ty si ale bystrý! 🧠', 'Ide ti to! 🚀', 'Krása! 🌈', 'Áno, áno! 🥳'];
+const BUDDY_BAD = ['Nevadí, skúsime ďalšiu 💪', 'To nič, učíme sa 🧸', 'Skoro! Nabudúce to dáš 🙂', 'Hmm, nevadí 🤗', 'Ideme ďalej spolu 🐾', 'Aj ja sa mýlim 🙈', 'Bolo to blízko! 👌', 'Nevzdávame sa! ⭐', 'Chyba = nová vedomosť 💡'];
 let BUDDYT = null, BUDDYBT = null, BUDDYLAST = Date.now(), BUDDYBAD = 0, BUDDYVIEW = '', BUDDYSAY = 0;
 const BUDDY_FACTS = [
   'Chobotnica má tri srdcia a modrú krv.', 'Medvede vedia vyliezť na strom aj zabehnúť rýchlejšie ako človek.', 'Slimák môže spať aj tri roky.', 'Včela navštívi za deň stovky kvetov.', 'Žirafa má rovnako veľa krčných stavcov ako človek, len sú oveľa dlhšie.',
