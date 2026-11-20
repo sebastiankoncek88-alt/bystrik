@@ -90,6 +90,7 @@ Písanie priateľom je predvolene vypnuté (`DATA.settings.msgOk`). Úsporný re
 - Adventný kalendár: zatiaľ len návrh (nenasadený), https://claude.ai/artifact/MHiMhrvs9GHu1qT7msTNZx
 
 ## Otvorené
+- Plus – návod pre používateľa (spraví neskôr): 1) https://dashboard.stripe.com/register 2) produkt Bystrík Plus 3,99 €/mes + 29,99 €/rok (Recurring) https://dashboard.stripe.com/products/create 3) 2× platobný odkaz, 7 dní zadarmo, presmerovanie na web, Test mode VYPNUTÝ https://dashboard.stripe.com/payment-links/create 4) SQL `supabase/2026-11-plus.sql` https://supabase.com/dashboard/project/nxxltcpjdvoxomogzwaj/sql/new → pošle odkazy buy.stripe.com, ja ich dám do `PLUS_CFG`.
 - Plus: Stripe účet + Payment Links do `PLUS_CFG`, spustiť SQL, nasadiť stripe-webhook + tajomstvá; potom AI cez server, týždenný e-mail (Resend, treba doménu), čítanka s hodnotením, kolekcia.
 - Kontaktný e-mail do zásad súkromia (spýtať sa používateľa – zatiaľ neodpovedal).
 
