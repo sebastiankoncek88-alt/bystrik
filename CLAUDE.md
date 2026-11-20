@@ -70,7 +70,7 @@ Písanie priateľom je predvolene vypnuté (`DATA.settings.msgOk`). Úsporný re
 - Bystrík počúva čítanie: počas nahrávania beží rozpoznávanie reči (`SRC` = SpeechRecognition, sk-SK, `srStart/srStop/srApply`, fuzzy zhoda `srMatch`), prečítané slová `.rw.ok` (zelené), ďalšie `.rw.cur`; po skončení `RD.cov` % a karta `.rcov` „Bystrík počul X z Y slov“, uloží sa do `reading.cov` a rodič to vidí. Bez rozpoznávania reči sa slová neoznačujú (náhodné žlté posúvanie zrušené).
 - Mikrofón na iPhone: počas nahrávania `navigator.audioSession.type='play-and-record'` (režim 'playback' z audioUnlock blokoval mikrofón), po skončení späť 'playback'. Pred prvým nahrávaním vlastné okno `micAsk()` „Povoliť mikrofón“ (`DATA.micOk`, akcia mic-allow), po chybe (nie zamietnutí) raz znova `micAsk(true)`.
 - Darček za level: tlačidlo „Super!“ (`ov-super`) najprv otvorí darček, druhým ťuknutím zavrie.
-- SW cache zvyšovať pri každom nasadení s viditeľnou zmenou (teraz v60).
+- SW cache zvyšovať pri každom nasadení s viditeľnou zmenou (teraz v61).
 - Fun fakty (`BUDDY_FACTS`, 41 faktov): každé ~3 min mimo kvízu/hier/čítania/rodiča (kontrola každých 15 s) + po výsledku kvízu s ≥1 hviezdou 50 % šanca, ak posledný bol pred >90 s.
 - Rebríček: pri načítaní sa hráč hneď zapíše (`LBSELF`), obnova každých 30 s na obrazovke + tlačidlo `lb-refresh`, karta „Včerajší víťazi“ (`LB.yest`).
 - AI Bystrík: odpovede max 2–3 krátke vety (`tutorIntro`), chat `max: 400` (v artefakte sa max/effort nepošlú).
@@ -86,6 +86,7 @@ Písanie priateľom je predvolene vypnuté (`DATA.settings.msgOk`). Úsporný re
 - Číselné obory podľa osnov: 1. roč. do 20, 2. do 100, 3. do 1 000, 4. do 10 000. `m3-rad` (Čísla do 10 000) je v 4. ročníku, `m4-velke` (do milióna) je skrytá (`g: 5`), `m4-zaokr` do 10 000.
 - Rozsah čísel rastie počas roka: `NUM_CAP[ročník][mesiac]` v content.js (1. roč. do 5 → 10 → 20, 2. roč. do 20 → 50 → 100 od decembra, 3. roč. do 100 → 1 000 od novembra, 4. roč. do 1 000 → 10 000 od novembra); `genCapped` pregeneruje otázku, kým čísla nie sú v limite (len matematika vlastného ročníka).
 - Lunapark 2.1: každá hra má vlastnú farbu (`LUNABG` 9 farieb), karta s veľkou ikonou v krúžku (`.lubig`) a lúčmi, zamknutá hra = štítok „Zamknutá hra“ + stmavenie, okrúhle šípky `.luside`, atrakcie 3 × 3 s cenou pri zamknutých (`.luprice`).
+- Výber obťažnosti hry = spodný list `pickDiff` (hlavička vo farbe hry, 4 riadky `DIFF`: Veľmi ľahké / Ľahké / Ťažké / Majster s popisom, rýchlosťou a bodmi, ťuk = výber `dsel`, tlačidlo „▶ Hrať · …“ = `gdiff`).
 - Šatník: náhľad postavičky nie je prilepený (posúva sa so stránkou), horná lišta `.top2` je nepriehľadná.
 - Adventný kalendár: zatiaľ len návrh (nenasadený), https://claude.ai/artifact/MHiMhrvs9GHu1qT7msTNZx
 

@@ -920,14 +920,16 @@ const GAMES = {
   simon: { i: '🧠', n: 'Pamätaj si', d: 'Sleduj, v akom poradí sa rozsvietia farby, a zopakuj to.', bg: 'var(--lilac-soft)', cost: 150 },
   race: { i: '🏎️', n: 'Počtové preteky', d: 'Každá správna odpoveď posunie tvoje auto. Predbehni súpera do cieľa!', bg: 'var(--bad-soft)', cost: 200 }
 };
-const DIFF = { me: { n: 'Mega easy', e: '🐣', sp: 1.9, ql: 0, xp: .5 }, e: { n: 'Easy', e: '🙂', sp: 1.25, ql: 10, xp: 1 }, h: { n: 'Hard', e: '🔥', sp: .72, ql: 5, xp: 1.5 }, i: { n: 'Impossible', e: '💀', sp: .45, ql: 2.6, xp: 2 } };
+const DIFF = { me: { n: 'Veľmi ľahké', e: '🐣', d: 'Pomaly a s kopou času', lv: 1, c: '#5FC97A', sp: 1.9, ql: 0, xp: .5 }, e: { n: 'Ľahké', e: '🙂', d: 'Normálne tempo', lv: 2, c: '#4C86F7', sp: 1.25, ql: 10, xp: 1 }, h: { n: 'Ťažké', e: '🔥', d: 'Rýchlo, nezaváhaj!', lv: 3, c: '#FF7A3D', sp: .72, ql: 5, xp: 1.5 }, i: { n: 'Majster', e: '🏆', d: 'Len pre najbystrejších', lv: 4, c: '#B34FC4', sp: .45, ql: 2.6, xp: 2 } };
 const DF = () => DIFF[(GM && GM.d) || 'e'];
+let DSEL = null;
 function pickDiff(k) {
-  const p = P(); const last = (p.gdiff || {})[k] || 'e'; const g = GAMES[k]; sfx('whoosh');
-  const w = document.createElement('div'); w.className = 'over';
-  w.innerHTML = `<div class="card box diffbox"><div style="font-size:3.2rem;line-height:1">${g.i}</div><h2>${g.n}</h2><p class="muted b">Vyber si obtiažnosť</p><div class="diffs">${Object.entries(DIFF).map(([d, x]) => `<button class="diff press d-${d} ${d === last ? 'on' : ''}" data-a="gdiff" data-g="${k}" data-d="${d}"><span class="de">${x.e}</span><b>${x.n}</b><small>${x.xp === 1 ? 'normálne body' : x.xp < 1 ? 'polovica bodov' : '×' + x.xp + ' bodov'}</small></button>`).join('')}</div><button class="btn block" data-a="ov-close">Zrušiť</button></div>`;
+  const p = P(); DSEL = { k, d: (p.gdiff || {})[k] || 'e' }; const g = GAMES[k], ix = Object.keys(GAMES).indexOf(k); sfx('whoosh');
+  closeSheet(); const w = document.createElement('div'); w.id = 'sheetwrap';
+  w.innerHTML = `<div class="scrim" data-a="close-sheet"></div><div class="sheet dfsheet" role="dialog" aria-label="Vyber obťažnosť"><div class="dfhead" style="background:${LUNABG[ix % LUNABG.length]}"><i class="lurays" aria-hidden="true"></i><span class="dfi">${g.i}</span><div><b>${esc(g.n)}</b><small>Aké ťažké to chceš?</small></div><button class="dfx" data-a="close-sheet" aria-label="Zavrieť">✕</button></div><div class="dflist" id="dflist">${diffRows()}</div><button class="btn primary block bigplay dfgo" id="dfgo" data-a="gdiff" data-g="${k}" data-d="${DSEL.d}">▶ Hrať · ${DIFF[DSEL.d].n}</button></div>`;
   document.body.appendChild(w);
 }
+function diffRows() { return Object.entries(DIFF).map(([d, x]) => `<button class="dfrow press ${d === DSEL.d ? 'on' : ''}" style="--dc:${x.c}" data-a="dsel" data-d="${d}" aria-pressed="${d === DSEL.d}"><span class="dfe">${x.e}</span><span class="grow"><b>${x.n}</b><small>${x.d}</small></span><span class="dfspd" aria-label="Rýchlosť ${x.lv} zo 4">${[1, 2, 3, 4].map(i => `<i class="${i <= x.lv ? 'on' : ''}"></i>`).join('')}</span><em class="dfxp">${x.xp === 1 ? '×1' : x.xp < 1 ? '½' : '×' + x.xp} ⭐</em></button>`).join(''); }
 function qTimer(onOut, k = 1) {
   if (GM.qt) clearTimeout(GM.qt); const lim = DF().ql * k; const bar = $('#qbar'); if (!lim) { if (bar) bar.parentNode.style.display = 'none'; return; }
   if (bar) { bar.style.transition = 'none'; bar.style.width = '100%'; void bar.offsetWidth; bar.style.transition = `width ${lim}s linear`; bar.style.width = '0%'; }
