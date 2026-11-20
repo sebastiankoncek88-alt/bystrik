@@ -1020,7 +1020,9 @@ function gamesToday(p) { return p.gp && p.gp.d === today() ? p.gp.n : 0; }
 function gamesLeft(p) { const L = DATA.settings.gameLimit; return L ? Math.max(0, L - gamesToday(p)) : Infinity; }
 function gameLimitMsg() { const p = P(); sfx('no'); buzz([30, 40, 30]); const w = document.createElement('div'); w.className = 'over'; w.innerHTML = `<div class="card box"><div style="font-size:4rem;line-height:1">🌙</div><h2>Na dnes stačilo hier!</h2><p class="b muted">Dnes si už zahral(a) ${DATA.settings.gameLimit} ${plural(DATA.settings.gameLimit, 'minihru', 'minihry', 'miníhier')}. Zajtra môžeš znova. Zatiaľ sa môžeš učiť a zbierať slniečka 📚</p><button class="btn primary block" data-a="ov-learn">📚 Ísť sa učiť</button><button class="btn block" data-a="ov-close">OK</button></div>`; document.body.appendChild(w); say('Na dnes stačilo hier! Zajtra môžeš znova. Zatiaľ sa môžeš učiť a zbierať slniečka.'); }
 function startGame(k, d) { const pp = P(); if (!d) return pickDiff(k); pp.gdiff = pp.gdiff || {}; pp.gdiff[k] = d; if (gamesLeft(pp) <= 0) return gameLimitMsg(); pp.gp = { d: today(), n: gamesToday(pp) + 1 }; save(); const g = pp.grade; GM = { k, g, d, score: 0, lives: 3, left: 45, combo: 0 }; if (k === 'balloons') { GM.target = balloonTarget(g); GM.hits = 0; } if (k === 'rain') GM.setup = rainSetup(g); if (k === 'tf') GM.st = makeStatement(g); if (k === 'mole') GM.rule = moleRule(g); if (k === 'word') { GM.left = 60; wordNext(); } if (k === 'order') { GM.left = 60; orderNext(); } if (k === 'simon') { GM.left = 90; GM.seq = [R(0, 3), R(0, 3)]; GM.in = 0; GM.lockIn = true; } if (k === 'race') { GM.left = 75; GM.pos = 0; GM.bot = 0; GM.rq = frogQ(g); } if (k === 'frog') { GM.step = 0; GM.shores = 0; GM.fq = frogQ(g); GM.left = 60; } if (k === 'rocket') { GM.left = 60; GM.alt = 0; GM.moons = 0; GM.rq = frogQ(g); } if (k === 'fish') { GM.left = 60; GM.fq = frogQ(g); } if (k === 'run') { GM.left = 60; GM.lane = 1; GM.rq = frogQ(g); } go('game', {}, 'u'); }
-VIEWS.game = () => {
+const GDECO = { rocket: '⭐✨🪐', fish: '🫧🐚🌊', run: '🍃🌲🍄', balloons: '☁️🎈☀️', rain: '💧☁️🌈', tf: '✔️❓✖️', mole: '🌻🌱🐹', word: '🔤✏️📚', frog: '🪷🐸💧', order: '🔢⭐🧩', simon: '🎵🎨⭐', race: '🏁🚗💨' };
+VIEWS.game = (a) => { const h = VIEWS._game(a); if (!GM) return h; const ix = Object.keys(GAMES).indexOf(GM.k); const dc = Array.from(GDECO[GM.k] || '⭐✨'); return h.replace('<main class="view nonav">', `<main class="view nonav gview g-${GM.k}" style="--gbg:${LUNABG[ix % LUNABG.length]}"><i class="gdeco" aria-hidden="true">${[0, 1, 2, 3, 4, 5].map(i => `<b style="left:${[6, 82, 14, 88, 4, 70][i]}%;top:${[16, 26, 52, 62, 84, 90][i]}%;animation-delay:${i * .7}s">${dc[i % dc.length]}</b>`).join('')}</i>`); };
+VIEWS._game = () => {
   const head = `<div class="qtop"><button class="iconbtn press" data-a="quit-game" aria-label="Ukončiť">✕</button><span class="hearts" id="hearts">${'❤️'.repeat(GM.lives)}${'🤍'.repeat(3 - GM.lives)}</span><div style="flex:1"></div><span class="timer dtag">${DF().e}</span><span class="timer" id="gscore">⭐ ${GM.score}</span><span class="timer" id="gtime">${GM.left} s</span></div>`;
   if (GM.k === 'balloons') return `<main class="view nonav">${head}<div class="target" id="gtarget">Praskni balóny s výsledkom <b>${GM.target}</b></div><div class="gamearea" id="garea"></div></main>`;
   if (GM.k === 'rain') return `<main class="view nonav">${head}<div class="target">${GM.setup.title}<div class="hint">${GM.setup.hint}</div></div><div class="gamearea rain" id="garea"></div></main>`;
@@ -1155,34 +1157,64 @@ function setColor(slot, id) {
   if (slot === 'bg') p.av.bg = id; else p.av.col[slot] = id; p.stats.style++; checkBadges(p); save(); sfx('pop'); refreshWard(true); wardPuff();
 }
 
-/* --- odmeny --- */
+/* --- Moja cesta (levely ako výprava, séria, týždeň, úspechy) --- */
 let RTAB = 'road';
+const ZONES = [
+  { n: 'Kvetinová lúka', e: '🌼', to: 5, bg: 'linear-gradient(180deg,#DFF7D2,#BFEBA8)', ink: '#1E5B2A', deco: ['🌼', '🦋', '🌷', '🐞'] },
+  { n: 'Tajomný les', e: '🌲', to: 10, bg: 'linear-gradient(180deg,#BFE6C8,#7CC59A)', ink: '#11402A', deco: ['🌲', '🍄', '🦔', '🌳'] },
+  { n: 'Veľké hory', e: '⛰️', to: 15, bg: 'linear-gradient(180deg,#D9E6FF,#A9C1F2)', ink: '#1E3466', deco: ['⛰️', '🦅', '❄️', '🏔️'] },
+  { n: 'Hrad v oblakoch', e: '🏰', to: 20, bg: 'linear-gradient(180deg,#EADCFF,#C5A9F5)', ink: '#3B1F75', deco: ['☁️', '🏰', '⭐', '🌈'] }
+];
+function journeyHTML(p) {
+  const li = levelInfo(p.xp), L = li.L; const lv = []; for (let l = 2; l <= 20; l++) { const r = rewardsAt(l, p.av.gender); if (r.length) lv.push([l, r]); }
+  const nextL = lv.find(([l]) => l > L); const toNext = nextL ? (() => { let x = li.need - li.cur; for (let k = L + 1; k < nextL[0]; k++) x += need(k); return x; })() : 0;
+  const got = lv.filter(([l]) => l <= L).length; let from = 2; const XS = [22, 50, 78, 50];
+  const zones = ZONES.map((z, zi) => {
+    const nodes = lv.filter(([l]) => l >= from && l <= z.to); const zFrom = from; from = z.to + 1; if (!nodes.length) return '';
+    const H = 118, pts = nodes.map((n, i) => [XS[(i + zi) % 4], 70 + i * H]); const h = 70 + nodes.length * H;
+    const path = pts.map((q, i) => i ? `C${pts[i - 1][0]} ${pts[i - 1][1] + H / 2} ${q[0]} ${q[1] - H / 2} ${q[0]} ${q[1]}` : `M${q[0]} ${q[1]}`).join(' ');
+    const reached = L >= zFrom; const deco = z.deco.map((d, i) => `<i class="jdeco" style="left:${[6, 88, 10, 84][i]}%;top:${[18, 34, 64, 82][i]}%">${d}</i>`).join('');
+    const nd = nodes.map(([l, r], i) => {
+      const st = l <= L ? 'got' : nextL && l === nextL[0] ? 'now' : 'fut'; const q = pts[i]; const side = q[0] > 60 ? 'l' : 'r';
+      return `<div class="jn st-${st}" style="left:${q[0]}%;top:${q[1]}px"><button class="jstone press" data-a="jnode" data-l="${l}" aria-label="Level ${l}">${st === 'got' ? '✓' : st === 'now' ? l : '🔒'}<em>${l}</em></button>
+      ${st === 'now' ? `<span class="jme">${avatarSvg(p.av, { crop: 'head' })}</span>` : ''}
+      <div class="jgift ${side}">${r.slice(0, 2).map(([c, it]) => `<span class="t">${itemThumb(c, it, p.av)}</span>`).join('')}${r.length > 2 ? `<b>+${r.length - 2}</b>` : ''}${st === 'now' ? `<small>Chýba ${toNext} b.</small>` : ''}</div></div>`;
+    }).join('');
+    return `<section class="jzone ${reached ? '' : 'dim'}" style="--zbg:${z.bg};--zink:${z.ink}"><header class="jzh"><span>${z.e}</span><b>${z.n}</b><small>Level ${zFrom}–${z.to}</small></header><div class="jmap" style="height:${h}px">${deco}<svg class="jpath" viewBox="0 0 100 ${h}" preserveAspectRatio="none" aria-hidden="true"><path d="${path}" vector-effect="non-scaling-stroke"/></svg>${nd}</div></section>`;
+  }).join('');
+  return `<section class="jhead"><span class="jhme">${avatarSvg(p.av, { crop: 'head' })}</span><div class="grow"><b>Level ${L} · ${title(L)}</b><small>${nextL ? `Ďalšia zastávka: level ${nextL[0]} · chýba ${toNext} bodov` : 'Prešiel si celú cestu! 👑'}</small><div class="xpbar"><i style="width:${li.pct}%"></i></div></div><span class="jcount"><b>${got}</b>/${lv.length}<small>zastávok</small></span></section>${zones}<p class="muted b" style="font-size:.82rem;text-align:center">Body získaš za správne odpovede, hry, úlohy a dennú odmenu.</p>`;
+}
+function streakHTML(p) {
+  const sr = streakRewards(p.av.gender); const dn = drNextDay(p); const c = p.streak.count;
+  const days = Array.from({ length: 7 }, (_, i) => { const k = daysAgo(6 - i); const d = new Date(); d.setDate(d.getDate() - (6 - i)); return { n: ['Ne', 'Po', 'Ut', 'St', 'Št', 'Pi', 'So'][d.getDay()], on: !!(p.days[k] && p.days[k].q), today: i === 6 }; });
+  const nextM = sr.find(([, it]) => (p.streak.best || 0) < it.streak);
+  return `<section class="sthero"><div class="stfire"><span class="stfl">🔥</span><b>${c}</b></div><div class="grow"><b class="stt">${c} ${plural(c, 'deň', 'dni', 'dní')} po sebe</b><small>Najdlhšia séria: ${p.streak.best || 0} ${plural(p.streak.best || 0, 'deň', 'dni', 'dní')}</small>${nextM ? `<small class="stnext">Ďalšia odmena o ${Math.max(0, nextM[1].streak - c)} ${plural(Math.max(0, nextM[1].streak - c), 'deň', 'dni', 'dní')}</small>` : ''}</div></section>
+  <div class="stweek">${days.map(d => `<div class="${d.on ? 'on' : ''} ${d.today ? 'today' : ''}"><span>${d.on ? '🔥' : d.today ? '⏳' : '·'}</span><small>${d.n}</small></div>`).join('')}</div>
+  <div class="sec"><h2>Odmeny za sériu</h2></div><div class="stmiles">${sr.map(([cat, it]) => { const ok = (p.streak.best || 0) >= it.streak; const pct = Math.min(100, c / it.streak * 100); return `<div class="stm ${ok ? 'got' : ''}" style="--pct:${ok ? 100 : pct}"><span class="string"><span class="t">${itemThumb(cat, it, p.av)}</span></span><b>${it.streak} ${plural(it.streak, 'deň', 'dni', 'dní')}</b><small>${ok ? 'Získané ✓' : rewardName(cat, it)}</small></div>`; }).join('')}</div>
+  <div class="sec"><h2>Denná odmena</h2><span class="eyebrow">${drReady(p) ? 'Pripravená!' : 'Zajtra ďalšia'}</span></div><div class="drgrid">${DR.map((x, i) => { const gotD = i + 1 < dn || (!drReady(p) && i + 1 === p.dailyReward.day); const now = drReady(p) && i + 1 === dn; return `<div class="drd ${gotD ? 'got' : ''} ${now ? 'now' : ''} ${i === 6 ? 'big' : ''}"><small>${i + 1}. deň</small><span>${gotD ? '✓' : x.i}</span><em>${x.t}</em></div>`; }).join('')}</div>${drReady(p) ? '<button class="btn sun block" data-a="dreward">🎁 Vyzdvihnúť dnešnú odmenu</button>' : ''}`;
+}
+function badgesHTML(p) {
+  const tot = ACH.reduce((s, a) => s + achTier(p, a), 0);
+  return `<section class="bdhead"><b>${tot} / ${ACH.length * 3}</b><small>medailí · za každú dostaneš slniečka (🥉 ${ACH_COINS[0]}, 🥈 ${ACH_COINS[1]}, 🥇 ${ACH_COINS[2]})</small></section><div class="bdgrid">${ACH.map(a => { const tr = achTier(p, a); const v = a.m(p) || 0; const next = a.t[tr]; const prev = tr ? a.t[tr - 1] : 0; const pct = next ? Math.min(100, (v - prev) / (next - prev) * 100) : 100; return `<div class="bd t${tr}" style="--pct:${pct}"><span class="bdring"><span class="bdi">${a.i}</span></span><b>${a.n}</b><small>${next ? `${v} / ${next}` : 'Všetko splnené!'}</small><span class="bdmed">${MEDAL.map((m, k) => `<i class="${k < tr ? 'on' : ''}">${m}</i>`).join('')}</span></div>`; }).join('')}</div>`;
+}
 VIEWS.rewards = () => {
-  const p = P(); const li = levelInfo(p.xp); const L = li.L; let body;
-  if (RTAB === 'road') {
-    const lv = []; for (let l = 2; l <= 20; l++) { const r = rewardsAt(l, p.av.gender); if (r.length) lv.push([l, r]); }
-    const meL = lv.filter(([l]) => l <= L).map(([l]) => l).pop();
-    const nextL = lv.find(([l]) => l > L); const toNext = nextL ? (() => { let x = li.need - li.cur; for (let k = L + 1; k < nextL[0]; k++) x += need(k); return x; })() : 0;
-    const got = lv.filter(([l]) => l <= L).length; const nextI = lv.findIndex(([l]) => l > L);
-    const node = ([l, r], i) => { const st = l <= L ? 'got' : i === nextI ? 'now' : 'fut'; const pct = st === 'now' ? Math.max(4, Math.round((1 - toNext / Math.max(1, (() => { let x = 0; for (let k = (lv[i - 1] ? lv[i - 1][0] : 1) + 1; k <= l; k++) x += need(k - 1); return x; })())) * 100)) : 0; return `<li class="mile st-${st} ${i % 2 ? 'r' : 'l'}" aria-label="Level ${l}: ${st === 'got' ? 'získané' : st === 'now' ? 'ďalšia odmena' : 'neskôr'}"><span class="mdot">${st === 'got' ? '✓' : st === 'now' ? '⭐' : '🔒'}<em>${l}</em></span><div class="mcard"><span class="mlv">${st === 'got' ? 'Získané' : st === 'now' ? 'Ďalšia odmena' : 'Level ' + l}</span><div class="mitems">${r.slice(0, 3).map(([c, it]) => `<span class="mit"><span class="t">${itemThumb(c, it, p.av)}</span><small>${rewardName(c, it)}</small></span>`).join('')}${r.length > 3 ? `<span class="mmore">+${r.length - 3}</span>` : ''}</div>${st === 'now' ? `<div class="mprog"><i style="width:${Math.min(100, pct)}%"></i></div><small class="mleft">Chýba ${toNext} bodov</small>` : ''}</div></li>`; };
-    body = `<section class="card roadhead"><div class="rhl"><span class="rhme">${avatarSvg(p.av, { crop: 'head' })}</span><div><b>Level ${L} · ${title(L)}</b><small>${nextL ? `Ďalšia odmena na leveli ${nextL[0]}` : 'Máš všetky odmeny za levely! 👑'}</small></div></div><div class="xpbar" style="height:14px"><i style="width:${li.pct}%"></i></div><div class="rhstats"><span><i class="lg own"></i>${got} získané</span><span><i class="lg can"></i>${nextL ? 1 : 0} ďalšia</span><span><i class="lg lock"></i>${lv.length - got - (nextL ? 1 : 0)} neskôr</span></div></section>
-    <ol class="miles">${lv.map(node).join('')}</ol><p class="muted b" style="font-size:.82rem;text-align:center">Body získaš za správne odpovede, hry, úlohy a dennú odmenu.</p>`;
-  } else if (RTAB === 'streak') {
-    const sr = streakRewards(p.av.gender); const dn = drNextDay(p);
-    body = `<section class="card streak" style="align-items:center;text-align:center"><span class="flame" style="font-size:4rem">🔥</span><b class="n" style="font-size:2rem">${p.streak.count} ${plural(p.streak.count, 'deň', 'dni', 'dní')} po sebe</b><span class="b muted">Najdlhšia séria: ${p.streak.best || 0}. Séria rastie, keď sa učíš každý deň.</span></section>
-    <div class="sec"><h2>Odmeny za sériu</h2></div><div class="road" style="padding:0">${sr.map(([c, it]) => { const got = (p.streak.best || 0) >= it.streak; return `<div class="node ${got ? 'got' : ''}"><span class="ln">${got ? '✓' : `<span><small>DNÍ</small>${it.streak}</span>`}</span><div class="nc"><b>${got ? 'Získané' : `Séria ${it.streak} dní`}</b><div class="ri"><span class="rt"><span class="t">${itemThumb(c, it, p.av)}</span>${rewardName(c, it)}</span></div><div class="pbar" style="margin-top:6px"><i style="width:${Math.min(100, p.streak.count / it.streak * 100)}%;background:var(--accent)"></i></div></div></div>`; }).join('')}</div>
-    <div class="sec"><h2>Denná odmena</h2><span class="eyebrow">${drReady(p) ? 'Pripravená!' : 'Zajtra ďalšia'}</span></div><div class="cal">${DR.map((x, i) => `<div class="d ${i + 1 < dn || (!drReady(p) && i + 1 === p.dailyReward.day) ? 'got' : ''} ${drReady(p) && i + 1 === dn ? 'now' : ''} ${i === 6 ? 'big' : ''}"><span class="di">${x.i}</span>${i + 1}. deň<br>${x.t}</div>`).join('')}</div>${drReady(p) ? '<button class="btn sun block" data-a="dreward">Vyzdvihnúť dnešnú odmenu</button>' : ''}`;
-  } else if (RTAB === 'week') body = weekDiploma(p);
-  else body = `<p class="muted b" style="font-size:.88rem">Každý úspech má 3 medaily: 🥉 bronz, 🥈 striebro a 🥇 zlato. Za každú medailu dostaneš slniečka!</p><div class="achlist pop-in">${ACH.map(a => { const t = achTier(p, a); const v = a.m(p) || 0; const next = a.t[t]; const prev = t ? a.t[t - 1] : 0; const pct = next ? Math.min(100, (v - prev) / (next - prev) * 100) : 100; return `<div class="card ach ${t ? 't' + t : 'off'}"><span class="ai">${a.i}</span><div class="ab"><b>${a.n}</b><span>${a.d}${next ? `: ${v} / ${next}` : ': všetko splnené!'}</span><div class="pbar"><i style="width:${pct}%"></i></div></div><span class="amed">${MEDAL.map((m, k) => `<i class="${k < t ? 'on' : ''}">${m}</i>`).join('')}</span></div>`; }).join('')}</div>`;
-  return `${topbar('back-me')}<main class="view"><h1 style="font-size:2rem">Odmeny</h1><div class="seg"><button class="${RTAB === 'road' ? 'on' : ''}" data-a="rtab" data-t="road">🗺️ Cesta</button><button class="${RTAB === 'streak' ? 'on' : ''}" data-a="rtab" data-t="streak">🔥 Séria</button><button class="${RTAB === 'week' ? 'on' : ''}" data-a="rtab" data-t="week">📜 Týždeň</button><button class="${RTAB === 'badges' ? 'on' : ''}" data-a="rtab" data-t="badges">🏅 Úspechy</button></div>${body}</main>${nav('rewards')}`;
+  const p = P(); let body;
+  if (RTAB === 'road') body = journeyHTML(p);
+  else if (RTAB === 'streak') body = streakHTML(p);
+  else if (RTAB === 'week') body = weekDiploma(p);
+  else body = badgesHTML(p);
+  return `${topbar('back-me')}<main class="view jview"><h1 style="font-size:2rem">Moja cesta</h1><div class="seg"><button class="${RTAB === 'road' ? 'on' : ''}" data-a="rtab" data-t="road">🗺️ Výprava</button><button class="${RTAB === 'streak' ? 'on' : ''}" data-a="rtab" data-t="streak">🔥 Séria</button><button class="${RTAB === 'week' ? 'on' : ''}" data-a="rtab" data-t="week">📜 Týždeň</button><button class="${RTAB === 'badges' ? 'on' : ''}" data-a="rtab" data-t="badges">🏅 Úspechy</button></div>${body}</main>${nav('rewards')}`;
 };
+function jnodeOpen(d) { const p = P(), l = +d.l, r = rewardsAt(l, p.av.gender), L = levelInfo(p.xp).L; closeSheet(); const w = document.createElement('div'); w.id = 'sheetwrap';
+  w.innerHTML = `<div class="scrim" data-a="close-sheet"></div><div class="sheet jsheet" role="dialog" aria-label="Level ${l}"><div class="grab"></div><h2>Level ${l} ${l <= L ? '✓' : '🔒'}</h2><p class="muted b" style="margin:0">${l <= L ? 'Tieto veci už máš.' : `Odomkneš na leveli ${l}.`}</p><div class="jsitems">${r.map(([c, it]) => `<span class="mit"><span class="t">${itemThumb(c, it, p.av)}</span><small>${rewardName(c, it)}</small></span>`).join('')}</div><button class="btn primary block" data-a="close-sheet">Super</button></div>`;
+  document.body.appendChild(w); sfx('pop'); }
 function drawRoad() {
   const road = $('#road'), svg = $('#roadpath'); if (!road || !svg) return; const r0 = road.getBoundingClientRect();
   const pts = $$('#road .ln').map(e => { const r = e.getBoundingClientRect(); return [r.left + r.width / 2 - r0.left, r.top + r.height / 2 - r0.top, e.closest('.node').classList.contains('got')]; });
   let s = ''; for (let i = 1; i < pts.length; i++) { const [x1, y1] = pts[i - 1], [x2, y2, g] = pts[i]; const my = (y1 + y2) / 2; s += `<path d="M${x1} ${y1} C${x1} ${my} ${x2} ${my} ${x2} ${y2}" stroke="${g ? 'var(--good)' : 'var(--line)'}" stroke-width="7" fill="none" stroke-linecap="round" ${g ? '' : 'stroke-dasharray="2 14"'}/>`; }
   svg.innerHTML = s;
 }
-AFTER.rewards = () => setTimeout(drawRoad, 30);
+AFTER.rewards = () => setTimeout(() => { drawRoad(); const n = $('.jn.st-now'); if (n && RTAB === 'road') n.scrollIntoView({ block: 'center', behavior: 'instant' }); }, 30);
 
 /* --- denná odmena --- */
 function drCard(p) {
