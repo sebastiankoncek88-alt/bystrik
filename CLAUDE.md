@@ -70,7 +70,7 @@ Písanie priateľom je predvolene vypnuté (`DATA.settings.msgOk`). Úsporný re
 - Bystrík počúva čítanie: počas nahrávania beží rozpoznávanie reči (`SRC` = SpeechRecognition, sk-SK, `srStart/srStop/srApply`, fuzzy zhoda `srMatch`), prečítané slová `.rw.ok` (zelené), ďalšie `.rw.cur`; po skončení `RD.cov` % a karta `.rcov` „Bystrík počul X z Y slov“, uloží sa do `reading.cov` a rodič to vidí. Bez rozpoznávania reči sa slová neoznačujú (náhodné žlté posúvanie zrušené).
 - Mikrofón na iPhone: počas nahrávania `navigator.audioSession.type='play-and-record'` (režim 'playback' z audioUnlock blokoval mikrofón), po skončení späť 'playback'. Pred prvým nahrávaním vlastné okno `micAsk()` „Povoliť mikrofón“ (`DATA.micOk`, akcia mic-allow), po chybe (nie zamietnutí) raz znova `micAsk(true)`.
 - Darček za level: tlačidlo „Super!“ (`ov-super`) najprv otvorí darček, druhým ťuknutím zavrie.
-- SW cache zvyšovať pri každom nasadení s viditeľnou zmenou (teraz v61).
+- SW cache zvyšovať pri každom nasadení s viditeľnou zmenou (teraz v62).
 - Fun fakty (`BUDDY_FACTS`, 41 faktov): každé ~3 min mimo kvízu/hier/čítania/rodiča (kontrola každých 15 s) + po výsledku kvízu s ≥1 hviezdou 50 % šanca, ak posledný bol pred >90 s.
 - Rebríček: pri načítaní sa hráč hneď zapíše (`LBSELF`), obnova každých 30 s na obrazovke + tlačidlo `lb-refresh`, karta „Včerajší víťazi“ (`LB.yest`).
 - AI Bystrík: odpovede max 2–3 krátke vety (`tutorIntro`), chat `max: 400` (v artefakte sa max/effort nepošlú).
@@ -89,6 +89,9 @@ Písanie priateľom je predvolene vypnuté (`DATA.settings.msgOk`). Úsporný re
 - Výber obťažnosti hry = spodný list `pickDiff` (hlavička vo farbe hry, 4 riadky `DIFF`: Veľmi ľahké / Ľahké / Ťažké / Majster s popisom, rýchlosťou a bodmi, ťuk = výber `dsel`, tlačidlo „▶ Hrať · …“ = `gdiff`).
 - Šatník: náhľad postavičky nie je prilepený (posúva sa so stránkou), horná lišta `.top2` je nepriehľadná.
 - Adventný kalendár: zatiaľ len návrh (nenasadený), https://claude.ai/artifact/MHiMhrvs9GHu1qT7msTNZx
+
+- Hry 3.0: Raketa na Mesiac (`rocket`, palivo `GM.alt` 0–100, pristátie +5 ⭐), Rybárik (`fish`, 100 slniečok, rybky `fish2` s `--dur/--del`), Lesný beh (`run`, 140 slniečok, brány `rgate`, pruhy `GM.lane`); otázky z `frogQ`, akcie rk-ans/fish/run-lane, farby na začiatku `LUNABG`.
+- Plus viditeľne (na želanie používateľa): `plusBanner()` navrchu Prehľadu a Nastavení rodiča, `plusKidBanner()` v Ja a v detských Nastaveniach (bez ceny, „ukáž rodičovi“ → `plus-parent` = PIN → Plus), občasné okno `plusNudge()` po ťuknutí v rodičovskom účte (25 %, max raz za 2 dni, `DATA.plusNudge`). Skryté s aktívnym Plus a v artefakte.
 
 ## Otvorené
 - Plus – návod pre používateľa (spraví neskôr): 1) https://dashboard.stripe.com/register 2) produkt Bystrík Plus 3,99 €/mes + 29,99 €/rok (Recurring) https://dashboard.stripe.com/products/create 3) 2× platobný odkaz, 7 dní zadarmo, presmerovanie na web, Test mode VYPNUTÝ https://dashboard.stripe.com/payment-links/create 4) SQL `supabase/2026-11-plus.sql` https://supabase.com/dashboard/project/nxxltcpjdvoxomogzwaj/sql/new → pošle odkazy buy.stripe.com, ja ich dám do `PLUS_CFG`.
