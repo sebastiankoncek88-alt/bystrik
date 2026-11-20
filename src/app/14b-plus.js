@@ -20,7 +20,7 @@ const PLUS_FEAT = [
   ['🗣️', 'Bystrík vypočuje čítanie', 'Ukáže plynulosť a chyby pri čítaní nahlas.', 'soon'],
   ['👨‍👩‍👧‍👦', `Až ${PLUS_KIDS} detí v jednom účte`, `Zadarmo ${FREE_KIDS} deti. Synchronizácia na všetkých zariadeniach rodiny.`, 'kids'],
   ['👕', 'Mesačná kolekcia oblečenia', 'Nové veci pre postavičku aj Bystríka. Len vzhľad, bez výhody v rebríčku.', 'soon'],
-  ['🎮', 'Nové hry v lunaparku', 'Raketa, Rybárik, Pekáreň a ďalšie hry s učivom každý mesiac.', 'soon'],
+  ['🎮', 'Nové hry v lunaparku', 'Každý mesiac nová hra s učivom.', 'soon'],
   ['📚', 'Viac učiva', 'Logika, angličtina navyše a príprava na previerky pre 1.–4. ročník.', 'soon'],
   ['🏠', 'Nové veci do Bystríkovho domčeka', 'Nábytok, hračky a čiapky pre medvedíka.', 'soon'],
   ['🎧', 'Nahrávky čítania na každom zariadení', 'Dieťa pošle nahrávku a vy si ju vypočujete aj na svojom telefóne.', 'rec'],
@@ -48,6 +48,25 @@ function plusCard() {
 }
 /* otvorí Plus kartu v rodičovských nastaveniach (len z rodičovskej časti) */
 function plusOpen() { if (UI.view !== 'parent') return; PTAB = 'set'; PSET_WANT = 'Bystrík Plus'; render(null); scrollTo({ top: 0 }); }
+/* viditeľná ponuka Plus */
+const PLUS_SHOW = () => !isPlus() && !(window.claude && window.claude.use);
+function plusBanner() { if (!PLUS_SHOW()) return ''; return `<button class="plban press" data-a="plus-open"><i class="lurays" aria-hidden="true"></i><span class="plbi">⭐</span><span class="grow"><b>Bystrík Plus</b><small>${PLUS_CFG.month || PLUS_CFG.year ? `${PLUS_PRICE.trial} dní zadarmo · od ${(29.99 / 12).toFixed(2).replace('.', ',')} € mesačne` : 'Čítanka, úlohy, súboj, diktát a ďalšie'}</small></span><em>Pozrieť ›</em></button>`; }
+/* dieťa vidí len „pre rodičov“ bez ceny – ťuk otvorí rodičovský PIN */
+function plusKidBanner(ja) { if (!PLUS_SHOW()) return ''; return `<button class="plban kid ${ja ? 'ja' : ''} press" data-a="plus-parent"><i class="lurays" aria-hidden="true"></i><span class="plbi">⭐</span><span class="grow"><b>Bystrík Plus</b><small>Čítanka, súboj, diktát a ďalšie · ukáž rodičovi</small></span><em>›</em></button>`; }
+ACT['plus-parent'] = () => { ACT['parent-open'](); PTAB = 'set'; PSET_WANT = 'Bystrík Plus'; render(null); };
+/* občas po ťuknutí v rodičovskom účte ukáže okno s Plus (max raz za 2 dni, raz za spustenie) */
+let PLUS_NUDGED = false;
+function plusNudge() {
+  if (PLUS_NUDGED || !PLUS_SHOW() || UI.view !== 'parent' || !PARENT_OK || document.getElementById('sheetwrap') || (typeof GUIDE !== 'undefined' && GUIDE)) return;
+  if (Date.now() - (DATA.plusNudge || 0) < 2 * 864e5 || Math.random() > .25) return;
+  PLUS_NUDGED = true; DATA.plusNudge = Date.now(); save();
+  const top = PLUS_FEAT.filter(f => f[3] !== 'soon').slice(0, 5).map(([i, n]) => `<li><span>${i}</span>${n}</li>`).join('');
+  const w = document.createElement('div'); w.id = 'sheetwrap';
+  w.innerHTML = `<div class="scrim" data-a="close-sheet"></div><div class="sheet plnudge" role="dialog" aria-label="Bystrík Plus"><div class="plnh"><i class="lurays" aria-hidden="true"></i>${bearSvg('love')}<div><b>Bystrík Plus</b><small>${PLUS_CFG.month || PLUS_CFG.year ? `Prvých ${PLUS_PRICE.trial} dní zadarmo` : 'Zatiaľ všetko zadarmo – vyskúšajte'}</small></div></div><ul>${top}</ul><button class="btn primary block bigplay" data-a="plus-go">⭐ Pozrieť Bystrík Plus</button><button class="linkbtn" data-a="close-sheet">Teraz nie</button></div>`;
+  document.body.appendChild(w); sfx('pop');
+}
+ACT['plus-go'] = () => { closeSheet(); plusOpen(); };
+document.addEventListener('click', e => { if (UI.view === 'parent' && e.target.closest('[data-a]') && !e.target.closest('#sheetwrap')) setTimeout(plusNudge, 600); }, true);
 /* dieťa: zamknutá časť – bez ceny a bez ponuky, len „zapína rodič“ */
 VIEWS.plusk = ({ w }) => `${topbar('home')}<main class="view"><section class="card pluskid">${bearSvg('wink')}<span class="pkstar">⭐</span><h2>${esc(w || 'Táto časť')}</h2><p class="b">Túto časť zapína rodič v rodičovskom účte. Ukáž mu ju! 🙂</p><button class="btn primary block" data-a="nav" data-v="learn">Späť k učeniu</button></section></main>${nav('learn')}`;
 function plusLockCard(what, desc) { return `<section class="card pcard plock"><span class="plk">⭐</span><div class="grow"><b>${what}</b><small>${desc}</small></div><button class="btn small primary" data-a="plus-need" data-w="${what}">Bystrík Plus</button></section>`; }

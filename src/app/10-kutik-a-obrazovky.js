@@ -910,6 +910,9 @@ function binTap(i, el) {
 
 /* --- minihry --- */
 const GAMES = {
+  rocket: { i: '🚀', n: 'Raketa na Mesiac', d: 'Každá správna odpoveď pridá palivo. Doleť cez oblaky a hviezdy až na Mesiac!', bg: 'var(--lilac-soft)' },
+  fish: { i: '🎣', n: 'Rybárik', d: 'Rybky s odpoveďami plávajú rybníkom. Chyť tú so správnou odpoveďou!', bg: 'var(--c-mat-soft)', cost: 100 },
+  run: { i: '🏃', n: 'Lesný beh', d: 'Bystrík beží lesom. Ťukni na cestičku s bránou, kde je správna odpoveď!', bg: 'var(--mint-soft)', cost: 140 },
   balloons: { i: '🎈', n: 'Balónová prestrelka', d: 'Praskni balóny s príkladom, ktorého výsledok je hľadané číslo.', bg: 'var(--c-mat-soft)' },
   rain: { i: '🌧️', n: 'Slovný dážď', d: 'Padajú písmenká a slová. Ťukaj len na tie správne.', bg: 'var(--lilac-soft)' },
   tf: { i: '⚡', n: 'Pravda či nie?', d: 'Je to pravda? Rozhodni sa čo najrýchlejšie.', bg: 'var(--sun-soft)' },
@@ -1003,7 +1006,7 @@ AFTER.games = () => {
   /* aj tlačidlá na počítači */
   st.querySelectorAll('[data-luna-step]').forEach(b => b.addEventListener('click', () => lunaGo(+b.dataset.lunaStep)));
 };
-const LUNABG = ['linear-gradient(160deg,#6FC3FF,#3E7BFA)', 'linear-gradient(160deg,#C3B5FF,#7B5CF0)', 'linear-gradient(160deg,#FFD166,#F2A100)', 'linear-gradient(160deg,#9BE38A,#3FA34D)', 'linear-gradient(160deg,#FF9FC0,#E2457A)', 'linear-gradient(160deg,#6FD6E8,#1E9AB8)', 'linear-gradient(160deg,#FFB86B,#FF7A3D)', 'linear-gradient(160deg,#F7A8E8,#B34FC4)', 'linear-gradient(160deg,#FF8A7A,#D9443A)'];
+const LUNABG = ['linear-gradient(160deg,#3B2F9A,#7B5CF0)', 'linear-gradient(160deg,#6FD6E8,#1E78B8)', 'linear-gradient(160deg,#8FD86A,#2F8A3E)', 'linear-gradient(160deg,#6FC3FF,#3E7BFA)', 'linear-gradient(160deg,#C3B5FF,#7B5CF0)', 'linear-gradient(160deg,#FFD166,#F2A100)', 'linear-gradient(160deg,#9BE38A,#3FA34D)', 'linear-gradient(160deg,#FF9FC0,#E2457A)', 'linear-gradient(160deg,#6FD6E8,#1E9AB8)', 'linear-gradient(160deg,#FFB86B,#FF7A3D)', 'linear-gradient(160deg,#F7A8E8,#B34FC4)', 'linear-gradient(160deg,#FF8A7A,#D9443A)'];
 function lunaStage(p) {
   const keys = Object.keys(GAMES); if (!LUNASEL || !GAMES[LUNASEL]) LUNASEL = keys.find(k => !gameLocked(p, k)) || keys[0];
   const k = LUNASEL, g = GAMES[k], lock = gameLocked(p, k), ix = keys.indexOf(k), none = !gamesLeft(p);
@@ -1016,7 +1019,7 @@ let GM = null;
 function gamesToday(p) { return p.gp && p.gp.d === today() ? p.gp.n : 0; }
 function gamesLeft(p) { const L = DATA.settings.gameLimit; return L ? Math.max(0, L - gamesToday(p)) : Infinity; }
 function gameLimitMsg() { const p = P(); sfx('no'); buzz([30, 40, 30]); const w = document.createElement('div'); w.className = 'over'; w.innerHTML = `<div class="card box"><div style="font-size:4rem;line-height:1">🌙</div><h2>Na dnes stačilo hier!</h2><p class="b muted">Dnes si už zahral(a) ${DATA.settings.gameLimit} ${plural(DATA.settings.gameLimit, 'minihru', 'minihry', 'miníhier')}. Zajtra môžeš znova. Zatiaľ sa môžeš učiť a zbierať slniečka 📚</p><button class="btn primary block" data-a="ov-learn">📚 Ísť sa učiť</button><button class="btn block" data-a="ov-close">OK</button></div>`; document.body.appendChild(w); say('Na dnes stačilo hier! Zajtra môžeš znova. Zatiaľ sa môžeš učiť a zbierať slniečka.'); }
-function startGame(k, d) { const pp = P(); if (!d) return pickDiff(k); pp.gdiff = pp.gdiff || {}; pp.gdiff[k] = d; if (gamesLeft(pp) <= 0) return gameLimitMsg(); pp.gp = { d: today(), n: gamesToday(pp) + 1 }; save(); const g = pp.grade; GM = { k, g, d, score: 0, lives: 3, left: 45, combo: 0 }; if (k === 'balloons') { GM.target = balloonTarget(g); GM.hits = 0; } if (k === 'rain') GM.setup = rainSetup(g); if (k === 'tf') GM.st = makeStatement(g); if (k === 'mole') GM.rule = moleRule(g); if (k === 'word') { GM.left = 60; wordNext(); } if (k === 'order') { GM.left = 60; orderNext(); } if (k === 'simon') { GM.left = 90; GM.seq = [R(0, 3), R(0, 3)]; GM.in = 0; GM.lockIn = true; } if (k === 'race') { GM.left = 75; GM.pos = 0; GM.bot = 0; GM.rq = frogQ(g); } if (k === 'frog') { GM.step = 0; GM.shores = 0; GM.fq = frogQ(g); GM.left = 60; } go('game', {}, 'u'); }
+function startGame(k, d) { const pp = P(); if (!d) return pickDiff(k); pp.gdiff = pp.gdiff || {}; pp.gdiff[k] = d; if (gamesLeft(pp) <= 0) return gameLimitMsg(); pp.gp = { d: today(), n: gamesToday(pp) + 1 }; save(); const g = pp.grade; GM = { k, g, d, score: 0, lives: 3, left: 45, combo: 0 }; if (k === 'balloons') { GM.target = balloonTarget(g); GM.hits = 0; } if (k === 'rain') GM.setup = rainSetup(g); if (k === 'tf') GM.st = makeStatement(g); if (k === 'mole') GM.rule = moleRule(g); if (k === 'word') { GM.left = 60; wordNext(); } if (k === 'order') { GM.left = 60; orderNext(); } if (k === 'simon') { GM.left = 90; GM.seq = [R(0, 3), R(0, 3)]; GM.in = 0; GM.lockIn = true; } if (k === 'race') { GM.left = 75; GM.pos = 0; GM.bot = 0; GM.rq = frogQ(g); } if (k === 'frog') { GM.step = 0; GM.shores = 0; GM.fq = frogQ(g); GM.left = 60; } if (k === 'rocket') { GM.left = 60; GM.alt = 0; GM.moons = 0; GM.rq = frogQ(g); } if (k === 'fish') { GM.left = 60; GM.fq = frogQ(g); } if (k === 'run') { GM.left = 60; GM.lane = 1; GM.rq = frogQ(g); } go('game', {}, 'u'); }
 VIEWS.game = () => {
   const head = `<div class="qtop"><button class="iconbtn press" data-a="quit-game" aria-label="Ukončiť">✕</button><span class="hearts" id="hearts">${'❤️'.repeat(GM.lives)}${'🤍'.repeat(3 - GM.lives)}</span><div style="flex:1"></div><span class="timer dtag">${DF().e}</span><span class="timer" id="gscore">⭐ ${GM.score}</span><span class="timer" id="gtime">${GM.left} s</span></div>`;
   if (GM.k === 'balloons') return `<main class="view nonav">${head}<div class="target" id="gtarget">Praskni balóny s výsledkom <b>${GM.target}</b></div><div class="gamearea" id="garea"></div></main>`;
@@ -1027,6 +1030,9 @@ VIEWS.game = () => {
   if (GM.k === 'order') return `<main class="view nonav">${head}<div class="qbarw"><i id="qbar"></i></div><div id="ordwrap" style="display:flex;flex-direction:column;gap:12px">${orderHTML()}</div></main>`;
   if (GM.k === 'simon') return `<main class="view nonav">${head}<p class="deckinfo" id="simoninfo">👀 Pozeraj sa…</p><div class="simon" id="simon">${SIMC.map((c, i) => `<button class="spad" data-a="simon-pad" data-i="${i}" style="--c:${c}" aria-label="Farba ${i + 1}"></button>`).join('')}</div><p class="deckinfo">Každé kolo pribudne jedna farba.</p></main>`;
   if (GM.k === 'race') return `<main class="view nonav">${head}<section class="card track"><div class="lane"><span class="car" id="carme" style="left:${GM.pos * 8.4}%">🏎️</span><i>🏁</i><small>Ty</small></div><div class="lane"><span class="car" id="carbot" style="left:${GM.bot * 8.4}%">🚙</span><i>🏁</i><small>Súper</small></div></section><div id="raceq" style="display:flex;flex-direction:column;gap:12px"></div></main>`;
+  if (GM.k === 'rocket') return `<main class="view nonav">${head}${qb}<section class="rksky" id="rksky" style="--alt:${GM.alt}"><i class="rkstars" aria-hidden="true"></i><span class="rkmoon">🌕</span><span class="rkob rkplane">✈️</span><span class="rkob rkcl c1">☁️</span><span class="rkob rkcl c2">☁️</span><span class="rkob rksat">🛰️</span><span class="rkob rkufo">🪐</span><div class="rkship" id="rkship"><span>🚀</span><i class="rkflame"></i></div><div class="rkalt"><b id="rkalt">${Math.round(GM.alt * 3.84)} 000 km</b><small>🌕 ${GM.moons}×</small></div><div class="rkbar"><i id="rkbar" style="height:${GM.alt}%"></i></div></section><div id="rkq">${rocketQ()}</div></main>`;
+  if (GM.k === 'fish') return `<main class="view nonav">${head}${qb}<div class="target" id="fishq">${esc(GM.fq.text)}</div><section class="pond2" id="pond2"><i class="pbub b1"></i><i class="pbub b2"></i><i class="pbub b3"></i><span class="pweed w1">🌿</span><span class="pweed w2">🌱</span><span class="pfisher">${bearSvg('cheer')}<i class="prod"></i></span></section><p class="deckinfo">Ťukni na rybku so správnou odpoveďou 🐟</p></main>`;
+  if (GM.k === 'run') return `<main class="view nonav">${head}<div class="target" id="runq">${esc(GM.rq.text)}</div><section class="run3" id="run3"><i class="rtrees l"><b>${'<span>🌲</span><span>🌳</span>'.repeat(6)}</b></i><i class="rtrees r"><b>${'<span>🌲</span><span>🌳</span>'.repeat(6)}</b></i><div class="rlanes">${[0, 1, 2].map(i => `<button class="rlane" data-a="run-lane" data-l="${i}" aria-label="Cestička ${i + 1}"></button>`).join('')}</div><div class="rbear" id="rbear" style="--l:${GM.lane}">${bearSvg('cheer')}</div></section><p class="deckinfo">Ťukni na cestičku, kam má Bystrík bežať 👆</p></main>`;
   if (GM.k === 'word') return `<main class="view nonav">${head}${qb}<div id="wordwrap" style="display:flex;flex-direction:column;gap:14px">${wordHTML()}</div></main>`;
   return `<main class="view nonav">${head}${qb}<p class="deckinfo">Je to pravda?</p><section class="card tfcard enter" id="tfcard">${esc(GM.st.text)}</section><div class="tfbtns"><button class="yes press" data-a="tf" data-v="1" aria-label="Pravda">✓</button><button class="no press" data-a="tf" data-v="0" aria-label="Nepravda">✗</button></div><p class="deckinfo" id="tfex">&nbsp;</p></main>`;
 };
@@ -1056,8 +1062,44 @@ AFTER.game = () => {
   if (GM.k === 'word') qTimer(wordOut, 2.4);
   if (GM.k === 'order') qTimer(orderOut, 3);
   if (GM.k === 'simon') TIMERS.push(setTimeout(simonPlay, 500));
+  if (GM.k === 'rocket') qTimer(rocketOut, 1.4);
+  if (GM.k === 'fish') { fishSpawn(); qTimer(fishOut, 1.6); }
+  if (GM.k === 'run') TIMERS.push(setTimeout(runGate, 500));
   if (GM.k === 'race') { raceDraw(true); TIMERS.push(setInterval(() => { if (!GM || GM.ended || GM.busy) return; GM.bot++; raceDraw(false); if (GM.bot >= 10) { GM.busy = true; gHit(false, $('#carbot')); toast('Súper bol rýchlejší. Skús to znova!'); if (GM.ended) return; TIMERS.push(setTimeout(() => { if (!GM || GM.ended) return; GM.pos = 0; GM.bot = 0; GM.busy = false; raceDraw(true); }, 1100)); } }, Math.max(1300, 3000 * DF().sp))); }
 };
+/* ===== Raketa na Mesiac ===== */
+function rocketQ() { const q = GM.rq; return `<div class="target rktq">${esc(q.text)}</div><div class="opts rkopts">${q.opts.map((o, i) => `<button class="card opt press" data-a="rk-ans" data-i="${i}">${esc(o)}</button>`).join('')}</div>`; }
+function rocketDraw() { const s = $('#rksky'); if (s) s.style.setProperty('--alt', GM.alt); const a = $('#rkalt'); if (a) a.textContent = Math.round(GM.alt * 3.84) + ' 000 km'; const b = $('#rkbar'); if (b) b.style.height = GM.alt + '%'; }
+function rocketNext() { GM.rq = frogQ(GM.g); const w = $('#rkq'); if (w) w.innerHTML = rocketQ(); qTimer(rocketOut, 1.4); }
+function rocketOut() { if (!GM || GM.ended) return; GM.alt = Math.max(0, GM.alt - 6); rocketDraw(); gHit(false, $('#rkship')); if (!GM.ended) rocketNext(); }
+function rocketAns(i, el) {
+  if (!GM || GM.ended || GM.busy) return; const ok = GM.rq.opts[i] === GM.rq.answer; const sh = $('#rkship');
+  if (ok) { GM.alt = Math.min(100, GM.alt + 12); rocketDraw(); if (sh) { sh.classList.remove('boost'); void sh.offsetWidth; sh.classList.add('boost'); } gHit(true, el);
+    if (GM.alt >= 100) { GM.busy = true; GM.moons++; GM.score += 5; const sc = $('#gscore'); if (sc) sc.textContent = '⭐ ' + GM.score; sfx('level'); try { confetti(90, .3); } catch (e) { } hint('Pristál si na Mesiaci! +5 ⭐ 🌕'); const s = $('#rksky'); if (s) s.classList.add('landed');
+      TIMERS.push(setTimeout(() => { if (!GM || GM.ended) return; GM.alt = 0; GM.busy = false; const s2 = $('#rksky'); if (s2) s2.classList.remove('landed'); const m = $('.rkalt small'); if (m) m.textContent = '🌕 ' + GM.moons + '×'; rocketDraw(); rocketNext(); }, 1600)); return; } }
+  else { GM.alt = Math.max(0, GM.alt - 6); rocketDraw(); if (sh) { sh.classList.remove('wobble'); void sh.offsetWidth; sh.classList.add('wobble'); } gHit(false, el); }
+  if (!GM.ended) rocketNext();
+}
+/* ===== Rybárik ===== */
+function fishSpawn() {
+  const p = $('#pond2'); if (!p || !GM) return; p.querySelectorAll('.fish2').forEach(f => f.remove()); const q = GM.fq; const lanes = shuffle([16, 40, 64]); const FC = ['#FF9F45', '#FF6F91', '#5FC9F0', '#9B7CF0', '#5FC97A'];
+  q.opts.forEach((o, i) => { const f = document.createElement('button'); f.className = 'fish2 press'; f.dataset.a = 'fish'; f.dataset.i = i; const dur = (5.5 + Math.random() * 2.5) * DF().sp; const del = (Math.random() * dur).toFixed(1); f.style.cssText = `top:${lanes[i % 3]}%;--fc:${pick(FC)};--dur:${dur.toFixed(1)}s;--del:-${del}s;animation-duration:${dur.toFixed(1)}s;animation-delay:-${del}s`; f.innerHTML = `<span class="fbody"><i class="feye"></i><b>${esc(o)}</b></span><i class="ftail"></i>`; f.setAttribute('aria-label', 'Rybka ' + o); p.appendChild(f); });
+}
+function fishNext() { GM.fq = frogQ(GM.g); const q = $('#fishq'); if (q) q.textContent = GM.fq.text; fishSpawn(); qTimer(fishOut, 1.6); }
+function fishOut() { if (!GM || GM.ended) return; gHit(false, $('#pond2')); if (!GM.ended) fishNext(); }
+function fishTap(i, el) {
+  if (!GM || GM.ended || GM.busy) return; const ok = GM.fq.opts[i] === GM.fq.answer;
+  if (ok) { GM.busy = true; el.classList.add('caught'); const r = $('.pfisher .prod'); if (r) { r.classList.remove('pull'); void r.offsetWidth; r.classList.add('pull'); } gHit(true, el); TIMERS.push(setTimeout(() => { if (!GM || GM.ended) return; GM.busy = false; fishNext(); }, 700)); }
+  else { el.classList.remove('nope'); void el.offsetWidth; el.classList.add('nope'); gHit(false, el); }
+}
+/* ===== Lesný beh ===== */
+function runGate() {
+  const a = $('#run3'); if (!a || !GM || GM.ended) return; GM.rq = frogQ(GM.g); const q = $('#runq'); if (q) q.textContent = GM.rq.text;
+  const g = document.createElement('div'); g.className = 'rgate'; g.innerHTML = GM.rq.opts.map(o => `<span>${esc(o)}</span>`).join(''); g.style.animationDuration = (4.6 * DF().sp).toFixed(1) + 's';
+  g.addEventListener('animationend', () => { if (!GM || GM.ended) return; const ok = GM.rq.opts[GM.lane] === GM.rq.answer; const sp = g.children[GM.lane]; if (sp) sp.classList.add(ok ? 'ok' : 'bad'); const b = $('#rbear'); if (ok) { if (b) { b.classList.remove('jump'); void b.offsetWidth; b.classList.add('jump'); } } gHit(ok, b || g); TIMERS.push(setTimeout(() => { g.remove(); if (GM && !GM.ended) runGate(); }, 350)); });
+  a.appendChild(g);
+}
+function runLane(l) { if (!GM || GM.ended) return; GM.lane = l; const b = $('#rbear'); if (b) b.style.setProperty('--l', l); sfx('tap'); }
 function gHit(ok, el) {
   const s = $('#gscore');
   if (ok) { GM.score++; GM.combo++; sfx(GM.k === 'balloons' ? 'balloon' : 'ok'); buzz(10); floatXp(el, '+1'); burst(el, 16); }
@@ -1345,7 +1387,7 @@ function dailySeq(p) {
 function giftsToday(p) { const t = today(); return (p.log || []).filter(l => l.k === 'gift' && dkey(new Date(l.t)) === t).length; }
 let VIEWDATA = null, PSEL_SAVED = null;
 VIEWS.remote = () => { const saved = DATA, ok = PARENT_OK; DATA = VIEWDATA; PARENT_OK = true; if (!DATA.profiles.find(x => x.id === PSEL)) PSEL = DATA.current || (DATA.profiles[0] && DATA.profiles[0].id); let html; try { html = VIEWS.parent(); } finally { DATA = saved; PARENT_OK = ok; } return `<div class="remotebar">👀 Len na pozretie: postup z iného zariadenia (záloha z ${fmtTime(VIEWDATA._at || Date.now())})<button class="btn small" data-a="remote-close">Zavrieť</button></div><div class="readonly">${html}</div>`; };
-const KIND = { go: 'Pokračuj (mix učenia)', 'game-order': 'Minihra Zoraď čísla', 'game-simon': 'Minihra Pamätaj si', 'game-race': 'Minihra Počtové preteky', rread: 'Odmena od rodiča za čítanie', dict: 'Diktát', 'game-word': 'Minihra Poskladaj slovo', 'game-frog': 'Minihra Žabka', review: 'Opakovanie chýb', write: 'Písanie prstom', duel: 'Súboj', test: 'Test', ptask: 'Splnená úloha od rodiča', gift: 'Odmena od rodiča', 'game-mole': 'Minihra Chyť škrečka', read: 'Čítanka – nahrávka', readq: 'Čítanka – otázky', quiz: 'Kvíz', time: 'Na čas', daily: 'Denná výzva', cards: 'Kartičky', pex: 'Pexeso', match: 'Spájačka', sort: 'Triedička', 'game-balloons': 'Minihra Balóny', 'game-rain': 'Minihra Slovný dážď', 'game-tf': 'Minihra Pravda či nie' };
+const KIND = { 'game-rocket': 'Minihra Raketa na Mesiac', 'game-fish': 'Minihra Rybárik', 'game-run': 'Minihra Lesný beh', go: 'Pokračuj (mix učenia)', 'game-order': 'Minihra Zoraď čísla', 'game-simon': 'Minihra Pamätaj si', 'game-race': 'Minihra Počtové preteky', rread: 'Odmena od rodiča za čítanie', dict: 'Diktát', 'game-word': 'Minihra Poskladaj slovo', 'game-frog': 'Minihra Žabka', review: 'Opakovanie chýb', write: 'Písanie prstom', duel: 'Súboj', test: 'Test', ptask: 'Splnená úloha od rodiča', gift: 'Odmena od rodiča', 'game-mole': 'Minihra Chyť škrečka', read: 'Čítanka – nahrávka', readq: 'Čítanka – otázky', quiz: 'Kvíz', time: 'Na čas', daily: 'Denná výzva', cards: 'Kartičky', pex: 'Pexeso', match: 'Spájačka', sort: 'Triedička', 'game-balloons': 'Minihra Balóny', 'game-rain': 'Minihra Slovný dážď', 'game-tf': 'Minihra Pravda či nie' };
 function fmtTime(t) { const d = new Date(t); const k = dkey(d); const hm = `${d.getHours()}:${String(d.getMinutes()).padStart(2, '0')}`; return k === today() ? `dnes ${hm}` : k === daysAgo(1) ? `včera ${hm}` : `${d.getDate()}. ${d.getMonth() + 1}. ${hm}`; }
 let PTAB = 'over'; let PS = null; const PACC = {};
 let PLOCKT = null; const plockArm = () => { clearTimeout(PLOCKT); if (typeof PARENT_OK !== 'undefined' && PARENT_OK) PLOCKT = setTimeout(() => { if (PARENT_OK && ['parent', 'remote', 'teacher'].includes(UI.view)) { PARENT_OK = false; go(P() ? 'home' : 'profiles', {}, 'b'); toast('🔒 Rodičovský účet sa sám zamkol.'); } }, 180000); };
