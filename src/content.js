@@ -180,10 +180,15 @@ function autoEx(q) {
     if (op === ':') return `${x} : ${y} = ${r}, lebo ${r} · ${y} = ${x}.`; }
   return '';
 }
+/* rozsah čísel rastie počas školského roka (index = mesiac školského roka 0 = september … 9 = jún) */
+const NUM_CAP = { 1: [5, 5, 10, 10, 10, 20, 20, 20, 20, 20], 2: [20, 20, 50, 100, 100, 100, 100, 100, 100, 100], 3: [100, 100, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000], 4: [1000, 1000, 10000, 10000, 10000, 10000, 10000, 10000, 10000, 10000] };
+function numCap(t) { try { const p = typeof P === 'function' && P(); if (!p || t.s !== 'mat' || t.g !== p.grade || !NUM_CAP[t.g] || typeof schoolMonth !== 'function') return Infinity; return NUM_CAP[t.g][schoolMonth()]; } catch (e) { return Infinity; } }
+function maxNum(g) { const s = [g.q, g.html ? String(g.html).replace(/<[^>]+>/g, ' ') : '', g.a].join(' ').replace(/(\d)[\s\u00a0\u202f](?=\d{3}\b)/g, '$1'); const m = s.match(/\d+/g); return m ? Math.max(...m.map(Number)) : 0; }
+function genCapped(t) { const cap = numCap(t); let g = t.gen(); if (cap === Infinity) return g; let best = g, bm = maxNum(g); for (let i = 0; i < 25 && bm > cap; i++) { g = t.gen(); const m = maxNum(g); if (m < bm) { best = g; bm = m; } } return best; }
 function makeQuestion(t, mode) {
   let q;
   if (t.gen) {
-    const g = t.gen();
+    const g = genCapped(t);
     const numeric = typeof g.a === 'number' && !g.w;
     q = { text: g.q, html: g.html || '', speak: g.speak || g.q, answer: String(typeof g.a === 'number' ? fmt(g.a) : g.a), raw: g.a, numeric, ex: g.ex || '' };
     let w = numeric ? numOptions(g.a) : g.w.slice();

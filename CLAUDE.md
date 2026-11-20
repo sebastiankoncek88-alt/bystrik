@@ -79,6 +79,7 @@ Písanie priateľom je predvolene vypnuté (`DATA.settings.msgOk`). Úsporný re
 - V artefakte je na Dnes karta `webCard()` s odkazom na plnú verziu na webe (`WEB_URL`). Web je hlavná verzia.
 - Plus (kým nie sú platby, `plusFree()` → všetko zadarmo): podrobný prehľad pre rodiča (`T_detail`, inak `plusLockCard`), nahrávky do cloudu (`recUpload` len s `hasPlus()`), Moje poznámky, pracovné listy, až 5 detí. Nahrávky sa mažú po 60 dňoch (`recCleanup`, `REC_KEEP_DAYS`).
 - Číselné obory podľa osnov: 1. roč. do 20, 2. do 100, 3. do 1 000, 4. do 10 000. `m3-rad` (Čísla do 10 000) je v 4. ročníku, `m4-velke` (do milióna) je skrytá (`g: 5`), `m4-zaokr` do 10 000.
+- Rozsah čísel rastie počas roka: `NUM_CAP[ročník][mesiac]` v content.js (1. roč. do 5 → 10 → 20, 2. roč. do 20 → 50 → 100 od decembra, 3. roč. do 100 → 1 000 od novembra, 4. roč. do 1 000 → 10 000 od novembra); `genCapped` pregeneruje otázku, kým čísla nie sú v limite (len matematika vlastného ročníka).
 - Šatník: náhľad postavičky nie je prilepený (posúva sa so stránkou), horná lišta `.top2` je nepriehľadná.
 - Adventný kalendár: zatiaľ len návrh (nenasadený), https://claude.ai/artifact/MHiMhrvs9GHu1qT7msTNZx
 
