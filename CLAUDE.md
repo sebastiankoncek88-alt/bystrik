@@ -70,7 +70,7 @@ Písanie priateľom je predvolene vypnuté (`DATA.settings.msgOk`). Úsporný re
 - Bystrík počúva čítanie: počas nahrávania beží rozpoznávanie reči (`SRC` = SpeechRecognition, sk-SK, `srStart/srStop/srApply`, fuzzy zhoda `srMatch`), prečítané slová `.rw.ok` (zelené), ďalšie `.rw.cur`; po skončení `RD.cov` % a karta `.rcov` „Bystrík počul X z Y slov“, uloží sa do `reading.cov` a rodič to vidí. Bez rozpoznávania reči sa slová neoznačujú (náhodné žlté posúvanie zrušené).
 - Mikrofón na iPhone: počas nahrávania `navigator.audioSession.type='play-and-record'` (režim 'playback' z audioUnlock blokoval mikrofón), po skončení späť 'playback'. Pred prvým nahrávaním vlastné okno `micAsk()` „Povoliť mikrofón“ (`DATA.micOk`, akcia mic-allow), po chybe (nie zamietnutí) raz znova `micAsk(true)`.
 - Darček za level: tlačidlo „Super!“ (`ov-super`) najprv otvorí darček, druhým ťuknutím zavrie.
-- SW cache zvyšovať pri každom nasadení s viditeľnou zmenou (teraz v65).
+- SW cache zvyšovať pri každom nasadení s viditeľnou zmenou (teraz v66).
 - Fun fakty (`BUDDY_FACTS`, 41 faktov): každé ~3 min mimo kvízu/hier/čítania/rodiča (kontrola každých 15 s) + po výsledku kvízu s ≥1 hviezdou 50 % šanca, ak posledný bol pred >90 s.
 - Rebríček: pri načítaní sa hráč hneď zapíše (`LBSELF`), obnova každých 30 s na obrazovke + tlačidlo `lb-refresh`, karta „Včerajší víťazi“ (`LB.yest`).
 - AI Bystrík: odpovede max 2–3 krátke vety (`tutorIntro`), chat `max: 400` (v artefakte sa max/effort nepošlú).
@@ -97,7 +97,15 @@ Písanie priateľom je predvolene vypnuté (`DATA.settings.msgOk`). Úsporný re
 - Hry 3.1: každá hra má vlastné farebné prostredie (`VIEWS.game` obalí `VIEWS._game`, trieda `.gview`, `--gbg` z `LUNABG`, plávajúce emoji `GDECO`).
 - Vianočný režim `XMAS()` (avatar.js; 1. 12. – 6. 1., ukážka: localStorage `bystrik.xmas`='1'): trieda `html.xmas` (sneh v `.hero2`), Bystrík má čiapku (`XHAT` v bearSvg), obchod má pás „🎄 Vianočný obchod“ (`.xshop`) s vecami `xmas:1` (Mikulášska čiapka 150, Sobie parohy 170, Vianočný sveter 240) – mimo sezóny sa nepredávajú, kúpené ostávajú.
 
+- Dnes scéna 3.0 `heroBg(night)` (SVG krajina: obloha, slnko s lúčmi/mesiac, hory, stromy, domček s dymom, lúka, kvety, motýle, vtáčik, svetlušky v noci; trieda `.hero2.h3`), Bystrík `bearSvg('hidle')` dýcha, žmurká, občas zamáva.
+- Kvíz: `fxAnswer(ok, el)` (záblesk, pečiatka ✓/✗, hviezdičky, zatrasenie), vety `SAY_OK/SAY_COMBO/SAY_BAD` (`sayOk/sayBad`), viac `BUDDY_OK/BAD`.
+- PIN 2.0 (`.pin2`, klávesy `.pk2` s písmenami), tlačidlo Rodič v Ja biele s fialovým zámkom.
+- Domček: tanec aj rádio hrajú pesničku `playTune()` (3 vlastné melódie `TUNES` v 02-zvuky.js, noty `TN`). Priateľstvo s Bystríkom: ďalší level potrebuje viac (10, 15, 20…), hladkanie/tanec max 6× denne a raz za 5 s (`bearLoveUp(p, n, tap)`).
+- Obchod 4.0 (`.sh3`): markíza, nadpis „Bystríkov obchodík“, peňaženka + časovač, karty 2 v rade s celou postavičkou na podstavci.
+- Moderátor: SQL `supabase/2026-11-moderator.sql` (tabuľka admins, RPC am_admin/grant_plus/revoke_plus/list_gifts; e-mail sa dopĺňa pri spustení, v repe je TVOJ_EMAIL – e-mail používateľa NEdávať do kódu ani repa). V appke `ADMIN` (z `rpc/am_admin` v `plusLoad`, cache `bystrik.admin`) → `isPlus()` true; v Nastavenia → Bystrík Plus karta `modCard()` (darovať Plus na 1 mesiac/1 rok/navždy, zoznam, zrušiť). Darované Plus = riadok v `plus` s plan='gift'.
+
 ## Otvorené
+- Používateľ musí spustiť `supabase/2026-11-moderator.sql` so svojím e-mailom (+ 2026-11-plus.sql pred ním).
 - Plus – návod pre používateľa (spraví neskôr): 1) https://dashboard.stripe.com/register 2) produkt Bystrík Plus 3,99 €/mes + 29,99 €/rok (Recurring) https://dashboard.stripe.com/products/create 3) 2× platobný odkaz, 7 dní zadarmo, presmerovanie na web, Test mode VYPNUTÝ https://dashboard.stripe.com/payment-links/create 4) SQL `supabase/2026-11-plus.sql` https://supabase.com/dashboard/project/nxxltcpjdvoxomogzwaj/sql/new → pošle odkazy buy.stripe.com, ja ich dám do `PLUS_CFG`.
 - Plus: Stripe účet + Payment Links do `PLUS_CFG`, spustiť SQL, nasadiť stripe-webhook + tajomstvá; potom AI cez server, týždenný e-mail (Resend, treba doménu), čítanka s hodnotením, kolekcia.
 - Kontaktný e-mail do zásad súkromia (spýtať sa používateľa – zatiaľ neodpovedal).
