@@ -26,8 +26,10 @@ const PLUS_FEAT = [
   ['🎧', 'Nahrávky čítania na každom zariadení', 'Dieťa pošle nahrávku a vy si ju vypočujete aj na svojom telefóne.', 'rec'],
   ['📊', 'Podrobný prehľad', 'Grafy, silné a slabé témy, pokrok v predmetoch a história učenia.', 'stats'],
   ['📸', 'Moje poznámky', 'Dieťa odfotí zošit a Bystrík z neho spraví kvíz.', 'notes'],
-  ['⏰', 'Rozvrh a pripomienky', 'Nastavte čas na učenie, Bystrík sa sám pripomenie.', 'soon'],
-  ['🏫', 'Licencia pre triedu', 'Pre učiteľov: celá trieda a export výsledkov žiakov.', 'soon']
+  ['📋', 'Viac úloh od rodiča', 'Až 3 úlohy s odmenou naraz (zadarmo 1).', 'tasks'],
+  ['⏰', 'Pripomienka učenia', 'Každý deň v zvolený čas pripomenie, že je čas na Bystríka.', 'remind'],
+  ['📤', 'Týždenný report', 'Pošlite súhrn týždňa druhému rodičovi alebo babke.', 'report'],
+  ['🏫', 'Režim učiteľa a trieda', 'Trieda, kód pre žiakov a prehľad celej triedy.', 'teacher']
 ];
 /* karta v rodičovskom účte */
 function plusCard() {

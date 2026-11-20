@@ -96,6 +96,7 @@ function weekCard(p) {
 }
 /* Pripomienka na učenie – opakovaná udalosť do kalendára telefónu */
 function remindCard() {
+  if (!hasPlus()) return plusLockCard('Pripomienka učenia', 'Každý deň v zvolený čas pripomenie v kalendári, že je čas na Bystríka.');
   const inClaude = !!(window.claude && window.claude.use); const t = DATA.settings.remind || '17:00';
   return `<section class="card pcard"><span class="eyebrow">⏰ Pripomienka na učenie</span><p class="muted b" style="font-size:.85rem;padding:4px 0">Vyberte čas a pridajte si do kalendára v telefóne udalosť, ktorá sa opakuje každý deň. Telefón vás upozorní aj vtedy, keď je apka zatvorená.</p><div class="chips" style="padding:4px 0">${['15:00', '16:00', '17:00', '18:00', '19:00'].map(x => `<button class="chip ${t === x ? 'on' : ''}" data-a="remind-t" data-t="${x}">${x}</button>`).join('')}</div>${inClaude ? '<p class="b" style="font-size:.85rem">V tejto verzii sa súbor nedá stiahnuť. Nastavte si v telefóne budík alebo otvorte apku na webe.</p>' : `<div class="bkbtns"><button class="btn small primary" data-a="remind-add">📅 Pridať do kalendára (${t})</button></div><p class="muted b" style="font-size:.78rem">Stiahne sa malý súbor. Otvorte ho a potvrďte pridanie do kalendára. Zrušíte ju vymazaním udalosti v kalendári.</p>`}</section>`;
 }
