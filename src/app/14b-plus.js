@@ -22,7 +22,7 @@ const PLUS_FEAT = [
   ['👕', 'Mesačná kolekcia oblečenia', 'Nové veci pre postavičku aj Bystríka. Len vzhľad, bez výhody v rebríčku.', 'soon'],
   ['🎮', 'Nové hry v lunaparku', 'Raketa, Rybárik, Pekáreň a ďalšie hry s učivom každý mesiac.', 'soon'],
   ['📚', 'Viac učiva', 'Logika, angličtina navyše a príprava na previerky pre 1.–4. ročník.', 'soon'],
-  ['🏝️', 'Nové svety izby a doplnky pre Bystríka', 'Vesmír, more, hrad, čiapky a pelech pre medvedíka.', 'soon'],
+  ['🏠', 'Nové veci do Bystríkovho domčeka', 'Nábytok, hračky a čiapky pre medvedíka.', 'soon'],
   ['🎧', 'Nahrávky čítania na každom zariadení', 'Dieťa pošle nahrávku a vy si ju vypočujete aj na svojom telefóne.', 'rec'],
   ['📊', 'Podrobný prehľad', 'Grafy, silné a slabé témy, pokrok v predmetoch a história učenia.', 'stats'],
   ['📸', 'Moje poznámky', 'Dieťa odfotí zošit a Bystrík z neho spraví kvíz.', 'notes'],
