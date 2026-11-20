@@ -204,7 +204,7 @@ function makeQuestion(t, mode) {
     q = { text: txt, html: '', speak: txt, answer: c, options: [c, ...others], keep: t.choices.length <= 4 ? t.choices : null, ex: t.ex || '' };
   } else if (t.type === 'vocab') {
     const items = topicItems(t); const [en, sk, e] = pick(dayItems(t)); const others = shuffle(items.filter(x => x[0] !== en)).slice(0, 3);
-    if (Math.random() < .5) q = { text: `Čo znamená „${en}“?`, html: e ? `<div class="bigemoji">${e}</div>` : '', speak: en, speakLang: 'en-GB', answer: sk, options: [sk, ...others.map(x => x[1])], ex: `${en} = ${sk}` };
+    if (Math.random() < .5) q = { text: `Čo znamená „${en}“?`, html: '', speak: en, speakLang: 'en-GB', answer: sk, options: [sk, ...others.map(x => x[1])], ex: `${en} = ${sk}` };
     else q = { text: `Ako sa po anglicky povie „${sk}“?`, html: '', speak: `Ako sa po anglicky povie ${sk}?`, answer: en, options: [en, ...others.map(x => x[0])], ex: `${sk} = ${en}`, sayAfter: en };
   } else if (t.type === 'fill') {
     const [w, c, full] = pick(dayItems(t));
