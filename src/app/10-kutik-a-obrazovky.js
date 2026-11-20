@@ -247,6 +247,7 @@ function wavRecorder(stream) {
 async function recStart() {
   const inClaude = !!(window.claude && window.claude.use);
   try { speechSynthesis.cancel(); } catch (e) { }
+  try { if (navigator.audioSession) navigator.audioSession.type = 'play-and-record'; } catch (e) { }
   if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) { MICERR = 'no mediaDevices'; MIC_BLOCKED = true; render(null); return inClaude ? openDiktafon() : micHelp('nosupport'); }
   try {
     let stream; try { stream = await navigator.mediaDevices.getUserMedia({ audio: { echoCancellation: true, noiseSuppression: true } }); } catch (e1) { if (e1 && (e1.name === 'NotAllowedError' || e1.name === 'SecurityError' || e1.name === 'PermissionDeniedError')) throw e1; stream = await navigator.mediaDevices.getUserMedia({ audio: true }); }
@@ -261,6 +262,8 @@ async function recStart() {
     MICERR = String((e && e.name) || '') + (e && e.message ? ': ' + String(e.message).slice(0, 60) : '');
     MIC_BLOCKED = true; render(null);
     if (inClaude) return openDiktafon();
+    try { if (navigator.audioSession) navigator.audioSession.type = 'playback'; } catch (x) { }
+    if (e && e.name !== 'NotAllowedError' && e.name !== 'SecurityError' && e.name !== 'PermissionDeniedError' && !RD.micRetry) { RD.micRetry = 1; MIC_BLOCKED = false; render(null); return micAsk(true); }
     micHelp(e && (e.name === 'NotAllowedError' || e.name === 'SecurityError' || e.name === 'PermissionDeniedError') ? 'denied' : e && (e.name === 'NotFoundError' || e.name === 'DevicesNotFoundError') ? 'nomic' : e && e.name === 'NotReadableError' ? 'busy' : 'other');
   }
 }
@@ -340,7 +343,12 @@ function srStart() {
   } catch (e) { SRON = false; }
 }
 function srStop() { const on = SRON; SRON = false; try { SR && SR.stop(); } catch (e) { } SR = null; if (on && RD && RD.words) RD.cov = Math.round(RD.seenN / RD.words * 100); }
-function gotRecording(blob) { srStop(); RD.dur = REC ? (Date.now() - REC.t0) / 1000 : 0; RD.recording = false; RD.blob = blob; if (RD.blobUrl) URL.revokeObjectURL(RD.blobUrl); RD.blobUrl = URL.createObjectURL(blob); RD.saved = false; render(null); sfx('ok'); }
+function micAsk(again) {
+  closeSheet(); const w = document.createElement('div'); w.id = 'sheetwrap';
+  w.innerHTML = `<div class="scrim" data-a="close-sheet"></div><div class="sheet micask" role="dialog" aria-label="Povoliť mikrofón"><div class="grab"></div><div class="mabear">${bearSvg('cheer')}<span>🎤</span></div><h2>${again ? 'Skúsime to ešte raz?' : 'Bystrík ťa chce počuť!'}</h2><p class="b muted">Ťukni na tlačidlo. Telefón sa opýta, či môže Bystrík použiť mikrofón. Vyber <b>Povoliť</b>.</p><button class="btn primary block bigplay" data-a="mic-allow">🎤 Povoliť mikrofón</button><button class="linkbtn" data-a="close-sheet">Teraz nie</button></div>`;
+  document.body.appendChild(w); sfx('pop'); try { say('Ťukni na tlačidlo a potom vyber povoliť.'); } catch (e) { }
+}
+function gotRecording(blob) { srStop(); try { if (navigator.audioSession) navigator.audioSession.type = 'playback'; } catch (e) { } RD.dur = REC ? (Date.now() - REC.t0) / 1000 : 0; RD.recording = false; RD.blob = blob; if (RD.blobUrl) URL.revokeObjectURL(RD.blobUrl); RD.blobUrl = URL.createObjectURL(blob); RD.saved = false; render(null); sfx('ok'); }
 function idb() { return new Promise((res, rej) => { try { const r = indexedDB.open('bystrik-audio', 1); r.onupgradeneeded = () => r.result.createObjectStore('rec', { keyPath: 'id' }); r.onsuccess = () => res(r.result); r.onerror = () => rej(r.error); } catch (e) { rej(e); } }); }
 async function idbOp(mode, fn) { const db = await idb(); return new Promise((res, rej) => { const tx = db.transaction('rec', mode); const st = tx.objectStore('rec'); const q = fn(st); tx.oncomplete = () => res(q && q.result); tx.onerror = () => rej(tx.error); }); }
 
@@ -821,7 +829,7 @@ AFTER.result = () => {
 function showRewardOverlay(x) {
   const p = P(); sfx('level'); buzz([40, 60, 40]); if (x.level) setTimeout(() => confetti(180, .3), 950); else confetti(180, .3);
   const w = document.createElement('div'); w.className = 'over';
-  w.innerHTML = `<div class="card box"><span class="eyebrow">${x.level ? 'Nový level' : 'Odmena'}</span>${x.level ? `<div class="lvwrap"><span class="lvstars" aria-hidden="true">${Array.from({ length: 14 }, (_, i) => { const a = i / 14 * Math.PI * 2, r = 120 + (i % 3) * 30; return `<i style="--x:${Math.round(Math.cos(a) * r)}px;--y:${Math.round(Math.sin(a) * r)}px;animation-delay:${(i % 5) * 40}ms">${i % 2 ? '⭐' : '✨'}</i>`; }).join('')}</span><div class="num lvnum">${x.num}</div></div>` : `<div class="num">${x.num}</div>`}<h2>${esc(x.title)}</h2><p class="b">${esc(x.sub)}</p>${x.rw.length ? `<button class="gift" data-a="gift" aria-label="Otvoriť darček">🎁</button><div class="rewards" hidden>${x.rw.slice(0, 3).map(([c, it], i) => `<div class="rew" style="animation-delay:${i * 120}ms"><span class="th">${itemThumb(c, it, p.av)}</span>${rewardName(c, it)}</div>`).join('')}</div><button class="btn primary block" data-a="ov-wear" hidden>Obliecť sa v šatníku</button>` : ''}<button class="btn block" data-a="ov-close">Super!</button></div>`;
+  w.innerHTML = `<div class="card box"><span class="eyebrow">${x.level ? 'Nový level' : 'Odmena'}</span>${x.level ? `<div class="lvwrap"><span class="lvstars" aria-hidden="true">${Array.from({ length: 14 }, (_, i) => { const a = i / 14 * Math.PI * 2, r = 120 + (i % 3) * 30; return `<i style="--x:${Math.round(Math.cos(a) * r)}px;--y:${Math.round(Math.sin(a) * r)}px;animation-delay:${(i % 5) * 40}ms">${i % 2 ? '⭐' : '✨'}</i>`; }).join('')}</span><div class="num lvnum">${x.num}</div></div>` : `<div class="num">${x.num}</div>`}<h2>${esc(x.title)}</h2><p class="b">${esc(x.sub)}</p>${x.rw.length ? `<button class="gift" data-a="gift" aria-label="Otvoriť darček">🎁</button><div class="rewards" hidden>${x.rw.slice(0, 3).map(([c, it], i) => `<div class="rew" style="animation-delay:${i * 120}ms"><span class="th">${itemThumb(c, it, p.av)}</span>${rewardName(c, it)}</div>`).join('')}</div><button class="btn primary block" data-a="ov-wear" hidden>Obliecť sa v šatníku</button>` : ''}<button class="btn block" data-a="ov-super">Super!</button></div>`;
   document.body.appendChild(w);
 }
 

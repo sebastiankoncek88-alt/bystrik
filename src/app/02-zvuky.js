@@ -7,7 +7,7 @@ let SAYQ = [], TTSOK = false;
 function ttsUnlock() { if (TTSOK || !('speechSynthesis' in window)) return; TTSOK = true; try { const u = new SpeechSynthesisUtterance(' '); u.volume = 0; speechSynthesis.speak(u); } catch (e) { } }
 function audioUnlock() {
   ttsUnlock();
-  try { if (navigator.audioSession) navigator.audioSession.type = 'playback'; } catch (e) { }
+  try { if (navigator.audioSession && !(typeof RD !== 'undefined' && RD && RD.recording)) navigator.audioSession.type = 'playback'; } catch (e) { }
   const a = ac(); if (!a) return;
   try { const b = a.createBuffer(1, 1, 22050), s = a.createBufferSource(); s.buffer = b; s.connect(a.destination); s.start(0); } catch (e) { }
 }
