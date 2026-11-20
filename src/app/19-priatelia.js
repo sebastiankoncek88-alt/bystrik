@@ -104,6 +104,7 @@ function boot() {
   if (SUPA_ON() && AUTH && !DATA.planChosen && !(typeof isPlus === 'function' && isPlus())) return go('plan', {}, 'u');
   if (!DATA.profiles.length) { OB = { step: 0, name: '', gender: 'd', grade: 1, av: defaultAvatar('d'), room: defaultRoom('d') }; return go('onboard', {}, 'u'); }
   if (!P()) return go('profiles', {}, 'u');
+  try { const m = location.hash.match(/[#&]read=([\w-]+)/); if (m && typeof READ !== 'undefined' && READ[m[1]]) { history.replaceState(null, '', location.pathname + location.search); RD = { id: m[1], opts: {}, ans: {}, correct: 0 }; return go('read', {}, 'u'); } } catch (e) { }
   go('home', { wave: true }, 'u');
 }
 load();
