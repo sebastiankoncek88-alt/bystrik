@@ -479,9 +479,9 @@ const CURR = {
   's1-pismeno': 0, 's1-rymy': 0, 's1-nepatri': 0, 's1-hlasky': 1, 's1-slabiky': 1, 's1-spoj': 2, 's1-pocetslabik': 2, 's1-dopln': 3, 's1-pary': 3, 's1-dlhe': 3, 's1-makcen': 4, 's1-slova': 5, 's1-velke': 5, 's1-abeceda': 6, 's1-veta': 6,
   'm2-prechod': 0, 'm2-dj': 1, 'm2-rady': 1, 'm2-desat': 2, 'm2-porov': 2, 'm2-do100': 3, 'm2-parne': 3, 'm2-slovne': 3, 'm2-neznamy': 4, 'm2-retaz': 4, 'm2-peniaze': 4, 'm2-utvary': 4, 'm2-zaokr': 5, 'm2-dlzka': 5, 'm2-hodiny': 7, 'm2-cas': 7,
   's2-hlasky': 0, 's2-abc': 0, 's2-slabiky': 1, 's2-dvojhlasky': 1, 's2-koniec': 1, 's2-o': 2, 's2-vety': 2, 's2-opak': 2, 's2-zdrob': 3, 's2-spoluhlasky': 3, 's2-tvrde': 4, 's2-makke': 4, 's2-dtnl': 5, 's2-yi': 5, 's2-vlastne': 6,
-  'm2-nasob': 0, 'm3-nasobilka': 1, 'm2-dvoj': 2, 'm3-delenie': 1, 'm3-porov': 2, 'm3-do1000': 2, 'm3-trvanie': 3, 'm3-slovne': 3, 'm3-nasob10': 4, 'm3-poradie': 4, 'm3-zaokr': 5, 'm3-dlzka': 5, 'm3-geometria': 6, 'm3-rad': 7,
+  'm2-nasob': 0, 'm3-nasobilka': 1, 'm2-dvoj': 2, 'm3-delenie': 1, 'm3-porov': 2, 'm3-do1000': 2, 'm3-trvanie': 3, 'm3-slovne': 3, 'm3-nasob10': 4, 'm3-poradie': 4, 'm3-zaokr': 5, 'm3-dlzka': 5, 'm3-geometria': 6,
   's3-spodob': 0, 's3-vybrane-bm': 1, 's3-pribuzne': 2, 's3-podobne': 2, 's3-nadradene': 2, 's3-vybrane-rs': 3, 's3-spravne': 4, 's3-druhy': 5, 's3-rod': 6,
-  'm4-zaokr': 2, 'm4-velke': 7, 'm4-pisomne': 2, 'm4-neznama': 2, 'm4-slovne': 2, 'm4-delenie': 3, 'm4-zvysok': 3, 'm4-dvakroky': 4, 'm4-jednotky': 4, 'm4-rimske': 5, 'm4-casti': 6, 'm4-obvod': 6, 'm4-obsah': 7,
+  'm3-rad': 0, 'm4-zaokr': 2, 'm4-pisomne': 2, 'm4-neznama': 2, 'm4-slovne': 2, 'm4-delenie': 3, 'm4-zvysok': 3, 'm4-dvakroky': 4, 'm4-jednotky': 4, 'm4-rimske': 5, 'm4-casti': 6, 'm4-obvod': 6, 'm4-obsah': 7,
   's4-vybrane-l': 0, 's4-vybrane-mix': 1, 's4-spravne': 1, 's4-druhy': 2, 's4-vlastne': 2, 's4-a': 3, 's4-rytmicky': 3, 's4-cas': 5, 's4-osoba': 5,
   'n1-mikulas': 3, 'n2-velkanoc': 7
 };
