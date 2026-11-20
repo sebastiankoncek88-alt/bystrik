@@ -198,7 +198,7 @@ function hairBack(h, c, d) {
 function hairFront(h, c, d) {
   const longFront = `<path d="M48 92 C44 12 156 12 152 92 C148 66 122 54 100 56 C78 54 52 66 48 92Z" fill="${c}"/><path d="M100 56 Q96 70 84 76" stroke="${d}" stroke-width="3" fill="none" opacity=".5"/>`;
   switch (h) {
-    case 'kratke': return `<path d="M49 88 C46 42 78 32 102 33 C130 34 154 48 151 88 C143 70 128 60 112 62 C96 64 80 58 72 66 C62 72 54 78 49 88Z" fill="${c}"/>`;
+    case 'kratke': return `<path d="M48 98 C40 52 62 24 102 23 C142 23 162 50 152 98 L147 98 C147 86 144 76 138 70 C132 76 122 72 117 64 C110 72 98 72 91 63 C84 72 72 74 64 67 C58 74 54 86 54 98 Z" fill="${c}"/><path d="M66 40 Q96 22 134 34 Q110 30 90 44 Z" fill="#fff" opacity=".18"/><path d="M117 64 Q120 46 112 30 M91 63 Q92 48 84 36" stroke="${d}" stroke-width="2.4" fill="none" stroke-linecap="round" opacity=".35"/>`;
     case 'strapate': return `<path d="M49 88 C45 46 70 36 100 36 C130 36 155 46 151 88 C140 68 120 62 100 64 C80 62 60 68 49 88Z" fill="${c}"/><path d="M49 86 L44 60 L62 64 L58 40 L78 52 L84 28 L98 46 L110 26 L118 48 L138 34 L136 56 L156 54 L151 86 C140 68 120 62 100 64 C80 62 60 68 49 86Z" fill="${c}"/>`;
     case 'afro': { let o = ''; for (let i = 0; i <= 12; i++) { const a = Math.PI * 1.05 + i * Math.PI * .9 / 12; o += `<circle cx="${(100 + 50 * Math.cos(a)).toFixed(1)}" cy="${(82 + 40 * Math.sin(a)).toFixed(1)}" r="14" fill="${c}"/>`; } return o; }
     case 'bokom': return `<path d="M48 90 C44 14 150 12 152 88 C146 70 132 62 118 64 C100 68 78 66 62 70 C54 76 50 82 48 90Z" fill="${c}"/><path d="M96 46 Q136 52 150 94 Q132 74 104 68Z" fill="${c}"/><path d="M70 50 Q100 40 136 56" stroke="${d}" stroke-width="3" fill="none" opacity=".45"/>`;
