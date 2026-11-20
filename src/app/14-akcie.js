@@ -371,13 +371,13 @@ const ACT = {
   'rec-start': () => recStart(), 'dikt-open': () => openDiktafon(), 'mic-retry': () => { closeSheet(); MIC_BLOCKED = false; render(null); recStart(); },
   'rec-pick': () => { closeSheet(); const f = $('#recfile'); if (f) f.click(); },
   'rec-stop': () => { if (REC && REC.mr.state !== 'inactive') REC.mr.stop(); },
-  'rec-again': () => { RD.blobUrl = null; RD.blob = null; RD.saved = false; render(null); if (!MIC_BLOCKED) recStart(); },
+  'rec-again': () => { RD.cov = null; RD.seen = null; RD.blobUrl = null; RD.blob = null; RD.saved = false; render(null); if (!MIC_BLOCKED) recStart(); },
   'rd-done': (d, el) => { const p = P(); p.readings.unshift({ id: 'rd' + Date.now().toString(36), r: RD.id, t: Date.now(), rating: null, noAudio: true }); if (p.readings.length > 60) p.readings.length = 60; RD.done = true; if (!RD.recXp) { RD.recXp = true; gain(p, 20); floatXp(el, '+20'); } burst(el, 40); logAct('read', null, 1, 1); touchStreak(p); save(); sfx('coin'); render(null); },
   'rec-save': async (d, el) => { const p = P(); if (RD.sending || RD.saved) return; const id = 'rec' + Date.now().toString(36); RD.sending = true; render(null); let local = false, cloud = null;
     try { await idbOp('readwrite', st => st.put({ id, pid: p.id, r: RD.id, t: Date.now(), blob: RD.blob })); local = true; } catch (e) { }
     try { cloud = await recUpload(id, RD.blob); } catch (e) { cloud = null; }
     RD.sending = false; if (!local && !cloud) { toast('Nahrávku sa nepodarilo uložiť. Skús to znova.'); render(null); return; }
-    p.readings.unshift({ id, r: RD.id, t: Date.now(), rating: null, cloud: cloud || undefined, dur: Math.round(RD.dur || 0) }); if (p.readings.length > 60) { const gone = p.readings.splice(60); recRemove(gone.map(x => x.cloud).filter(Boolean)); }
+    p.readings.unshift({ id, r: RD.id, t: Date.now(), rating: null, cloud: cloud || undefined, dur: Math.round(RD.dur || 0), cov: RD.cov != null ? RD.cov : undefined }); if (p.readings.length > 60) { const gone = p.readings.splice(60); recRemove(gone.map(x => x.cloud).filter(Boolean)); }
     RD.saved = true; RD.cloud = !!cloud; if (!RD.recXp) { RD.recXp = true; gain(p, 20); floatXp(el, '+20'); } logAct('read', null, 1, 1); touchStreak(p); save(); sfx('gift'); burst(el); hint(cloud ? 'Nahrávka letí k rodičovi! 📨' : 'Nahrávka je uložená. Rodič si ju vypočuje. 🎧'); render(null); },
   'dk-play': () => { const au = $('#dkaud'), ic = $('#dkico'), pr = $('#dkprog'), du = $('#dkdur'); if (!au) return; if (!au.dataset.w) { au.dataset.w = 1; au.ontimeupdate = () => { const D = isFinite(au.duration) && au.duration > 0 ? au.duration : (RD.dur || 1); if (pr) pr.style.width = Math.min(100, au.currentTime / D * 100) + '%'; if (du) du.textContent = fmtDur(au.currentTime); }; au.onended = () => { if (ic) ic.setAttribute('d', 'M7 4l13 8-13 8z'); if (pr) pr.style.width = '0%'; if (du) du.textContent = fmtDur(RD.dur); }; }
     if (au.paused) { au.play().catch(() => { }); if (ic) ic.setAttribute('d', 'M6 4h4v16H6zM14 4h4v16h-4z'); } else { au.pause(); if (ic) ic.setAttribute('d', 'M7 4l13 8-13 8z'); } },

@@ -256,7 +256,7 @@ async function recStart() {
     if (mr) { REC = { mr, chunks: [], stream, t0: Date.now() }; mr.ondataavailable = e => { if (e.data && e.data.size) REC.chunks.push(e.data); }; mr.onstop = () => { const blob = new Blob(REC.chunks, { type: mr.mimeType || 'audio/webm' }); if (!blob.size && !own) { toast('Nahrávka je prázdna. Skús to ešte raz a hovor hlasnejšie.'); } done(blob); }; try { mr.start(250); } catch (e) { mr = null; } }
     if (!mr) { own = true; const wr = wavRecorder(stream); REC = { mr: wr, chunks: [], stream, t0: Date.now() }; wr.onstop = () => done(wr.blob); }
     MIC_BLOCKED = false; RD.recording = true; render(null); sfx('pop');
-    TIMERS.push(setInterval(() => { const e = $('#rectime'); if (e && REC) e.textContent = fmtDur((Date.now() - REC.t0) / 1000); }, 250)); recViz(stream);
+    TIMERS.push(setInterval(() => { const e = $('#rectime'); if (e && REC) e.textContent = fmtDur((Date.now() - REC.t0) / 1000); }, 250)); recViz(stream); srStart();
   } catch (e) {
     MICERR = String((e && e.name) || '') + (e && e.message ? ': ' + String(e.message).slice(0, 60) : '');
     MIC_BLOCKED = true; render(null);
@@ -317,7 +317,30 @@ async function recCleanup() {
   } catch (e) { }
 }
 setTimeout(() => { if (typeof DATA !== 'undefined' && DATA.profiles) recCleanup(); }, 8000);
-function gotRecording(blob) { RD.dur = REC ? (Date.now() - REC.t0) / 1000 : 0; RD.recording = false; RD.blob = blob; if (RD.blobUrl) URL.revokeObjectURL(RD.blobUrl); RD.blobUrl = URL.createObjectURL(blob); RD.saved = false; render(null); sfx('ok'); }
+/* Bystrík počúva: rozpoznávanie reči (sk-SK) označuje slová, ktoré dieťa naozaj prečítalo */
+const SRC = window.SpeechRecognition || window.webkitSpeechRecognition; let SR = null, SRON = false;
+const srNorm = w => String(w).toLowerCase().replace(/<[^>]+>/g, '').replace(/[.,!?„“"”…:;()\-–—'’]/g, '').normalize('NFD').replace(/[̀-ͯ]/g, '').trim();
+function srLev(a, b) { if (Math.abs(a.length - b.length) > 1) return 2; const d = Array.from({ length: a.length + 1 }, (_, i) => [i]); for (let j = 1; j <= b.length; j++) d[0][j] = j; for (let i = 1; i <= a.length; i++) for (let j = 1; j <= b.length; j++) d[i][j] = Math.min(d[i - 1][j] + 1, d[i][j - 1] + 1, d[i - 1][j - 1] + (a[i - 1] === b[j - 1] ? 0 : 1)); return d[a.length][b.length]; }
+const srMatch = (w, s) => w === s || (w.length >= 4 && s.length >= 3 && (srLev(w, s) <= 1 || w.startsWith(s) || s.startsWith(w)));
+function srWords() { const r = READ[RD.id]; return (r.text.replace(/<[^>]+>/g, ' ').match(/[^\s]+/g) || []).map(srNorm); }
+function srApply(spoken) {
+  const W = RD.srw || (RD.srw = srWords()); let idx = 0; const seen = new Set();
+  for (const s0 of spoken) { const s = srNorm(s0); if (!s) continue; for (let k = 0; k <= 3 && idx + k < W.length; k++) { if (srMatch(W[idx + k], s)) { seen.add(idx + k); idx = idx + k + 1; break; } } }
+  RD.seen = seen; RD.words = W.length; RD.seenN = seen.size;
+  $$('#readtext .rw').forEach(el => { const i = +el.dataset.i; el.classList.toggle('ok', seen.has(i)); el.classList.toggle('cur', i === idx); });
+}
+function srStart() {
+  SRON = false; if (!SRC || !RD) return; RD.seen = new Set(); RD.srw = srWords(); RD.cov = null; let finals = [];
+  try {
+    SR = new SRC(); SR.lang = 'sk-SK'; SR.continuous = true; SR.interimResults = true; SR.maxAlternatives = 1;
+    SR.onresult = e => { const fin = [], tmp = []; for (let i = 0; i < e.results.length; i++) (e.results[i].isFinal ? fin : tmp).push(e.results[i][0].transcript); const all = finals.concat(fin.join(' ').split(/\s+/), tmp.join(' ').split(/\s+/)); srApply(all); SR._fin = fin; };
+    SR.onend = () => { if (SR && SR._fin) { finals = finals.concat(SR._fin.join(' ').split(/\s+/)); SR._fin = null; } if (RD && RD.recording && SRON) { try { SR.start(); } catch (e) { } } };
+    SR.onerror = e => { if (['not-allowed', 'service-not-allowed', 'audio-capture', 'language-not-supported'].includes(e.error)) { SRON = false; const t = $('#readtext'); if (t) t.classList.remove('live'); } };
+    SR.start(); SRON = true; const t = $('#readtext'); if (t) t.classList.add('live');
+  } catch (e) { SRON = false; }
+}
+function srStop() { const on = SRON; SRON = false; try { SR && SR.stop(); } catch (e) { } SR = null; if (on && RD && RD.words) RD.cov = Math.round(RD.seenN / RD.words * 100); }
+function gotRecording(blob) { srStop(); RD.dur = REC ? (Date.now() - REC.t0) / 1000 : 0; RD.recording = false; RD.blob = blob; if (RD.blobUrl) URL.revokeObjectURL(RD.blobUrl); RD.blobUrl = URL.createObjectURL(blob); RD.saved = false; render(null); sfx('ok'); }
 function idb() { return new Promise((res, rej) => { try { const r = indexedDB.open('bystrik-audio', 1); r.onupgradeneeded = () => r.result.createObjectStore('rec', { keyPath: 'id' }); r.onsuccess = () => res(r.result); r.onerror = () => rej(r.error); } catch (e) { rej(e); } }); }
 async function idbOp(mode, fn) { const db = await idb(); return new Promise((res, rej) => { const tx = db.transaction('rec', mode); const st = tx.objectStore('rec'); const q = fn(st); tx.oncomplete = () => res(q && q.result); tx.onerror = () => rej(tx.error); }); }
 
@@ -1242,7 +1265,7 @@ function pinKey(k) {
 function parentReads(p) {
   if (!p.readings.length) return `<section class="card pcard"><span class="eyebrow">📖 Čítanie – text a nahrávky</span><p class="muted b" style="padding:8px 0">Zatiaľ žiadne nahrávky. Dieťa ich nahrá v Čítanke a pošle vám ich sem. Keď ste prihlásení, uvidíte ich na každom svojom zariadení.</p></section>`;
   const ids = []; p.readings.forEach(x => { if (!ids.includes(x.r)) ids.push(x.r); });
-  return `<section class="card pcard"><span class="eyebrow">📖 Čítanie – text a nahrávky</span><p class="muted b" style="font-size:.85rem;padding:4px 0">Pri každom texte vidíte presne to, čo dieťa čítalo, a pod tým jeho čítania a nahrávky. Vypočujte si ich, ohodnoťte a za pekné čítanie dieťa odmeňte (+5 bodov za každé čítanie, slniečka sa takto nedávajú). Dieťa uvidí hodnotenie v Čítanke.</p>${ids.map(rid => { const r = READ[rid]; const recs = p.readings.filter(x => x.r === rid); return `<div class="ptext"><b style="font-family:var(--f-display);font-size:1.1rem">${r ? r.icon + ' ' + r.title : 'Text'} <span class="muted" style="font-size:.85rem">${r ? r.g + '. ročník' : ''}</span></b><div class="ptextbody">${r ? esc(r.text) : ''}</div>${recs.map((x, i) => `<div class="prec"><span class="b">${x.noAudio ? '✅ Prečítal(a) nahlas, bez nahrávky' : '🎙️ Nahrávka' + (x.cloud ? ' ☁️' : '')}${x.rating ? '' : ' <em class="pnew">nové</em>'} · ${fmtTime(x.t)}</span>${x.noAudio ? '' : `<div id="aud-${x.id}"><button class="btn small" data-a="play-rec" data-id="${x.id}">▶️ Vypočuť</button></div>`}<div class="chips" style="padding:0">${[3, 2, 1].map(k => `<button class="chip ${x.rating === k ? 'on' : ''}" data-a="rate-rec" data-id="${x.id}" data-r="${k}">${RATE[k]}</button>`).join('')}<button class="chip" data-a="del-rec" data-id="${x.id}" aria-label="Vymazať nahrávku">🗑️</button></div>${x.rewarded ? '<span class="b" style="color:var(--good);font-size:.85rem">🎁 Odmenené +5 bodov</span>' : `<button class="btn small primary" data-a="reward-rec" data-id="${x.id}">🎁 Odmeniť za čítanie (+5 bodov)</button>`}</div>`).join('')}</div>`; }).join('')}</section>`;
+  return `<section class="card pcard"><span class="eyebrow">📖 Čítanie – text a nahrávky</span><p class="muted b" style="font-size:.85rem;padding:4px 0">Pri každom texte vidíte presne to, čo dieťa čítalo, a pod tým jeho čítania a nahrávky. Vypočujte si ich, ohodnoťte a za pekné čítanie dieťa odmeňte (+5 bodov za každé čítanie, slniečka sa takto nedávajú). Dieťa uvidí hodnotenie v Čítanke.</p>${ids.map(rid => { const r = READ[rid]; const recs = p.readings.filter(x => x.r === rid); return `<div class="ptext"><b style="font-family:var(--f-display);font-size:1.1rem">${r ? r.icon + ' ' + r.title : 'Text'} <span class="muted" style="font-size:.85rem">${r ? r.g + '. ročník' : ''}</span></b><div class="ptextbody">${r ? esc(r.text) : ''}</div>${recs.map((x, i) => `<div class="prec"><span class="b">${x.noAudio ? '✅ Prečítal(a) nahlas, bez nahrávky' : '🎙️ Nahrávka' + (x.cloud ? ' ☁️' : '') + (x.cov != null ? ` · Bystrík počul ${x.cov} % slov` : '')}${x.rating ? '' : ' <em class="pnew">nové</em>'} · ${fmtTime(x.t)}</span>${x.noAudio ? '' : `<div id="aud-${x.id}"><button class="btn small" data-a="play-rec" data-id="${x.id}">▶️ Vypočuť</button></div>`}<div class="chips" style="padding:0">${[3, 2, 1].map(k => `<button class="chip ${x.rating === k ? 'on' : ''}" data-a="rate-rec" data-id="${x.id}" data-r="${k}">${RATE[k]}</button>`).join('')}<button class="chip" data-a="del-rec" data-id="${x.id}" aria-label="Vymazať nahrávku">🗑️</button></div>${x.rewarded ? '<span class="b" style="color:var(--good);font-size:.85rem">🎁 Odmenené +5 bodov</span>' : `<button class="btn small primary" data-a="reward-rec" data-id="${x.id}">🎁 Odmeniť za čítanie (+5 bodov)</button>`}</div>`).join('')}</div>`; }).join('')}</section>`;
 }
 function checkPTasks(p, id, stars) {
   (p.ptasks || []).forEach(t => { if (!t.done && t.topic === id && stars >= t.stars) { t.done = Date.now(); p.coins = (p.coins || 0) + t.coins; p.log.unshift({ t: Date.now(), k: 'ptask', id, c: t.coins, n: t.stars }); setTimeout(() => achPop({ i: '📋', n: 'Úloha od rodiča splnená!', d: TOPIC[id].name, t: [t.coins] }, 0, t.coins), 1200); } });
