@@ -16,7 +16,7 @@ VIEWS.learn = () => {
 /* --- obchod --- */
 let SHOPCAT = 'all', SHOPSEL = null;
 const SHOPCATS = [['all', 'Všetko'], ['top', '👕 Vrch'], ['bottom', '👖 Spodok'], ['shoes', '👟 Topánky'], ['acc', '🎩 Doplnky']];
-function shopItems(p) { const out = []; for (const c of ['top', 'bottom', 'shoes', 'acc']) for (const it of CATALOG[c]) if (it.price && (!it.g || it.g === p.av.gender)) out.push([c, it]); return out.sort((a, b) => a[1].price - b[1].price); }
+function shopItems(p) { const out = []; for (const c of ['top', 'bottom', 'shoes', 'acc']) for (const it of CATALOG[c]) if (it.price && !it.xmas && (!it.g || it.g === p.av.gender)) out.push([c, it]); return out.sort((a, b) => a[1].price - b[1].price); }
 const SHOP_DAYS = 1, DAYMS = 86400000;
 function shopPeriod() { const d = new Date(); return Math.floor(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()) / DAYMS / SHOP_DAYS); }
 function shopMs() { const d = new Date(); const now = Date.UTC(d.getFullYear(), d.getMonth(), d.getDate(), d.getHours(), d.getMinutes(), d.getSeconds()); return Math.max(0, (shopPeriod() + 1) * SHOP_DAYS * DAYMS - now); }
@@ -37,7 +37,7 @@ function dealHero(p, x) {
   return `<section class="deal2"><i class="dshine" aria-hidden="true"></i><div class="dinfo"><span class="dtag">PONUKA DŇA · ešte ${shopLeft()}</span><b>${esc(it.n)}</b><span class="dprice">${own ? '✓ Už máš' : COIN + ' ' + it.price}</span><button class="dbtn press" data-a="shop-prev" data-c="${c}" data-i="${it.id}">👀 Vyskúšať</button></div><div class="dfig">${avatarSvg(av, { cls: 'idle', noBg: true, noPet: true })}</div></section>`;
 }
 VIEWS.shop = () => {
-  const p = P(); const list = shopOffer(p); const prem = shopPremium(p); const all = [...prem, ...list];
+  const p = P(); const list = shopOffer(p); const prem = shopPremium(p); const xm = XMAS() ? ['top', 'acc'].flatMap(c => CATALOG[c].filter(it => it.xmas).map(it => [c, it])) : []; const all = [...xm, ...prem, ...list];
   const sel = all.find(([, it]) => it.sid === SHOPSEL);
   const state = it => p.owned.includes(it.sid) ? 'own' : (p.coins || 0) >= it.price ? 'can' : 'lock';
   const fil = arr => SHOPCAT === 'all' ? arr : arr.filter(([c]) => c === SHOPCAT);
@@ -51,6 +51,7 @@ VIEWS.shop = () => {
   ${dealHero(p, prem[0])}
   ${learnedToday(p) ? '' : (shopLockSay(), `<button class="sh2lock press" data-a="go-start"><span>📚</span><b>Kupovať môžeš po dnešnom učení</b><em>Učiť sa ▶</em></button>`)}
   <div class="sh2bar"><div class="sh2wallet"><span class="sh2coin">${COIN}</span><b>${p.coins || 0}</b><small>slniečok</small></div><div class="sh2timer"><small>Nová ponuka o</small><b id="shopcd2">${shopHMS()}</b></div></div>
+  ${xm.length ? `<section class="xshop"><i class="xlights" aria-hidden="true"></i><div class="xsh"><b>🎄 Vianočný obchod</b><small>len do 6. januára</small></div><div class="xgrid">${xm.map(card).join('')}</div></section>` : ''}
   <div class="sh2cats">${SHOPCATS.map(([k, n]) => `<button class="${SHOPCAT === k ? 'on' : ''}" data-a="shopcat" data-c="${k}">${n}</button>`).join('')}</div>
   <div class="sh2grid">${items.length ? items.map(card).join('') : '<p class="b muted">V tejto kategórii dnes nič nie je. Pozri sa zajtra!</p>'}</div>
 
