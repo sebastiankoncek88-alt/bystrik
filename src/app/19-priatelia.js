@@ -101,6 +101,7 @@ function boot() {
   if (!(window.claude && window.claude.use) && typeof EMO_BASE !== 'undefined' && !isStandalone() && !WEBOK() && !RECOVER) return go('getapp', {}, 'u');
   if (SUPA_ON() && RECOVER) return go('newpass', {}, 'u');
   if (SUPA_ON() && !AUTH) return go('login', {}, 'u');
+  if (SUPA_ON() && AUTH && !DATA.planChosen && !(typeof isPlus === 'function' && isPlus())) return go('plan', {}, 'u');
   if (!DATA.profiles.length) { OB = { step: 0, name: '', gender: 'd', grade: 1, av: defaultAvatar('d'), room: defaultRoom('d') }; return go('onboard', {}, 'u'); }
   if (!P()) return go('profiles', {}, 'u');
   go('home', { wave: true }, 'u');

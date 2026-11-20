@@ -2,7 +2,9 @@
 let UI = { view: 'home', params: {} };
 let TIMERS = [];
 function clearTimers() { TIMERS.forEach(t => { clearInterval(t); clearTimeout(t); }); TIMERS = []; }
+const PLUS_VIEWS = { reads: 'Čítanka', read: 'Čítanka', duel: 'Súboj s kamarátom', dict: 'Diktát' };
 function go(view, params = {}, dir = 'f') {
+  if (PLUS_VIEWS[view] && typeof hasPlus === 'function' && !hasPlus()) { params = { w: PLUS_VIEWS[view] }; view = 'plusk'; }
   if (typeof PARENT_OK !== 'undefined' && PARENT_OK && !['parent', 'psetup', 'pin', 'remote', 'onboard', 'teacher', 'privacy'].includes(view)) PARENT_OK = false;
   try { if (typeof REC !== 'undefined' && REC && REC.mr && REC.mr.state !== 'inactive' && view !== 'read') { REC.mr.onstop = null; REC.mr.stop(); REC.stream && REC.stream.getTracks().forEach(t => t.stop()); if (typeof RD !== 'undefined' && RD) RD.recording = false; } } catch (e) { }
   if (view !== 'fchat' && typeof fcClose === 'function') fcClose();
@@ -41,7 +43,7 @@ function scrollReveal() {
 function render(dir) {
   const app = $('#app');
   if (dir) { const a = NAV_ORDER.indexOf(LASTVIEW), b = NAV_ORDER.indexOf(UI.view); if (a >= 0 && b >= 0 && a !== b) dir = b > a ? 'r' : 'l'; ghostOut(dir); LASTVIEW = UI.view; }
-  app.innerHTML = VIEWS[UI.view](UI.params); document.documentElement.classList.toggle('adult', ['parent', 'pin', 'psetup', 'teacher', 'remote'].includes(UI.view)); document.documentElement.classList.toggle('luna', UI.view === 'games');
+  app.innerHTML = VIEWS[UI.view](UI.params); document.documentElement.classList.toggle('adult', ['parent', 'pin', 'psetup', 'teacher', 'remote', 'plan'].includes(UI.view)); document.documentElement.classList.toggle('luna', UI.view === 'games');
   const v = app.querySelector('.view'); if (v && dir) v.classList.add('enter-' + dir);
   AFTER[UI.view] && AFTER[UI.view]();
   applyRoom(); navPill(); setTimeout(scrollReveal, 80); if (CHG) setTimeout(chgStep, 260); if (nightOn() !== LASTNIGHT) applyTheme(true); bearObs(); pathFireworks(); try { buddySync(); } catch (e) { }

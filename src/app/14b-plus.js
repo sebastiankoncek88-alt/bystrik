@@ -17,7 +17,7 @@ const PLUS_FEAT = [
   ['🧸', 'AI Bystrík bez kľúča', 'Vysvetlí chybu, odpovie na otázku a dá sa s ním rozprávať hlasom.', 'soon'],
   ['📧', 'Týždenný e-mail', 'Každý týždeň súhrn: čo dieťa robilo a čo precvičiť.', 'soon'],
   ['🖨️', 'Pracovné listy na tlač', 'Vygenerované zo slabých tém dieťaťa, s kľúčom správnych odpovedí.', 'ws'],
-  ['📖', 'Čítanka s hodnotením', 'Bystrík vypočuje čítanie a ukáže plynulosť a chyby.', 'soon'],
+  ['🗣️', 'Bystrík vypočuje čítanie', 'Ukáže plynulosť a chyby pri čítaní nahlas.', 'soon'],
   ['👨‍👩‍👧‍👦', `Až ${PLUS_KIDS} detí v jednom účte`, `Zadarmo ${FREE_KIDS} deti. Synchronizácia na všetkých zariadeniach rodiny.`, 'kids'],
   ['👕', 'Mesačná kolekcia oblečenia', 'Nové veci pre postavičku aj Bystríka. Len vzhľad, bez výhody v rebríčku.', 'soon'],
   ['🎮', 'Nové hry v lunaparku', 'Raketa, Rybárik, Pekáreň a ďalšie hry s učivom každý mesiac.', 'soon'],
@@ -26,7 +26,10 @@ const PLUS_FEAT = [
   ['🎧', 'Nahrávky čítania na každom zariadení', 'Dieťa pošle nahrávku a vy si ju vypočujete aj na svojom telefóne.', 'rec'],
   ['📊', 'Podrobný prehľad', 'Grafy, silné a slabé témy, pokrok v predmetoch a história učenia.', 'stats'],
   ['📸', 'Moje poznámky', 'Dieťa odfotí zošit a Bystrík z neho spraví kvíz.', 'notes'],
-  ['📋', 'Viac úloh od rodiča', 'Až 3 úlohy s odmenou naraz (zadarmo 1).', 'tasks'],
+  ['📋', 'Úlohy a učivo zo školy', 'Zadávajte dieťaťu úlohy s odmenou a nastavte, čo sa práve učí v škole.', 'tasks'],
+  ['📖', 'Čítanka s nahrávaním', 'Príbehy na čítanie nahlas pre 1.–4. ročník, nahrávky a hodnotenie od rodiča.', 'reads'],
+  ['⚔️', 'Súboj s kamarátom', 'Dve deti, rovnaké otázky, kto bude rýchlejší a presnejší.', 'duel'],
+  ['🎧', 'Diktát', 'Bystrík diktuje slová a vety, dieťa ich píše.', 'dict'],
   ['⏰', 'Pripomienka učenia', 'Každý deň v zvolený čas pripomenie, že je čas na Bystríka.', 'remind'],
   ['📤', 'Týždenný report', 'Pošlite súhrn týždňa druhému rodičovi alebo babke.', 'report'],
   ['🏫', 'Režim učiteľa a trieda', 'Trieda, kód pre žiakov a prehľad celej triedy.', 'teacher']
@@ -45,6 +48,8 @@ function plusCard() {
 }
 /* otvorí Plus kartu v rodičovských nastaveniach (len z rodičovskej časti) */
 function plusOpen() { if (UI.view !== 'parent') return; PTAB = 'set'; PSET_WANT = 'Bystrík Plus'; render(null); scrollTo({ top: 0 }); }
+/* dieťa: zamknutá časť – bez ceny a bez ponuky, len „zapína rodič“ */
+VIEWS.plusk = ({ w }) => `${topbar('home')}<main class="view"><section class="card pluskid">${bearSvg('wink')}<span class="pkstar">⭐</span><h2>${esc(w || 'Táto časť')}</h2><p class="b">Túto časť zapína rodič v rodičovskom účte. Ukáž mu ju! 🙂</p><button class="btn primary block" data-a="nav" data-v="learn">Späť k učeniu</button></section></main>${nav('learn')}`;
 function plusLockCard(what, desc) { return `<section class="card pcard plock"><span class="plk">⭐</span><div class="grow"><b>${what}</b><small>${desc}</small></div><button class="btn small primary" data-a="plus-need" data-w="${what}">Bystrík Plus</button></section>`; }
 ACT['plus-need'] = d => plusNeed(d.w || 'Táto funkcia');
 function plusNeed(what) { toast(`⭐ ${what} je v Bystrík Plus`); plusOpen(); }
@@ -87,3 +92,15 @@ Object.assign(ACT, {
 /* návrat zo Stripe: ?plus=ok */
 try { if (/[?&]plus=ok/.test(location.search)) { history.replaceState(null, '', location.pathname); setTimeout(async () => { await plusLoad(); if (isPlus()) { toast('⭐ Ďakujeme! Bystrík Plus je aktívny.'); confetti(120); } }, 1500); } } catch (e) { }
 setTimeout(() => { if (AUTH) plusLoad(); }, 2500);
+
+/* výber verzie po prihlásení rodiča (raz): Zadarmo alebo Plus */
+const PLAN_FREE = ['Všetko učivo pre 1.–4. ročník', 'Všetky hry v lunaparku', 'Šatník, obchod a Bystríkov domček', 'Rebríček a priatelia', 'Rodič: týždenný graf a pravidlá pre dieťa'];
+const PLAN_PLUS = ['📖 Čítanka s nahrávaním', '📋 Úlohy pre dieťa a učivo zo školy', '📊 Podrobný prehľad a história', '⚔️ Súboj s kamarátom a 🎧 Diktát', '📸 Moje poznámky a 🖨️ pracovné listy', '⏰ Pripomienka a 📤 týždenný report', `👨‍👩‍👧‍👦 Až ${PLUS_KIDS} detí`, '🧸 AI Bystrík bez kľúča (čoskoro)'];
+VIEWS.plan = () => `<main class="view nonav planv"><div class="planhead">${bearSvg('cheer')}<h1>Vyberte si Bystríka</h1><p class="muted b">Kedykoľvek to zmeníte v rodičovskom účte.</p></div>
+<section class="card plancard free"><div class="plt"><b>Zadarmo</b><span class="plp">0 €</span></div><ul>${PLAN_FREE.map(x => `<li>${x}</li>`).join('')}</ul><button class="btn block" data-a="plan-free">Pokračovať zadarmo</button></section>
+<section class="card plancard plus"><span class="plbadge">⭐ Odporúčame</span><div class="plt"><b>Bystrík Plus</b><span class="plp">${PLUS_PRICE.month}<small> / mesiac</small></span></div><p class="pltrial">Prvých ${PLUS_PRICE.trial} dní zadarmo · zrušíte kedykoľvek</p><p class="plinc">Všetko zo Zadarmo a k tomu:</p><ul>${PLAN_PLUS.map(x => `<li>${x}</li>`).join('')}</ul><button class="btn primary block" data-a="plan-plus" data-k="month">Vyskúšať ${PLUS_PRICE.trial} dní zadarmo</button><button class="linkbtn plyear" data-a="plan-plus" data-k="year">alebo ročne ${PLUS_PRICE.year} (ušetríte 37 %)</button></section>
+<p class="muted b" style="text-align:center;font-size:.78rem">Platbu spracúva Stripe. Ponuku vidí len rodič, dieťa nikdy.</p></main>`;
+Object.assign(ACT, {
+  'plan-free': () => { DATA.planChosen = 'free'; save(); sfx('tap'); boot(); },
+  'plan-plus': d => { const u = plusLink(d.k || 'month'); DATA.planChosen = 'plus'; save(); if (u) { sfx('tap'); location.href = u; return; } toast('Bystrík Plus spúšťame čoskoro. Dovtedy máte všetky funkcie zadarmo. 🎉'); sfx('coin'); boot(); }
+});
