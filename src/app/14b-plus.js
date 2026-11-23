@@ -10,9 +10,31 @@ const isPlus = () => ADMIN || !!(PLUS && ['active', 'trialing'].includes(PLUS.st
 const plusFree = () => !PLUS_CFG.month && !PLUS_CFG.year;
 const hasPlus = () => isPlus() || plusFree();
 async function plusLoad() {
-  if (!SUPA_ON() || !AUTH || !AUTH.uid) return;
+  if (!SUPA_ON() || !AUTH || !AUTH.uid) return; try { await plusLoad0(); } finally { setTimeout(giftCheck, 600); }
+}
+async function plusLoad0() {
   try { const a = await sb('POST', 'rpc/am_admin', {}); ADMIN = a === true; try { localStorage.setItem('bystrik.admin', ADMIN ? '1' : '0'); } catch (e) { } } catch (e) { /* funkcia ešte nie je */ }
   try { const r = await sb('GET', 'plus?select=status,plan,current_period_end&user_id=eq.' + AUTH.uid); const x = r && r[0]; PLUS = x ? { status: x.status, plan: x.plan, until: x.current_period_end, at: Date.now() } : null; try { localStorage.setItem('bystrik.plus', JSON.stringify(PLUS)); } catch (e) { } } catch (e) { /* tabuľka ešte neexistuje alebo offline */ }
+}
+/* Darované Plus: raz sa ukáže celoobrazovkové otvorenie darčeka */
+function giftCheck() {
+  if (!PLUS || PLUS.plan !== 'gift' || PLUS.status !== 'active' || (PLUS.until && new Date(PLUS.until) < new Date())) return;
+  let seen = ''; try { seen = localStorage.getItem('bystrik.giftSeen') || ''; } catch (e) { } if (seen === String(PLUS.until)) return;
+  if (document.querySelector('.over,.giftfs') || ['quiz', 'game', 'pin', 'login', 'onboard', 'onboard2'].includes(UI.view)) { setTimeout(giftCheck, 4000); return; }
+  giftReveal();
+}
+function giftReveal() {
+  const days = PLUS && PLUS.until ? (new Date(PLUS.until) - Date.now()) / 864e5 : 9999; const len = days > 3000 ? 'navždy' : days > 300 ? 'na celý rok' : days > 25 ? 'na mesiac' : 'na ' + Math.max(1, Math.round(days)) + ' dní';
+  const w = document.createElement('div'); w.className = 'giftfs'; w.setAttribute('role', 'dialog'); w.setAttribute('aria-label', 'Darček: Bystrík Plus');
+  w.innerHTML = `<i class="gfrays" aria-hidden="true"></i><i class="gfstars" aria-hidden="true"></i>
+  <div class="gfstage"><p class="gfhint">Máš darček! 🎁</p><button class="gfbox" id="gfbox" aria-label="Otvoriť darček"><span class="gflid"><i class="gfbow"></i></span><span class="gfbody"></span></button><p class="gftap">Ťukni a otvor ho</p></div>
+  <div class="gfopen" hidden><div class="gfbear">${bearSvg('hidle')}<span class="gfcrown">👑</span></div><h1 class="gflogo">Bystrík <em>Plus</em></h1><p class="gftxt">Niekto ti daroval Bystrík Plus <b>${len}</b>!</p>
+  <ul class="gfl"><li>📖 Čítanka s Bystríkom, ktorý počúva</li><li>⚔️ Súboj a 🎧 Diktát</li><li>📋 Úlohy od rodiča a podrobný prehľad</li></ul><button class="btn primary block bigplay gfok" id="gfok">Super, ďakujem! ⭐</button></div>`;
+  document.body.appendChild(w); try { sfx('pop'); } catch (e) { }
+  const done = () => { try { localStorage.setItem('bystrik.giftSeen', String(PLUS.until)); } catch (e) { } w.classList.add('out'); setTimeout(() => { w.remove(); try { render(null); } catch (e) { } }, 450); };
+  let opened = false; const open = () => { if (opened) return; opened = true; const box = w.querySelector('#gfbox'); box.classList.add('opening'); try { sfx('chest'); } catch (e) { try { sfx('level'); } catch (x) { } }
+    setTimeout(() => { w.classList.add('opened'); w.querySelector('.gfstage').hidden = true; w.querySelector('.gfopen').hidden = false; try { sfx('level'); confetti(160, .45); } catch (e) { } try { say('Hurá! Dostal si darček. Bystrík Plus!'); } catch (e) { } setTimeout(() => { try { confetti(90, .3); } catch (e) { } }, 900); }, 900); };
+  w.querySelector('#gfbox').addEventListener('click', open); w.querySelector('#gfok').addEventListener('click', done);
 }
 function plusLink(k) { const u = PLUS_CFG[k]; if (!u) return ''; const q = new URLSearchParams(); if (AUTH && AUTH.uid) q.set('client_reference_id', AUTH.uid); if (AUTH && AUTH.email) q.set('prefilled_email', AUTH.email); return u + (u.includes('?') ? '&' : '?') + q.toString(); }
 const PLUS_FEAT = [
