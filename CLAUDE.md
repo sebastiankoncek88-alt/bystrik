@@ -70,7 +70,7 @@ Písanie priateľom je predvolene vypnuté (`DATA.settings.msgOk`). Úsporný re
 - Bystrík počúva čítanie: počas nahrávania beží rozpoznávanie reči (`SRC` = SpeechRecognition, sk-SK, `srStart/srStop/srApply`, fuzzy zhoda `srMatch`), prečítané slová `.rw.ok` (zelené), ďalšie `.rw.cur`; po skončení `RD.cov` % a karta `.rcov` „Bystrík počul X z Y slov“, uloží sa do `reading.cov` a rodič to vidí. Bez rozpoznávania reči sa slová neoznačujú (náhodné žlté posúvanie zrušené).
 - Mikrofón na iPhone: počas nahrávania `navigator.audioSession.type='play-and-record'` (režim 'playback' z audioUnlock blokoval mikrofón), po skončení späť 'playback'. Pred prvým nahrávaním vlastné okno `micAsk()` „Povoliť mikrofón“ (`DATA.micOk`, akcia mic-allow), po chybe (nie zamietnutí) raz znova `micAsk(true)`.
 - Darček za level: tlačidlo „Super!“ (`ov-super`) najprv otvorí darček, druhým ťuknutím zavrie.
-- SW cache zvyšovať pri každom nasadení s viditeľnou zmenou (teraz v66).
+- SW cache zvyšovať pri každom nasadení s viditeľnou zmenou (teraz v67).
 - Fun fakty (`BUDDY_FACTS`, 41 faktov): každé ~3 min mimo kvízu/hier/čítania/rodiča (kontrola každých 15 s) + po výsledku kvízu s ≥1 hviezdou 50 % šanca, ak posledný bol pred >90 s.
 - Rebríček: pri načítaní sa hráč hneď zapíše (`LBSELF`), obnova každých 30 s na obrazovke + tlačidlo `lb-refresh`, karta „Včerajší víťazi“ (`LB.yest`).
 - AI Bystrík: odpovede max 2–3 krátke vety (`tutorIntro`), chat `max: 400` (v artefakte sa max/effort nepošlú).
@@ -104,7 +104,14 @@ Písanie priateľom je predvolene vypnuté (`DATA.settings.msgOk`). Úsporný re
 - Obchod 4.0 (`.sh3`): markíza, nadpis „Bystríkov obchodík“, peňaženka + časovač, karty 2 v rade s celou postavičkou na podstavci.
 - Moderátor: SQL `supabase/2026-11-moderator.sql` (tabuľka admins, RPC am_admin/grant_plus/revoke_plus/list_gifts; e-mail sa dopĺňa pri spustení, v repe je TVOJ_EMAIL – e-mail používateľa NEdávať do kódu ani repa). V appke `ADMIN` (z `rpc/am_admin` v `plusLoad`, cache `bystrik.admin`) → `isPlus()` true; v Nastavenia → Bystrík Plus karta `modCard()` (darovať Plus na 1 mesiac/1 rok/navždy, zoznam, zrušiť). Darované Plus = riadok v `plus` s plan='gift'. SQL pre plus aj moderátora je v Supabase spustené (21. 11. 2026, overené).
 
+- Odmeny sťažené (rozhodnutie používateľa): levely `need(L)=90+50(L-1)+4(L-1)²` (do L20 ~18 700 b, predtým 6 270), prevod `xpMigrate` (p.xpv=2) zachová level aj rozrobený postup; 1 slniečko za 15 bodov; denná odmena 8/20b/10/12/×2/20+30b/oblečenie; odmena za tému 15 slniečok alebo vec ≤120; hra max 50 b.
+- Kontrola učiva (val2.js vo scratchpade): 199 tém, ~3 970 otázok, 736 prepočítaných príkladov bez chyby; ručne prečítaných 1 256 textových otázok, opravené: minca, víla, kolobeh vody, najvyšší vrch, patrónka Slovenska, peňaženka.
+- Fun fakty 2.0 (`07b-buddy.js`): druhy `FACT_KINDS` (zvieratká, vesmír, telo, Slovensko, jedlo, mix = staré BUDDY_FACTS), vianočné `FACT_XMAS` (v XMAS 60 %), `factShow` = Bystrík vyskočí zdola (`.factpop`, `.fpbear`) s bublinou a štítkom druhu, zvuk plop + cink (bub + mar), vianočné červené so snehom; zavrie sa samo alebo ťukom (`fact-close`).
+- Moderátorský panel: vlastná sekcia Nastavení „🛡️ Moderátor“ (`modPanel()` v 14b-plus.js): štatistiky (`rpc/admin_stats`), zoznam všetkých rodičov s e-mailom, registráciou, posledným prihlásením a stavom Plus (`rpc/admin_users`), vyhľadávanie, darovať rok/zrušiť pri každom, záložka Darovať Plus (`modCard(true)`). SQL `supabase/2026-11-moderator2.sql` treba spustiť.
+- Jednotný vzhľad: token `--sh-card`, rovnaké `--r` zaoblenie na nových kartách.
+
 ## Otvorené
+- Používateľ musí spustiť `supabase/2026-11-moderator2.sql` (zoznam rodičov a štatistiky v moderátorskom paneli).
 - Plus – návod pre používateľa (spraví neskôr): 1) https://dashboard.stripe.com/register 2) produkt Bystrík Plus 3,99 €/mes + 29,99 €/rok (Recurring) https://dashboard.stripe.com/products/create 3) 2× platobný odkaz, 7 dní zadarmo, presmerovanie na web, Test mode VYPNUTÝ https://dashboard.stripe.com/payment-links/create 4) SQL `supabase/2026-11-plus.sql` https://supabase.com/dashboard/project/nxxltcpjdvoxomogzwaj/sql/new → pošle odkazy buy.stripe.com, ja ich dám do `PLUS_CFG`.
 - Plus: Stripe účet + Payment Links do `PLUS_CFG`, spustiť SQL, nasadiť stripe-webhook + tajomstvá; potom AI cez server, týždenný e-mail (Resend, treba doménu), čítanka s hodnotením, kolekcia.
 - Kontaktný e-mail do zásad súkromia (spýtať sa používateľa – zatiaľ neodpovedal).
