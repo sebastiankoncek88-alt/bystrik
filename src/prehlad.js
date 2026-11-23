@@ -191,7 +191,7 @@ const PRV = [
     Ako sa volá zmena vody na ľad?|tuhnutie (mrznutie)|topenie;vyparovanie;var
     Čo vzniká, keď sa vodná para ochladí na studenom skle?|kvapky vody|ľad hneď;piesok;dym
     Prečo sa mláky po daždi stratia?|voda sa vyparí|voda zmrzne;voda zhorí;vypijú ju vtáky
-    Ako voláme kolobeh vody v prírode?|obeh vody|reťazec vody;kruh ohňa;ročné obdobie`) },
+    Ako voláme neustály pohyb vody v prírode (výpar, oblaky, dážď, rieky)?|kolobeh vody|reťazec vody;kruh ohňa;ročné obdobie`) },
   { id: 'p3-materialy', g: 3, type: 'qa', name: 'Materiály a triedenie odpadu', icon: '♻️', items: lines(`
     Čo priťahuje magnet?|železný klinec|drevená ceruzka;plastová lyžica;sklený pohár
     Z čoho sa vyrába papier?|z dreva|zo skla;z kameňa;z plastu
@@ -230,7 +230,7 @@ const PRV = [
     Kam pošleme list alebo balík?|na poštu|do lekárne;do školy;do obchodu s obuvou
     Ktoré číslo voláme v núdzi (jednotné európske)?|112|111;123;999
     Kto hasí požiare?|hasiči|policajti;lekári;poštári
-    Ako sa volá najväčší vrch Slovenska?|Gerlachovský štít|Kriváň;Lomnický štít;Chopok
+    Ako sa volá najvyšší vrch Slovenska?|Gerlachovský štít|Kriváň;Lomnický štít;Chopok
     Ktorá rieka preteká Bratislavou?|Dunaj|Váh;Hron;Morava`) },
   { id: 'p3-skola', g: 3, type: 'vocab', name: 'Angličtina: v škole', icon: '🎒', items: lines(`
     pen|pero|🖊️

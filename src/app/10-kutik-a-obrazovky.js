@@ -729,9 +729,9 @@ function nextStep() { const fb = $('#fb'); if (fb) fb.remove(); Q.i++; if (Q.i >
 /* odmena za prvé zvládnutie témy na plný počet (každá téma raz): oblečenie, kľúč alebo ×2 slniečka na 10 min */
 let TREW = null;
 function topicReward(p, id) {
-  const r = Math.random(); const free = shopItems(p).filter(([, it]) => it.price <= 200 && !p.owned.includes(it.sid) && !it.chest);
+  const r = Math.random(); const free = shopItems(p).filter(([, it]) => it.price <= 120 && !p.owned.includes(it.sid) && !it.chest);
   if (r < .4 && free.length) { const [c, it] = pick(free); p.owned.push(it.sid); return { k: 'item', c, it, id }; }
-  if (r < .8) { p.coins = (p.coins || 0) + 30; return { k: 'coins', v: 30, id }; }
+  if (r < .8) { p.coins = (p.coins || 0) + 15; return { k: 'coins', v: 15, id }; }
   p.boost = Date.now() + 10 * 60000; return { k: 'boost', id };
 }
 function showTopicReward(rw) {
@@ -1151,7 +1151,7 @@ function gHit(ok, el) {
   if (GM.lives <= 0) endGame();
 }
 function endGame() {
-  if (!GM || GM.ended) return; GM.ended = true; clearTimers(); const p = P(); const before = p.xp; const g = Math.round(Math.min(80, 10 + GM.score * 4) * DF().xp);
+  if (!GM || GM.ended) return; GM.ended = true; clearTimers(); const p = P(); const before = p.xp; const g = Math.round(Math.min(50, 5 + GM.score * 3) * DF().xp);
   gain(p, g); p.stats.games++; p.best[GM.k] = Math.max(p.best[GM.k] || 0, GM.score); bump('games'); logAct('game-' + GM.k, null, GM.score, 0); touchStreak(p); checkBadges(p); save();
   TIMERS.push(setTimeout(() => go('result', { kind: 'game', game: GM.k, score: GM.score, xp: g, bonus: 0, before, after: p.xp, back: { v: 'games', p: {} } }, 'u'), 400));
 }

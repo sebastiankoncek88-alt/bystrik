@@ -85,7 +85,7 @@ const ACT = {
   'dr-claim': (d, el) => { const p = P(); if (!drReady(p)) return; const dn = drNextDay(p); p.dailyReward = { last: today(), day: dn }; $('.over')?.remove(); confetti(120); touchStreak(p); drGrant(p, DR[dn - 1], el); if (UI.view === 'home' || UI.view === 'rewards') render(null); },
   claim: (d, el) => { const p = P(); const dd = ensureDay(p); if (dd.claimed.includes(d.id)) return; dd.claimed.push(d.id); p.stats.tasks++; checkBadges(p); const T = TASKS.find(x => x.id === d.id); confetti(50, .5); grant(T.xp, el); render(null); },
   'claim-bonus': (d, el) => { const p = P(); const dd = ensureDay(p); if (dd.bonus) return; dd.bonus = true; save(); openChest(50); },
-  jnode: d => jnodeOpen(d),
+  jnode: d => jnodeOpen(d), 'fact-close': () => factHide(),
   'rtab-go': d => { RTAB = d.t; go('rewards', {}, 'f'); },
   wcat: d => { WCAT = d.c; sfx('tap'); $$('.cats .chip').forEach(c => c.classList.toggle('on', c.dataset.c === d.c)); $('#witems').innerHTML = wardItems(); },
   wear: d => wear(d.i), color: d => setColor(d.s, d.i),

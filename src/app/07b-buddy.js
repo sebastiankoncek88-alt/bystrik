@@ -46,7 +46,33 @@ function buddyMood(m, txt) {
 function buddySayTxt(t) { if (Date.now() - BUDDYSAY < 2500) return; BUDDYSAY = Date.now(); try { say(t.replace(/\p{Extended_Pictographic}|️|‍/gu, '').trim()); } catch (er) { } }
 /* zábavný fakt v hornom pruhu s Bystríkom */
 let BUDDYFACT = Date.now();
-function buddyFact(speak) { BUDDYFACT = Date.now(); const f = pick(BUDDY_FACTS); try { hint('💡 Vedel si? ' + f, !speak); } catch (e) { } }
+/* Fun fakty 2.0: druhy faktov, vianočné v decembri, Bystrík vyskočí s „plop“ zvukom */
+const FACT_KINDS = {
+  zvieratka: { e: '🦒', n: 'Zvieratká', c: '#22A65A', f: ['Žirafa má rovnako veľa krčných stavcov ako človek, len sú oveľa dlhšie.', 'Kolibrík vie letieť aj dozadu.', 'Tučniaky si dávajú kamienky ako darček.', 'Slon je jediné zviera, ktoré nevie skákať.', 'Krava má najlepšiu kamarátku a je smutná, keď je bez nej.', 'Pavúk má na nohách chĺpky, ktorými cíti vibrácie.', 'Vydry sa pri spánku držia za labky, aby ich voda neodniesla.', 'Ježko má na chrbte asi päťtisíc bodlín.', 'Netopier vidí ušami: počúva ozvenu svojho piskotu.', 'Veverička zabudne, kam schovala veľa orieškov, a tak z nich vyrastú stromy.', 'Sliepka si pamätá viac ako sto tvárí.', 'Chameleón mení farbu podľa nálady.'] },
+  vesmir: { e: '🪐', n: 'Vesmír', c: '#6B4FE0', f: ['Na Venuši je deň dlhší ako celý jej rok.', 'Saturn je taký ľahký, že by na vode plával.', 'Svetlo zo Slnka letí na Zem asi osem minút.', 'Na Marse je zapadajúce Slnko modré.', 'Vo vesmíre je úplné ticho, lebo tam nie je vzduch.', 'Na Mesiaci by si vyskočil šesťkrát vyššie ako na Zemi.', 'Hviezd na oblohe je viac ako zrniek piesku na všetkých plážach.', 'Jupiter má viac ako deväťdesiat mesiacov.'] },
+  telo: { e: '🫀', n: 'Ľudské telo', c: '#E5484D', f: ['Keď kýchneš, srdce nezastane, len sa ti zavrú oči.', 'Tvoje kosti sú silnejšie ako betón.', 'Za život vyrastú človeku vlasy asi deväťsto kilometrov.', 'Najmenšia kosť v tele je v uchu a je menšia ako zrnko ryže.', 'Odtlačok tvojho jazyka je jedinečný ako odtlačok prsta.', 'Keď sa usmievaš, používaš asi dvanásť svalov.', 'Bábätko sa narodí bez kolenných jabĺčok, vyrastú mu neskôr.', 'Mozog pracuje aj vtedy, keď spíš, a triedi, čo si sa naučil.'] },
+  slovensko: { e: '🏔️', n: 'Slovensko', c: '#3E8EDE', f: ['Na Slovensku je najviac hradov a zámkov na počet obyvateľov v Európe.', 'Spišský hrad je jeden z najväčších hradov v strednej Európe.', 'V Dobšinskej ľadovej jaskyni je ľad aj v lete.', 'Bojnický zámok vyzerá ako z rozprávky.', 'Slovensko susedí s piatimi krajinami: Českom, Poľskom, Ukrajinou, Maďarskom a Rakúskom.', 'Kriváň je na slovenských jedno-, dvoj- a päťcentových minciach.', 'Ochtinská aragonitová jaskyňa má kryštály, ktoré vyzerajú ako ježkovia.', 'V Tatrách žije kamzík, ktorý skáče po skalách ako akrobat.'] },
+  jedlo: { e: '🍎', n: 'Jedlo', c: '#FF7A3D', f: ['Med sa nikdy nepokazí, ani po tisíckach rokov.', 'Jahoda má semienka na povrchu, asi dvesto na jednej.', 'Banány sú trochu rádioaktívne, ale úplne neškodne.', 'Mrkva bola kedysi fialová.', 'Arašidy nie sú oriešky, ale strukoviny ako hrach.', 'Jablko pláva na vode, lebo má v sebe vzduch.', 'Uhorka je z väčšej časti voda.', 'Čokoláda sa robí zo semien kakaovníka.'] },
+  mix: { e: '💡', n: 'Vedel si?', c: '#E0A100', f: null }
+};
+const FACT_XMAS = ['Prvý ozdobený vianočný stromček bol vraj v Rige alebo v Tallinne pred viac ako päťsto rokmi.', 'Na Slovensku sa na Štedrý večer tradične je kapustnica a kapor.', 'Pod obrus sa dáva šupina z kapra, aby boli peniaze celý rok.', 'Oblátky s medom a cesnakom sú na Štedrý večer pre zdravie a lásku.', 'Koledníci chodili po domoch so spevom a priali šťastie.', 'Snehová vločka má vždy šesť ramien, ale žiadne dve nie sú rovnaké.', 'Sob je jediný jeleň, ktorému rastú parohy aj samičkám.', 'Na Luciu 13. decembra sa podľa tradície vymetajú kúty husím krídlom.', 'Adventný veniec má štyri sviečky, jednu na každú nedeľu.', 'Vianočné svetielka vymysleli, aby nahradili skutočné sviečky na stromčeku.', 'Mikuláš bol skutočný biskup, ktorý pomáhal chudobným deťom.', 'Na Silvestra sa podľa tradície nevynáša smetie, aby sme si nevyniesli šťastie.', 'Medovníky sa pečú dopredu, lebo po pár dňoch zmäknú a sú lepšie.', 'Na Štedrý večer sa podľa zvyku necháva pri stole jedno miesto voľné pre pocestného.', 'Jablko rozkrojené na Štedrý večer prezradí, aký bude rok: hviezdička znamená zdravie.', 'Najväčší snehuliak na svete mal viac ako tridsať metrov.'];
+let FACTBOX = null;
+function buddyFact(speak) {
+  BUDDYFACT = Date.now(); const x = typeof XMAS === 'function' && XMAS() && Math.random() < .6;
+  let kind, text; if (x) { kind = { e: '🎄', n: 'Vianočný fakt', c: '#E23B4E', xmas: 1 }; text = pick(FACT_XMAS); }
+  else { const ks = Object.keys(FACT_KINDS); const k = pick(ks); kind = FACT_KINDS[k]; text = kind.f ? pick(kind.f) : pick(BUDDY_FACTS); }
+  factShow(kind, text, speak);
+}
+function factShow(kind, text, speak) {
+  try { if (FACTBOX) FACTBOX.remove(); } catch (e) { }
+  const w = document.createElement('div'); w.className = 'factpop' + (kind.xmas ? ' xmas' : ''); w.setAttribute('role', 'status'); w.style.setProperty('--fc', kind.c);
+  w.innerHTML = `<button class="fpbear" data-a="fact-close" aria-label="Zavrieť fakt">${bearSvg('hidle')}</button><div class="fpcard"><span class="fpchip">${kind.e} ${kind.n}</span><p>${esc(text)}</p><button class="fpx" data-a="fact-close" aria-label="Zavrieť">✕</button></div>${kind.xmas ? '<i class="fpsnow" aria-hidden="true"></i>' : ''}`;
+  document.body.appendChild(w); FACTBOX = w;
+  try { bub(420, 980, 0, .09, .11); mar(784, .1, .07, .35); mar(1175, .2, .05, .4); } catch (e) { }
+  if (speak) { try { say(text); } catch (e) { } }
+  setTimeout(() => factHide(w), Math.min(14000, 6000 + text.length * 60));
+}
+function factHide(w) { w = w || FACTBOX; if (!w || !w.isConnected) return; w.classList.add('out'); setTimeout(() => w.remove(), 450); if (w === FACTBOX) FACTBOX = null; }
 let BUDDYOK = 0;
 function buddyAnswer(ok) {
   if (ok) { BUDDYBAD = 0; BUDDYOK++; if (BUDDYOK % 3 === 0) buddyMood(pick(['dance', 'spin', 'cheer']), BUDDYOK + ' správne za sebou! 🔥'); else buddyMood(pick(['happy', 'wink', 'love', 'hop', 'laugh']), Math.random() < .4 ? pick(BUDDY_OK) : ''); }

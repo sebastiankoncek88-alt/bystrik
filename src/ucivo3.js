@@ -128,7 +128,7 @@ const U4_PRV = [
     Prečo je dôležité hovoriť pravdu?|aby nám ostatní dôverovali|aby sme sa vyhli práci;nie je to dôležité;aby sme vyhrali
     Kamarát ti povedal tajomstvo. Čo urobíš?|nechám si ho pre seba|poviem ho všetkým;napíšem ho na tabuľu;vysmejem ho
     Kedy tajomstvo povedať dospelému?|keď niekomu hrozí nebezpečenstvo|nikdy;vždy hneď;keď sa nudím
-    Našiel si na chodbe peňaženku. Čo urobíš?|odnesiem ju učiteľke|nechám si ju;vyhodím ju;minie sa na sladkosti
+    Našiel si na chodbe peňaženku. Čo urobíš?|odnesiem ju učiteľke|nechám si ju;vyhodím ju;miniem peniaze na sladkosti
     Čo znamená sľúbiť niečo?|že to naozaj urobíme|že to možno urobíme;že to nikdy neurobíme;nič
     Našiel si na chodbe cudziu peňaženku. Čo urobíš?|odovzdám ju učiteľke alebo vrátnikovi|nechám si ju;vyhodím ju;miniem peniaze
     Čo je klamstvo?|keď vedome nehovoríme pravdu|keď sa pomýlime pri počítaní;keď spievame;keď mlčíme pri čítaní
@@ -182,7 +182,7 @@ const U4_PRV = [
     Kto nosí deťom darčeky 6. decembra?|svätý Mikuláš|svätý Martin;Ježiško;Dedo Mráz
     Kto podľa legendy rozdelil plášť s chudobným?|svätý Martin|svätý Mikuláš;svätý Juraj;svätý Peter
     Kedy oslavujeme sviatok Cyrila a Metoda?|5. júla|1. januára;24. decembra;1. mája
-    Ktorý svätec je patrónom Slovenska spolu s Cyrilom a Metodom?|Sedembolestná Panna Mária|svätý Mikuláš;svätý Martin;svätý Valentín
+    Kto je patrónkou Slovenska?|Sedembolestná Panna Mária|svätý Mikuláš;svätý Martin;svätý Valentín
     Kedy si pripomíname sviatok Cyrila a Metoda?|5. júla|24. decembra;1. mája;6. januára
     Kto bol knieža Pribina?|vládca, za ktorého bol v Nitre posvätený kostol|kráľ z rozprávky;pápež;astronaut
     Ktorý svätý delil svoj plášť so žobrákom?|svätý Martin|svätý Juraj;svätý Peter;svätý Pavol

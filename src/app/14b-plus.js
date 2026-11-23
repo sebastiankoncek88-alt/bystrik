@@ -51,23 +51,51 @@ function plusCard() {
 }
 /* otvorí Plus kartu v rodičovských nastaveniach (len z rodičovskej časti) */
 function plusOpen() { if (UI.view !== 'parent') return; PTAB = 'set'; PSET_WANT = 'Bystrík Plus'; render(null); scrollTo({ top: 0 }); }
+/* ---- Moderátor: panel (štatistiky, používatelia, darovanie Plus) ---- */
+let MODP = { tab: 'users', users: null, stats: null, q: '', loading: 0, err: '' };
+async function modPanelLoad() { if (!ADMIN || MODP.loading) return; MODP.loading = 1; MODP.err = '';
+  try { const [u, s] = await Promise.all([sb('POST', 'rpc/admin_users', {}), sb('POST', 'rpc/admin_stats', {})]); MODP.users = u || []; MODP.stats = s || {}; } catch (e) { MODP.users = MODP.users || []; MODP.err = 'Zoznam sa nepodarilo načítať. Spustili ste SQL „moderátor 2“?'; }
+  MODP.loading = 0; if (UI.view === 'parent') render(null); }
+function modPanel() {
+  if (!ADMIN) return ''; if (MODP.users == null && !MODP.loading) setTimeout(modPanelLoad, 0);
+  const s = MODP.stats || {}; const tile = (v, n, e) => `<div class="mtile"><span>${e}</span><b>${v == null ? '…' : v}</b><small>${n}</small></div>`;
+  const tabs = [['users', '👥 Používatelia'], ['gift', '🎁 Darovať Plus']].map(([k, n]) => `<button class="${MODP.tab === k ? 'on' : ''}" data-a="modp-tab" data-t="${k}">${n}</button>`).join('');
+  let body = '';
+  if (MODP.tab === 'users') {
+    const q = MODP.q.trim().toLowerCase(); const L = (MODP.users || []).filter(u => !q || (u.email || '').toLowerCase().includes(q));
+    const d = x => x ? new Date(x).toLocaleDateString('sk-SK') : '–';
+    const badge = u => { const act = u.plus_status === 'active' || u.plus_status === 'trialing'; const live = act && (!u.plus_until || new Date(u.plus_until) > new Date()); return live ? (u.plus_plan === 'gift' ? '<em class="mb g">🎁 darované</em>' : '<em class="mb p">⭐ Plus</em>') : '<em class="mb">zadarmo</em>'; };
+    body = `<input class="field" id="modq" type="search" placeholder="Hľadať e-mail…" value="${esc(MODP.q)}" style="width:100%;box-sizing:border-box" oninput="window.bysModQ(this)">
+    <p class="muted b" style="margin:6px 0;font-size:.8rem">${MODP.users == null ? 'Načítavam…' : `${L.length} z ${(MODP.users || []).length} rodičov`}</p>
+    <div class="mulist">${L.slice(0, 200).map(u => { const gifted = u.plus_plan === 'gift' && u.plus_status === 'active'; return `<div class="murow"><div class="grow"><b>${esc(u.email || '(bez e-mailu)')}</b><small>Registrácia ${d(u.created_at)} · naposledy ${d(u.last_sign_in_at)}</small></div>${badge(u)}<button class="btn small" data-a="${gifted ? 'mod-revoke' : 'modp-gift'}" data-e="${esc(u.email || '')}">${gifted ? 'Zrušiť' : '🎁 Rok'}</button></div>`; }).join('')}</div>`;
+  } else body = modCard(true);
+  return `<section class="card pcard modcard"><span class="eyebrow">🛡️ Moderátorský účet · máš všetko zadarmo</span>
+  <div class="mtiles">${tile(s.users, 'rodičov', '👨‍👩‍👧')}${tile(s.active7, 'aktívnych za 7 dní', '🔥')}${tile(s.new7, 'nových za 7 dní', '✨')}${tile(s.plus, 'platí Plus', '⭐')}${tile(s.gifts, 'darované Plus', '🎁')}</div>
+  <div class="mtabs">${tabs}</div>${MODP.err ? `<p class="b" style="color:var(--bad)">${esc(MODP.err)}</p>` : ''}${body}
+  <button class="linkbtn" data-a="modp-refresh">↻ Obnoviť</button></section>`;
+}
+window.bysModQ = el => { MODP.q = el.value; clearTimeout(window._mq); window._mq = setTimeout(() => { const ps = el.selectionStart; render(null); const i = document.getElementById('modq'); if (i) { i.focus(); try { i.setSelectionRange(ps, ps); } catch (e) { } } }, 350); };
+ACT['modp-tab'] = d => { MODP.tab = d.t; render(null); };
+ACT['modp-refresh'] = () => { MODP.users = null; MODP.stats = null; MOD.list = null; render(null); };
+ACT['modp-gift'] = async d => { if (!d.e) return; try { const r = await sb('POST', 'rpc/grant_plus', { target_email: d.e, days: 365 }); toast(r === 'ok' ? `🎁 Plus na rok pre ${d.e}` : 'Účet sa nenašiel'); } catch (x) { toast('Nepodarilo sa'); } MODP.users = null; MODP.stats = null; MOD.list = null; render(null); };
+
 /* ---- Moderátor: darovanie Plus ---- */
 let MOD = { list: null, busy: false, msg: '' };
-function modCard() {
+function modCard(inPanel) {
   if (!ADMIN) return ''; if (MOD.list == null && !MOD.loading) { MOD.loading = 1; setTimeout(() => modLoad().finally(() => { MOD.loading = 0; }), 0); }
   const rows = MOD.list == null ? '<p class="muted b" style="margin:0">Načítavam…</p>' : MOD.list.length ? MOD.list.map(g => `<div class="modrow"><span class="grow"><b>${esc(g.email)}</b><small>${g.status === 'active' ? 'do ' + new Date(g.until).toLocaleDateString('sk-SK') : 'zrušené'}</small></span>${g.status === 'active' ? `<button class="btn small" data-a="mod-revoke" data-e="${esc(g.email)}">Zrušiť</button>` : ''}</div>`).join('') : '<p class="muted b" style="margin:0">Zatiaľ si nikomu Plus nedaroval.</p>';
-  return `<section class="card pcard modcard"><span class="eyebrow">🛡️ Moderátor · máš všetko zadarmo</span><p class="b" style="margin:4px 0 8px">Daruj Bystrík Plus inému rodičovi. Napíš e-mail, ktorým sa prihlasuje v Bystríkovi.</p>
+  return `<div class="modgift"><p class="b" style="margin:4px 0 8px">Daruj Bystrík Plus inému rodičovi. Napíš e-mail, ktorým sa prihlasuje v Bystríkovi.</p>
   <input class="field" id="modmail" type="email" inputmode="email" autocapitalize="off" autocomplete="off" placeholder="rodic@email.sk" style="width:100%;box-sizing:border-box">
   <div class="moddays" role="group" aria-label="Na ako dlho">${[[30, '1 mesiac'], [365, '1 rok'], [36500, 'Navždy']].map(([d, n], i) => `<button class="${(MOD.days || 365) === d ? 'on' : ''}" data-a="mod-days" data-d="${d}">${n}</button>`).join('')}</div>
   <button class="btn primary block" data-a="mod-grant" ${MOD.busy ? 'disabled' : ''}>🎁 Darovať Plus</button>${MOD.msg ? `<p class="b" style="margin:6px 0 0">${esc(MOD.msg)}</p>` : ''}
-  <span class="eyebrow" style="margin-top:12px">Darované</span><div class="modlist">${rows}</div></section>`;
+  <span class="eyebrow" style="margin-top:12px">Darované</span><div class="modlist">${rows}</div></div>`;
 }
 async function modLoad() { if (!ADMIN) return; try { MOD.list = await sb('POST', 'rpc/list_gifts', {}) || []; } catch (e) { MOD.list = []; MOD.msg = 'Zoznam sa nepodarilo načítať. Spustili ste SQL pre moderátora?'; } if (UI.view === 'parent') render(null); }
 ACT['mod-days'] = d => { MOD.days = +d.d; render(null); };
 ACT['mod-grant'] = async () => { const e = ($('#modmail') || {}).value || ''; if (!/^\S+@\S+\.\S+$/.test(e.trim())) { toast('Napíšte platný e-mail'); return; } MOD.busy = true; MOD.msg = ''; render(null);
   try { const r = await sb('POST', 'rpc/grant_plus', { target_email: e.trim(), days: MOD.days || 365 }); MOD.msg = r === 'ok' ? `✓ Plus darovaný pre ${e.trim()}.` : 'Taký účet v Bystríkovi nie je. Rodič sa musí najprv prihlásiť e-mailom.'; } catch (x) { MOD.msg = 'Nepodarilo sa. Skontrolujte pripojenie alebo SQL pre moderátora.'; }
-  MOD.busy = false; MOD.list = null; render(null); modLoad(); };
-ACT['mod-revoke'] = async d => { try { await sb('POST', 'rpc/revoke_plus', { target_email: d.e }); toast('Plus zrušený'); } catch (x) { toast('Nepodarilo sa zrušiť'); } MOD.list = null; render(null); modLoad(); };
+  MOD.busy = false; MOD.list = null; MODP.users = null; MODP.stats = null; render(null); modLoad(); };
+ACT['mod-revoke'] = async d => { try { await sb('POST', 'rpc/revoke_plus', { target_email: d.e }); toast('Plus zrušený'); } catch (x) { toast('Nepodarilo sa zrušiť'); } MOD.list = null; MODP.users = null; MODP.stats = null; render(null); modLoad(); };
 
 /* viditeľná ponuka Plus */
 const PLUS_SHOW = () => !isPlus() && !(window.claude && window.claude.use);

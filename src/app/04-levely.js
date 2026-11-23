@@ -1,5 +1,8 @@
 /* ===== Levely, odmeny ===== */
-const need = L => 60 + 30 * (L - 1);
+const needOld = L => 60 + 30 * (L - 1);
+const need = L => 90 + 50 * (L - 1) + 4 * (L - 1) * (L - 1);
+/* prevod starých bodov na nové levely: level a rozrobený postup ostanú rovnaké */
+function xpMigrate(p) { if (!p || p.xpv === 2) return; let L = 1, r = p.xp || 0; while (r >= needOld(L)) { r -= needOld(L); L++; } const fr = r / needOld(L); let x = 0; for (let k = 1; k < L; k++) x += need(k); p.xp = Math.round(x + fr * need(L)); p.xpv = 2; }
 function levelInfo(xp) { let L = 1, r = xp; while (r >= need(L)) { r -= need(L); L++; } return { L, cur: r, need: need(L), pct: Math.round(r / need(L) * 100) }; }
 const TITLES = ['Zvedavé vajíčko', 'Malý bystrík', 'Šikovná hlávka', 'Pátrač', 'Objaviteľ', 'Vynálezca', 'Majster slov', 'Kráľ čísel', 'Profesor', 'Génius', 'Legenda'];
 const title = L => TITLES[Math.min(TITLES.length - 1, Math.floor(L / 2))];

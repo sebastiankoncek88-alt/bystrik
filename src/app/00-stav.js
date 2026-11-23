@@ -13,7 +13,7 @@ function normalize() {
   if (DATA.lbOpt === 1) { DATA.settings.lb = true; DATA.lbOpt = 2; DATA.lbDel = 0; } /* rebríček predvolene zapnutý, rodič ho môže vypnúť */
   if (!DATA.settings.glimFree) { if (DATA.settings.gameLimit === 2) DATA.settings.gameLimit = 0; DATA.settings.glimFree = 1; }
   DATA.parent = DATA.parent || { pin: null };
-  DATA.profiles.forEach(migrate);
+  DATA.profiles.forEach(migrate); DATA.profiles.forEach(p => { try { xpMigrate(p); } catch (e) { } });
 }
 function migrate(p) {
   const g = p.av && p.av.gender === 'd' ? 'd' : 'c'; const d = defaultAvatar(g); const old = p.av || {};

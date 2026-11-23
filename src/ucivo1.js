@@ -23,7 +23,7 @@ const U1_SJL = [
     Ktoré slovo je napísané správne?|múka|muka;muká;múká
     Ktoré slovo je napísané správne?|ráno|rano;ranó;ránó
     Ktoré slovo je napísané správne?|ryba|rýba;rybá;rýbá
-    Ktoré slovo je napísané správne?|víla|vila;vilá;vílá
+    Ktoré slovo je napísané správne?|víla|vilá;vílá;víľa
     Ktoré slovo je napísané správne?|noha|nóha;nohá;nóhá
     Ktoré slovo je napísané správne?|máme|mame;mamé;mámé
     Ktoré slovo je napísané správne?|koza|kóza;kozá;kózá

@@ -36,13 +36,13 @@ function bump(k, n = 1) {
 function logAct(k, id, c, n) { const p = P(); if (p && k !== 'gift' && k !== 'ptask' && k !== 'rread') { bearInit(p); p.bear.honey = Math.min(5, (p.bear.honey || 0) + 1); } if (k !== 'gift' && k !== 'ptask') { const wk = weekId(); if (!p.wk || p.wk.w !== wk) p.wk = { w: wk, xp: 0 }; p.wk.n = (p.wk.n || 0) + 1; dyOf(p).n++; const dd = p.days[today()] || (p.days[today()] = { q: 0, c: 0 }); dd.n = (dd.n || 0) + 1; } p.log.unshift({ t: Date.now(), k, id, c, n }); if (p.log.length > 300) p.log.length = 300; }
 function countDay(ok) { const p = P(); const d = p.days[today()] || (p.days[today()] = { q: 0, c: 0 }); d.q++; if (ok) d.c++; }
 /* denná odmena: každý deň iný darček, 7. deň oblečenie */
-const DR = [{ k: 'coins', v: 15, i: '🪙', t: '15 slniečok' }, { k: 'xp', v: 30, i: '⭐', t: '30 bodov' }, { k: 'coins', v: 20, i: '🪙', t: '20 slniečok' }, { k: 'coins', v: 25, i: '🪙', t: '25 slniečok' }, { k: 'boost', v: 15, i: '✖️2️⃣', t: '×2 slniečka' }, { k: 'mix', v: 40, xp: 50, i: '🎁', t: '40 slniečok + 50 bodov' }, { k: 'item', i: '👕', t: 'oblečenie' }];
+const DR = [{ k: 'coins', v: 8, i: '🪙', t: '8 slniečok' }, { k: 'xp', v: 20, i: '⭐', t: '20 bodov' }, { k: 'coins', v: 10, i: '🪙', t: '10 slniečok' }, { k: 'coins', v: 12, i: '🪙', t: '12 slniečok' }, { k: 'boost', v: 10, i: '✖️2️⃣', t: '×2 slniečka' }, { k: 'mix', v: 20, xp: 30, i: '🎁', t: '20 slniečok + 30 bodov' }, { k: 'item', i: '👕', t: 'oblečenie' }];
 DR.forEach(x => x.xp = x.xp || (x.k === 'xp' ? x.v : 0));
 const drReady = p => p.dailyReward.last !== today();
 const drNextDay = p => p.dailyReward.last === daysAgo(1) ? (p.dailyReward.day % 7) + 1 : 1;
 let PENDING = [];
 const dyOf = p => { const t = today(); if (!p.dy || p.dy.d !== t) p.dy = { d: t, n: 0, xp: 0 }; return p.dy; };
-function gain(p, n) { const wk = weekId(); if (!p.wk || p.wk.w !== wk) p.wk = { w: wk, xp: 0 }; p.wk.xp += n; dyOf(p).xp += n; p.xp += n; /* slniečka: 1 za 10 bodov (zvyšok sa zbiera), počas ×2 dvojnásobne */ const boost = (p.boost || 0) > Date.now() ? 2 : 1; p.cf = (p.cf || 0) + n / 10 * boost; const c = Math.floor(p.cf); p.cf -= c; p.coins = (p.coins || 0) + c; }
+function gain(p, n) { const wk = weekId(); if (!p.wk || p.wk.w !== wk) p.wk = { w: wk, xp: 0 }; p.wk.xp += n; dyOf(p).xp += n; p.xp += n; /* slniečka: 1 za 15 bodov (zvyšok sa zbiera), počas ×2 dvojnásobne */ const boost = (p.boost || 0) > Date.now() ? 2 : 1; p.cf = (p.cf || 0) + n / 15 * boost; const c = Math.floor(p.cf); p.cf -= c; p.coins = (p.coins || 0) + c; }
 function addXp(n) { const p = P(); const a = levelInfo(p.xp).L; gain(p, n); const b = levelInfo(p.xp).L; return { from: a, to: b }; }
 function flushPending() { if ($('.over')) return; const x = PENDING.shift(); if (x) showRewardOverlay(x); }
 function coinFly(el, k = 6) {
