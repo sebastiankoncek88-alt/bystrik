@@ -181,10 +181,32 @@ function autoEx(q) {
   return '';
 }
 /* rozsah čísel rastie počas školského roka (index = mesiac školského roka 0 = september … 9 = jún) */
-const NUM_CAP = { 1: [5, 5, 10, 10, 10, 20, 20, 20, 20, 20], 2: [20, 20, 50, 100, 100, 100, 100, 100, 100, 100], 3: [100, 100, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000], 4: [1000, 1000, 10000, 10000, 10000, 10000, 10000, 10000, 10000, 10000] };
+const NUM_CAP = { 1: [5, 5, 10, 10, 10, 20, 20, 20, 20, 20], 2: [20, 20, 50, 50, 100, 100, 100, 100, 100, 100], 3: [100, 100, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000], 4: [1000, 1000, 10000, 10000, 10000, 10000, 10000, 10000, 10000, 10000] };
 function numCap(t) { try { const p = typeof P === 'function' && P(); if (!p || t.s !== 'mat' || t.g !== p.grade || !NUM_CAP[t.g] || typeof schoolMonth !== 'function') return Infinity; return NUM_CAP[t.g][schoolMonth()]; } catch (e) { return Infinity; } }
 function maxNum(g) { const s = [g.q, g.html ? String(g.html).replace(/<[^>]+>/g, ' ') : '', g.a].join(' ').replace(/(\d)[\s\u00a0\u202f](?=\d{3}\b)/g, '$1'); const m = s.match(/\d+/g); return m ? Math.max(...m.map(Number)) : 0; }
-function genCapped(t) { const cap = numCap(t); let g = t.gen(); if (cap === Infinity) return g; let best = g, bm = maxNum(g); for (let i = 0; i < 25 && bm > cap; i++) { g = t.gen(); const m = maxNum(g); if (m < bm) { best = g; bm = m; } } return best; }
+/* prechod cez desiatku/stovku pri dvoj- a trojciferných číslach (napr. 37 + 48, 63 − 29) */
+function hasCarry(g) {
+  const s = String(g.q || '').replace(/(\d)[\s  ](?=\d{3}\b)/g, '$1').replace(/−/g, '-'); const m = s.match(/\d+|[+\-]/g); if (!m) return false;
+  let acc = null, op = null, carry = false;
+  for (const x of m) { if (x === '+' || x === '-') { op = x; continue; } const n = +x; if (acc === null) { acc = n; continue; } if (!op) { acc = n; continue; }
+    if (Math.max(acc, n) >= 10) { if (op === '+' && (acc % 10) + (n % 10) >= 10 && !(acc < 10 && n < 10)) carry = true; if (op === '-' && (acc % 10) < (n % 10) && acc >= 10) carry = true;
+      if (op === '+' && acc >= 100 && (Math.floor(acc / 10) % 10) + (Math.floor(n / 10) % 10) >= 10) carry = true; if (op === '-' && acc >= 100 && (Math.floor(acc / 10) % 10) < (Math.floor(n / 10) % 10)) carry = true; }
+    acc = op === '+' ? acc + n : acc - n; op = null; }
+  return carry;
+}
+/* kedy sa v škole preberá sčítanie/odčítanie s prechodom (mesiac školského roka 0 = september) */
+const CARRY_FROM = { 2: 5, 3: 4, 4: 0 };
+const NO_CARRY_OK = { 'm2-prechod': 1 };
+/* ako sa dieťaťu darí v téme (posledné odpovede) – keď málo, ľahšie čísla */
+function topicWeak(t) { try { const p = P(); const ts = p && p.topics && p.topics[t.id]; return !!(ts && ts.total >= 6 && ts.correct / ts.total < .55); } catch (e) { return false; } }
+function genCapped(t) {
+  let cap = numCap(t); let g = t.gen(); if (cap === Infinity) return g;
+  const weak = topicWeak(t); if (weak) cap = Math.max(t.g <= 1 ? 10 : 20, Math.round(cap / 2));
+  let noCarry = false; try { noCarry = !NO_CARRY_OK[t.id] && (weak || (CARRY_FROM[t.g] != null && schoolMonth() < CARRY_FROM[t.g])); } catch (e) { }
+  const score = x => (maxNum(x) > cap ? 2 : 0) + (noCarry && hasCarry(x) ? 1 : 0);
+  let best = g, bs = score(g); for (let i = 0; i < 40 && bs > 0; i++) { g = t.gen(); const s = score(g); if (s < bs) { best = g; bs = s; } }
+  return best;
+}
 function makeQuestion(t, mode) {
   let q;
   if (t.gen) {
