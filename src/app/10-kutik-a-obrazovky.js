@@ -1313,8 +1313,8 @@ async function askBot(q) {
 
 /* --- kalkulačka --- */
 let CALC = { cur: '0', acc: null, op: null, fresh: true, hist: '' };
-const HELP_TABS = { mat: [['calc', '🧮 Kalkulačka'], ['nasob', '✖️ Násobilka'], ['jedn', '📏 Jednotky']], sjl: [['abc', '🔤 Abeceda'], ['hlasky', '🗣️ Hlásky'], ['vybrane', '🐂 Vybrané slová'], ['druhy', '🏷️ Slovné druhy'], ['vety', '💬 Vety']] };
-let HELPTAB = { mat: 'calc', sjl: 'vybrane' };
+const HELP_TABS = { mat: [['nasob', '✖️ Násobilka'], ['jedn', '📏 Jednotky']], sjl: [['abc', '🔤 Abeceda'], ['hlasky', '🗣️ Hlásky'], ['vybrane', '🐂 Vybrané slová'], ['druhy', '🏷️ Slovné druhy'], ['vety', '💬 Vety']] };
+let HELPTAB = { mat: 'nasob', sjl: 'vybrane' };
 /* 1. ročník: namiesto kalkulačky počítacia os so žabkou */
 const HELP_TABS1 = [['os', '🐸 Počítacia os']];
 /* najväčšie číslo v aktuálnej otázke: pri číslach nad 20 ponúkneme aj kalkulačku */
@@ -1337,9 +1337,9 @@ function helpBody(s, t) {
   return '';
 }
 function openHelp(s) {
-  closeSheet(); sfx('whoosh'); const g1 = s !== 'sjl' && P() && P().grade <= 2; const big = g1 && qMaxNum() > 20; const tabs = g1 ? (big ? [['calc', '🧮 Kalkulačka'], ...HELP_TABS1] : HELP_TABS1) : (HELP_TABS[s] || HELP_TABS.mat); const t = big ? 'calc' : tabs.some(x => x[0] === HELPTAB[s]) ? HELPTAB[s] : tabs[0][0];
+  closeSheet(); sfx('whoosh'); const g1 = s !== 'sjl' && P() && P().grade <= 2; const tabs = g1 ? HELP_TABS1 : (HELP_TABS[s] || HELP_TABS.mat); const t = tabs.some(x => x[0] === HELPTAB[s]) ? HELPTAB[s] : tabs[0][0];
   const w = document.createElement('div'); w.id = 'sheetwrap';
-  w.innerHTML = `<div class="calcdock helpdock" role="dialog" aria-label="Pomôcky od Bystríka"><div class="calchead"><span class="hb">${bearSvg('')}<span>${g1 && !big ? 'Počítacia os' : 'Pomôcky od Bystríka'}</span></span><button class="iconbtn press" data-a="close-sheet" aria-label="Zavrieť pomôcky">✕</button></div>${tabs.length > 1 ? `<div class="chips htabs">${tabs.map(([k, n]) => `<button class="chip ${k === t ? 'on' : ''}" data-a="help-tab" data-s="${s}" data-t="${k}">${n}</button>`).join('')}</div>` : ''}<div class="hbody" id="hbody">${helpBody(s, t)}</div></div>`;
+  w.innerHTML = `<div class="calcdock helpdock" role="dialog" aria-label="Pomôcky od Bystríka"><div class="calchead"><span class="hb">${bearSvg('')}<span>${g1 ? 'Počítacia os' : 'Pomôcky od Bystríka'}</span></span><button class="iconbtn press" data-a="close-sheet" aria-label="Zavrieť pomôcky">✕</button></div>${tabs.length > 1 ? `<div class="chips htabs">${tabs.map(([k, n]) => `<button class="chip ${k === t ? 'on' : ''}" data-a="help-tab" data-s="${s}" data-t="${k}">${n}</button>`).join('')}</div>` : ''}<div class="hbody" id="hbody">${helpBody(s, t)}</div></div>`;
   document.body.appendChild(w); document.body.classList.add('calcopen'); scrollTo({ top: 0, behavior: 'smooth' }); if (t === 'os') setTimeout(() => nlDraw(), 60);
 }
 function openCalc() {
