@@ -70,7 +70,7 @@ Písanie priateľom je predvolene vypnuté (`DATA.settings.msgOk`). Úsporný re
 - Bystrík počúva čítanie: počas nahrávania beží rozpoznávanie reči (`SRC` = SpeechRecognition, sk-SK, `srStart/srStop/srApply`, fuzzy zhoda `srMatch`), prečítané slová `.rw.ok` (zelené), ďalšie `.rw.cur`; po skončení `RD.cov` % a karta `.rcov` „Bystrík počul X z Y slov“, uloží sa do `reading.cov` a rodič to vidí. Bez rozpoznávania reči sa slová neoznačujú (náhodné žlté posúvanie zrušené).
 - Mikrofón na iPhone: počas nahrávania `navigator.audioSession.type='play-and-record'` (režim 'playback' z audioUnlock blokoval mikrofón), po skončení späť 'playback'. Pred prvým nahrávaním vlastné okno `micAsk()` „Povoliť mikrofón“ (`DATA.micOk`, akcia mic-allow), po chybe (nie zamietnutí) raz znova `micAsk(true)`.
 - Darček za level: tlačidlo „Super!“ (`ov-super`) najprv otvorí darček, druhým ťuknutím zavrie.
-- SW cache zvyšovať pri každom nasadení s viditeľnou zmenou (teraz v72).
+- SW cache zvyšovať pri každom nasadení s viditeľnou zmenou (teraz v73).
 - Fun fakty (`BUDDY_FACTS`, 41 faktov): každé ~3 min mimo kvízu/hier/čítania/rodiča (kontrola každých 15 s) + po výsledku kvízu s ≥1 hviezdou 50 % šanca, ak posledný bol pred >90 s.
 - Rebríček: pri načítaní sa hráč hneď zapíše (`LBSELF`), obnova každých 30 s na obrazovke + tlačidlo `lb-refresh`, karta „Včerajší víťazi“ (`LB.yest`).
 - AI Bystrík: odpovede max 2–3 krátke vety (`tutorIntro`), chat `max: 400` (v artefakte sa max/effort nepošlú).
