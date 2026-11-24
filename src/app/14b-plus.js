@@ -10,7 +10,7 @@ const isPlus = () => ADMIN || !!(PLUS && ['active', 'trialing'].includes(PLUS.st
 const plusFree = () => !PLUS_CFG.month && !PLUS_CFG.year;
 const hasPlus = () => isPlus() || plusFree();
 async function plusLoad() {
-  if (!SUPA_ON() || !AUTH || !AUTH.uid) return; try { await plusLoad0(); } finally { setTimeout(giftCheck, 600); }
+  if (!SUPA_ON() || !AUTH || !AUTH.uid) return; try { await plusLoad0(); } finally { setTimeout(giftCheck, 600); setTimeout(coinGiftCheck, 900); }
 }
 async function plusLoad0() {
   try { const a = await sb('POST', 'rpc/am_admin', {}); ADMIN = a === true; try { localStorage.setItem('bystrik.admin', ADMIN ? '1' : '0'); } catch (e) { } } catch (e) { /* funkcia ešte nie je */ }
@@ -96,7 +96,9 @@ function modPanel() {
     <div class="mkids">${DATA.profiles.map(x => `<button class="${x.id === kid.id ? 'on' : ''}" data-a="modp-kid" data-id="${x.id}"><span>${avatarSvg(x.av, { crop: 'head' })}</span><b>${esc(x.name)}</b><small>${COIN} ${x.coins || 0}</small></button>`).join('')}</div>
     <div class="mcoins">${[100, 500, 1000, 5000].map(n => `<button class="btn" data-a="modp-coins" data-n="${n}">+${n} ${COIN}</button>`).join('')}</div>
     <div class="mcust"><input class="field" id="modcoins" type="number" inputmode="numeric" min="1" max="100000" placeholder="Vlastný počet"><button class="btn primary" data-a="modp-coins" data-n="custom">Pridať</button></div>
-    <button class="linkbtn" data-a="modp-coins" data-n="reset" style="margin-top:6px">Nastaviť na 0</button>`;
+    <button class="linkbtn" data-a="modp-coins" data-n="reset" style="margin-top:6px">Nastaviť na 0</button>
+    <h4 style="margin:16px 0 4px;font-family:var(--f-display)">📧 Poslať na iný účet</h4><p class="muted b" style="font-size:.8rem;margin:0 0 6px">Napíšte e-mail rodiča. Slniečka dostane jeho dieťa pri najbližšom otvorení Bystríka.</p>
+    <input class="field" id="modcmail" type="email" autocomplete="off" placeholder="email@rodica.sk" style="width:100%;box-sizing:border-box;margin-bottom:8px"><div class="mcust"><input class="field" id="modcamt" type="number" inputmode="numeric" min="1" max="100000" placeholder="Počet slniečok"><button class="btn primary" data-a="modp-send">Poslať</button></div><p class="b" id="modcmsg" style="font-size:.85rem;margin:6px 0 0"></p>`;
   } else body = modCard(true);
   return `<section class="card pcard modcard"><span class="eyebrow">🛡️ Moderátorský účet · máš všetko zadarmo</span>
   <div class="mtiles">${tile(s.users, 'rodičov', '👨‍👩‍👧')}${tile(s.active7, 'aktívnych za 7 dní', '🔥')}${tile(s.new7, 'nových za 7 dní', '✨')}${tile(s.plus, 'platí Plus', '⭐')}${tile(s.gifts, 'darované Plus', '🎁')}</div>
@@ -206,3 +208,12 @@ Object.assign(ACT, {
   'plan-free': () => { DATA.planChosen = 'free'; save(); sfx('tap'); boot(); },
   'plan-plus': d => { const u = plusLink(d.k || 'month'); DATA.planChosen = 'plus'; save(); if (u) { sfx('tap'); location.href = u; return; } toast('Bystrík Plus spúšťame čoskoro. Dovtedy máte všetky funkcie zadarmo. 🎉'); sfx('coin'); boot(); }
 });
+
+ACT['modp-send'] = async () => { if (!ADMIN) return; const e = (($('#modcmail') || {}).value || '').trim(), n = Math.floor(+(($('#modcamt') || {}).value || 0)), m = $('#modcmsg');
+  const msg = t => { if (m) m.textContent = t; };
+  if (!/^\S+@\S+\.\S+$/.test(e)) return msg('Napíšte platný e-mail.'); if (!(n > 0 && n <= 100000)) return msg('Počet od 1 do 100 000.');
+  msg('⏳ Posielam…'); try { const r = await sb('POST', 'rpc/admin_give_coins', { target_email: e, amount: n }); msg(r === 'ok' ? `✓ ${n} slniečok poslaných pre ${e}.` : r === 'none' ? 'Taký účet v Bystríkovi nie je.' : 'Nepodarilo sa.'); } catch (x) { msg('Nepodarilo sa. Spustili ste SQL 2026-11-slniecka.sql?'); } };
+/* darované slniečka od moderátora: vyzdvihnú sa pri načítaní */
+async function coinGiftCheck() { try { if (!(SUPA_ON() && AUTH)) return; const n = await sb('POST', 'rpc/claim_coins', {}); if (!(n > 0)) return; const p = P(); if (!p) return; p.coins = (p.coins || 0) + n; p.log.unshift({ t: Date.now(), k: 'gift', id: null, c: n, n: 0 }); save();
+  const show = k => { if (document.querySelector('.over') || ['quiz', 'game', 'login', 'onboard'].includes(UI.view)) { if (k < 40) setTimeout(() => show(k + 1), 1000); return; } const o = document.createElement('div'); o.className = 'over'; o.innerHTML = `<div class="card box">${bearSvg('cheer')}<h2>🎁 Darček!</h2><p class="b">Bystrík ti posiela slniečka.</p><div style="font:900 2.6rem var(--f-display)">+${n} ${COIN}</div><button class="btn primary block" data-a="ov-close">Paráda!</button></div>`; document.body.appendChild(o); sfx('level'); try { confetti(140, .3); } catch (e) { } say('Darček! Dostal si ' + n + ' slniečok.'); if (['home', 'me', 'shop'].includes(UI.view)) render(null); };
+  show(0); } catch (e) { } }

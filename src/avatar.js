@@ -21,10 +21,10 @@ const CATALOG = {
     { id: 'kratke', n: 'Krátke', g: 'c' }, { id: 'strapate', n: 'Strapaté', g: 'c' }, { id: 'jezko', n: 'Ježko', g: 'c' }, { id: 'patka', n: 'S patkou', g: 'c' }, { id: 'miska', n: 'Mikádo', g: 'c' }, { id: 'vlnkyk', n: 'Vlnité', g: 'c' },
     { id: 'bokom', n: 'Ofina nabok', g: 'c' }, { id: 'afro', n: 'Afro', g: 'c' }, { id: 'kucery', n: 'Kučery', g: 'c', lvl: 3 }, { id: 'surfer', n: 'Dlhšie', g: 'c', lvl: 6 }, { id: 'cirok', n: 'Čírka', g: 'c', lvl: 9 }, { id: 'samuraj', n: 'Samurajský drdol', g: 'c', lvl: 13 },
     { id: 'dlhe', n: 'Dlhé rovné', g: 'd' }, { id: 'vlny', n: 'Dlhé vlnité', g: 'd' }, { id: 'vrkoce', n: 'Copíky', g: 'd' }, { id: 'chvost', n: 'Chvost', g: 'd' }, { id: 'ofina', n: 'Mikádo', g: 'd' }, { id: 'drdol', n: 'Drdol', g: 'd' },
-    { id: 'pixie', n: 'Krátke s ofinou', g: 'd' }, { id: 'bocny', n: 'Chvost nabok', g: 'd' }, { id: 'dva', n: 'Dva drdoly', g: 'd', lvl: 3 }, { id: 'vrkoc', n: 'Vrkoč', g: 'd', lvl: 4 }, { id: 'kuceryd', n: 'Dlhé kučery', g: 'd', lvl: 7 }, { id: 'vysoky', n: 'Vysoký chvost', g: 'd', lvl: 13 }, { id: 'venec', n: 'Venček z vrkoča', g: 'd', lvl: 16 }, { id: 'princ', n: 'Princeznovský', g: 'd', lvl: 19 }
+    { id: 'quiff', n: 'Vlna hore', g: 'c', price: 160 }, { id: 'dlofina', n: 'Dlhá ofina', g: 'c', price: 190 }, { id: 'dvachv', n: 'Dva chvostíky', g: 'd', price: 160 }, { id: 'masla', n: 'S mašľou', g: 'd', price: 210 }, { id: 'pixie', n: 'Krátke s ofinou', g: 'd' }, { id: 'bocny', n: 'Chvost nabok', g: 'd' }, { id: 'dva', n: 'Dva drdoly', g: 'd', lvl: 3 }, { id: 'vrkoc', n: 'Vrkoč', g: 'd', lvl: 4 }, { id: 'kuceryd', n: 'Dlhé kučery', g: 'd', lvl: 7 }, { id: 'vysoky', n: 'Vysoký chvost', g: 'd', lvl: 13 }, { id: 'venec', n: 'Venček z vrkoča', g: 'd', lvl: 16 }, { id: 'princ', n: 'Princeznovský', g: 'd', lvl: 19 }
   ],
-  eyes: [{ id: 'bodky', n: 'Bodky' }, { id: 'velke', n: 'Veľké' }, { id: 'stastne', n: 'Šťastné', lvl: 2 }, { id: 'mrk', n: 'Žmurk', lvl: 6 }, { id: 'hviezdy', n: 'Hviezdičky', lvl: 11 }, { id: 'srdce', n: 'Srdiečka', lvl: 13 }],
-  mouth: [{ id: 'usmev', n: 'Úsmev' }, { id: 'smiech', n: 'Smiech' }, { id: 'o', n: 'Údiv', lvl: 3 }, { id: 'jazyk', n: 'Jazýček', lvl: 5 }, { id: 'zuby', n: 'Zúbky', lvl: 8 }],
+  eyes: [{ id: 'bodky', n: 'Bodky' }, { id: 'velke', n: 'Veľké' }, { id: 'stastne', n: 'Šťastné', lvl: 2 }, { id: 'mrk', n: 'Žmurk', lvl: 6 }, { id: 'hviezdy', n: 'Hviezdičky', lvl: 11 }, { id: 'srdce', n: 'Srdiečka', lvl: 13 }, { id: 'ospale', n: 'Ospalé', price: 110 }, { id: 'riasy', n: 'Dlhé mihalnice', price: 140 }, { id: 'dudle', n: 'Kukadlá', price: 150 }],
+  mouth: [{ id: 'usmev', n: 'Úsmev' }, { id: 'smiech', n: 'Smiech' }, { id: 'o', n: 'Údiv', lvl: 3 }, { id: 'jazyk', n: 'Jazýček', lvl: 5 }, { id: 'zuby', n: 'Zúbky', lvl: 8 }, { id: 'macka', n: 'Mačacie', price: 100 }, { id: 'siroky', n: 'Veľký úsmev', price: 120 }, { id: 'pusa', n: 'Pusinka', price: 110 }],
   top: [
     { id: 'tricko', n: 'Tričko' }, { id: 'pruhy', n: 'Pruhované' }, { id: 'hviezda', n: 'S hviezdou' }, { id: 'mikina', n: 'Mikina' }, { id: 'sveter', n: 'Sveter' }, { id: 'vsveter', n: 'Vianočný sveter', price: 240, xmas: 1 }, { id: 'saty', n: 'Šaty' },
     { id: 'kosela', n: 'Košeľa', lvl: 4 }, { id: 'dres', n: 'Dres', lvl: 6 }, { id: 'bunda', n: 'Bunda', lvl: 7 }, { id: 'super', n: 'Superhrdina', lvl: 10 }, { id: 'princezna', n: 'Plesové šaty', lvl: 12, g: 'd' }, { id: 'rytier', n: 'Rytier', lvl: 12, g: 'c' }, { id: 'kuzelnik', n: 'Kúzelník', lvl: 14 }, { id: 'astronaut', n: 'Astronaut', lvl: 19 },
@@ -179,6 +179,8 @@ function bgLayer(av, id) {
 /* --- vlasy --- */
 function hairBack(h, c, d) {
   switch (h) {
+    case 'dvachv': return `<path d="M40 84 C26 104 30 140 46 156 C52 136 50 112 56 92Z" fill="${c}"/><path d="M160 84 C174 104 170 140 154 156 C148 136 150 112 144 92Z" fill="${c}"/><circle cx="48" cy="86" r="7" fill="#FF6A8A"/><circle cx="152" cy="86" r="7" fill="#FF6A8A"/>`;
+    case 'masla': return `<path d="M46 92 C40 8 160 8 154 92 L157 150 Q100 162 43 150 Z" fill="${c}"/>`;
     case 'dlhe': case 'princ': return `<path d="M46 92 C40 8 160 8 154 92 L160 176 Q100 192 40 176 Z" fill="${c}"/>`;
     case 'vlny': return `<path d="M46 92 C40 8 160 8 154 92 C164 112 150 128 162 146 C172 164 150 176 156 190 Q100 204 44 190 C50 176 28 164 38 146 C50 128 36 112 46 92Z" fill="${c}"/>`;
     case 'kuceryd': { let o = `<path d="M46 92 C40 8 160 8 154 92 L156 170 Q100 184 44 170 Z" fill="${c}"/>`; for (let y = 100; y <= 176; y += 19) o += `<circle cx="42" cy="${y}" r="13" fill="${c}"/><circle cx="158" cy="${y}" r="13" fill="${c}"/>`; return o + `<circle cx="70" cy="178" r="12" fill="${c}"/><circle cx="100" cy="182" r="12" fill="${c}"/><circle cx="130" cy="178" r="12" fill="${c}"/>`; }
@@ -223,6 +225,10 @@ function hairFront(h, c, d) {
     case 'ofina': return `<path d="M48 90 C44 12 156 12 152 90 C150 78 146 72 140 70 L60 70 C54 72 50 78 48 90Z" fill="${c}"/>`;
     case 'chvost': return `<path d="M49 88 C44 12 156 12 151 88 C142 66 124 58 106 60 C88 60 70 62 60 70 C54 74 50 80 49 88Z" fill="${c}"/><circle cx="146" cy="60" r="6" fill="#FFC23C"/>`;
     case 'drdol': case 'dva': return `<path d="M49 88 C44 12 156 12 151 88 C142 66 124 58 100 58 C76 58 58 66 49 88Z" fill="${c}"/>` + (h === 'drdol' ? `<rect x="88" y="44" width="24" height="7" rx="3" fill="#FF6A8A"/>` : '');
+    case 'quiff': return `<path d="M50 90 C46 54 62 40 80 36 C84 18 112 8 132 22 C148 32 156 56 150 90 C146 72 134 62 118 62 C100 60 80 62 66 68 C58 74 52 80 50 90Z" fill="${c}"/><path d="M86 32 Q110 14 134 28" stroke="${d}" stroke-width="3" fill="none" opacity=".45"/>`;
+    case 'dlofina': return `<path d="M48 92 C42 16 158 14 152 92 C148 74 140 66 130 64 C118 82 92 90 70 88 C60 90 52 92 48 92Z" fill="${c}"/><path d="M96 40 Q120 52 128 66" stroke="${d}" stroke-width="3" fill="none" opacity=".45"/>`;
+    case 'dvachv': return `<path d="M48 92 C44 12 156 12 152 92 C146 74 130 64 112 66 L100 58 L88 66 C70 64 54 74 48 92Z" fill="${c}"/>`;
+    case 'masla': return `<path d="M48 92 C44 12 156 12 152 92 C148 66 122 54 100 56 C78 54 52 66 48 92Z" fill="${c}"/><g transform="translate(132 34) rotate(18)"><path d="M0 0 L-18 -11 L-18 11Z M0 0 L18 -11 L18 11Z" fill="#FF5C8A" stroke="#C93A66" stroke-width="2" stroke-linejoin="round"/><circle r="5" fill="#FF8AAE" stroke="#C93A66" stroke-width="2"/></g>`;
     case 'cirok': return `<path d="M86 72 C84 40 90 14 100 6 C110 14 116 40 114 72 Z" fill="${c}"/><path d="M60 70 Q100 52 140 70" stroke="${c}" stroke-width="6" opacity=".35" fill="none"/>`;
     default: return '';
   }
@@ -236,6 +242,9 @@ function eyesSvg(e, ink, g) {
     case 'stastne': return `<path d="M73 99 Q82 88 91 99 M109 99 Q118 88 127 99" stroke="${ink}" stroke-width="4.5" fill="none" stroke-linecap="round"/>${lash}`;
     case 'mrk': return `<circle cx="82" cy="96" r="6.5" fill="${ink}"/><circle cx="84" cy="94" r="2" fill="#fff"/><path d="M110 97 Q118 102 127 97" stroke="${ink}" stroke-width="4.5" fill="none" stroke-linecap="round"/>${lash}`;
     case 'hviezdy': { const st = (cx, cy) => { let p = ''; for (let i = 0; i < 10; i++) { const r = i % 2 ? 4.5 : 11, a = -Math.PI / 2 + i * Math.PI / 5; p += `${(cx + r * Math.cos(a)).toFixed(1)},${(cy + r * Math.sin(a)).toFixed(1)} `; } return `<polygon points="${p}" fill="#FFC23C" stroke="${ink}" stroke-width="2" stroke-linejoin="round"/>`; }; return st(82, 96) + st(118, 96); }
+    case 'ospale': return `<path d="M73 97 Q82 102 91 97 M109 97 Q118 102 127 97" stroke="${ink}" stroke-width="4.5" fill="none" stroke-linecap="round"/><path d="M72 93 L92 93 M108 93 L128 93" stroke="${ink}" stroke-width="2.5" stroke-linecap="round" opacity=".55"/>`;
+    case 'riasy': { const E = x => `<ellipse cx="${x}" cy="97" rx="7.6" ry="9.4" fill="${ink}"/><ellipse cx="${x + 2.6}" cy="93" rx="2.8" ry="3.2" fill="#fff"/>`; return E(82) + E(118) + `<path d="M72 90 L66 84 M76 87 L73 80 M81 86 L80 79 M128 90 L134 84 M124 87 L127 80 M119 86 L120 79" stroke="${ink}" stroke-width="2.6" stroke-linecap="round"/>`; }
+    case 'dudle': { const E = x => `<circle cx="${x}" cy="96" r="12" fill="#fff" stroke="${ink}" stroke-width="2.4"/><circle cx="${x + 2}" cy="98" r="6" fill="${ink}"/><circle cx="${x + 4}" cy="95.5" r="2" fill="#fff"/>`; return E(82) + E(118); }
     case 'srdce': { const h = (x, y) => `<path d="M${x} ${y + 9} C${x - 14} ${y} ${x - 8} ${y - 10} ${x} ${y - 3} C${x + 8} ${y - 10} ${x + 14} ${y} ${x} ${y + 9}Z" fill="#F0475A" stroke="${ink}" stroke-width="2"/>`; return h(82, 96) + h(118, 96); }
     default: { const E = x => `<ellipse cx="${x}" cy="97" rx="8.2" ry="9.8" fill="url(#EYb${AVID})"/><ellipse cx="${x + 2.8}" cy="92.8" rx="3.2" ry="3.6" fill="#fff"/><circle cx="${x - 2.6}" cy="101.6" r="1.6" fill="#fff" opacity=".9"/>`; return `<defs><radialGradient id="EYb${AVID}" cx="38%" cy="30%" r="80%"><stop offset="0" stop-color="#7A4A2E"/><stop offset=".55" stop-color="#2A1810"/><stop offset="1" stop-color="#150B06"/></radialGradient></defs>` + E(82) + E(118) + lash; }
   }
@@ -245,6 +254,9 @@ function mouthSvg(m, ink) {
     case 'smiech': return `<path d="M88 114 Q100 113 112 114 Q110 130 100 130 Q90 130 88 114Z" fill="#8A2A3A"/><path d="M92 124 Q100 120 108 124 Q105 129 100 129 Q95 129 92 124Z" fill="#FF8FA6"/>`;
     case 'o': return `<ellipse cx="100" cy="121" rx="6.5" ry="8" fill="#8A2A3E"/>`;
     case 'jazyk': return `<path d="M87 116 Q100 127 113 116" stroke="${ink}" stroke-width="4" fill="none" stroke-linecap="round"/><path d="M95 121 Q100 134 107 121 Z" fill="#FF7A93"/>`;
+    case 'macka': return `<path d="M88 115 Q94 122 100 115 Q106 122 112 115" stroke="#5A2A22" stroke-width="3.4" fill="none" stroke-linecap="round" stroke-linejoin="round"/>`;
+    case 'siroky': return `<path d="M82 112 Q100 136 118 112 Z" fill="#8A2A3E" stroke="#5A2A22" stroke-width="2" stroke-linejoin="round"/><path d="M84 113 L116 113 L114 118 L86 118Z" fill="#fff"/><path d="M92 128 Q100 122 108 128 Q100 132 92 128Z" fill="#FF8FA6"/>`;
+    case 'pusa': return `<path d="M96 112 Q92 116 96 119 Q92 122 96 126 Q102 124 104 119 Q102 114 96 112Z" fill="#E8546E"/><path d="M118 104 L121 99 L124 104 L121 108Z" fill="#FF9FB4" opacity=".0"/>`;
     case 'zuby': return `<path d="M85 114 Q100 132 115 114 Z" fill="#8A2A3E"/><rect x="93" y="114" width="6.5" height="7" rx="1.5" fill="#fff"/><rect x="100.5" y="114" width="6.5" height="7" rx="1.5" fill="#fff"/>`;
     default: return `<path d="M88 115 Q100 127 112 115" stroke="#5A2A22" stroke-width="3.4" fill="none" stroke-linecap="round"/>`;
   }

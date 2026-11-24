@@ -41,9 +41,11 @@ function applyTheme(slow) {
   /* plynulý prechod: jedna vrstva cez obrazovku sa rozsvieti/stmavne (lacné aj na slabom telefóne); stav sa nastaví hneď */
   const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
   const was = de.dataset.theme || '', wasNight = de.classList.contains('bnight');
-  run();
-  if (!slow || reduce || (was === (de.dataset.theme || '') && wasNight === de.classList.contains('bnight'))) return;
-  try { let f = document.getElementById('thfade'); if (f) f.remove(); f = document.createElement('div'); f.id = 'thfade'; f.style.background = LASTNIGHT ? '#1A1240' : '#FFF6E0'; document.body.appendChild(f); requestAnimationFrame(() => { f.classList.add('go'); }); setTimeout(() => f.remove(), 1300); } catch (e) { }
+  const wn = nightOn(), tt = wn ? 'dark' : DATA.settings.theme, wt = tt === 'light' || tt === 'dark' ? tt : (THEME_SET ? '' : was);
+  if (!slow || reduce || !document.body || (wn === wasNight && wt === was)) { run(); return; }
+  /* plynulo: vrstva sa pomaly zatiahne (ako súmrak/svitanie), pod ňou sa prepne vzhľad, potom sa pomaly odtiahne */
+  try { let f = document.getElementById('thfade'); if (f) f.remove(); f = document.createElement('div'); f.id = 'thfade'; f.className = 'in'; f.style.background = wn ? 'radial-gradient(circle at 50% 30%,#3A2C7A,#140E36 70%)' : 'radial-gradient(circle at 50% 30%,#FFF3C4,#FFE2B0 70%)'; document.body.appendChild(f);
+    requestAnimationFrame(() => requestAnimationFrame(() => f.classList.add('on'))); setTimeout(() => { run(); requestAnimationFrame(() => { f.classList.remove('on'); f.classList.add('out'); }); }, 900); setTimeout(() => f.remove(), 2700); } catch (e) { run(); }
 }
 let THEME_SET = false;
 function load() { try { const s = localStorage.getItem(KEY); if (s) DATA = Object.assign(DATA, JSON.parse(s)); } catch (e) { } normalize(); }

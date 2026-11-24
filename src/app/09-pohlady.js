@@ -15,8 +15,8 @@ VIEWS.learn = () => {
 };
 /* --- obchod --- */
 let SHOPCAT = 'all', SHOPSEL = null;
-const SHOPCATS = [['all', 'Všetko'], ['top', '👕 Vrch'], ['bottom', '👖 Spodok'], ['shoes', '👟 Topánky'], ['acc', '🎩 Doplnky']];
-function shopItems(p) { const out = []; for (const c of ['top', 'bottom', 'shoes', 'acc']) for (const it of CATALOG[c]) if (it.price && !it.xmas && (!it.g || it.g === p.av.gender)) out.push([c, it]); return out.sort((a, b) => a[1].price - b[1].price); }
+const SHOPCATS = [['all', 'Všetko'], ['top', '👕 Vrch'], ['bottom', '👖 Spodok'], ['shoes', '👟 Topánky'], ['acc', '🎩 Doplnky'], ['hair', '💇 Vlasy'], ['eyes', '👀 Oči'], ['mouth', '😊 Ústa']];
+function shopItems(p) { const out = []; for (const c of ['top', 'bottom', 'shoes', 'acc', 'hair', 'eyes', 'mouth']) for (const it of CATALOG[c]) if (it.price && !it.xmas && (!it.g || it.g === p.av.gender)) out.push([c, it]); return out.sort((a, b) => a[1].price - b[1].price); }
 const SHOP_DAYS = 1, DAYMS = 86400000;
 function shopPeriod() { const d = new Date(); return Math.floor(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()) / DAYMS / SHOP_DAYS); }
 function shopMs() { const d = new Date(); const now = Date.UTC(d.getFullYear(), d.getMonth(), d.getDate(), d.getHours(), d.getMinutes(), d.getSeconds()); return Math.max(0, (shopPeriod() + 1) * SHOP_DAYS * DAYMS - now); }
@@ -24,9 +24,10 @@ function cdHTML() { let t = Math.floor(shopMs() / 1000); const dd = Math.floor(t
 function shopHMS() { let s = Math.floor(shopMs() / 1000); const h = Math.floor(s / 3600); s %= 3600; const m = Math.floor(s / 60); s %= 60; return [h, m, s].map(x => String(x).padStart(2, '0')).join(':'); }
 AFTER.shop = () => { TIMERS.push(setInterval(() => { const e = $('#shopcd2'); if (e) e.textContent = shopHMS(); }, 1000)); TIMERS.push(setInterval(() => { const e = $('#shopcd'); if (!e) return; if (shopMs() <= 0) return render(null); e.innerHTML = cdHTML(); const s = e.querySelector('.cdb:last-child b'); if (s) { s.classList.remove('tick'); void s.offsetWidth; s.classList.add('tick'); } }, 1000)); };
 function shopLeft() { const d = new Date(); const now = Date.UTC(d.getFullYear(), d.getMonth(), d.getDate(), d.getHours(), d.getMinutes()); const ms = (shopPeriod() + 1) * SHOP_DAYS * DAYMS - now; const h = Math.max(1, Math.ceil(ms / 3600000)); return h >= 24 ? `${Math.floor(h / 24)} ${plural(Math.floor(h / 24), 'deň', 'dni', 'dní')} a ${h % 24} h` : `${h} h`; }
-function shopPremium(p) { const rnd = seeded('prem' + shopPeriod() + p.id); return shopItems(p).filter(([, it]) => it.price >= 200).sort(() => rnd() - .5).slice(0, 4); }
+const FACECATS = ['hair', 'eyes', 'mouth'];
+function shopPremium(p) { const rnd = seeded('prem' + shopPeriod() + p.id); return shopItems(p).filter(([c, it]) => it.price >= 200 && !FACECATS.includes(c)).sort(() => rnd() - .5).slice(0, 4); }
 function shopOffer(p) {
-  const rnd = seeded('shop' + shopPeriod() + p.id); const all = shopItems(p).filter(([, it]) => it.price < 200).sort(() => rnd() - .5);
+  const rnd = seeded('shop' + shopPeriod() + p.id); const all = shopItems(p).filter(([c, it]) => it.price < 200 && !FACECATS.includes(c)).sort(() => rnd() - .5);
   const out = []; for (const c of ['top', 'bottom', 'shoes', 'acc']) { const x = all.find(([cc]) => cc === c); if (x) out.push(x); }
   for (const x of all) { if (out.length >= 12) break; if (!out.includes(x)) out.push(x); }
   return out.sort((a, b) => a[1].price - b[1].price);
@@ -37,7 +38,7 @@ function dealHero(p, x) {
   return `<section class="deal2"><i class="dshine" aria-hidden="true"></i><div class="dinfo"><span class="dtag">PONUKA DŇA · ešte ${shopLeft()}</span><b>${esc(it.n)}</b><span class="dprice">${own ? '✓ Už máš' : COIN + ' ' + it.price}</span><button class="dbtn press" data-a="shop-prev" data-c="${c}" data-i="${it.id}">👀 Vyskúšať</button></div><div class="dfig">${avatarSvg(av, { cls: 'idle', noBg: true, noPet: true })}</div></section>`;
 }
 VIEWS.shop = () => {
-  const p = P(); const list = shopOffer(p); const prem = shopPremium(p); const xm = XMAS() ? ['top', 'acc'].flatMap(c => CATALOG[c].filter(it => it.xmas).map(it => [c, it])) : []; const all = [...xm, ...prem, ...list];
+  const p = P(); const list = shopOffer(p); const prem = shopPremium(p); const xm = XMAS() ? ['top', 'acc'].flatMap(c => CATALOG[c].filter(it => it.xmas).map(it => [c, it])) : []; const face = shopItems(p).filter(([c]) => FACECATS.includes(c)); const all = [...xm, ...prem, ...list, ...face];
   const sel = all.find(([, it]) => it.sid === SHOPSEL);
   const state = it => p.owned.includes(it.sid) ? 'own' : (p.coins || 0) >= it.price ? 'can' : 'lock';
   const fil = arr => SHOPCAT === 'all' ? arr : arr.filter(([c]) => c === SHOPCAT);

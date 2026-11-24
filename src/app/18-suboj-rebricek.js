@@ -97,14 +97,27 @@ async function lbAwards() {
   try {
     if (!(SUPA_ON() && AUTH)) return; const pd = daysAgo(1); const todo = DATA.profiles.filter(p => p.lbDay !== pd); if (!todo.length) return;
     const rows = (await lbGet('select=user_id,pid,name,grade,xp&week=eq.' + pd + '&pid=like.*%23d&order=xp.desc&limit=20')).map(x => ({ ...lbRow(x), pid: String(x.pid).slice(0, -2) })).sort(lbSort.d); const wins = [];
-    todo.forEach(p => { p.lbDay = pd; const r = rows.findIndex(x => x.user_id === AUTH.uid && x.pid === String(p.id)); if (r < 0 || r > 2 || !rows[r].n) return; const [item, coins] = LB_PRIZE[r]; p.owned = p.owned || []; const had = p.owned.includes('lb:' + item); if (!had) p.owned.push('lb:' + item); const c = coins + (had ? 20 : 0); p.coins = (p.coins || 0) + c; p.lbWins = (p.lbWins || 0) + 1; p.log.unshift({ t: Date.now(), k: 'gift', id: null, c, n: 0 }); wins.push({ p, r, item, c, had }); });
-    save(); const w = wins.find(x => x.p.id === DATA.current) || wins[0]; if (!w) return;
+    todo.forEach(p => { p.lbDay = pd; const r = rows.findIndex(x => x.user_id === AUTH.uid && x.pid === String(p.id)); if (r < 0 || r > 2 || !rows[r].n) return; p.lbPend = { r, d: pd }; wins.push(p); });
+    save(); if (wins.length && ['home', 'board', 'learn', 'me'].includes(UI.view)) render(null); return;
+  } catch (e) { }
+}
+/* výhra v rebríčku čaká na vyzdvihnutie: karta na Dnes a v Rebríčku → tlačidlo Zobrať odmenu */
+function lbWinCard(p, big) { const w = p && p.lbPend; if (!w) return ''; return `<section class="card lbwin ${big ? 'big' : ''}"><i class="lbwrays" aria-hidden="true"></i><span class="lbwm">${['🥇', '🥈', '🥉'][w.r]}</span><div class="grow"><b>${w.r === 0 ? 'Vyhral(a) si v rebríčku!' : 'Si na stupňoch víťazov!'}</b><small>Včera ${w.r + 1}. miesto · čaká na teba odmena</small></div><button class="btn primary press" data-a="lb-claim">🎁 Zobrať</button></section>`; }
+function lbClaim() {
+  try { const p = P(); const w = p.lbPend; if (!w) return; delete p.lbPend; const [item, coins] = LB_PRIZE[w.r]; p.owned = p.owned || []; const had = p.owned.includes('lb:' + item); if (!had) p.owned.push('lb:' + item); const c = coins + (had ? 20 : 0); p.coins = (p.coins || 0) + c; p.lbWins = (p.lbWins || 0) + 1; p.log.unshift({ t: Date.now(), k: 'gift', id: null, c, n: 0 }); save();
+    const it = itemOf('acc', item); const o = document.createElement('div'); o.className = 'over';
+    o.innerHTML = `<div class="card box lbwinbox"><span class="lbwbig">${['🏆', '🥈', '🥉'][w.r]}</span><h2>${w.r === 0 ? 'Si víťaz!' : (w.r + 1) + '. miesto!'}</h2><p class="b">${esc(p.name)}, včera ${p.av.gender === 'd' ? 'si stála' : 'si stál'} v rebríčku na ${w.r + 1}. mieste.</p><div class="lbprize"><span class="pth">${itemThumb('acc', it, p.av)}</span><div><b>${it.n}</b><small>${had ? 'Už ju máš, preto slniečka navyše' : 'Vzácny doplnok, v obchode ho nekúpiš'}</small><b>+${c} ${COIN}</b></div></div><button class="btn primary block" data-a="ov-close">Paráda!</button></div>`;
+    document.body.appendChild(o); sfx('level'); try { confetti(200, .3); fireworks(); } catch (e) { } say(w.r === 0 ? 'Si víťaz rebríčka! Gratulujem!' : 'Si na stupňoch víťazov! Gratulujem!'); render(null);
+  } catch (e) { }
+}
+async function lbAwardsOld() {
+  try { const w = null; if (!w) return;
     const it = itemOf('acc', w.item); const o = document.createElement('div'); o.className = 'over';
     o.innerHTML = `<div class="card box">${bearSvg('cheer')}<h2>${lbMedal(w.r)} ${w.r + 1}. miesto v rebríčku!</h2><p class="b">${esc(w.p.name)}, včera ${w.p.av.gender === 'd' ? 'si stála' : 'si stál'} na stupňoch víťazov.</p><div class="lbprize"><span class="pth">${itemThumb('acc', it, w.p.av)}</span><div><b>${it.n}</b><small>${w.had ? 'Už ju máš, preto slniečka navyše' : 'Vzácny doplnok, v obchode ho nekúpiš'}</small><b>+${w.c} ${COIN}</b></div></div><button class="btn primary block" data-a="ov-close">Paráda!</button></div>`;
     document.body.appendChild(o); sfx('level'); try { confetti(160, .3); } catch (e) { } if (UI.view === 'home' || UI.view === 'board') render(null);
   } catch (e) { }
 }
-VIEWS.board = () => {
+VIEWS.board0 = () => {
   const p = P(); const rows = lbRows(p, LBTAB); const first = !LB || (LB.loading && !LB.rows); const LBN = 23; const vOf = x => LBTAB === 's' ? x.st : x.n; const top = rows.filter(x => vOf(x) > 0).slice(0, 3); const others = rows.filter(x => !top.includes(x)); const rest = others.slice(0, LBN - 3); const mi = others.findIndex(x => x.me);
   const note = (LBPUSHERR && AUTH ? `<p class="muted b" style="font-size:.85rem;padding:4px 0">⚠️ Tvoj výsledok sa nepodarilo odoslať (${esc(LBPUSHERR)}). Skúsime znova pri ďalšom učení.</p>` : '') + (LB && LB.err ? `<p class="muted b" style="font-size:.88rem;padding:4px 0">${LB.err === 'net' ? 'Spoločný rebríček sa nepodarilo načítať. Zatiaľ vidíš hráčov z tohto zariadenia.' : LB.err === 'missing' ? 'Spoločný rebríček ešte nie je zapnutý. Zatiaľ vidíš hráčov z tohto zariadenia.' : 'Spoločný rebríček uvidíš po prihlásení. Zatiaľ vidíš hráčov z tohto zariadenia.'}</p>` : '');
   const list = first ? '<div class="typing" style="margin:14px auto"><i></i><i></i><i></i></div>' : note + rest.map((x, i) => lbLine(x, top.length + i, LBTAB, true)).join('') + Array.from({ length: Math.max(0, LBN - 3 - rest.length) }, (_, k) => `<div class="lbrow empty"><span class="rk">${top.length + rest.length + k + 1}.</span><span class="lbav"><span class="lbini q">?</span></span><span class="nm">voľné miesto<small>môžeš tu byť ty</small></span></div>`).join('') + (mi >= LBN - 3 ? `<div class="lbgap">⋯</div>${lbLine(others[mi], top.length + mi, LBTAB, true)}` : '');
@@ -125,3 +138,7 @@ function duelCreate() { const p = P(); if (D) duelClose(); D = { st: 'wait', hos
 function duelJoin(code) { const p = P(); if (D) duelClose(); D = { st: 'joining', host: false, code, me: String(p.name).slice(0, 14), id: Math.random().toString(36).slice(2, 10) }; D.ws = duelWs(code, duelMsg, () => { const hi = () => D && D.ws && D.ws.say('join', { id: D.id, name: D.me }); hi(); D.tick = setInterval(hi, 1000); }); D.to = setTimeout(() => { if (D && D.st === 'joining') { duelClose(); D = { st: 'lobby', err: 'Súboj s týmto kódom sa nenašiel. Skontroluj kód.' }; if (UI.view === 'duel') render(null); } }, 15000); }
 
 ACT['lb-refresh'] = () => { sfx('whoosh'); const b = $('.lbref'); if (b) b.classList.add('spin'); lbPush(); setTimeout(lbLoad, 900); };
+
+ACT['lb-claim'] = () => lbClaim();
+{ const _ah = AFTER.home; AFTER.home = (...a) => { if (_ah) _ah(...a); try { if (!LBAW && SUPA_ON() && AUTH) lbFresh(); } catch (e) { } }; }
+VIEWS.board = (...a) => { const h = VIEWS.board0(...a); const c = lbWinCard(P(), 1); return c ? h.replace('<main class="view', '<main class="view').replace(/(<main[^>]*>)/, '$1' + c) : h; };

@@ -39,11 +39,20 @@ const TUNES = [
   { bpm: 168, bass: ['G4', 'D4', 'E4', 'C4'], n: 'G4 1 G4 1 D5 1 D5 1 E5 1 E5 1 D5 2 C5 1 C5 1 B4 1 B4 1 A4 1 A4 1 G4 2 D5 1 D5 1 C5 1 C5 1 B4 1 B4 1 A4 2 G4 4' }
 ];
 let TUNE_I = 0, TUNE_UNTIL = 0;
+/* klavír: rýchly úder, alikvóty s rozladením, pomalé doznievanie cez lowpass */
+function piano(f, when = 0, vol = .12, d = 1.2) {
+  const a = ac(); if (!a || a.state !== 'running') return; const t = a.currentTime + when;
+  const lp = a.createBiquadFilter(); lp.type = 'lowpass'; lp.frequency.setValueAtTime(Math.min(9000, f * 9), t); lp.frequency.exponentialRampToValueAtTime(Math.max(400, f * 2), t + d); lp.Q.value = .4;
+  const g = a.createGain(); g.gain.setValueAtTime(.0001, t); g.gain.exponentialRampToValueAtTime(vol, t + .006); g.gain.exponentialRampToValueAtTime(vol * .35, t + .25); g.gain.exponentialRampToValueAtTime(.0001, t + d);
+  lp.connect(g).connect(a.destination);
+  [[1, 1, 'triangle'], [2, .45, 'sine'], [3, .18, 'sine'], [4, .08, 'sine']].forEach(([h, v, ty], k) => { [-1.5, 1.5].forEach(det => { const o = a.createOscillator(), og = a.createGain(); o.type = ty; o.frequency.value = f * h; o.detune.value = det * (k + 1); og.gain.value = v / 2; o.connect(og).connect(lp); o.start(t); o.stop(t + d + .05); }); });
+  const n = a.createBufferSource(), nb = a.createBuffer(1, Math.floor(a.sampleRate * .03), a.sampleRate), ch = nb.getChannelData(0); for (let i = 0; i < ch.length; i++) ch[i] = (Math.random() * 2 - 1) * (1 - i / ch.length); n.buffer = nb; const ng = a.createGain(); ng.gain.value = vol * .25; n.connect(ng).connect(lp); n.start(t);
+}
 function playTune(i) {
   if (Date.now() < TUNE_UNTIL) return; const tu = TUNES[i == null ? (TUNE_I++ % TUNES.length) : i]; const beat = 60 / tu.bpm; const parts = tu.n.split(' '); let t = .05;
   try {
-    for (let k = 0; k < parts.length; k += 2) { const f = TN[parts[k]], d = +parts[k + 1] * beat; if (f) mar(f, t, .11, Math.max(.25, d * 1.4)); t += d; }
-    for (let b = 0, bt = .05; bt < t; b++, bt += beat * 2) { const f = TN[tu.bass[Math.floor(b / 2) % tu.bass.length]] / 2; tone(f, beat * 1.6, 'triangle', .07, bt); if (b % 2) tone(1800, .03, 'square', .012, bt + beat); }
+    for (let k = 0; k < parts.length; k += 2) { const f = TN[parts[k]], d = +parts[k + 1] * beat; if (f) piano(f, t, .13, Math.max(.6, d * 2.2)); t += d; }
+    for (let b = 0, bt = .05; bt < t; b++, bt += beat * 2) { const f = TN[tu.bass[Math.floor(b / 2) % tu.bass.length]] / 2; piano(f, bt, .08, beat * 2.4); piano(f * 1.5, bt + beat, .045, beat * 1.6); }
   } catch (e) { }
   TUNE_UNTIL = Date.now() + t * 1000;
 }

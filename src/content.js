@@ -206,13 +206,21 @@ const CARRY_FROM = { 2: { 1: 5, 2: 99 }, 3: { 1: 0, 2: 5 }, 4: { 1: 0, 2: 3 } };
 const NO_CARRY_OK = { 'm2-prechod': 1 };
 /* ako sa dieťaťu darí v téme (posledné odpovede) – keď málo, ľahšie čísla */
 function topicWeak(t) { try { const p = P(); const ts = p && p.topics && p.topics[t.id]; return !!(ts && ts.total >= 6 && ts.correct / ts.total < .55); } catch (e) { return false; } }
+/* posledné čísla v príkladoch – aby sa to isté číslo (napr. stále 6) neopakovalo v rade */
+let GEN_RECENT = [];
+const genNums = x => (String(x.q || x.text || '').replace(/(\d)[\s  ](?=\d{3}\b)/g, '$1').match(/\d+/g) || []).map(Number);
 function genCapped(t) {
-  let cap = numCap(t); let g = t.gen(); if (cap === Infinity) return g;
-  const weak = topicWeak(t); if (weak) cap = Math.max(t.g <= 1 ? 10 : 20, Math.round(cap / 2));
+  let cap = numCap(t); const weak = cap !== Infinity && topicWeak(t); if (weak) cap = Math.max(t.g <= 1 ? 10 : 20, Math.round(cap / 2));
   let mo = 0; try { mo = schoolMonth(); } catch (e) { } const CF = CARRY_FROM[t.g];
-  const carryBad = x => { if (NO_CARRY_OK[t.id]) return false; const lv = hasCarry(x); if (!lv) return false; if (weak) return true; return !!(CF && mo < (CF[lv] != null ? CF[lv] : 0)); };
-  const score = x => (maxNum(x) > cap ? 4 : 0) + (carryBad(x) ? 1 : 0) + (multTooHard(x, t.g) ? 2 : 0);
-  let best = g, bs = score(g); for (let i = 0; i < 50 && bs > 0; i++) { g = t.gen(); const s = score(g); if (s < bs) { best = g; bs = s; } }
+  const carryBad = x => { if (cap === Infinity || NO_CARRY_OK[t.id]) return false; const lv = hasCarry(x); if (!lv) return false; if (weak) return true; return !!(CF && mo < (CF[lv] != null ? CF[lv] : 0)); };
+  const rep = x => { const n = genNums(x); if (!n.length) return 0; let s = 0; const last = n[n.length - 1]; if (n.length >= 2 && GEN_RECENT.slice(-3).some(r => r.includes(n[1]) || r.includes(last))) s += .6; if (/[+−-]\s*0\s*=/.test(String(x.q || x.text || ''))) s += .5; return s; };
+  const hard = x => (cap !== Infinity && maxNum(x) > cap ? 4 : 0) + (carryBad(x) ? 1 : 0) + (multTooHard(x, t.g) ? 2 : 0);
+  const cands = []; for (let i = 0; i < 24; i++) cands.push(t.gen());
+  /* ak sa limit čísel v téme takmer nedá splniť (téma je na neskôr), limit sa ignoruje – inak by stále padalo napr. 10 + 0 */
+  const capOff = cap !== Infinity && cands.filter(c => maxNum(c) <= cap).length < cands.length * .3;
+  const sc = x => (capOff ? hard(x) % 4 : hard(x)) + rep(x);
+  let best = cands[0], bs = sc(best); for (const c of cands) { const s = sc(c); if (s < bs) { best = c; bs = s; } }
+  const n = genNums(best); if (n.length) { GEN_RECENT.push(n); if (GEN_RECENT.length > 6) GEN_RECENT.shift(); }
   return best;
 }
 function makeQuestion(t, mode) {
